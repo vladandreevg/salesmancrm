@@ -113,7 +113,7 @@ rm salesman.zip
    - скрипт скачивает дистрибутив и распаковывает его в текущей папке
 4. Провести установку (п.5 ручной установки)
 
-### Развертывание из репозитория [GitHub](https://github.com/iandreyev/salesman.git)
+### Развертывание из репозитория [GitHub](https://github.com/vladandreevg/salesmancrm.git)
 
 ```shell
 # Установка git
@@ -121,7 +121,7 @@ yum git install
 # Переходим в каталог установки
 cd /var/www/
 # Клонируем репозиторий
-git clone https://github.com/iandreyev/salesman.git
+git clone https://github.com/vladandreevg/salesmancrm.git
 ```
 
 ## Обновление / Update
