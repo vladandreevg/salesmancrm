@@ -1,0 +1,291 @@
+/*body,*/
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+/*.ui-widget-content,*/
+.ui-widget-header2,
+.ui-layout-resizer{
+	background:#ECF0F1;
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content{
+	border-color:#ECF0F1;
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner{
+	background: #EEEEEE;
+}
+
+.tableHeader table{
+	border-top:1px solid #E6E9ED;
+}
+#last .tableHeader table{
+	border-top:0px;
+}
+
+.ui-widget-content{
+	border-right:0;
+}
+.ui-layout-center{
+	border:transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv{
+	background: #FFFFFF;
+}
+
+/*фон меню*/
+.ui-layout-north{
+	background: rgba(0,150,136, 1.0);
+}
+.menu--block,
+#menu{
+	background:
+			linear-gradient(
+					rgba(0,150,136,0.5),
+					rgba(0,150,136,0.5)
+			),
+			url(/assets/images/bg/banan.png) repeat,
+			rgba(0,150,136, 1.0);
+}
+#menu .hov{
+	border-right: 1px solid rgba(0,150,136,0.3);
+}
+#menu ul:hover{
+	background: rgba(0,105,92 ,1);
+}
+#menu ul ul {
+	border-top:2px solid #e3e2e2;
+}
+#menu ul ul,
+#menu ul ul:hover,
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	color:#FFF;
+	background:rgba(0,105,92 ,1);
+}
+#menu ul ul li.header{
+	color:#ECF0F1;
+}
+#menu a.navlink:hover{
+	color:#34495E;
+	background: #FFCE54;
+}
+#menu ul > .top-triangle-white{
+	border-bottom: 7px solid rgba(0,105,92 ,1);
+}
+#menu hr{
+	border-bottom: 1px solid rgba(0,150,136,0.2);
+}
+#menu ul ul:after {
+	border-bottom-color: rgba(0,105,92 ,1);
+}
+
+#menu ul ul ul.sub{
+	background:rgba(0,105,92 ,1);
+}
+#menu ul ul ul.sub:after {
+	border-left-color: rgba(0,105,92 ,1);
+}
+
+#menuavatar hr{
+	border-bottom: 1px solid #ECF0F1;
+}
+	#menuavatar:hover{
+		background:rgba(0,105,92 ,1);
+	}
+	#menuavatar .avatar-subtext{
+		color:#ECF0F1;
+	}
+
+/**
+Меню аватара
+*/
+.avatar--menu{
+	color              : var(--white);
+	background         : #00796b;
+	border             : #117811 1px solid;
+}
+.avatar--menu:after {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #117811;
+}
+.avatar--menu:before {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #00796b;
+}
+.avatar--menu .item:first-child {
+	border-right : 1px dotted var(--green-dark);
+}
+
+.avatar--menu .item .string {
+	color                 : #FFF;
+	border-bottom         : 1px dotted var(--green-dark);
+}
+.avatar--menu .item .string.green {
+	color      : var(--green-sublite);
+}
+.avatar--menu .item .string .blue {
+	color      : var(--green-sublite);
+}
+.avatar--menu .item .string .gray2 {
+	color      : var(--green-sublite);
+}
+.avatar--menu .item .string:hover {
+	color:#34495E;
+	background-color : #FFCE54;
+}
+.avatar--menu .item .string:hover .blue{
+	color      : #00796b;
+}
+.avatar--menu .item .title {
+	color          : var(--green-lite);
+	border-bottom  : 1px dotted var(--green-dark);
+}
+.avatar--menu .item hr {
+	border-bottom   : 1px dotted var(--blue2);
+}
+.avatar--menu .product{
+	color: #222;
+}
+.avatar--menu .product a,
+.avatar--menu .product .blue{
+	color      : var(--green-lite);
+}
+
+/*различные кнопки*/
+.bl2{
+	color:#FFF;
+	background: #34495E;
+	border: 1px solid #34495E;
+}
+.bl2:hover{
+	color:#FFF;
+	background: #16A085;
+	border: 1px solid #16A085;
+}
+
+/*a.button, input.button, a.button:link, a.button:visited{
+	color:#222;
+	background: #ECF0F1;
+	border: 1px solid #BDC3C7;
+	line-height: 20px;
+}
+a.button:hover {
+	background: #03A9F4;
+	border: 1px solid #2196F3;
+	color:#fff;
+}*/
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color:#222;
+	background: #FFCE54;
+	border:0px;
+	margin: 0px 2px;
+	padding: 10px;
+}
+.contaner > a.button:hover {
+	color:#222;
+	background: #F6BB42;
+}
+
+.ha:hover{
+	background: rgba(255, 207, 83, 0.3);
+}
+
+/*popup*/
+.popmenu, .popmenu-top, .submenu{
+
+}
+	.popmenu .popheader{
+		color:#FFF;
+		background: #16a085;
+	}
+	.popmenu .popheader .blue{
+		color:#FFF;
+	}
+
+.triangle{
+	border-top: 7px solid #16a085;
+}
+.top-triangle{
+	border-bottom: 7px solid #16a085;
+}
+
+/*карточка*/
+#head #close{
+	/*top:-10px;*/
+	border:1px solid #16a085;
+	border-top:0;
+	background:#FFCE54;
+	font-size:0.80em;
+	color: #222;
+	line-height: 0.95em;
+	padding: 5px 10px;
+}
+#head #close:hover{
+	border:1px solid #1abc9c;
+	border-top:0;
+	background:#FFFFFF;
+	color: #1abc9c;
+}
+
+.fixx{
+	color:#FFF;
+	background:
+			linear-gradient(
+					rgba(0,150,136, 0.5),
+					rgba(0,150,136, 0.9)
+			),
+			url(/assets/images/bg/banan.png) repeat;
+}
+	.fixx #ctitle .blue,
+	.fixx #ctitle a{
+		color:#FFCE54;
+	}
+
+#dtabs ul li {
+	color: #fff;
+	/*background:rgba(255,255,255, 0.3);*/
+	background: rgba(0,105,92 ,0.9);
+}
+#dtabs ul li:hover {
+	border-bottom:0px;
+}
+#dtabs ul li a{
+	color: #fff;
+}
+
+/*элементы ui.jquery*/
+.ui-state-active, .ui-widget-content .ui-state-active,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active{
+	border-color: #BDC3C7;
+}
+
+fieldset .batton-edit a,
+fieldset .batton-edit a .blue{
+	color:#16a085;
+}
+
+#tab_container,
+#tab_container .blue{
+	color:#222;
+}
+
+/*список дел в левой панели*/
+#taskweek .header{
+	color:#222;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}

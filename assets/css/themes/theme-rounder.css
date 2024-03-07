@@ -1,0 +1,476 @@
+/*скругленные элементы*/
+:root {
+	--rmenu-gray   : #78909C;
+}
+
+#menu a.navlink:hover {
+	border-radius: 20px;
+}
+
+#menu ul ul {
+	padding-right: 5px;
+	padding-left: 5px;
+}
+
+#menuavatar .submenu .halight{
+	height: 1.6em;
+	line-height: 1.6em;
+}
+
+#menuavatar .submenu .halight:hover,
+#menuavatar .submenu .stroka:hover,
+#menuavatar .submenu a.menu:hover {
+	border-radius: 20px;
+}
+
+#rmenu .tabs a:not(.razdel),
+#rmenu .counters ul li,
+#rmenu .tabs a:not(.razdel),
+#rmenu a.razdel.pl5,
+#rmenu a.razdel.pr5,
+div.leftpop,
+#rmenu div:not(.leftpop) > a.razdel{
+	width         : 36px;
+	height        : 36px;
+	line-height   : 34px;
+}
+
+#rmenu .tabs a:not(.razdel),
+#rmenu .counters ul li {
+	font-size     : 0.9em;
+	display       : block;
+	background    : var(--gray2) !important;
+	border        : 1px inset var(--gray5);
+	border-bottom : 0;
+	border-right  : 0;
+	/*border-radius : 50px;*/
+	margin-bottom : 2px;
+	margin-left   : 8px;
+	border-radius : 50px !important;
+}
+#rmenu .counters ul li div.popmenu {
+	line-height : initial;
+	font-size   : 1.1em;
+	color       : inherit;
+}
+
+#rmenu .counters ul li:hover {
+	background : var(--blue2) !important;
+}
+#rmenu .counters ul li:hover .pops {
+	color : var(--white) !important;
+	border-radius : 50px !important;
+}
+
+#rmenu a {
+	/*background: var(--gray2);*/
+}
+#rmenu .tabs a:not(.razdel),
+#rmenu a.razdel.pl5,
+#rmenu a.razdel.pr5 {
+	padding     : 0 !important;
+}
+#rmenu a.razdel .bullet {
+	right : 9px;
+}
+#rmenu a.razdel i {
+	position : relative;
+}
+#rmenu a.active {
+	font-size : 0.7em;
+}
+#rmenu a.active i i {
+	background : transparent;
+}
+
+#rmenu .ymailer a.razdel i {
+	position : relative;
+}
+#rmenu .ymailer a.razdel i.sub {
+	position   : absolute;
+	/*top        : 8px;*/
+	right      : 5px;
+	z-index    : 30;
+	background : transparent;
+	color      : inherit;
+	line-height: initial;
+}
+#rmenu .ymailer a.razdel:hover i.sub,
+#rmenu .ymailer a.razdel.active i.sub{
+	color: #FFF !important;
+}
+
+#rmenu ul li .pops {
+	padding : 0;
+}
+#rmenu ul li .pops:hover {
+	background : transparent;
+	color      : inherit;
+}
+#rmenu ul li .bullet {
+	right : -2px;
+}
+
+div.leftpop,
+#rmenu div:not(.leftpop) > a.razdel {
+	font-size     : 0.9em;
+	border        : var(--gray5) 1px inset;
+	border-bottom : 0;
+	border-right  : 0;
+	padding       : 0;
+	border-radius : 50px;
+	margin-bottom : 2px;
+	margin-left   : 8px;
+}
+
+div.leftpop {
+	margin-left : 8px;
+	background  : var(--gray2) !important;
+	padding     : 0 !important;
+}
+
+div.leftpop:hover {
+	background : var(--blue2) !important;
+}
+
+div.leftpop:hover:before {
+	position   : absolute;
+	top        : -1px;
+	left       : 18px;
+	content    : "";
+	width      : 18px;
+	height     : 36px;
+	background : var(--blue2);
+	z-index    : -10;
+}
+
+div.leftpop ul {
+	line-height   : initial;
+	font-size     : 1.1em;
+	border-radius : 0 10px 10px 0 !important;
+	border        : 1px solid var(--blue2);
+}
+
+div.leftpop ul li:first-child,
+div.leftpop ul li:first-child a:hover,
+div.leftpop ul li:first-child a.active{
+	border-radius : 0 9px 0 0 !important;
+}
+
+div.leftpop ul li:last-child,
+div.leftpop ul li:last-child a:hover,
+div.leftpop ul li:last-child a.active{
+	border-radius : 0 0 9px 0 !important;
+}
+
+.leftpop .menu a.razdel {
+	padding     : 0 0 0 10px !important;
+	line-height : 32px;
+}
+
+#rmenu .tabs a.lpToggler {
+	margin-top : 5px;
+	background : var(--orange) !important;
+	color: var(--black) !important;
+}
+
+@media (max-width : 1024px) {
+	
+	#rmenu .tabs a:not(.razdel),
+	#rmenu .counters ul li,
+	#rmenu .tabs a:not(.razdel),
+	#rmenu a.razdel.pl5,
+	#rmenu a.razdel.pr5,
+	div.leftpop,
+	#rmenu div:not(.leftpop) > a.razdel{
+		width         : 32px;
+		height        : 32px;
+		line-height   : 30px;
+	}
+	
+	div.leftpop,
+	#rmenu div:not(.leftpop) > a.razdel,
+	#rmenu .tabs a:not(.razdel),
+	#rmenu .counters ul li {
+		margin-left   : 4px;
+	}
+	
+	div.leftpop:hover:before {
+		top        : -1px;
+		left       : 18px;
+		width      : 18px;
+		height     : 32px;
+	}
+	
+	.leftpop .menu a.razdel {
+		padding     : 0 0 0 5px !important;
+	}
+	.leftpop .menu a.razdel {
+		line-height : 22px;
+	}
+	#rmenu a.razdel [class^="icon-"]::before,
+	#rmenu a.razdel [class*=" icon-"]::before {
+		/*margin-left: 0;*/
+	}
+	#rmenu ul li .bullet {
+		margin-top: -4px;
+	}
+	
+}
+
+div.button,
+input[type="submit"],
+a.period,
+a.button,
+a.button:link,
+a.button:visited {
+	padding               : 10px 15px;
+	margin                : 0 8px 3px 0;
+	color                 : var(--white);
+	border                : 0 inset var(--black);
+	border-radius         : 50px !important;
+	-moz-border-radius    : 50px !important;
+	-webkit-border-radius : 50px !important;
+	box-shadow            : 0 0 0 0;
+	-webkit-box-shadow    : 0 0 0 0;
+	-moz-box-shadow       : 0 0 0 0;
+}
+
+a.button.bcancel {
+	border: 0;
+}
+
+div.button,
+.flex-container a.button{
+	padding: 5px 10px !important;
+}
+
+.ui-layout-west input, .ui-layout-west select {
+	padding: 5px 15px;
+}
+
+input,
+select {
+	border-radius         : 20px;
+	-moz-border-radius    : 20px;
+	-webkit-border-radius : 20px;
+	padding-left          : 15px;
+	padding-right         : 15px;
+}
+
+.select::after {
+	right : 5px;
+}
+
+textarea {
+	border-radius         : 10px;
+	-moz-border-radius    : 10px;
+	-webkit-border-radius : 10px;
+	padding               : 10px;
+}
+
+.like-input,
+.ydropDown:not(.pipeline) {
+	border-radius         : 20px;
+	-moz-border-radius    : 20px;
+	-webkit-border-radius : 20px;
+}
+
+#pid_list.like-input{
+	padding: 2px !important;
+}
+#pid_list .pid_box {
+	margin: 0 5px 0 0;
+	padding-right: 10px !important;
+	border-radius         : 20px;
+	-moz-border-radius    : 20px;
+	-webkit-border-radius : 20px;
+	background: var(--biruza-lite) !important;
+}
+#pid_list .del {
+	color: var(--biruza);
+	background: var(--biruza-lite);
+}
+
+.ydropDown{
+	padding: 5px 10px 5px 15px !important;
+}
+
+.dialog .ui-multiselect li.ui-element {
+	border-radius         : 20px !important;
+	-moz-border-radius    : 20px !important;
+	-webkit-border-radius : 20px !important;
+}
+
+.filebox{
+	background: transparent !important;
+}
+
+.idel{
+	top: 10px;
+}
+
+#psdiv .but,
+#tagbox .tags{
+	border-radius: 15px;
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+	border: 1px solid transparent;
+}
+
+.infodiv,
+.formdiv,
+.warning,
+.success,
+.attention,
+.div-info,
+.viewdiv{
+	border-radius: 7px;
+}
+
+.ul--group{
+	padding-left: 15px;
+}
+
+#dialog{
+	border-radius: 10px;
+	border:0;
+}
+#dialog #resultdiv{
+	border-top-left-radius: 8px;
+	-webkit-border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	-webkit-border-top-right-radius: 8px;
+}
+#dialog .zagolovok{
+	border: 0;
+	border-top-left-radius: 8px;
+	-webkit-border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	-webkit-border-top-right-radius: 8px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 10px;
+}
+#dialog .button--pane{
+	border-radius: 0 0 10px 10px;
+}
+#dialog .close{
+	margin-top: 5px;
+	margin-right: 5px;
+}
+#dialog .close:hover {
+	border-radius: 20px;
+}
+
+.ac_results{
+	margin-left: 13px;
+}
+
+ul.group{
+	border-radius: 20px !important;
+	-moz-border-radius: 20px !important;
+	-webkit-border-radius: 20px !important;
+}
+ul.group > li:first-child{
+	border-radius: 20px 0 0 20px !important;
+	-moz-border-radius: 20px 0 0 20px !important;
+	-webkit-border-radius: 20px 0 0 20px !important;
+}
+ul.group > li:last-child{
+	border-radius: 0 20px 20px 0 !important;
+	-moz-border-radius: 0 20px 20px 0 !important;
+	-webkit-border-radius: 0 20px 20px 0 !important;
+}
+
+#ytabs ul{
+	border-radius: 10px 10px 0 0 !important;
+	-moz-border-radius: 10px 10px 0 0 !important;
+	-webkit-border-radius: 10px 10px 0 0 !important;
+}
+#ytabs ul li:first-child{
+	border-radius: 10px 0 0 0 !important;
+	-moz-border-radius: 10px 0 0 0 !important;
+	-webkit-border-radius: 10px 0 0 0 !important;
+}
+#ytabs ul li:last-child{
+	border-radius: 0 10px 0 0 !important;
+	-moz-border-radius: 0 10px 0 0 !important;
+	-webkit-border-radius: 0 10px 0 0 !important;
+}
+
+#head #close{
+	padding: 10px 20px;
+	border-radius: 0 0 10px 10px !important;
+	-moz-border-radius: 0 0 10px 10px !important;
+	-webkit-border-radius: 0 0 10px 10px !important;
+}
+
+#container.fcontainer{
+	border-radius: 0 0 10px 10px !important;
+	-moz-border-radius: 0 0 10px 10px !important;
+	-webkit-border-radius: 0 0 10px 10px !important;
+}
+
+.card--steps .tstep{
+	border: 1px outset transparent !important;
+}
+.card--steps .tstep:first-child{
+	border-radius: 50px 0 0 50px !important;
+}
+.card--steps .tstep.sclose{
+	border-radius: 0 50px 50px 0 !important;
+}
+.card--steps .step div{
+	border: 1px solid #FFF;
+}
+.card--steps .step:first-child div{
+	border-radius: 50px 0 0 50px !important;
+}
+.card--steps .step.sclose div{
+	border-radius: 0 50px 50px 0 !important;
+}
+
+#dtabs ul li{
+	border-radius: 10px 10px 0 0 !important;
+	-moz-border-radius: 10px 10px 0 0 !important;
+	-webkit-border-radius: 10px 10px 0 0 !important;
+}
+
+fieldset,
+.fcontainer{
+	border-radius: 10px !important;
+	-moz-border-radius: 10px !important;
+	-webkit-border-radius: 10px !important;
+}
+
+.a--group{
+	background: transparent !important;
+}
+.a--group a.button {
+	border-radius : 0 !important;
+	margin: 0 !important;
+}
+.a--group a.button:first-child {
+	border-radius : 50px 0 0 50px !important;
+}
+.a--group a.button:last-child {
+	border-radius : 0 50px 50px 0 !important;
+}
+
+#head #close {
+	font-size   : 0.70em;
+	line-height : 1.15em;
+	padding     : 5px 10px;
+}
+
+#subwindow .footer {
+	padding: 0 10px;
+}
+
+#dialog .flex-string.label {
+	padding-left: 20px;
+}
+.container1{
+	border-radius: 13px;
+}

@@ -1,0 +1,74 @@
+/* 
+ * dragtable
+ *
+ * @Version 2.0.15
+ *
+ * default css
+ *
+ */
+/*##### the dragtable stuff #####*/
+.dragtable-sortable {
+	list-style-type : none; margin : 0; padding : 0; -moz-user-select : none;
+}
+.dragtable-sortable li {
+	margin : 0; padding : 0; float : left; font-size : 1em; background : white;
+}
+
+.dragtable-sortable th,
+.dragtable-sortable td {
+	border-left : 0;
+}
+.dragtable-sortable th {
+	border-left : 0;
+	background  : rgba(255, 249, 196, .9) !important;
+	box-shadow  : 0 2px 2px 0 rgba(50, 50, 50, 0.5) !important;
+}
+
+.dragtable-sortable li:first-child th,
+.dragtable-sortable li:first-child td {
+	border-left : 1px solid #CCC;
+}
+
+.ui-sortable-helper {
+	opacity : 0.95;filter : alpha(opacity=95);
+}
+.ui-sortable-placeholder {
+	-moz-box-shadow    : 4px 5px 4px #C6C6C6 inset !important;
+	-webkit-box-shadow : 4px 5px 4px #C6C6C6 inset !important;
+	box-shadow         : 4px 5px 4px #C6C6C6 inset !important;
+	border-bottom      : 1px solid #CCC !important;
+	border-top         : 1px solid #CCC !important;
+	visibility         : visible !important;
+	background         : #EFEFEF !important;
+}
+.ui-sortable-placeholder * {
+	opacity : 0.0; visibility : hidden;
+}
+
+.drag--accept {
+	position : relative;
+}
+.thandler {
+	position : relative;
+	float    : right;
+	display : none;
+}
+.thandler:before {
+	font-family : "fontello";
+	content     : "\e923";
+	/*content     : "\e888";*/
+	font-size: 1.1em;
+	font-style: normal;
+	font-weight: normal;
+	line-height: 1em;
+	speak: none;
+	position    : absolute;
+	top: 2px;
+	color: #C6C6C6;
+	right       : 1px;
+	z-index     : 1;
+	cursor      : move;
+}
+.drag--accept:hover .thandler{
+	display: initial;
+}

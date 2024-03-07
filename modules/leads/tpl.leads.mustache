@@ -1,0 +1,288 @@
+<script id="listsTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="w15 hidden-netbook"><input type="checkbox" name="che" id="che"/></th>
+			<th class="yw40 text-left">
+				<div class="ellipsis hand" id="x-id" onclick="changesort('id')" title="Изменить порядок вывода">ID</div>
+			</th>
+			<th class="yw60 text-left">
+				<div class="ellipsis hand" id="x-datum" onclick="changesort('datum')" title="Изменить порядок вывода">Дата</div>
+			</th>
+			<th class="yw60 text-left">
+				<div class="ellipsis hand" id="x-status" onclick="changesort('status')" title="Изменить порядок вывода">Статус</div>
+			</th>
+			<th class="yw120 text-left">
+				<div class="ellipsis hand" id="x-name" onclick="changesort('name')" title="Изменить порядок вывода">Имя</div>
+			</th>
+			<th class="hidden-ipad yw200 text-left"><b>Email</b>/<b>Телефон</b></th>
+			<th class="hidden-netbook yw100 text-left">
+				<div class="ellipsis hand" id="x-clientpath" onclick="changesort('clientpath')" title="Изменить порядок вывода">Источник</div>
+			</th>
+			<th class="text-left"><span class="ellipsis"><b>Клиент/Персона/Сделка</b></span></th>
+			<th class="yw100 text-left">
+				<div class="ellipsis hand" id="x-user" onclick="changesort('user')" title="Изменить порядок вывода">Сотрудник</div>
+			</th>
+			<TH class="w5"></TH>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th55" id="lead{{id}}">
+				<TD class="hidden-netbook"><input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"></TD>
+				<TD class="text-center"><span>{{id}}</span></TD>
+				<TD class="text-right">
+					<div class="smalltext">
+						{{datum}}
+						{{#ddo}}<br><b class="{{statusclass}}" title="Время обработки">{{ddo}}</b>{{/ddo}}
+					</div>
+				</TD>
+				<TD class="text-center">
+					<div class="smalltext">
+						{{#status}}
+							<div class="visible-netbook"><b class="{{statusclass}}">{{status}}</b></div>
+						{{/status}}
+						{{#rezult}}
+							<div class="visible-netbook"><b class="{{rezultclass}}">{{rezult}}</b></div>
+						{{/rezult}}
+					</div>
+				</TD>
+				<TD onClick="editLead('{{id}}','view');" title="Просмотр" class="hand">
+					<span class="ellipsis" title="{{title}}"><b>{{title}}</b></span>
+					{{#company}}
+						<br><span class="ellipsis smalltext blue">{{company}}</span>
+					{{/company}}
+					{{^company}}
+						<br><span class="gray smalltxt">--не определено--</span>
+					{{/company}}
+				</TD>
+				<TD class="hidden-ipad">
+					<span class="ellipsis paddbott5" title="{{temail}}">
+
+						{{#countemail}}<span class="bullet Bold redbg hand" onclick="searchEmail('{{email}}')" title="Найдены записи с таким email">{{countemail}}</span>&nbsp;{{/countemail}}
+						{{{email}}}
+
+					</span><br>
+					<span class="ellipsis" title="{{tphone}}">
+
+						{{#countphone}}<span class="bullet Bold orangebg hand" onclick="searchPhone('{{tphone}}')" title="Найдены записи с таким номером">{{countphone}}</span>&nbsp;{{/countphone}}
+						{{{phone}}}
+
+					</span>
+				</TD>
+				<TD class="hidden-netbook"><span class="ellipsis" title="{{clientpath}}">{{clientpath}}</span></TD>
+				<TD>
+					{{#client}}
+						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onClick="openClient('{{clid}}')"><i class="icon-building blue"></i>{{client}}</a></span>
+					{{/client}}
+					{{#person}}
+						<br><span class="ellipsis" title="{{person}}"><a href="javascript:void(0)" onClick="openPerson('{{pid}}')"><i class="icon-user-1 green"></i>{{person}}</a></span>
+					{{/person}}
+					{{#deal}}
+						<br><span class="ellipsis" title="{{deal}}"><a href="javascript:void(0)" onClick="openDogovor('{{did}}')"><i class="icon-briefcase broun"></i>{{deal}}</a></span>
+					{{/deal}}
+				</TD>
+				<TD>
+					{{#user}}
+						<span>{{user}}</span>
+					{{/user}}
+					{{^user}}
+						<div class="ellipsis gray">Не назначено</div>
+					{{/user}}
+				</TD>
+				<TD>
+					<div class="action--container">
+						<div class="action--block">
+
+							{{#action}}
+
+								{{#setuser}}<A href="javascript:void(0)" onClick="editLead('{{id}}','setuser');" title="Назначить Ответственного" class="gray orange"><i class="icon-help-circled"></i></A>&nbsp;{{/setuser}}
+								{{#workit}}<a href="javascript:void(0)" onClick="editLead('{{id}}', 'workit');" title="Обработать" class="gray orange"><i class="icon-ok-circled"></i></a>{{/workit}}
+								{{#view}}<A href="javascript:void(0)" onClick="editLead('{{id}}', 'view');" title="Просмотр" class="gray green"><i class="icon-eye" title="{{status}}"></i></a>&nbsp;{{/view}}
+
+							{{/action}}
+							{{#edit}}
+
+								<a href="javascript:void(0)" onClick="editLead('{{id}}', 'add');" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
+
+							{{/edit}}
+							{{#del}}
+
+								<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editLead('{{id}}', 'delete');" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+
+							{{/del}}
+
+						</div>
+					</div>
+				</TD>
+			</TR>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-60"></div>
+
+</script>
+
+<script id="sourceTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="yw40 text-left">
+				<div class="ellipsis hand" id="x-id" onclick="changesort('id')" title="Изменить порядок вывода">ID</div>
+			</th>
+			<th class="text-left">
+				<div class="ellipsis hand" id="x-name" onclick="changesort('name')" title="Изменить порядок вывода">Название</div>
+			</th>
+			<th class="yw200 text-left">
+				<div class="ellipsis hand" id="x-utm_source" onclick="changesort('utm_source')" title="Изменить порядок вывода">Источник перехода</div>
+			</th>
+			<th class="yw160 text-left">
+				<div class="ellipsis hand" id="x-destination" onclick="changesort('destination')" title="Изменить порядок вывода">Номер телефона</div>
+			</th>
+			<TH class="w5"></TH>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th55" id="{{id}}">
+				<TD class="text-center"><span>{{id}}</span></TD>
+				<TD>
+					<div class="ellipsis">
+						{{name}}
+						{{#isDefault}}&nbsp[<em class="fs-09 red">По умолчанию</em>]{{/isDefault}}
+					</div>
+				</TD>
+				<TD>
+					<div class="ellipsis" title="{{utm_source}}">
+						{{#utm_source}}{{utm_source}}{{/utm_source}}
+						{{^utm_source}}<em class="gray">--не задано--</em>{{/utm_source}}
+					</div>
+				</TD>
+				<TD>
+					<div class="ellipsis" title="{{destination}}">
+						{{#destination}}{{destination}}{{/destination}}
+						{{^destination}}<em class="gray">--не задано--</em>{{/destination}}
+					</div>
+				</TD>
+				<TD>
+					<div class="action--container">
+						<div class="action--block">
+
+							{{#edit}}
+								<a href="javascript:void(0)" onClick="doLoad('modules/leads/form.leads.php?id={{id}}&action=source.edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
+								<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)doLoad('modules/leads/form.leads.php?id={{id}}&action=source.delete')" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+							{{/edit}}
+
+						</div>
+					</div>
+				</TD>
+			</TR>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-60"></div>
+
+</script>
+
+<script id="utmsTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="yw40 text-left">
+				<div class="ellipsis hand" id="x-id" onclick="changesort('id')" title="Изменить порядок вывода">ID</div>
+			</th>
+			<th class="yw80 text-left">
+				<div class="ellipsis hand" id="x-datum" onclick="changesort('datum')" title="Изменить порядок вывода">Добавлен</div>
+			</th>
+			<th class="text-left">
+				<div class="ellipsis hand" id="x-utm_url" onclick="changesort('utm_url')" title="Изменить порядок вывода">URL</div>
+			</th>
+			<TH class="w25"></TH>
+			<th class="yw120 text-left">
+				<div class="ellipsis hand" id="x-clientpath" onclick="changesort('clientpath')" title="Изменить порядок вывода">Название источника</div>
+			</th>
+			<th class="yw80 text-left">
+				<div class="ellipsis hand" id="x-utm_source" onclick="changesort('utm_source')" title="Изменить порядок вывода">Источник перехода</div>
+			</th>
+			<th class="yw80 text-left">
+				<div class="ellipsis hand" id="x-utm_medium" onclick="changesort('utm_medium')" title="Изменить порядок вывода">Тип трафика</div>
+			</th>
+			<th class="yw100 text-left">
+				<div class="ellipsis hand" id="x-utm_campaign" onclick="changesort('utm_campaign')" title="Изменить порядок вывода">Кампания</div>
+			</th>
+			<th class="yw100 text-left">
+				<div class="ellipsis hand" id="x-utm_term" onclick="changesort('utm_term')" title="Изменить порядок вывода">Ключевые слова, фраза</div>
+			</th>
+			<TH class="w5"></TH>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th55" id="{{id}}">
+				<TD class="text-center"><span>{{id}}</span></TD>
+				<TD>
+					<div class="ellipsis" title="{{datum}}">{{datum}}</div>
+				</TD>
+				<TD>
+					{{#utm_url}}
+						<div class="ellipsis" title="{{utm_url}}">{{{utm_url}}}</div>{{/utm_url}}
+					{{^utm_url}}<span>--</span>{{/utm_url}}
+				</TD>
+				<TD>
+					{{#utm_url}}
+						<div class="url hand" data-clipboard-text="{{{utm_url}}}" title="Скопировать в буфер">
+							<i class="icon-paste blue"></i><span class="visible-iphone">Скопировать</span></div>
+					{{/utm_url}}
+					{{^utm_url}}<span>&nbsp;</span>{{/utm_url}}
+				</TD>
+				<TD>
+					{{#clientpath}}
+						<div class="ellipsis" title="{{clientpath}}">{{clientpath}}</div>{{/clientpath}}
+					{{^clientpath}}<span>--</span>{{/clientpath}}
+				</TD>
+				<TD>
+					{{#utm_source}}
+						<div class="ellipsis" title="{{utm_source}}">{{{utm_source}}}</div>{{/utm_source}}
+					{{^utm_source}}<span>--</span>{{/utm_source}}
+				</TD>
+				<TD>
+					{{#utm_medium}}
+						<div class="ellipsis" title="{{utm_medium}}">{{{utm_medium}}}</div>{{/utm_medium}}
+					{{^utm_medium}}<span>--</span>{{/utm_medium}}
+				</TD>
+				<TD>
+					{{#utm_campaign}}
+						<div class="ellipsis" title="{{utm_campaign}}">{{{utm_campaign}}}</div>{{/utm_campaign}}
+					{{^utm_campaign}}<span>--</span>{{/utm_campaign}}
+				</TD>
+				<TD>
+					{{#utm_term}}
+						<div class="ellipsis" title="{{utm_term}}">{{{utm_term}}}</div>{{/utm_term}}
+					{{^utm_term}}<span>--</span>{{/utm_term}}
+				</TD>
+				<TD>
+					<div class="action--container">
+						<div class="action--block">
+
+							{{#edit}}
+								<!--<a href="javascript:void(0)" onClick="doLoad('modules/leads/form.leads.php?id={{id}}&action=utms.view')" title="Просмотр" class="gray green"><i class="icon-eye green"></i></a>-->
+								<a href="javascript:void(0)" onClick="doLoad('modules/leads/form.leads.php?id={{id}}&action=utms.edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
+								<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)removeUTM('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+							{{/edit}}
+
+						</div>
+					</div>
+				</TD>
+			</TR>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-60"></div>
+
+</script>

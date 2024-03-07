@@ -1,0 +1,62 @@
+{{#list}}
+
+	{{#accesse}}
+	<ul class="hov" id="{{id}}">
+		<li class="{{main.class}}">
+
+			<div class="mnu {{main.divclass}}" onClick="{{#main.url}}goodlink('{{main.url}}'){{/main.url}}{{main.onclick}}">
+				<a href="javascript:void(0)" onClick="{{#main.url}}goodlink('{{main.url}}'){{/main.url}}{{main.onclick}}" title="{{main.title}}">
+					&nbsp;{{{main.icon}}}
+					<span class="{{main.spanclass}}"{{#spanstyle}} style="{{spanstyle}}"{{/spanstyle}}>&nbsp;{{main.title}}</span>
+				</a>
+			</div>
+
+			{{#subid}}
+			<ul class="relativ" id="{{subid}}">
+
+				{{#sub}}
+				{{#accesse}}
+
+					{{#ismenu}}
+					<li class="{{class}}" data-type="{{type}}">
+
+						{{#accesse}}
+						<a href="{{#url}}{{url}}{{/url}}{{^url}}javascript:void(0){{/url}}" class="navlink"{{#onclick}} onClick="{{{onclick}}}"{{/onclick}} {{#target}}target="{{target}}"{{/target}}>
+							<span>{{{icon}}}</span>
+							<span class="{{spanclass}}"{{#spanstyle}} style="{{spanstyle}}"{{/spanstyle}}>{{title}}</span>
+						</a>
+						{{/accesse}}
+
+						{{#subsubid}}
+							<ul class="sub">
+							{{#subsub}}
+							{{#accesse}}
+								<li class="{{class}}">
+									<a href="{{#url}}{{url}}{{/url}}{{^url}}javascript:void(0){{/url}}" class="navlink"{{#onclick}} onClick="{{{onclick}}}"{{/onclick}} {{#target}}target="{{target}}"{{/target}}>
+										<span>&nbsp;&nbsp;{{{icon}}}</span>
+										<span class="{{spanclass}}"{{#spanstyle}} style="{{spanstyle}}"{{/spanstyle}}>{{title}}</span>
+									</a>
+								</li>
+							{{/accesse}}
+							{{/subsub}}
+							</ul>
+						{{/subsubid}}
+
+					</li>
+					{{/ismenu}}
+
+					{{^ismenu}}
+					<li class="{{class}}" data-type="{{type}}">{{{content}}}</li>
+					{{/ismenu}}
+
+				{{/accesse}}
+				{{/sub}}
+
+			</ul>
+			{{/subid}}
+
+		</li>
+	</ul>
+	{{/accesse}}
+
+{{/list}}

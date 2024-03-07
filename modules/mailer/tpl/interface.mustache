@@ -1,0 +1,1515 @@
+<script id="list" type="text/html">
+
+	{{#list}}
+	<div class="messagelist ha {{unseen}}" id="message_{{id}}" data-id="{{id}}" data-type="row">
+
+		<input type="hidden" name="messageid" id="messageid" value="{{id}}">
+
+		<div class="pull-aright cnopka">
+
+			{{#conversation}}
+				<a href="javascript:void(0)" onclick="viewconversation('{{email}}');" class="gray" title="Показать переписку"><i class="icon-chat-1 blue"></i></a>&nbsp;
+			{{/conversation}}
+
+			{{#isDraft}}
+				<a href="javascript:void(0)" onclick="$mailer.edit('{{id}}');" class="gray"><i class="icon-pencil blue" title="Редактировать"></i><span class="blue"></span></a>&nbsp;
+			{{/isDraft}}
+
+			{{#isInbox}}
+				<a href="javascript:void(0)" onclick="$mailer.compose('{{id}}','re');" class="gray" title="Ответить"><i class="icon-reply blue"></i><span class="blue hidden-netbook"></span></a>&nbsp;
+			{{/isInbox}}
+
+			{{#isTrash}}
+				<span>{{{folderIcon}}}</span>&nbsp;
+			{{/isTrash}}
+
+			{{#isTrashNo}}
+				<a href="javascript:void(0)" onclick="$mailer.action('{{id}}','trash');" class="gray" title="Удалить в корзину"><i class="icon-trash-1"></i><span class="hidden-netbook"></span></a>&nbsp;
+			{{/isTrashNo}}
+
+		</div>
+
+		<div class="data">
+
+			<input type="checkbox" onclick="chbCheck()" class="mcheck" name="multi[]" id="multi[]" value="{{id}}" {{#elementIsDisabled}}disabled{{/elementIsDisabled}}>&nbsp;<span style="padding-top: 2px;">{{{date}}}</span>&nbsp;
+
+			{{#files}}
+				<span class="gray hidden">\</span><i class="icon-attach-1 blue"></i>&nbsp;
+			{{/files}}
+			{{#hid}}
+				<span class="gray hidden">\</span><i class="icon-clock green" title="Сообщение прикреплено к истории активностей"></i>
+			{{/hid}}
+			{{^hid}}
+				<span class="gray hidden">\</span><i class="icon-clock yelw" title="Сообщение НЕ сохранено в активностях"></i>
+			{{/hid}}
+
+			{{#inleads}}
+				{{#isInbox}}
+				<span class="gray hidden">\</span><span title="Есть необработанные заявки" class="red"><i class="icon-sort-alt-down"></i></span>
+				{{/isInbox}}
+			{{/inleads}}
+
+			{{#conversation}}
+				<span class="Bold {{#isOutbox}}green{{/isOutbox}}{{#isInbox}}blue{{/isInbox}}" title="{{folderName}}">{{{folderIcon}}} {{folderName0}}</span>
+			{{/conversation}}
+
+		</div>
+
+		<div class="hand onemessage">
+
+			<div class="ellipsis paddtop5 theme">
+
+				{{^isUserOwner}}
+
+					{{#reazons}}
+
+						{{#isOwnerClient}}
+							<i class="icon-box-1 blue" title="Получатель: {{Owner}}. Причина показа: Вы - Куратор по Клиенту"></i>
+						{{/isOwnerClient}}
+						{{#isDostupClient}}
+							<i class="icon-box-1 blue" title="Получатель: {{Owner}}. Причина показа: у Вас есть доступ к карточке Клиента"></i>
+						{{/isDostupClient}}
+
+						{{#isOwnerPerson}}
+							<i class="icon-box-1 green" title="Получатель: {{Owner}}. Причина показа: Вы - Куратор по Контакту"></i>
+						{{/isOwnerPerson}}
+
+						{{#isOwnerDeal}}
+							<i class="icon-box-1 broun" title="Получатель: {{Owner}}. Причина показа: Вы - Куратор по Сделке"></i>
+						{{/isOwnerDeal}}
+						{{#isDostupDeal}}
+							<i class="icon-box-1 broun" title="Получатель: {{Owner}}. Причина показа: у Вас есть доступ к карточке Сделки"></i>
+						{{/isDostupDeal}}
+
+					{{/reazons}}
+					{{^reazons}}
+
+						{{#elementIsDisabled}}
+							<i class="icon-lock red" title="Получатель: {{Owner}}."></i>
+						{{/elementIsDisabled}}
+
+					{{/reazons}}
+
+				{{/isUserOwner}}
+				{{#haveAccesse}}
+					<i class="icon-lock-open deeppink" title="Получатель: {{Owner}}."></i>
+				{{/haveAccesse}}
+
+				{{{priority}}}{{theme}}
+
+			</div>
+
+			<div class="ellipsis header">
+
+				<div class="ellipsis1 blue fs-09">
+
+					{{#to}}
+						<span title="{{email}}"><i class="{{icon}}"></i>{{name}}</span>
+					{{/to}}
+					{{#copy}}
+						<span title="{{email}}"><i class="{{icon}}"></i>{{name}}</span>
+					{{/copy}}
+					{{#from}}
+						<span title="{{email}}"><i class="{{icon}}"></i>{{name}}</span>
+					{{/from}}
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+	{{/list}}
+	{{^list}}
+	<div id="emptymessage" class="gray miditxt">
+		<i class="icon-monitor icon-3x gray"></i><br><b class="red">Упс.</b>&nbsp;&nbsp;<b>Нет сообщений</b>
+	</div>
+	{{/list}}
+
+	<div class="space-40 more"></div>
+
+</script>
+
+<script id="view" type="text/html">
+
+		{{^emptyMessage}}
+		<div class="viewblock">
+
+			<div class="mheader p0 pt10 sticked--top" style="display: flow-root;">
+
+				<div class="flex-container float">
+
+					<div class="flex-string float">
+
+						<div class="flex-container p10 pt5 pb5 float">
+
+							<div class="flex-string w80">От кого:</div>
+							<div class="flex-string float">
+
+								{{#from}}
+
+									{{#iduser}}
+										<span title="{{name}}"><i class="{{icon}} green"></i><b>{{name}}</b> [ сотрудник ]</span>
+									{{/iduser}}
+
+									{{^iduser}}
+
+										{{#clid}}
+											<span title="{{email}}" class="hand" onclick="viewClient('{{clid}}')"><i class="{{icon}} blue"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/clid}}
+
+										{{#pid}}
+											<span title="{{email}}" class="hand" onclick="viewPerson('{{pid}}')"><i class="icon-user-1 broun"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/pid}}
+
+										{{#unknown}}
+
+											<span title="{{email}}"><i class="icon-help-circled-1 gray"></i><b>{{name}}</b> [{{email}}]</span>
+											{{#actions}}
+												<div class="tagsmenuToggler hand relativ inline">
+													<span class="fs-10 gray2"><i class="icon-cog"></i> Действия</span>
+													<div class="tagsmenu w200 left hidden" style="left: 10px">
+														<ul>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toContact('{{id}}','{{from}}');" class="gray1" title="Добавить к контакту"><span class="w40 inline"><i class="icon-user-1 orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к контакту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toClient('{{id}}','{{from}}');" class="gray1" title="Добавить к клиенту"><span class="w40 inline"><i class="icon-building orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к клиенту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClientExpress('{{id}}','{{rid}}');" class="gray1" title="Добавить экспресс"><span class="w40 inline"><i class="icon-plus-circled red"></i></span>&nbsp;Добавить экспресс</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addContact('{{id}}','{{rid}}');" class="gray1" title="Добавить контакт"><span class="w40 inline"><i class="icon-user-add blue"></i></span>&nbsp;Добавить контакт</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClient('{{id}}','{{rid}}');" class="gray1" title="Добавить Клиента"><span class="w40 inline"><i class="icon-building broun"><i class="icon-plus sup fs-05"></i></i></span>&nbsp;Добавить Клиента</A>
+															</li>
+															<li id="ban">
+																{{#blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('delete','{{from}}')" class="gray1" title="Убрать из Черного списка"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-minus red sup fs-07"></i></i></span>&nbsp;Убрать из ЧС</A>
+																{{/blacklist}}
+																{{^blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('add','{{from}}')" class="gray1" title="Добавить в Черный список"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-plus green sup fs-07"></i></i></span>&nbsp;В Черный список</A>
+																{{/blacklist}}
+															</li>
+														</ul>
+													</div>
+												</div>
+											{{/actions}}
+
+										{{/unknown}}
+
+									{{/iduser}}
+
+								{{/from}}
+
+							</div>
+
+						</div>
+						<div class="flex-container p10 pt5 pb5 float">
+
+							<div class="flex-string w80">Кому:</div>
+							<div class="flex-string float">
+
+								{{#to}}
+
+									{{#iduser}}
+										<span title="{{name}}"><i class="{{icon}} green"></i><b>{{name}}</b> [ сотрудник ]</span>
+									{{/iduser}}
+
+									{{^iduser}}
+
+										{{#clid}}
+											<span title="{{email}}" class="hand" onclick="viewClient('{{clid}}')"><i class="{{icon}} blue"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/clid}}
+
+										{{#pid}}
+											<span title="{{email}}" class="hand" onclick="viewPerson('{{pid}}')"><i class="icon-user-1 broun"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/pid}}
+
+										{{#unknown}}
+
+											<span title="{{email}}"><i class="icon-help-circled-1 gray"></i><b>{{name}}</b> [{{email}}]</span>
+											{{#action}}
+
+												<div class="tagsmenuToggler hand relativ inline">
+													<span class="fs-10 gray2"><i class="icon-cog"></i> Действия</span>
+													<div class="tagsmenu left hidden w200" style="left: 10px">
+														<ul>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toContact('{{id}}','{{email}}');" class="gray1" title="Добавить к контакту"><span class="w40 inline"><i class="icon-user-1 orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к контакту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toClient('{{id}}','{{email}}');" class="gray1" title="Добавить к клиенту"><span class="w40 inline"><i class="icon-building orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к клиенту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClientExpress('{{id}}','{{rid}}');" class="gray1" title="Добавить экспресс"><span class="w40 inline"><i class="icon-plus-circled red"></i></span>&nbsp;Добавить экспресс</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addContact('{{id}}','{{rid}}');" class="gray1" title="Добавить контакт"><span class="w40 inline"><i class="icon-user-add blue"></i></span>&nbsp;Добавить контакт</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClient('{{id}}','{{rid}}');" class="gray1" title="Добавить Клиента"><span class="w40 inline"><i class="icon-building broun"><i class="icon-plus sup fs-05"></i></i></span>&nbsp;Добавить Клиента</A>
+															</li>
+															<li id="ban">
+																{{#blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('delete','{{from}}')" class="gray1" title="Убрать из Черного списка"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-minus red sup fs-07"></i></i></span>&nbsp;Убрать из ЧС</A>
+																{{/blacklist}}
+																{{^blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('add','{{from}}')" class="gray1" title="Добавить в Черный список"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-plus green sup fs-07"></i></i></span>&nbsp;В Черный список</A>
+																{{/blacklist}}
+															</li>
+														</ul>
+													</div>
+												</div>
+
+											{{/action}}
+
+										{{/unknown}}
+
+									{{/iduser}}
+
+
+								{{/to}}
+
+							</div>
+
+						</div>
+						{{#haveCopy}}
+							<div class="flex-container p10 pt5 pb5 float">
+
+								<div class="flex-string w80">Копия:</div>
+								<div class="flex-string float">
+									<div class="Bold" id="tagbox">{{copy}}</div>
+								</div>
+
+							</div>
+						{{/haveCopy}}
+
+					</div>
+					<div class="flex-string w160 text-center">
+
+						<div class="fs-20">{{{folderIcon}}}</div>
+						<div class="Bold hidden">{{{folderName}}}</div>
+						<div class="gray2 fs-09">{{{date}}}</div>
+
+					</div>
+
+				</div>
+				<div class="flex-container p10 mt15 bgwhite relativ">
+
+					{{#priority}}
+						<div class="pull-right mt5 mr5 gray">{{{priority}}}</div>
+					{{/priority}}
+
+					<div class="flex-string wp100 fs-12 Bold blue">
+						{{theme}}
+					</div>
+
+				</div>
+				<div class="tools">
+
+					{{#isAccesse}}
+						<div class="inline">
+							<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','delete');" class="batton gray{{{NoPochta}}}"><i class="icon-cancel red"></i>Удалить</A>&nbsp;
+						</div>
+					{{/isAccesse}}
+					{{^isAccesse}}
+						<div class="inline">
+							<A href="javascript:void(0)" class="batton gray disabled" title="Нет доступа"><i class="icon-cancel red"></i>Удалить</A>&nbsp;
+						</div>
+					{{/isAccesse}}
+
+					{{#toTrash}}
+						<div class="inline">
+							<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','trash');" class="batton gray {{#elementIsDisabled}}disabled{{/elementIsDisabled}}"><i class="icon-trash-1 broun"></i>В корзину</A>&nbsp;
+						</div>
+					{{/toTrash}}
+					{{#fromTrash}}
+						<div class="inline">
+							<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','untrash');" class="batton gray {{#elementIsDisabled}}disabled{{/elementIsDisabled}}"><i class="icon-trash-1 green"></i><span class="green">В корзине</span></A>&nbsp;
+						</div>
+					{{/fromTrash}}
+
+					{{#did}}
+						<div class="inline">
+							<A href="javascript:void(0)" onclick="viewDogovor('{{did}}');" class="batton gray"><i class="icon-briefcase blue"></i>&nbsp;<span>Сделка</span></A>&nbsp;
+							{{#isAccesse}}
+								<A href="javascript:void(0)" onclick="$mailer.toDeal('{{id}}');" class="batton gray" title="Привязать к другой сделке"><i class="icon-briefcase red">&nbsp;<i class="icon-forward-1 sup blue"></i></i>&nbsp;<span>К сделке</span></A>&nbsp;
+							{{/isAccesse}}
+						</div>
+					{{/did}}
+					{{#isAccesse}}
+						{{^did}}
+							<div class="inline">
+								<A href="javascript:void(0)" onclick="$mailer.toDeal('{{id}}');" class="batton gray"><i class="icon-briefcase red"></i>&nbsp;<span>К сделке</span></A>&nbsp;
+							</div>
+						{{/did}}
+					{{/isAccesse}}
+					{{#inleads}}
+						{{#isInbox}}
+						<div class="inline">
+							<A href="javascript:void(0)" title="Есть необработанные заявки" class="batton gray info"><i class="icon-sort-alt-down"></i>&nbsp;<span>В заявках</span></A>&nbsp;
+						</div>
+						{{/isInbox}}
+
+					{{/inleads}}
+
+					<div class="pull-aright">
+
+
+						{{#isDraft}}
+
+							<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','new');" class="batton gray"><i class="icon-pencil green"></i>Как новое</A>&nbsp;
+							<A href="javascript:void(0)" onclick="$mailer.edit('{{id}}');" class="batton gray"><i class="icon-pencil blue"></i>Редактировать</A>&nbsp;
+							{{#haveTo}}
+								<A href="javascript:void(0)" onclick="$mailer.send('{{id}}');" class="batton gray"><i class="icon-upload-1 broun"></i>Отправить</A>&nbsp;
+							{{/haveTo}}
+
+						{{/isDraft}}
+						{{#isInbox}}
+
+							<A href="javascript:void(0)" onclick="$mailer.addLead('{{id}}');" class="batton" title="Добавить Лид">
+								<i class="icon-plus-circled green"></i></A>&nbsp;
+							<A href="javascript:void(0)" onclick="$mailer.addKnowledge('{{id}}');" class="batton" title="Добавить в Базу знаний"><i class="icon-graduation-cap blue"></i></A>&nbsp;
+							{{#links.clid}}
+								{{#links.pid}}
+									<A href="javascript:void(0)" onclick="$mailer.addTask('{{id}}');" class="batton" title="Добавить напоминание"><i class="icon-calendar-1 broun"></i></A>&nbsp;
+								{{/links.pid}}
+							{{/links.clid}}
+							{{^links.clid}}
+								{{#links.pid}}
+									<A href="javascript:void(0)" onclick="$mailer.addTask('{{id}}');" class="batton" title="Добавить напоминание"><i class="icon-calendar-1 broun"></i></A>&nbsp;
+								{{/links.pid}}
+								{{^links.pid}}
+									<A href="javascript:void(0)" class="batton list disabled" title="Нет связанного Клиента или Контакта"><i class="icon-calendar-1"></i></A>&nbsp;
+								{{/links.pid}}
+							{{/links.clid}}
+
+						{{/isInbox}}
+
+						{{#isNotDraft}}
+
+							{{#countClidsPids}}
+
+								{{#hid}}
+									<A href="javascript:void(0)" onclick="viewHistory('{{hid}}')" class="batton list" title="Письмо прикреплено к истории активностей"><i class="icon-clock green"></i>&nbsp;&nbsp;В истории</A>&nbsp;
+								{{/hid}}
+								{{^hid}}
+									<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','history');" class="batton" title="Добавить в историю активностей"><i class="icon-clock green"><i class="sup icon-plus red"></i></i>&nbsp;&nbsp;В историю</A>&nbsp;
+								{{/hid}}
+
+							{{/countClidsPids}}
+
+						{{/isNotDraft}}
+
+						{{#isInbox}}
+							<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','re');" class="batton gray"><i class="icon-reply green"></i>Ответить</A>&nbsp;
+						{{/isInbox}}
+						{{#isSended}}
+							<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','new');" class="batton gray"><i class="icon-pencil green"></i>Как новое</A>&nbsp;
+						{{/isSended}}
+
+						<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','fwd');" class="batton gray"><i class="icon-forward-1 broun"></i>Переслать</A>&nbsp;
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="mbody relativ p15 no-border">
+
+				<div id="msgbody">{{{content}}}</div>
+
+			</div>
+
+			{{#countFiles}}
+				<div class="p10 infodiv bgwhite m5 mt10">
+
+					<div class="gray pad3">Вложенные файлы:</div>
+
+					<div class="fpoleCold adresat" id="fileList">
+
+						{{#hasAttachments}}
+							<FORM name="attachForm" id="attachForm" data-id="{{id}}">
+
+								{{#attachments}}
+
+									<INPUT type="hidden" id="file[]" name="file[]" value="{{file}}">
+
+								{{/attachments}}
+								{{#needdownload}}
+									<div class="pull-aright">
+										<A href="javascript:void(0)" onclick="$mailer.downloadAttachmentsAll('{{uid}}','{{id}}')" class="button dotted redbtn dwnld"><i class="icon-download" title="Загрузить"></i> загрузить все</A>
+									</div>
+								{{/needdownload}}
+
+							</FORM>
+						{{/hasAttachments}}
+
+						{{#diskControl}}
+
+							{{^emptyfile}}
+								<div class="pull-aright {{^isdownload}}hidden{{/isdownload}}" id="zipFiles">
+									<A href="javascript:void(0)" onclick="$mailer.zipAttachmentsAll('{{id}}')" class="button dotted bluebtn"><i class="icon-download" title="Загрузить"></i> Скачать загруженные</A>
+								</div>
+							{{/emptyfile}}
+
+						{{/diskControl}}
+
+						<div id="fuploads" style="max-height:150px; overflow: auto;">
+
+							{{#files}}
+
+								{{^infile}}
+									{{#id}}
+										<div class="smalltxt">
+											<a href="/content/helpers/get.file.php?file=ymail/{{file}}" target="_blank" title="Просмотр" data-tip="{{tip}}" data-file="{{path}}{{file}}" data-fname="{{name}}">{{{icon}}}{{name}}</a>&nbsp;
+											<a href="javascript:void(0)" onclick="fileDownload('','ymail/{{file}}','yes','{{name}}')"><i class="icon-download blue" title="Скачать"></i></a>[ {{size}} kb ]
+										</div>
+									{{/id}}
+									{{^id}}
+										<div class="smalltxt" id="file{{id}}" data-file="{{name}}">
+											{{{icon}}}{{name}}
+											{{#diskControl}}&nbsp;<a href="javascript:void(0)" onclick="$mailer.downloadAttachments('{{uid}}','{{name}}','{{id}}')"><i class="icon-download broun" title="Загрузить"></i></a>{{/diskControl}}
+											{{^diskControl}}&nbsp;<i class="icon-attention red" title="Дисковая квота превышена - {{diskPercent}}%"></i>{{/diskControl}}
+											<span class="gray">[Файл не загружен]</span>
+										</div>
+									{{/id}}
+								{{/infile}}
+								{{#infile}}
+
+									{{#fid}}
+										<div class="smalltxt">
+											<a href="/content/helpers/get.file.php?fid={{fid}}" target="_blank" title="Просмотр" data-tip="{{tip}}" data-file="{{file}}" data-fname="{{name}}">{{{icon}}}{{name}}</a>&nbsp;
+											<a href="javascript:void(0)" onclick="fileDownload('{{fid}}','','yes','{{name}}')"><i class="icon-download blue" title="Скачать"></i></a>&nbsp;
+											[ {{size}} kb ][<a href="javascript:void(0)" onclick="editUpload('{{fid}}','info')"><i class="icon-info-circled blue"></i></a><span class="gray">Из файлов</span>]
+										</div>
+									{{/fid}}
+									{{^fid}}
+										<div class="smalltxt" id="file{{id}}" data-file="{{name}}">
+											{{{icon}}}{{name}}
+											{{#diskControl}}&nbsp;<a href="javascript:void(0)" onclick="$mailer.downloadAttachments('{{uid}}','{{name}}','{{id}}')"><i class="icon-download broun" title="Загрузить"></i></a>{{/diskControl}}
+											{{^diskControl}}&nbsp;<i class="icon-attention red" title="Дисковая квота превышена - {{diskPercent}}%"></i>{{/diskControl}}
+											<span class="gray">[Файл не загружен]</span>
+										</div>
+									{{/fid}}
+
+								{{/infile}}
+
+							{{/files}}
+
+						</div>
+					</div>
+
+				</div>
+
+			{{/countFiles}}
+
+			<div class="ymImagePreview p10 mb10"></div>
+
+			<div class="space-30"></div>
+
+		</div>
+		{{/emptyMessage}}
+
+		{{#emptyMessage}}
+
+		<div id="emptymessage" class="gray miditxt">
+			<i class="icon-monitor icon-3x gray"></i><br><b class="red">Упс.</b>&nbsp;&nbsp;<b>Не выбрано сообщение для просмотра</b>
+		</div>
+
+		{{/emptyMessage}}
+
+</script>
+
+<script id="preview" type="text/html">
+
+	<div class="zagolovok">Просмотр сообщения</div>
+
+		{{^emptyMessage}}
+		<div id="messagediv">
+
+			<div class="mheader1 pad0">
+
+				<div class="flex-container float">
+
+					<div class="flex-string float">
+
+						<div class="flex-container float p5 mb5">
+
+							<div class="flex-string w60 Bold gray2">От кого:</div>
+							<div class="flex-string float">
+
+								{{#from}}
+
+									{{#iduser}}
+										<span title="{{name}}"><i class="{{icon}} green"></i><b>{{name}}</b> [ сотрудник ]</span>
+									{{/iduser}}
+
+									{{^iduser}}
+
+										{{#clid}}
+											<span title="{{email}}" class="hand" onclick="viewClient('{{clid}}')"><i class="{{icon}} blue"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/clid}}
+
+										{{#pid}}
+											<span title="{{email}}" class="hand" onclick="viewPerson('{{pid}}')"><i class="icon-user-1 broun"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/pid}}
+
+										{{#unknown}}
+
+											<span title="{{email}}"><i class="icon-help-circled-1 gray"></i><b>{{name}}</b> [{{email}}]</span>
+											{{#actions}}
+												<div class="tagsmenuToggler hand relativ inline">
+													<span class="fs-10 gray2"><i class="icon-cog"></i> Действия</span>
+													<div class="tagsmenu w200 left hidden" style="left: 10px">
+														<ul>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toContact('{{id}}','{{from}}');" class="gray1" title="Добавить к контакту"><span class="w40 inline"><i class="icon-user-1 orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к контакту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toClient('{{id}}','{{from}}');" class="gray1" title="Добавить к клиенту"><span class="w40 inline"><i class="icon-building orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к клиенту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClientExpress('{{id}}','{{rid}}');" class="gray1" title="Добавить экспресс"><span class="w40 inline"><i class="icon-plus-circled red"></i></span>&nbsp;Добавить экспресс</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addContact('{{id}}','{{rid}}');" class="gray1" title="Добавить контакт"><span class="w40 inline"><i class="icon-user-add blue"></i></span>&nbsp;Добавить контакт</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClient('{{id}}','{{rid}}');" class="gray1" title="Добавить Клиента"><span class="w40 inline"><i class="icon-building broun"><i class="icon-plus sup fs-05"></i></i></span>&nbsp;Добавить Клиента</A>
+															</li>
+															<li id="ban">
+																{{#blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('delete','{{from}}')" class="gray1" title="Убрать из Черного списка"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-minus red sup fs-07"></i></i></span>&nbsp;Убрать из ЧС</A>
+																{{/blacklist}}
+																{{^blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('add','{{from}}')" class="gray1" title="Добавить в Черный список"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-plus green sup fs-07"></i></i></span>&nbsp;В Черный список</A>
+																{{/blacklist}}
+															</li>
+														</ul>
+													</div>
+												</div>
+											{{/actions}}
+
+										{{/unknown}}
+
+									{{/iduser}}
+
+								{{/from}}
+
+							</div>
+
+						</div>
+						<div class="flex-container float p5 mb5">
+
+							<div class="flex-string w60 Bold gray2">Кому:</div>
+							<div class="flex-string float">
+
+								{{#to}}
+
+									{{#iduser}}
+										<span title="{{name}}"><i class="{{icon}} green"></i><b>{{name}}</b> [ сотрудник ]</span>
+									{{/iduser}}
+
+									{{^iduser}}
+
+										{{#clid}}
+											<span title="{{email}}" class="hand" onclick="viewClient('{{clid}}')"><i class="{{icon}} blue"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/clid}}
+
+										{{#pid}}
+											<span title="{{email}}" class="hand" onclick="viewPerson('{{pid}}')"><i class="icon-user-1 broun"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/pid}}
+
+										{{#unknown}}
+
+											<span title="{{email}}"><i class="icon-help-circled-1 gray"></i><b>{{name}}</b> [{{email}}]</span>
+											{{#action}}
+
+												<div class="tagsmenuToggler hand relativ inline">
+													<span class="fs-10 gray2"><i class="icon-cog"></i> Действия</span>
+													<div class="tagsmenu left hidden w200" style="left: 10px">
+														<ul>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toContact('{{id}}','{{email}}');" class="gray1" title="Добавить к контакту"><span class="w40 inline"><i class="icon-user-1 orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к контакту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toClient('{{id}}','{{email}}');" class="gray1" title="Добавить к клиенту"><span class="w40 inline"><i class="icon-building orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к клиенту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClientExpress('{{id}}','{{rid}}');" class="gray1" title="Добавить экспресс"><span class="w40 inline"><i class="icon-plus-circled red"></i></span>&nbsp;Добавить экспресс</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addContact('{{id}}','{{rid}}');" class="gray1" title="Добавить контакт"><span class="w40 inline"><i class="icon-user-add blue"></i></span>&nbsp;Добавить контакт</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClient('{{id}}','{{rid}}');" class="gray1" title="Добавить Клиента"><span class="w40 inline"><i class="icon-building broun"><i class="icon-plus sup fs-05"></i></i></span>&nbsp;Добавить Клиента</A>
+															</li>
+															<li id="ban">
+																{{#blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('delete','{{from}}')" class="gray1" title="Убрать из Черного списка"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-minus red sup fs-07"></i></i></span>&nbsp;Убрать из ЧС</A>
+																{{/blacklist}}
+																{{^blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('add','{{from}}')" class="gray1" title="Добавить в Черный список"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-plus green sup fs-07"></i></i></span>&nbsp;В Черный список</A>
+																{{/blacklist}}
+															</li>
+														</ul>
+													</div>
+												</div>
+
+											{{/action}}
+
+										{{/unknown}}
+
+									{{/iduser}}
+
+
+								{{/to}}
+
+							</div>
+
+						</div>
+						{{#copy}}
+							<div class="flex-container float p5 mb5">
+
+								<div class="flex-string w60 Bold gray2">Копия:</div>
+								<div class="flex-string float">
+
+									<div class="Bold" id="tagbox">{{copy}}</div>
+
+								</div>
+
+							</div>
+						{{/copy}}
+
+					</div>
+					<div class="flex-string w100 text-center p10">
+
+						<div class="fs-20">{{{folderIcon}}}</div>
+						<div class="Bold hidden">{{{folderName}}}</div>
+						<div class="gray2 fs-09">{{{date}}}</div>
+
+					</div>
+
+				</div>
+
+				<div class="infodiv no-border wp100">
+
+					<div class="fs-12 Bold">
+						{{theme}}
+					</div>
+
+				</div>
+
+			</div>
+			<div class="mbody relativ paddbott20" style="height:60vh; max-height: 60vh; overflow-x: hidden; position:relative">
+
+				<div class="pull-aright gray inline">{{{priority}}}</div>
+				<div id="cont">{{{content}}}</div>
+
+				{{#countFiles}}
+					<div class="p10 infodiv bgwhite m5 mt10">
+
+						<div class="gray pad3">Вложенные файлы:</div>
+
+						<div class="fpoleCold adresat" id="fileList">
+
+							{{#hasAttachments}}
+								<FORM name="attachForm" id="attachForm">
+
+									{{#attachments}}
+										<INPUT type="hidden" id="file[]" name="file[]" value="{{attachments}}">
+									{{/attachments}}
+									{{#diskControl}}
+										<div class="pull-aright">
+											<A href="javascript:void(0)" onclick="$mailer.downloadAttachmentsAll('{{uid}}','{{id}}')" class="button dotted redbtn"><i class="icon-download" title="Загрузить"></i> загрузить все</A>
+										</div>
+									{{/diskControl}}
+
+								</FORM>
+							{{/hasAttachments}}
+							{{^countAttachments}}
+
+								{{#emptyfile}}
+									<FORM name="attachForm" id="attachForm">
+										{{#diskControl}}
+											<div class="pull-aright">
+												<A href="javascript:void(0)" onclick="$mailer.downloadAttachmentsAll('{{uid}}','{{id}}')" class="button dotted bluebtn"><i class="icon-download" title="Загрузить"></i> загрузить все</A>
+											</div>
+										{{/diskControl}}
+									</FORM>
+								{{/emptyfile}}
+
+							{{/countAttachments}}
+
+							{{#diskControl}}
+
+								{{^emptyfile}}
+									<div class="pull-aright {{^isdownload}}hidden{{/isdownload}}" id="zipFiles">
+										<A href="javascript:void(0)" onclick="$mailer.zipAttachmentsAll('{{id}}')" class="button dotted bluebtn"><i class="icon-download" title="Загрузить"></i> Скачать загруженные</A>
+									</div>
+								{{/emptyfile}}
+
+							{{/diskControl}}
+
+							<div id="fuploads" style="max-height:150px; overflow: auto;">
+
+								{{#files}}
+
+									{{^infile}}
+										{{#id}}
+											<div class="smalltxt">
+												<a href="/content/helpers/get.file.php?file=ymail/{{file}}" target="_blank" title="Просмотр" data-tip="{{tip}}" data-file="{{path}}{{file}}" data-fname="{{name}}">{{{icon}}}{{name}}</a>&nbsp;
+												<a href="javascript:void(0)" onclick="fileDownload('','ymail/{{file}}','yes','{{name}}')"><i class="icon-download blue" title="Скачать"></i></a>[ {{size}} kb ]
+											</div>
+										{{/id}}
+										{{^id}}
+											<div class="smalltxt" id="file{{id}}" data-file="{{name}}">
+												{{{icon}}}{{name}}
+												{{#diskControl}}&nbsp;<a href="javascript:void(0)" onclick="$mailer.downloadAttachments('{{uid}}','{{name}}','{{id}}')"><i class="icon-download broun" title="Загрузить"></i></a>{{/diskControl}}
+												{{^diskControl}}&nbsp;<i class="icon-attention red" title="Дисковая квота превышена - {{diskPercent}}%"></i>{{/diskControl}}
+												<span class="gray">[Файл не загружен]</span>
+											</div>
+										{{/id}}
+									{{/infile}}
+									{{#infile}}
+
+										{{#fid}}
+											<div class="smalltxt">
+												<a href="/content/helpers/get.file.php?fid={{fid}}" target="_blank" title="Просмотр" data-tip="{{tip}}" data-file="{{file}}" data-fname="{{name}}">{{{icon}}}{{name}}</a>&nbsp;
+												<a href="javascript:void(0)" onclick="fileDownload('{{fid}}','','yes','{{name}}')"><i class="icon-download blue" title="Скачать"></i></a>&nbsp;
+												[ {{size}} kb ][<a href="javascript:void(0)" onclick="editUpload('{{fid}}','info')"><i class="icon-info-circled blue"></i></a><span class="gray">Из файлов</span>]
+											</div>
+										{{/fid}}
+										{{^fid}}
+											<div class="smalltxt" id="file{{id}}" data-file="{{name}}">
+												{{{icon}}}{{name}}
+												{{#diskControl}}&nbsp;<a href="javascript:void(0)" onclick="$mailer.downloadAttachments('{{uid}}','{{name}}','{{id}}')"><i class="icon-download broun" title="Загрузить"></i></a>{{/diskControl}}
+												{{^diskControl}}&nbsp;<i class="icon-attention red" title="Дисковая квота превышена - {{diskPercent}}%"></i>{{/diskControl}}
+												<span class="gray">[Файл не загружен]</span>
+											</div>
+										{{/fid}}
+
+									{{/infile}}
+
+								{{/files}}
+
+							</div>
+						</div>
+
+					</div>
+
+				{{/countFiles}}
+
+			</div>
+
+		</div>
+		<div id="messagediv">
+
+			<div class="text-right tools">
+
+				{{#isAccesse}}
+					<div class="inline">
+						<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','delete');" class="batton gray{{{NoPochta}}}"><i class="icon-cancel red"></i>Удалить</A>&nbsp;
+					</div>
+				{{/isAccesse}}
+				{{^isAccesse}}
+					<div class="inline">
+						<A href="javascript:void(0)" class="batton gray disabled" title="Нет доступа"><i class="icon-cancel red"></i>Удалить</A>&nbsp;
+					</div>
+				{{/isAccesse}}
+
+				{{#toTrash}}
+					<div class="inline">
+						<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','trash');" class="batton gray {{#elementIsDisabled}}disabled{{/elementIsDisabled}}"><i class="icon-trash-1 broun"></i>В корзину</A>&nbsp;
+					</div>
+				{{/toTrash}}
+				{{#fromTrash}}
+					<div class="inline">
+						<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','untrash');" class="batton gray {{#elementIsDisabled}}disabled{{/elementIsDisabled}}"><i class="icon-trash-1 green"></i><span class="green">В корзине</span></A>&nbsp;
+					</div>
+				{{/fromTrash}}
+
+				{{#did}}
+					<div class="inline">
+						<A href="javascript:void(0)" onclick="viewDogovor('{{did}}');" class="batton gray"><i class="icon-briefcase blue"></i>&nbsp;<span>Сделка</span></A>&nbsp;
+						{{#isAccesse}}
+							<A href="javascript:void(0)" onclick="$mailer.toDeal('{{id}}');" class="batton gray" title="Привязать к другой сделке"><i class="icon-briefcase red">&nbsp;<i class="icon-forward-1 sup blue"></i></i>&nbsp;<span>К сделке</span></A>&nbsp;
+						{{/isAccesse}}
+					</div>
+				{{/did}}
+				{{#isAccesse}}
+					{{^did}}
+						<div class="inline">
+							<A href="javascript:void(0)" onclick="$mailer.toDeal('{{id}}');" class="batton gray"><i class="icon-briefcase red"></i>&nbsp;<span>К сделке</span></A>&nbsp;
+						</div>
+					{{/did}}
+				{{/isAccesse}}
+				{{#inleads}}
+
+					<div class="inline">
+						<A href="javascript:void(0)" title="Есть необработанные заявки" class="batton gray info"><i class="icon-sort-alt-down"></i>&nbsp;<span>В заявках</span></A>&nbsp;
+					</div>
+
+				{{/inleads}}
+
+				<div class="pull-aright">
+
+					{{#isDraft}}
+
+						<A href="javascript:void(0)" onclick="$mailer.edit('{{id}}');" class="batton gray"><i class="icon-pencil blue"></i>Редактировать</A>&nbsp;
+						{{#toIfNo}}
+							<A href="javascript:void(0)" onclick="$mailer.send('{{id}}');" class="batton gray"><i class="icon-upload-1 broun"></i>Отправить</A>&nbsp;
+						{{/toIfNo}}
+
+					{{/isDraft}}
+					{{#isInbox}}
+
+						<A href="javascript:void(0)" onclick="$mailer.addLead('{{id}}');" class="batton" title="Добавить Лид">
+							<i class="icon-plus-circled green"></i></A>&nbsp;
+						<A href="javascript:void(0)" onclick="$mailer.addKnowledge('{{id}}');" class="batton" title="Добавить в Базу знаний"><i class="icon-graduation-cap blue"></i></A>&nbsp;
+						{{#clid}}
+							{{#pid}}
+								<A href="javascript:void(0)" onclick="$mailer.addTask('{{id}}');" class="batton" title="Добавить напоминание"><i class="icon-calendar-1 broun"></i></A>&nbsp;
+							{{/pid}}
+						{{/clid}}
+						{{^clid}}
+							{{^pid}}
+								<A href="javascript:void(0)" class="batton list disabled" title="Нет связанного Клиента или Контакта"><i class="icon-calendar-1"></i></A>&nbsp;
+							{{/pid}}
+						{{/clid}}
+
+					{{/isInbox}}
+
+					{{#isNotDraft}}
+
+						{{#countClidsPids}}
+
+							{{#hid}}
+								<A href="javascript:void(0)" onclick="viewHistory('{{hid}}')" class="batton list" title="Письмо прикреплено к истории активностей"><i class="icon-clock green"></i>&nbsp;&nbsp;В истории</A>&nbsp;
+							{{/hid}}
+							{{^hid}}
+								<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','history');" class="batton" title="Добавить в историю активностей"><i class="icon-clock green"><i class="sup icon-plus red"></i></i>&nbsp;&nbsp;В историю</A>&nbsp;
+							{{/hid}}
+
+						{{/countClidsPids}}
+
+					{{/isNotDraft}}
+
+					{{#isInbox}}
+						<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','re');" class="batton gray"><i class="icon-reply green"></i>Ответить</A>&nbsp;
+					{{/isInbox}}
+
+					<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','fwd');" class="batton gray"><i class="icon-forward-1 broun"></i>Переслать</A>&nbsp;
+
+					<A href="javascript:void(0)" onclick="$mailer.preview('{{next}}');" class="batton gray" title="Следующее"><i class="icon-angle-double-right"></i></A>&nbsp;
+
+				</div>
+
+			</div>
+
+		</div>
+		{{/emptyMessage}}
+		{{#emptyMessage}}
+		<div id="emptymessage" class="gray miditxt"><i class="icon-monitor icon-3x gray"></i><br><b class="red">Упс.</b>&nbsp;&nbsp;<b>Не выбрано сообщение для просмотра</b>
+		</div>
+		{{/emptyMessage}}
+
+</script>
+
+<script id="composeForm" type="text/html">
+
+	<div class="fullscreen hand paddright10 hidden-ipad" title="На весь экран" onclick="fullScreen()">
+		<i class="icon-resize-full" id="fsc"></i>
+	</div>
+
+	<DIV class="zagolovok"><B>Написать письмо</B></DIV>
+
+		{{^to}}
+		<div class="warning">Упс! Не найден Email</div>
+		{{/to}}
+
+		{{#to}}
+
+		<FORM action="modules/ymail/editor.php" method="post" enctype="multipart/form-data" name="eForm" id="eForm">
+			<INPUT type="hidden" id="action" name="action" value="compose.on">
+			<INPUT type="hidden" id="isDraft" name="isDraft" value="yes">
+			<INPUT type="hidden" id="id" name="id" value="{{id}}">
+			<input type="hidden" name="parentmid" id="parentmid" value="{{parentmid}}">
+			<input type="hidden" name="tocount" id="tocount" value="{{tocount}}">
+			<input type="hidden" name="copycount" id="copycount" value="{{copycount}}">
+			<input type="hidden" name="did" id="did" value="{{did}}">
+
+			<DIV id="mailComposer">
+
+				<div id="mesLeft" style="display:inline-table; width:69%; float:left">
+
+					<div id="aTbl" class="tooltips" tooltip-type="orange" tooltip="<b>Чтобы добавить произвольный email нажмите клавиши Ctrl+Enter</b><br>Или начинайте вводить название Клиента, Контакта или email и выбирайте из найденных в базе." tooltip-position="bottom">
+
+						<div class="adresat adres mb2 relativ no--overflow">
+
+							<div id="tagbox" class="no--overflow">
+
+								<div class="tg inline">
+									{{#to}}
+										<div id="mess{{i}}" class="tags relativ black flex-box" title="{{email}}">
+											{{name}}
+											<input type="hidden" name="email[]" id="email[]" value="{{email}}">
+											<input type="hidden" name="name[]" id="name[]" value="{{name}}">
+											{{#pid}}
+												<input type="hidden" name="pid[]" id="pid[]" value="{{pid}}">{{/pid}}
+											{{#clid}}
+												<input type="hidden" name="clid[]" id="clid[]" value="{{clid}}">{{/clid}}
+											<div class="delete delItem"><i class="icon-cancel-circled"></i></div>
+										</div>
+									{{/to}}
+								</div>
+								<div id="flexinput" class="inline flex-box" style="flex-grow:2; align-self: stretch;">
+
+									<INPUT name="adresTo" type="text" id="adresTo" value="" placeholder="Адресат" onkeydown="if(event.keyCode==13 && event.ctrlKey){ addEmail(); return false }">
+
+								</div>
+
+							</div>
+
+						</div>
+
+						<div id="copyPole" class="adresat copy mb2 {{^copy}}hidden{{/copy}}">
+
+							<div id="tagbox2">
+
+								{{#copy}}
+									<div id="mess{{i}}" class="tags relativ black flex-box" title="{{email}}">
+										{{name}}
+										<input type="hidden" name="email[]" id="email[]" value="{{email}}">
+										<input type="hidden" name="name[]" id="name[]" value="{{name}}">
+										{{#pid}}<input type="hidden" name="pid[]" id="pid[]" value="{{pid}}">{{/pid}}
+										{{#clid}}
+											<input type="hidden" name="clid[]" id="clid[]" value="{{clid}}">{{/clid}}
+										<div class="delete delItem"><i class="icon-cancel-circled"></i></div>
+									</div>
+								{{/copy}}
+
+							</div>
+							<INPUT name="copyTo" type="text" id="copyTo" value="" placeholder="Добавить">
+
+						</div>
+
+						<div class="adresat mb2" id="theme">
+
+							<INPUT name="theme" type="text" id="theme" value="{{subject}}" class="required theme p5" style="width: 98.9%;" placeholder="Тема сообщения">
+
+						</div>
+
+					</div>
+
+					<div id="mesSubLeft" style="height:300px; max-height:300px; overflow: auto !important;">
+
+						<textarea name="content" id="content" style="height:100%">{{content}}</textarea>
+
+					</div>
+
+				</div>
+				<div id="mesRight" style="display:inline-block; height:400px; max-height:400px; overflow-y: auto; width:30%; border:0; float:right; margin-right: 3px;">
+
+					<div class="flex-container box--child">
+
+						<div class="flex-string wp100 label hidden"></div>
+						<div class="flex-string wp100 adresat" title="Приоритет">
+
+							<div id="psdiv" class="priority div-center flex-container">
+
+								<input type="hidden" id="priority" name="priority" value="{{priority}}">
+								<div class="but flex-string yelw text-center" id="pr5" title="Низкий Приоритет" onclick="setPS('priority','5')" data-priority="5">
+									<i class="icon-down-big"></i>Низкий
+								</div>
+								<div class="but flex-string blue text-center" id="pr3" title="Обычный Приоритет" onclick="setPS('priority','3')" data-priority="3">
+									<i class="icon-ok"></i>Норма
+								</div>
+								<div class="but flex-string red text-center" id="pr1" title="Высокий Приоритет" onclick="setPS('priority','1')" data-priority="1">
+									<i class="icon-up-big"></i>Высокий
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="flex-string wp100 label">Шаблоны</div>
+						<div class="flex-string wp100 block">
+
+							<select name="tplId" class="required wp100" id="tplId" onchange="selectTpl()">
+								<option value="0">--Выбор--</option>
+								{{#tpl}}
+									<option value="{{id}}">{{name}}{{#share}} [Общий]{{/share}}</option>
+								{{/tpl}}
+							</select>
+
+						</div>
+
+						<div class="flex-string wp100 label">Вложения</div>
+						<div class="flex-string wp100">
+
+							<div class="adresat border-box">
+								{{#diskLimit}}
+									<div id="iuploads" style="max-height:100px; overflow: auto;">
+
+										<div class="fileboxx relativ ha wp100 p5 border-box">
+											<input name="file[]" id="file[]" type="file" class="file wp100" onchange="addfile();" multiple>
+											<div class="dfileboxx hand clearUploadbox mt5" title="Очистить">
+												<i class="icon-cancel-circled red"></i>
+											</div>
+										</div>
+
+									</div>
+								{{/diskLimit}}
+								{{^diskLimit}}
+									<div class="warning smalltxt text-center">
+										<b class="red">Превышен лимит использования диска</b></div>
+								{{/diskLimit}}
+
+								<div class="infodiv hidden pad5 fs-07 description border-box" style="overflow: auto; max-height:200px"></div>
+
+							</div>
+							<div class="fs-07 gray">
+								Максимальный размер файла: <b>{{maxupload}} Mb</b>
+							</div>
+
+						</div>
+
+						<div class="flex-string wp100 label">Вложенные файлы</div>
+						<div class="flex-string wp100" id="existfile">
+
+							<div class="adresat border-box p5">
+
+								{{!--Загруженные в сообщение файлы ( вне системы )--}}
+								<div id="fuploads" style="max-height:100px; overflow: auto;">
+
+									{{#attach}}
+										<div class="fileboxx ellipsis wp100 relativ" style="display: block;">
+
+											<input name="fid[]" type="hidden" class="file" id="fid[]" value="{{id}}">
+											<a href="/content/helpers/get.file.php?file=ymail/{{file}}" target="blank" title="Открыть"><i class="{{icon}}"></i>{{name}}
+											</a>
+
+											<div class="dfileboxx hand mini deleteFilebox" title="Удалить">
+												<i class="icon-cancel-circled red"></i>
+											</div>
+
+										</div>
+									{{/attach}}
+
+									{{^attach}}
+										<div class="fs-09 gray nofile pt5 no--overflow">Нет вложений</div>
+									{{/attach}}
+
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="flex-string wp100 label">Из каталога файлов</div>
+						<div class="flex-string wp100">
+
+							<div id="docs" class="adresat relativ border-box">
+
+								<div id="duploads">
+
+									{{!-- Файлы из каталога файлов ( в системе )--}}
+									<div class="filebox wp100 border-bottom">
+
+										{{#files}}
+											<div id="doc-{{j}}" class="fileboxx ha relativ p5 ellipsis wp100 border-box">
+												<input name="xfid[]" id="xfid[]" type="hidden" value="{{fid}}">
+												<i class="{{icon}}"></i>{{name}}
+												<div class="dfileboxx hand deleteDocbox" title="Очистить">
+													<i class="icon-cancel-circled red"></i></div>
+											</div>
+										{{/files}}
+
+									</div>
+
+									<div class="p5">
+
+										<A href="javascript:void(0)" onclick="appendFiles()" class="sbutton greenbg">Добавить</A>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</DIV>
+
+			<hr>
+
+			<div class="bottom">
+
+				<span id="orangebutton" class="pull-left"><A href="javascript:void(0)" onclick="saveDraft()" class="button">Сохранить черновик</A></span>&nbsp;
+				<A href="javascript:void(0)" onclick="sendMessagef()" class="button">Отправить</A>&nbsp;
+				<A href="javascript:void(0)" onclick="DClose2()" class="button">Отмена</A>
+
+			</div>
+
+		</FORM>
+		{{/to}}
+
+
+</script>
+
+<script id="card" type="text/html">
+
+		{{#list}}
+
+		<div id="messagediv" class="msg fcontainer1 p0 mb5 box-shadow1 focused wp99" style="border: 1px solid #CCD1D9; overflow-x: hidden !important;">
+
+			<DIV class="fcontainer p0 m0">
+
+				<DIV class="fcontainer header no-border m0 pb5">
+
+					<div class="flex-container float">
+
+						<div class="flex-string float">
+
+							<div class="flex-container float h25 mb5">
+
+								<div class="flex-string w80">От кого:</div>
+								<div class="flex-string float">{{#from}}
+
+									{{#iduser}}
+										<span title="{{name}}"><i class="{{icon}} green"></i><b>{{name}}</b> [ сотрудник ]</span>
+									{{/iduser}}
+
+									{{^iduser}}
+
+										{{#clid}}
+											<span title="{{email}}" class="hand" onclick="viewClient('{{clid}}')"><i class="{{icon}} blue"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/clid}}
+
+										{{#pid}}
+											<span title="{{email}}" class="hand" onclick="viewPerson('{{pid}}')"><i class="icon-user-1 broun"></i><b>{{name}}</b> [{{email}}]</span>
+										{{/pid}}
+
+										{{#unknown}}
+
+											<span title="{{email}}"><i class="icon-help-circled-1 gray"></i><b>{{name}}</b> [{{email}}]</span>
+											{{#actions}}
+												<div class="tagsmenuToggler hand relativ inline">
+													<span class="fs-10 gray2"><i class="icon-cog"></i> Действия</span>
+													<div class="tagsmenu w200 left hidden" style="left: 10px">
+														<ul>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toContact('{{id}}','{{from}}');" class="gray1" title="Добавить к контакту"><span class="w40 inline"><i class="icon-user-1 orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к контакту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.toClient('{{id}}','{{from}}');" class="gray1" title="Добавить к клиенту"><span class="w40 inline"><i class="icon-building orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к клиенту</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClientExpress('{{id}}','{{rid}}');" class="gray1" title="Добавить экспресс"><span class="w40 inline"><i class="icon-plus-circled red"></i></span>&nbsp;Добавить экспресс</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addContact('{{id}}','{{rid}}');" class="gray1" title="Добавить контакт"><span class="w40 inline"><i class="icon-user-add blue"></i></span>&nbsp;Добавить контакт</A>
+															</li>
+															<li>
+																<A href="javascript:void(0)" onclick="$mailer.addClient('{{id}}','{{rid}}');" class="gray1" title="Добавить Клиента"><span class="w40 inline"><i class="icon-building broun"><i class="icon-plus sup fs-05"></i></i></span>&nbsp;Добавить Клиента</A>
+															</li>
+															<li id="ban">
+																{{#blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('delete','{{from}}')" class="gray1" title="Убрать из Черного списка"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-minus red sup fs-07"></i></i></span>&nbsp;Убрать из ЧС</A>
+																{{/blacklist}}
+																{{^blacklist}}
+																	<A href="javascript:void(0)" onclick="change_blacklist('add','{{from}}')" class="gray1" title="Добавить в Черный список"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-plus green sup fs-07"></i></i></span>&nbsp;В Черный список</A>
+																{{/blacklist}}
+															</li>
+														</ul>
+													</div>
+												</div>
+											{{/actions}}
+
+										{{/unknown}}
+
+									{{/iduser}}
+
+								{{/from}}</div>
+
+							</div>
+							<div class="flex-container float mb5" style="height: auto;">
+
+								<div class="flex-string w80">Кому:</div>
+								<div class="flex-string float">
+
+									{{#to}}
+
+											{{#iduser}}
+												<div title="{{name}}" class="mb5"><i class="{{icon}} green"></i><b>{{name}}</b> [ сотрудник ]</div>
+											{{/iduser}}
+
+											{{^iduser}}
+
+												{{#clid}}
+													<div title="{{email}}" class="hand mb5" onclick="viewClient('{{clid}}')"><i class="{{icon}} blue"></i><b>{{name}}</b> [{{email}}]</div>
+												{{/clid}}
+
+												{{#pid}}
+													<div title="{{email}}" class="hand mb5" onclick="viewPerson('{{pid}}')"><i class="icon-user-1 broun"></i><b>{{name}}</b> [{{email}}]</div>
+												{{/pid}}
+
+												{{#unknown}}
+
+													<div title="{{email}}" class="mb5"><i class="icon-help-circled-1 gray"></i><b>{{name}}</b> [{{email}}]</div>
+													{{#action}}
+
+														<div class="tagsmenuToggler hand relativ inline">
+															<span class="fs-10 gray2"><i class="icon-cog"></i> Действия</span>
+															<div class="tagsmenu left hidden w200" style="left: 10px">
+																<ul>
+																	<li>
+																		<A href="javascript:void(0)" onclick="$mailer.toContact('{{id}}','{{email}}');" class="gray1" title="Добавить к контакту"><span class="w40 inline"><i class="icon-user-1 orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к контакту</A>
+																	</li>
+																	<li>
+																		<A href="javascript:void(0)" onclick="$mailer.toClient('{{id}}','{{email}}');" class="gray1" title="Добавить к клиенту"><span class="w40 inline"><i class="icon-building orange"><i class="icon-plus-circled blue sup fs-07"></i></i></span>&nbsp;Добавить к клиенту</A>
+																	</li>
+																	<li>
+																		<A href="javascript:void(0)" onclick="$mailer.addClientExpress('{{id}}','{{rid}}');" class="gray1" title="Добавить экспресс"><span class="w40 inline"><i class="icon-plus-circled red"></i></span>&nbsp;Добавить экспресс</A>
+																	</li>
+																	<li>
+																		<A href="javascript:void(0)" onclick="$mailer.addContact('{{id}}','{{rid}}');" class="gray1" title="Добавить контакт"><span class="w40 inline"><i class="icon-user-add blue"></i></span>&nbsp;Добавить контакт</A>
+																	</li>
+																	<li>
+																		<A href="javascript:void(0)" onclick="$mailer.addClient('{{id}}','{{rid}}');" class="gray1" title="Добавить Клиента"><span class="w40 inline"><i class="icon-building broun"><i class="icon-plus sup fs-05"></i></i></span>&nbsp;Добавить Клиента</A>
+																	</li>
+																	<li id="ban">
+																		{{#blacklist}}
+																			<A href="javascript:void(0)" onclick="change_blacklist('delete','{{from}}')" class="gray1" title="Убрать из Черного списка"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-minus red sup fs-07"></i></i></span>&nbsp;Убрать из ЧС</A>
+																		{{/blacklist}}
+																		{{^blacklist}}
+																			<A href="javascript:void(0)" onclick="change_blacklist('add','{{from}}')" class="gray1" title="Добавить в Черный список"><span class="w40 inline"><i class="icon-block-1 red"><i class="icon-plus green sup fs-07"></i></i></span>&nbsp;В Черный список</A>
+																		{{/blacklist}}
+																	</li>
+																</ul>
+															</div>
+														</div>
+
+													{{/action}}
+
+												{{/unknown}}
+
+											{{/iduser}}
+
+									{{/to}}
+
+								</div>
+
+							</div>
+							<div class="flex-container float h25">
+
+								<div class="flex-string w80">
+									<div>Тема:</div>
+								</div>
+								<div class="flex-string float">
+									<b class="fs-12 blue">{{theme}}</b>
+								</div>
+
+							</div>
+
+						</div>
+						<div class="flex-string w90 text-center">
+
+							<div class="fs-20">{{{folderIcon}}}</div>
+							<div class="Bold">{{{folderName}}}</div>
+
+						</div>
+
+					</div>
+
+				</DIV>
+
+				<div class="tools right-text no-border">
+
+					<div class="inline pull-left fs-10 gray2 mt5">
+						<i class="icon-calendar-inv blue"></i>{{{date}}}
+					</div>
+
+					{{#did}}
+						<div class="inline">
+							<A href="javascript:void(0)" onclick="viewDogovor('{{did}}');" class="batton"><i class="icon-briefcase blue"></i>&nbsp;<span>Сделка</span></A>&nbsp;
+							{{#isAccesse}}
+								<A href="javascript:void(0)" onclick="$mailer.toDeal('{{id}}');" class="batton" title="Привязать к другой сделке"><i class="icon-briefcase red">&nbsp;<i class="icon-forward-1 sup blue"></i></i>&nbsp;<span>К сделке</span></A>&nbsp;
+							{{/isAccesse}}
+						</div>
+					{{/did}}
+					{{#isAccesse}}
+						{{^did}}
+							<div class="inline">
+								<A href="javascript:void(0)" onclick="$mailer.toDeal('{{id}}');" class="batton"><i class="icon-briefcase red"></i>&nbsp;<span>К сделке</span></A>&nbsp;
+							</div>
+						{{/did}}
+					{{/isAccesse}}
+					{{#isDraft}}
+
+						<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','new');" class="batton"><i class="icon-pencil green"></i>Как новое</A>&nbsp;
+						<A href="javascript:void(0)" onclick="$mailer.edit('{{id}}');" class="batton"><i class="icon-pencil blue"></i>Редактировать</A>&nbsp;
+						{{#haveTo}}
+							<A href="javascript:void(0)" onclick="$mailer.send('{{id}}');" class="batton"><i class="icon-upload-1 broun"></i>Отправить</A>&nbsp;
+						{{/haveTo}}
+
+					{{/isDraft}}
+					{{#isInbox}}
+
+						<A href="javascript:void(0)" onclick="$mailer.addLead('{{id}}');" class="batton" title="Добавить Лид">
+							<i class="icon-plus-circled green"></i></A>&nbsp;
+						<A href="javascript:void(0)" onclick="$mailer.addKnowledge('{{id}}');" class="batton" title="Добавить в Базу знаний"><i class="icon-graduation-cap blue"></i></A>&nbsp;
+						{{#clid}}
+							{{#pid}}
+								<A href="javascript:void(0)" onclick="$mailer.addTask('{{id}}');" class="batton" title="Добавить напоминание"><i class="icon-calendar-1 broun"></i></A>&nbsp;
+							{{/pid}}
+						{{/clid}}
+						{{^clid}}
+							{{^pid}}
+								<A href="javascript:void(0)" class="batton list disabled" title="Нет связанного Клиента или Контакта"><i class="icon-calendar-1"></i></A>&nbsp;
+							{{/pid}}
+						{{/clid}}
+
+					{{/isInbox}}
+
+					{{#isNotDraft}}
+
+						{{#countClidsPids}}
+
+							{{#hid}}
+								<A href="javascript:void(0)" onclick="viewHistory('{{hid}}')" class="batton list" title="Письмо прикреплено к истории активностей"><i class="icon-clock green"></i>&nbsp;&nbsp;В истории</A>&nbsp;
+							{{/hid}}
+							{{^hid}}
+								<A href="javascript:void(0)" onclick="$mailer.action('{{id}}','history');" class="batton" title="Добавить в историю активностей"><i class="icon-clock green"><i class="sup icon-plus red"></i></i>&nbsp;&nbsp;В историю</A>&nbsp;
+							{{/hid}}
+
+						{{/countClidsPids}}
+
+					{{/isNotDraft}}
+
+					{{#isInbox}}
+						<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','re');" class="batton gray"><i class="icon-reply green"></i>Ответить</A>&nbsp;
+					{{/isInbox}}
+					{{#isSended}}
+						<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','new');" class="batton"><i class="icon-mail-alt blue"></i>Как новое</A>&nbsp;
+					{{/isSended}}
+
+					<A href="javascript:void(0)" onclick="$mailer.compose('{{id}}','fwd');" class="batton"><i class="icon-forward-1 broun"></i>Переслать</A>&nbsp;
+
+					<a href="javascript:void(0)" onclick="$mailer.preview('{{id}}');" class="batton"><i class="icon-eye broun"></i></a>
+
+				</div>
+
+				<DIV class="fcontainer mbody no-border m0" style="max-height:350px; overflow-y:auto !important; overflow-x: hidden;">
+
+					<div class="fs-09 pt10">{{{content}}}</div>
+
+				</DIV>
+
+				{{#countFiles}}
+					<div class="p10 infodiv bgwhite m5 mt10 relativ">
+
+						<div class="gray pad3">Вложенные файлы:</div>
+
+						<div class="fpoleCold adresat" id="fileList">
+
+
+							<FORM name="attachForm" id="attachForm" data-id="{{id}}">
+
+								{{#attachments}}
+
+									<INPUT type="hidden" id="file[]" name="file[]" value="{{file}}">
+
+								{{/attachments}}
+
+								<div class="attachments">
+									{{#hasAttachments}}
+										<A href="javascript:void(0)" onclick="$mailer.downloadAttachmentsAll('{{uid}}','{{id}}')" class="button dotted redbtn dwnld"><i class="icon-download" title="Загрузить"></i> загрузить все</A>
+									{{/hasAttachments}}
+									{{^emptyfile}}
+										<span class="{{^isdownload}}hidden{{/isdownload}}" id="zipFiles">
+												<A href="javascript:void(0)" onclick="$mailer.zipAttachmentsAll('{{id}}')" class="button dotted bluebtn"><i class="icon-download" title="Загрузить"></i> Скачать загруженные</A>
+											</span>
+									{{/emptyfile}}
+
+								</div>
+
+							</FORM>
+
+							{{#diskControl}}{{/diskControl}}
+
+							<div id="fuploads" style="max-height:150px; overflow: auto;">
+
+								{{#files}}
+
+									{{^infile}}
+										{{#id}}
+											<div class="smalltxt">
+												<a href="/content/helpers/get.file.php?file=ymail/{{file}}" target="_blank" title="Просмотр" data-tip="{{tip}}" data-file="{{path}}{{file}}" data-fname="{{name}}">{{{icon}}}{{name}}</a>&nbsp;
+												<a href="javascript:void(0)" onclick="fileDownload('','ymail/{{file}}','yes','{{name}}')"><i class="icon-download blue" title="Скачать"></i></a>[ {{size}} kb ]
+											</div>
+										{{/id}}
+										{{^id}}
+											<div class="smalltxt" id="file{{id}}" data-file="{{name}}">
+												{{{icon}}}{{name}}
+												{{#diskControl}}&nbsp;<a href="javascript:void(0)" onclick="$mailer.downloadAttachments('{{uid}}','{{name}}','{{id}}')"><i class="icon-download broun" title="Загрузить"></i></a>{{/diskControl}}
+												{{^diskControl}}&nbsp;<i class="icon-attention red" title="Дисковая квота превышена - {{diskPercent}}%"></i>{{/diskControl}}
+												<span class="gray">[Файл не загружен]</span>
+											</div>
+										{{/id}}
+									{{/infile}}
+									{{#infile}}
+
+										{{#fid}}
+											<div class="smalltxt">
+												<a href="/content/helpers/get.file.php?fid={{fid}}" target="_blank" title="Просмотр" data-tip="{{tip}}" data-file="{{file}}" data-fname="{{name}}">{{{icon}}}{{name}}</a>&nbsp;
+												<a href="javascript:void(0)" onclick="fileDownload('{{fid}}','','yes','{{name}}')"><i class="icon-download blue" title="Скачать"></i></a>&nbsp;
+												[ {{size}} kb ][<a href="javascript:void(0)" onclick="editUpload('{{fid}}','info')"><i class="icon-info-circled blue"></i></a><span class="gray">Из файлов</span>]
+											</div>
+										{{/fid}}
+										{{^fid}}
+											<div class="smalltxt" id="file{{id}}" data-file="{{name}}">
+												{{{icon}}}{{name}}
+												{{#diskControl}}&nbsp;<a href="javascript:void(0)" onclick="$mailer.downloadAttachments('{{uid}}','{{name}}','{{id}}')"><i class="icon-download broun" title="Загрузить"></i></a>{{/diskControl}}
+												{{^diskControl}}&nbsp;<i class="icon-attention red" title="Дисковая квота превышена - {{diskPercent}}%"></i>{{/diskControl}}
+												<span class="gray">[Файл не загружен]</span>
+											</div>
+										{{/fid}}
+
+									{{/infile}}
+
+								{{/files}}
+
+							</div>
+						</div>
+
+					</div>
+				{{/countFiles}}
+
+				<div class="ymImagePreview p10 mb10"></div>
+
+			</DIV>
+
+		</div>
+
+		<hr>
+
+		<div class="viewdiv" id="pages" style="z-index: 1"></div>
+
+		{{/list}}
+		{{^list}}
+		<div class="fcontainer">Переписка не обнаружена</div>
+		{{/list}}
+
+</script>

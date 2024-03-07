@@ -1,0 +1,321 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2018 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*         salesman.pro         */
+/*         ver. 2018.6          */
+/* ============================ */
+
+@media (max-width: 767px) {
+
+	body {
+		margin-top: 4.7em !important;
+		height: auto !important;
+		overflow-y: hidden !important;
+	}
+
+	#head {
+		/*padding: 15px 15px 15px 5px;*/
+		padding-left: 5px;
+		font-size: 1.4em;
+	}
+	
+	#telo.l30,
+	#telo {
+		grid-template-columns : 100%;
+	}
+
+	.leftcol,
+	.rightcol{
+		width: 100%;
+		padding: 0 !important;
+	}
+
+	.elipsis{
+		text-overflow    : ellipsis !important;
+		-o-text-overflow : ellipsis !important;
+		overflow         : hidden !important;
+		white-space      : nowrap;
+		width            : 88%;
+		vertical-align   : middle;
+		margin-right     : -9999px;
+		display: block;
+	}
+
+	#ctitle{
+		width: 100%;
+		margin: 0 auto;
+		padding: 0;
+		line-height: 50px;
+	}
+
+	.back2menu{
+		display: none;
+	}
+
+	#close{
+		display: none;
+	}
+
+	#dtabs{
+		position: fixed;
+		top: 0;
+		right: 0;
+		width: 50px;
+		height: 50px;
+		line-height: 50px;
+		padding: 0;
+		margin: 0;
+		text-align: center;
+		user-select         : none;
+		-moz-user-select    : none;
+		-webkit-user-select : none;
+	}
+
+	#dtabs ul{
+		display: none;
+		background: #222;
+		position: absolute;
+		top: 50px;
+		right: 0;
+		width: 100vw;
+		line-height: 40px;
+	}
+
+	#dtabs.open ul{
+		display: block;
+	}
+	#dtabs.open .menu--card:before{
+		content: "\e808";
+	}
+	#dtabs ul li span.hidden-netbook{
+		display: inline-block !important;
+	}
+	#dtabs ul li span.hidden-normal{
+		/*display: none !important;*/
+	}
+	#dtabs.open ul li{
+		display: block;
+		width: 100vw;
+		line-height: 40px;
+		text-align: left !important;
+		float: initial !important;
+		padding: 0;
+		margin: 0 !important;
+		border-bottom: 1px dotted #222;
+	}
+	#dtabs.open ul li{
+		border-bottom: 1px dotted #222 !important;
+	}
+	#dtabs ul li.hidden-normal{
+		display: inline-block !important;
+	}
+
+	#dtabs.open ul li a{
+		line-height: 40px !important;
+		padding: 5px 15px !important;
+		height: 40px !important;
+		display: block !important;
+	}
+	li#tb600{
+		background: unset;
+	}
+	#dtabs .current:hover,
+	#dtabs .current,
+	#dtabs li:hover,
+	#dtabs li.current,
+	#dtabs li.current:hover{
+		border-bottom: 1px solid #F7F7EE;
+		background: #222 !important;
+		color: #FFF !important;
+		font-weight: bold;
+	}
+	.menu--card,
+	#dtabs .current a{
+		color: #FFF !important;
+	}
+	#dtabs ul li.current:hover a{
+		background: #222 !important;
+		color: #FFF !important;
+	}
+	
+	.menu--card{
+		width: 50px;
+	}
+
+	#telo{
+		width: 100vw;
+		max-height: calc(100vh - 4.7em - 5px);
+		min-height: calc(100vh - 4.7em - 5px);
+		overflow-y: auto;
+		margin-top: 0 !important;
+	}
+
+	/*#telo fieldset,*/
+	#telo fieldset{
+		padding: 2px !important;
+	}
+
+	#telo fieldset .fcontainer{
+		padding: 5px !important;
+		background: #FFF;
+		box-shadow: 0 0 0;
+	}
+	
+	#telo #container .fcontainer{
+		margin-bottom: 0 !important;
+	}
+	
+	#telo fieldset > fieldset{
+		border: 0;
+		padding: 0;
+		margin: 5px 0;
+		/*border-bottom: 1px solid #CCD1D9;*/
+	}
+	
+	#telo #tab0 table tr:not(.toggler){
+		padding: 1px !important;
+	}
+	#telo table tr td .em{
+		font-style: normal;
+	}
+	#telo #tab0 table td{
+		padding: 2px;
+	}
+	#telo table tr:not(.toggler) td:first-child{
+		font-size: 1.1rem;
+		font-weight: 700;
+		color : #607D8B;
+	}
+	#telo .phonenumber{
+		/*display: block;*/
+	}
+	#telo .fieldblock{
+		padding: 5px;
+	}
+	#telo .fieldblock .fs-10{
+		font-size: 1.3rem !important;
+		line-height: 1.6rem !important;
+	}
+	#telo .viewdiv{
+		padding: 5px !important;
+	}
+	
+	#tabgroup,
+	#carddostup{
+		display: table !important;
+		padding: 10px;
+	}
+	
+	#tabEntry,
+	#fileList,
+	#telo form div{
+		max-height: unset !important;
+	}
+	
+	#telo form{
+		display: table !important;
+		width: 100% !important;
+	}
+	
+	.text-content_rev, .text-header {
+		border-bottom: 0;
+		background: unset;
+		font-style: normal;
+		font-size: 0.95em;
+	}
+	.text-content_rev{
+		background: #FAFAFA;
+	}
+	
+	table.nobg td{
+		padding: 1px !important;
+		margin: 0;
+	}
+	table.nobg td:first-child{
+	
+	}
+	table.nobg td:last-child{
+		font-weight: 700;
+		font-size: 0.95em !important;
+	}
+	
+	.batton-edit{
+		padding: 10px;
+	}
+	.table{
+		display: table !important;
+	}
+	
+	#ytabs .flex-string,
+	#ytabs .flex-string:nth-child(1){
+		display: inline-block !important;
+		width: initial !important;
+		border-top: 1px solid #CCD1D9;
+		margin-bottom: 0 !important;
+		margin-top: 0 !important;
+		text-align: center !important;
+		flex-basis : 30% !important;
+		height: initial !important;
+		font-size: 1.3rem !important;
+	}
+	
+	.column12:last-child{
+		text-align: right !important;
+		margin-bottom: 10px;
+		width: 100%;
+	}
+	.mob-pull-right a,
+	.column12:last-child a,
+	.column12:last-child span.hand,
+	.column12:last-child span.gray2,
+	.column12:last-child span.green{
+		padding: 10px !important;
+		display: inline-block !important;
+		border: 1px solid #CCD1D9;
+		background: #FAFAFA;
+	}
+	.mob-pull-right{
+		width: 100%;
+		display: table !important;
+		font-size: 1.0rem;
+	}
+	
+	#history .pl10,
+	#history .pr10{
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	.ui-datepicker-title select{
+		width: 49% !important;
+	}
+	
+	.mp5{
+		padding: 5px !important;
+	}
+	#telo .fcontainer.mp10,
+	.mp10{
+		padding: 10px !important;
+	}
+	
+	.mh0{
+		max-height: initial !important;
+		overflow: unset !important;
+	}
+	
+	#telo .flex-string {
+		padding-left: 0 !important;
+	}
+	
+	.hidden-netbook{
+		display: inline-block !important;
+	}
+	
+	.fcontainer .flex-container.p10{
+		padding-left : 2px !important;
+		padding-right : 2px !important;
+	}
+
+}

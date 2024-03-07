@@ -1,0 +1,147 @@
+{{#isPositions}}
+<DIV class="batton-edit mb20">
+
+	<span class="hidden-iphone">
+		<A href="javascript:void(0)" onclick="editSpeca('','export','{{did}}');"><i class="icon-upload broun"></i>Экспорт</A>
+		{{#rights.add}}
+		&nbsp;&nbsp;<A href="javascript:void(0)" onclick="editSpeca('','import','{{did}}');"><i class="icon-download-1 broun"></i>Импорт</A>&nbsp;&nbsp;
+		{{/rights.add}}
+	</span>
+	{{#rights.add}}
+	<A href="javascript:void(0)" onclick="editSpeca('','add','{{did}}');"><i class="icon-plus-circled green"></i>Добавить</A>
+	{{/rights.add}}
+
+</DIV>
+
+{{#messagestring}}
+<div class="attention mt10 mb15">
+	<div><i class="icon-attention broun icon-1x dleft"></i></div>
+		{{{messagestring}}}<br>
+</div>
+{{/messagestring}}
+{{/isPositions}}
+
+<div style="overflow-y:auto; max-height: 70vh;">
+
+	<table class="bgwhite top" id="spekaTable">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="w10 text-center">№ п.п.</th>
+			<th class="text-center">Номенклатура</th>
+			<th class="w30 text-center">Ед.изм.</th>
+			<th class="w80 text-center">Кол-во</th>
+			{{#dop}}
+			<th class="w40 text-left">
+				<div class="ellipsis" title="{{dopName}}">{{dopName}}</div>
+			</th>
+			{{/dop}}
+			<th class="w100 text-right">Цена <br>за ед., {{valuta}}</th>
+			<th class="w120 text-right">Цена <br>итого, {{valuta}}</th>
+			<th class="w60">&nbsp;</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#speca}}
+		<tr class="ha">
+			<td class="text-center hidden-iphone"><span>{{number}}</span></td>
+			<td>
+				<span>
+					<div class="Bold uppercase fs-07 mb5">{{#artikul}}{{artikul}}: {{/artikul}}<span class="deepblue">{{tip}}</span></div>
+					<div class="Bold fs-11">
+						{{#isPrice}}
+							{{#isCatalog}}
+								<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}')">{{title}}</A>
+							{{/isCatalog}}
+							{{^isCatalog}}
+								<A href="javascript:void(0)" onclick="editPrice('{{prid}}','view');">{{title}}</A>
+							{{/isCatalog}}
+						{{/isPrice}}
+						{{^isPrice}}
+							{{title}}
+						{{/isPrice}}
+						{{{msg.html}}}
+					</div>
+					{{#comment}}<div class="smalltxt blue"><em>{{comment}}</em></div>{{/comment}}
+					{{#akts}}<div class="Bold deepblue fs-09">В актах №: {{akts}}</div>{{/akts}}
+				</span>
+			</td>
+			<td class="text-center"><span>{{edizm}}</span></td>
+			<td class="text-right"><span>{{kolf}}</span></td>
+			{{#dop}}<td class="text-right"><span>{{dopf}}</span></td>{{/dop}}
+			<td class="text-right">
+				<span>
+					<b>{{pricef}}</b>
+					{{#showMarga}}
+						<br><span class="gray smalltxt" title="Себестоимость"><i>{{price_inf}}</i></span>
+					{{/showMarga}}
+				</span>
+			</td>
+			<td class="text-right">
+				<span>
+					<b>{{summaf}}</b>
+					{{#showMarga}}
+					<br><span class="gray smalltxt" title="Себестоимость"><i>{{summaZakupf}}</i></span>
+					{{/showMarga}}
+				</span>
+			</td>
+			<td class="text-center">
+				<div class="mob-pull-right">
+
+					{{#edit}}
+					<a href="javascript:void(0)" onclick="editSpeca('{{spid}}','edit','{{did}}');" title="Редактировать"><i class="icon-pencil blue"></i></a>&nbsp;&nbsp;
+					<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editSpeca('{{spid}}','delete','{{did}}');" title="Удалить позицию"><i class="icon-cancel-circled red"></i></a>
+					{{/edit}}
+
+				</div>
+			</td>
+		</tr>
+		{{/speca}}
+		</tbody>
+		{{#haveSpeca}}
+		<tfoot class="graybg-sub sticked--bottom">
+		<tr>
+			<td class="text-center hidden-iphone"></td>
+			<td class="text-right"><span class="Bold">ИТОГО:</span></td>
+			<td class="text-center"></td>
+			<td class="text-right"><span class="Bold">{{totalCountF}}</span></td>
+			<td class="text-center"></td>
+			{{#dop}}
+			<td class="text-right"></td>
+			{{/dop}}
+			<td class="text-right">
+				<div class="Bold">{{totalSummaF}}</div>
+				{{#showMarga}}
+				<div><i class="gray smalltxt">{{totalZakupF}}</i></div>
+				{{/showMarga}}
+			</td>
+			<td class="text-right">&nbsp;</td>
+		</tr>
+		</tfoot>
+		{{/haveSpeca}}
+	</table>
+	{{^haveSpeca}}
+	<div class="fcontainer mp10 mt10">Позиции спецификации отсутствуют</div>
+	{{/haveSpeca}}
+
+</div>
+
+{{#haveSpeca}}
+{{#isPositions}}
+<hr>
+<div class="infodiv">
+
+	<div class="Bold blue">Итоговая информация:</div>
+
+	<ul class="simple pl10">
+		<li>Оборот по счету: <b>{{totalSummaF}}</b> {{valuta}} {{nalogComment}}</li>
+		{{#showMarga}}
+		<li>Прибыль по счету: <b>{{totalMargaF}}</b> {{valuta}}</li>
+		<li>Прибыльность: <b>{{value}}</b> %</li>
+		{{/showMarga}}
+		<li>Сумма налога (НДС): <b>{{totalNalogF}}</b> {{valuta}}
+			<i class="icon-info-circled blue" title="Расчет произведен в соответствии с настройками компании, от которой ведется продажа"></i>
+		</li>
+	</ul>
+</div>
+{{/isPositions}}
+{{/haveSpeca}}

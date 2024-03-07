@@ -1,0 +1,86 @@
+<script id="dealsTpl" type="text/html">
+
+	<TABLE id="zebraTable">
+		<thead class="sticked--top">
+		{{#header}}
+			<TR class="header_contaner">
+				<TH class="hidden-iphone hidden-ipad yw50 text-center"><B>Создана</B></TH>
+				<TH class="hidden-iphone hidden-ipad yw50 text-center"><B>{{plan}}</B></TH>
+				<TH class="yw40 text-center"></TH>
+				<TH class="nowidth text-center"><b>Название</b></TH>
+				<TH class="yw60 text-center"><b>Этап</b></TH>
+				<TH class="yw100 hidden-ipad text-center"><B>{{tip}}</B></TH>
+				<TH class="yw100 text-center"><b>Клиент</b></TH>
+				<TH class="yw100 hidden-ipad1">
+					<div class="ellipsis"><B>{{kol}}, {{valuta}}</B></div>
+				</TH>
+				<TH class="yw80 hidden-ipad text-center">
+					<div class="divhead" title="{{iduser}}"><b>{{iduser}}</b></div>
+				</TH>
+				<TH class="w5"></TH>
+			</TR>
+		{{/header}}
+		</thead>
+		{{#deals}}
+			<TR class="{{bg}} toggler hand sticked--top th45" data-id="d{{id}}">
+				<TD colspan="10">&nbsp;<B class="uppercase">{{title}}</B>&nbsp;(&nbsp;<b>{{count}}</b>&nbsp;)</TD>
+			</TR>
+			<tbody id="d{{id}}" class="{{state}}">
+
+			{{#data}}
+				<TR class="ha bgwhite th55">
+					<TD class="text-center"><span class="smalltxt">{{date}}</span></TD>
+					<TD class="text-center">
+						<div class="smalltxt">{{plantext}}</div>
+						{{#frozenDate}}<div class="bluemint fs-07">{{frozenDate}}</div>{{/frozenDate}}
+					</TD>
+					<TD class="text-center hidden-iphone">
+						<A href="javascript:void(0)" onClick="openDogovor('{{did}}')">{{{icon}}}&nbsp;{{{dostup}}}</A>
+					</TD>
+					<TD class="nowidth">
+						<SPAN class="ellipsis fs-11"><a href="javascript:void(0)" title="Быстрый просмотр: {{title}}" onClick="viewDogovor('{{did}}')"><B>{{title}}</B></a></SPAN>
+					</TD>
+					<TD class="ipad-user">
+						<DIV class="progressbarr wp97">{{step}}%
+							<sup class="gray" title="Статус изменен {{stepday}} дн. назад">{{stepday}} д.</sup>
+							<DIV id="test" class="progressbar-completed {{progress}}" style="width:{{step}}%; max-width: 100%;" title="{{step}}% - {{stepdes}}"></DIV>
+						</DIV>
+					</TD>
+					<TD class="hidden-ipad">
+						<DIV class="ellipsis" title="{{tip}}">{{tip}}</DIV>
+					</TD>
+					<TD>
+						{{#client}}
+							<DIV class="ellipsis" title="{{client}}">
+								<a href="javascript:void(0)" onClick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="icon-building broun"></i>{{client}}
+								</a></DIV>
+						{{/client}}
+					</TD>
+					<TD class="">
+						<DIV class="ellipsis" title="{{summa}}">{{summa}}</DIV>
+					</TD>
+					<TD class="">
+						<DIV class="ellipsis" title="{{user}}">
+							<a href="javascript:void(0)" onClick="viewUser('{{iduser}}');">{{user}}</a></DIV>
+					</TD>
+					<td>
+						{{#change}}
+							<div class="action--container">
+								<div class="action--block">
+									<a href="javascript:void(0)" onClick="openDogovor('{{did}}');" title="Открыть" class="gray brounbg2"><i class="icon-briefcase-1 broun"></i></a>
+									<a href="javascript:void(0)" onClick="editDogovor('{{did}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>
+									<a href="javascript:void(0)" onClick="addTask('{{datum}}','{{clid}}','{{pid}}','{{did}}');" title="Добавить напоминание" class="gray green"><i class="icon-calendar-1"></i></a>
+									<a href="javascript:void(0)" onClick="addHistory('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="gray orange"><i class="icon-clock" title="Добавить активность"></i></a>
+								</div>
+							</div>
+						{{/change}}
+					</td>
+				</TR>
+			{{/data}}
+
+			</tbody>
+		{{/deals}}
+
+	</table>
+
+</script>

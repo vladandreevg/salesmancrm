@@ -1,0 +1,127 @@
+<script id="personsTpl" type="text/html">
+
+	<table id="list_header" class="layout-fixed top">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="w30 hidden-netbook div-center"><input type="checkbox" name="che" id="che"></th>
+			<th class="w50 hidden-ipad"></th>
+
+			{{#head}}
+				<th class="{{clas}} text-left {{#width}}w{{width}}{{/width}} drag--accept" id="{{sort}}" title="{{title}}">
+					<div class="divhead ellipsis {{#sort}}hand{{/sort}}" title="{{title}}" {{#sort}}onclick="changesort('{{sort}}')"{{/sort}}>
+						{{#sort}}
+							<div class="sort" id="x-{{sort}}">
+								<i class="icon icon-angle-{{desc}}"></i>
+							</div>
+						{{/sort}}
+						{{^icon}}<b>{{title}}</b>{{/icon}}
+						{{#icon}}{{{icon}}}{{/icon}}
+					</div>
+				</th>
+			{{/head}}
+
+			<th class="w5 text-center"></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#person}}
+
+			<tr class="ha th50" id="person{{pid}}" data-type="row">
+				<td class="w30 hidden-netbook div-center">
+					<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{pid}}">
+				</td>
+				<td class="hidden-ipad text-center relativ hand" onclick="openPerson('{{pid}}')" title="Открыть карточку">
+					<i class="icon-user-1 broun"></i>{{^change}}<i class="icon-lock broun sup"></i>{{/change}}
+				</td>
+
+				{{#columns}}
+
+					{{#isString}}
+					<td class="{{clas}}" title="{{tooltip}}">
+						{{#title}}
+						<div class="ellipsis {{class}}">{{{title}}}</div>
+						{{/title}}
+					</td>
+					{{/isString}}
+
+					{{#isTitle}}
+					<td class="{{clas}} min100">
+						<div class="ellipsis hand" onclick="viewPerson('{{pid}}')" title="Просмотр: {{title}}">
+						<b class="fs-11">{{title}}</b></div>
+						{{#sub}}
+							{{#ptitle}}
+								<br>
+								<div class="ellipsis paddtop5 blue" title="{{ptitle}}">
+									{{ptitle}}
+								</div>
+							{{/ptitle}}
+							{{#client}}
+								<br>
+								<div class="ellipsis paddtop5" title="{{client}}">
+									<a href="javascript:void(0)" onclick="viewClient('{{clid}}')" class="gray"><i class="icon-building gray"></i>&nbsp;{{client}}</a>
+								</div>
+							{{/client}}
+						{{/sub}}
+					</td>
+					{{/isTitle}}
+
+					{{#isClient}}
+						<td class="{{clas}}">
+							{{#title}}
+							<div class="ellipsis" title="{{title}}">
+								<a href="javascript:void(0)" onclick="openClient('{{id}}')"><i class="icon-building broun"></i>{{title}}</a>
+							</div>
+							{{/title}}
+						</td>
+					{{/isClient}}
+
+					{{#isHistory}}
+					<td class="{{clas}}">
+						{{#title}}
+						<div class="ellipsis {{class}}" title="{{title}}">{{title}}</div>
+						{{#comment}}
+						<br>
+						<div class="ellipsis blue" title="{{{comment}}}">{{{comment}}}</div>
+						{{/comment}}
+						{{/title}}
+					</td>
+					{{/isHistory}}
+
+					{{#isLastHistory}}
+					<td class="{{clas}}">
+						{{#title}}
+						<div class="ellipsis {{class}}" title="{{title}}">{{title}}</div>
+						{{#comment}}
+						<br>
+						<div class="ellipsis blue" title="{{{comment}}}">{{{comment}}}</div>
+						{{/comment}}
+						{{/title}}
+					</td>
+					{{/isLastHistory}}
+
+					{{#isRelation}}
+					<td class="{{clas}}">
+						<div class="tip_rel hand" style="background:{{color}}" title="{{tooltip}}">{{title}}</div>
+					</td>
+					{{/isRelation}}
+
+				{{/columns}}
+
+				<td>
+					{{#change}}
+					<div class="action--container">
+						<div class="action--block">
+							<a href="javascript:void(0)" onClick="editPerson('{{pid}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></a>&nbsp;<a href="javascript:void(0)" onClick="addTask('','{{clid}}','{{pid}}');" title="Добавить напоминание" class="gray green"><i class="icon-calendar-1 green"></i></a>&nbsp;<a href="javascript:void(0)" onClick="addHistory('','{{clid}}','{{pid}}');" class="gray brounbg2"><i class="icon-clock broun" title="Добавить активность"></i></a>&nbsp;
+						</div>
+					</div>
+					{{/change}}
+				</td>
+			</tr>
+
+		{{/person}}
+		</tbody>
+	</table>
+
+	<div class="space-40"></div>
+
+</script>

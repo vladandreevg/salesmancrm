@@ -1,0 +1,255 @@
+<div class="fcontainer1">
+
+	<table id="" class="credit mrowtable nomob">
+		{{#credit}}
+			<tbody class="focused box-shadow {{#isdo}}gray{{/isdo}}">
+			<tr class="th40 graybg-sub" data-crid="{{crid}}" data-user="{{iduser}}">
+				<td colspan="5" class="text-right">
+					<div class="gray fs-09 pull-left">
+						Квота по счету: <b class="blue">{{user}}</b>
+					</div>
+					<span class="hidden-iphone buttons">
+						{{#rights}}
+							{{^isdo}}
+							{{#check}}
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите поставить отметку о поступлении платежа?');if (cf)editCredit('{{crid}}','credit.doit');" title="Отметить о поступлении оплаты" class="green"><i class="icon-ok"></i>Провести оплату</a>
+							{{/check}}
+							{{^check}}
+								<a href="javascript:void(0)" title="У вас нет достаточных прав. Отметить о поступлении оплаты" class="gray"><i class="icon-cancel-circled"></i>Провести оплату</a>
+							{{/check}}
+							{{/isdo}}
+							{{#email}}
+								<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.mail');" title="Отправить счет по Email"><i class="icon-mail broun"></i></a>
+							{{/email}}
+							{{#print}}
+								<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.print');" title="Получить счет"><i class="icon-print green"></i></a>
+							{{/print}}
+							{{#edit}}
+								<a href="javascript:void(0)" onclick="editCredit('{{crid}}','credit.edit');" title="Изменить"><i class="icon-pencil blue"></i></a>
+							{{/edit}}
+							{{#delete}}
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить платеж из графика?');if (cf) editCredit('{{crid}}','credit.delete');" title="Удалить платеж"><i class="icon-cancel-circled red"></i></a>
+							{{/delete}}
+							{{#undo}}
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно отменить платеж?');if (cf) editCredit('{{crid}}','credit.undoit');" title="Отменить платеж"><i class="icon-ccw blue"></i></a>
+							{{/undo}}
+							{{#undonotaccess}}
+							<a href="javascript:void(0)" title="У вас нет достаточных прав. Отменить платеж"><i class="icon-ccw gray"></i></a>
+							{{/undonotaccess}}
+						{{/rights}}
+					</span>
+				</td>
+			</tr>
+			<tr class="th30 credit border-bottom1 mb5 bgwhite">
+				<td class="wp20">
+					<div class="fs-14 flh-14"><b>Счет №{{invoice}}</b></div>
+					<div><span class="fs-09 mt5">от {{date}}</span></div>
+				</td>
+				<td class="text-right">
+					<div class="fs-14 flh-14"><b>{{summaf}}</b></div>
+					<div><span class="fs-09 mt5">НДС {{ndsf}}</span></div>
+					{{#iscurrency}}<div class="fs-11 flh-12">В валюте: <b class="blue">{{incurrency}}</b></div>{{/iscurrency}}
+				</td>
+				<td class="text-right wp20">
+					{{^isdo}}
+						<div class="fs-14 flh-14"><b class="red">{{dateplan}}</b></div>
+						<div><span class="fs-09 mt5">Ожидаемая дата</span></div>
+					{{/isdo}}
+					{{#isdo}}
+					<div class="fs-14 flh-14"><b class="green">Оплачен</b></div>
+					<div><span class="fs-09 mt5">{{datefact}}</span></div>
+					{{/isdo}}
+				</td>
+				<td class="text-right wp15">
+					{{^isdo}}
+						{{#status.overdue}}
+							<div class="fs-14"><b class="red">{{days}}</b> дн.</div><span class="fs-09 mt5">Просрочено</span>
+						{{/status.overdue}}
+						{{#status.expected}}
+							<div class="fs-14"><b class="green">+{{days}} дн</b>.</div><span class="fs-09 mt5">Ожидается</span>
+						{{/status.expected}}
+					{{/isdo}}
+				</td>
+				<td class="text-right wp20">
+					<div class="fs-14 flh-14 Bold">
+						{{contract}}
+					</div>
+					<div class="fs-09 mt5">Договор</div>
+				</td>
+				<td class="visible-iphone">
+					<div class="mob-pull-right pr5 border-box buttons">
+						{{#rights}}
+							{{^isdo}}
+								{{#check}}
+									<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите поставить отметку о поступлении платежа?');if (cf)editCredit('{{crid}}','credit.doit');" title="Отметить о поступлении оплаты" class="green"><i class="icon-ok"></i>Провести оплату</a>
+								{{/check}}
+								{{^check}}
+									<a href="javascript:void(0)" title="У вас нет достаточных прав. Отметить о поступлении оплаты" class="gray"><i class="icon-cancel-circled"></i>Провести оплату</a>
+								{{/check}}
+							{{/isdo}}
+							{{#email}}
+								<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.mail');" title="Отправить счет по Email"><i class="icon-mail broun"></i></a>
+							{{/email}}
+							{{#print}}
+								<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.print');" title="Получить счет"><i class="icon-print green"></i></a>
+							{{/print}}
+							{{#edit}}
+								<a href="javascript:void(0)" onclick="editCredit('{{crid}}','credit.edit');" title="Изменить"><i class="icon-pencil blue"></i></a>
+							{{/edit}}
+							{{#delete}}
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить платеж из графика?');if (cf) editCredit('{{crid}}','credit.delete');" title="Удалить платеж"><i class="icon-cancel-circled red"></i></a>
+							{{/delete}}
+							{{#undo}}
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно отменить платеж?');if (cf) editCredit('{{crid}}','credit.undoit');" title="Отменить платеж"><i class="icon-ccw blue"></i></a>
+							{{/undo}}
+							{{#undonotaccess}}
+								<a href="javascript:void(0)" title="У вас нет достаточных прав. Отменить платеж"><i class="icon-ccw gray"></i></a>
+							{{/undonotaccess}}
+						{{/rights}}
+					</div>
+				</td>
+			</tr>
+			</tbody>
+			<tr class="th5 transparent hidden-iphone">
+				<td colspan="5"></td>
+			</tr>
+		{{/credit}}
+	</table>
+
+	{{#haveDo}}
+	<div class="">
+
+		<div class="togglerbox Bold fs-12 blue p10 hand graybg-sub" data-id="creditDo">
+			<i class="icon-angle-down" id="mapic"></i> ещё оплаченные счета
+			<div class="pull-aright">{{countDo}} счета</div>
+		</div>
+
+		<div class="pt10 hidden" id="creditDo">
+
+			<table id="" class="credit mrowtable nomob">
+				{{#creditDo}}
+					<tbody class="focused box-shadow {{#isdo}}gray{{/isdo}}">
+					<tr class="th40 graybg-sub" data-crid="{{crid}}" data-user="{{iduser}}">
+						<td colspan="5" class="text-right">
+							<div class="gray fs-09 pull-left">
+								Квота по счету: <b class="blue">{{user}}</b>
+							</div>
+							<span class="hidden-iphone buttons">
+								{{#rights}}
+									{{^isdo}}
+										{{#check}}
+											<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите поставить отметку о поступлении платежа?');if (cf)editCredit('{{crid}}','credit.doit');" title="Отметить о поступлении оплаты" class="green"><i class="icon-ok"></i>Провести оплату</a>
+										{{/check}}
+										{{^check}}
+											<a href="javascript:void(0)" title="У вас нет достаточных прав. Отметить о поступлении оплаты" class="gray"><i class="icon-cancel-circled"></i>Провести оплату</a>
+										{{/check}}
+									{{/isdo}}
+									{{#email}}
+										<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.mail');" title="Отправить счет по Email"><i class="icon-mail broun"></i></a>
+									{{/email}}
+									{{#print}}
+										<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.print');" title="Получить счет"><i class="icon-print green"></i></a>
+									{{/print}}
+									{{#edit}}
+										<a href="javascript:void(0)" onclick="editCredit('{{crid}}','credit.edit');" title="Изменить"><i class="icon-pencil blue"></i></a>
+									{{/edit}}
+									{{#delete}}
+										<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить платеж из графика?');if (cf) editCredit('{{crid}}','credit.delete');" title="Удалить платеж"><i class="icon-cancel-circled red"></i></a>
+									{{/delete}}
+									{{#undo}}
+										<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно отменить платеж?');if (cf) editCredit('{{crid}}','credit.undoit');" title="Отменить платеж"><i class="icon-ccw blue"></i></a>
+									{{/undo}}
+									{{#undonotaccess}}
+										<a href="javascript:void(0)" title="У вас нет достаточных прав. Отменить платеж"><i class="icon-ccw gray"></i></a>
+									{{/undonotaccess}}
+								{{/rights}}
+							</span>
+						</td>
+					</tr>
+					<tr class="th30 credit border-bottom1 mb5 bgwhite">
+						<td class="wp20">
+							<div class="fs-14 flh-14"><b>Счет №{{invoice}}</b></div>
+							<div><span class="fs-09 mt5">от {{date}}</span></div>
+						</td>
+						<td class="text-right">
+							<div class="fs-14 flh-14"><b>{{summaf}}</b></div>
+							<div><span class="fs-09 mt5">НДС {{ndsf}}</span></div>
+							{{#iscurrency}}<div class="fs-11 flh-12">В валюте: <b class="blue">{{incurrency}}</b></div>{{/iscurrency}}
+						</td>
+						<td class="text-right wp20">
+							{{^isdo}}
+								<div class="fs-14 flh-14"><b class="red">{{dateplan}}</b></div>
+								<div><span class="fs-09 mt5">Ожидаемая дата</span></div>
+							{{/isdo}}
+							{{#isdo}}
+								<div class="fs-14 flh-14"><b class="green">Оплачен</b></div>
+								<div><span class="fs-09 mt5">{{datefact}}</span></div>
+							{{/isdo}}
+						</td>
+						<td class="text-right wp15">{{^isdo}}{{days}}{{/isdo}}</td>
+						<td class="text-right wp20">
+							<div class="fs-14 flh-14 Bold">
+								{{contract}}
+							</div>
+							<div class="fs-09 mt5">Договор</div>
+						</td>
+						<td class="visible-iphone">
+							<div class="mob-pull-right pr5 border-box buttons">
+								{{#rights}}
+									{{^isdo}}
+										{{#check}}
+											<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите поставить отметку о поступлении платежа?');if (cf)editCredit('{{crid}}','credit.doit');" title="Отметить о поступлении оплаты" class="green"><i class="icon-ok"></i>Провести оплату</a>
+										{{/check}}
+										{{^check}}
+											<a href="javascript:void(0)" title="У вас нет достаточных прав. Отметить о поступлении оплаты" class="gray"><i class="icon-cancel-circled"></i>Провести оплату</a>
+										{{/check}}
+									{{/isdo}}
+									{{#email}}
+										<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.mail');" title="Отправить счет по Email"><i class="icon-mail broun"></i></a>
+									{{/email}}
+									{{#print}}
+										<a href="javascript:void(0)" onclick="editCredit('{{crid}}','invoice.print');" title="Получить счет"><i class="icon-print green"></i></a>
+									{{/print}}
+									{{#edit}}
+										<a href="javascript:void(0)" onclick="editCredit('{{crid}}','credit.edit');" title="Изменить"><i class="icon-pencil blue"></i></a>
+									{{/edit}}
+									{{#delete}}
+										<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить платеж из графика?');if (cf) editCredit('{{crid}}','credit.delete');" title="Удалить платеж"><i class="icon-cancel-circled red"></i></a>
+									{{/delete}}
+									{{#undo}}
+										<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно отменить платеж?');if (cf) editCredit('{{crid}}','credit.undoit');" title="Отменить платеж"><i class="icon-ccw blue"></i></a>
+									{{/undo}}
+									{{#undonotaccess}}
+										<a href="javascript:void(0)" title="У вас нет достаточных прав. Отменить платеж"><i class="icon-ccw gray"></i></a>
+									{{/undonotaccess}}
+								{{/rights}}
+							</div>
+						</td>
+					</tr>
+					</tbody>
+					<tr class="th5 transparent hidden-iphone">
+						<td colspan="5"></td>
+					</tr>
+				{{/creditDo}}
+			</table>
+
+		</div>
+
+	</div>
+	{{/haveDo}}
+
+	{{#close}}
+	{{#haveDelta}}
+	<div class="warning m0 mt10 text-left">
+
+		<span><i class="icon-attention red icon-3x pull-left"></i></span>
+		<b class="red">Внимание:</b><br>
+		Сумма в графике отличается от плановой суммы сделки на
+		<b>{{deltaf}}</b> {{valuta}}<br>
+		<b>Откорректируйте график платежей!</b>
+
+	</div>
+	{{/haveDelta}}
+	{{/close}}
+
+</div>

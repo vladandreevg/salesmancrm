@@ -1,0 +1,621 @@
+<script id="catalogTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w15 hidden-netbook">
+				<input type="checkbox" name="che" id="che" onclick="checkb()"/>
+			</TH>
+			{{#mcArtikul}}
+			<TH class="yw80 text-left">
+				<div class="ellipsis hand" id="x-artikul" onclick="changesort('artikul')" title="Изменить порядок вывода">Артикул</div>
+			</TH>
+			{{/mcArtikul}}
+			<TH class="yw60 text-center"><B></B></TH>
+			<TH class="w30 text-center"></TH>
+			<TH class="yw250 text-left">
+				<div class="ellipsis hand" id="x-title" onclick="changesort('title')" title="Изменить порядок вывода">Название позиции</div>
+			</TH>
+			{{#price_1}}
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-price_1" onclick="changesort('price_1')" title="Изменить порядок вывода">{{price_1}}, {{valuta}}</div>
+			</TH>
+			{{/price_1}}
+			<TH class="yw60 text-center"><b>Кол-во</b></TH>
+			<TH class="yw40 text-left"><b>Ед.изм.</b></TH>
+			<TH class="yw60 text-center"><b>Резерв</b></TH>
+			<TH class="text-left"><b>Описание</b></TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha th55" id="catalog{{id}}">
+			<TD class="hidden-netbook">
+				<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/>
+			</TD>
+			{{#mcArtikul}}
+			<TD><span class="ellipsis"><B>{{artikul}}</B></span></TD>
+			{{/mcArtikul}}
+			<TD {{{image}}}></TD>
+			<TD class="text-center">
+				<A href="javascript:void(0)" onclick="window.open('card.modcatalog.php?n_id={{id}}')"><i class="icon-archive broun"></i></A>
+			</TD>
+			<TD>
+				<SPAN class="ellipsis" title="{{title}}">
+					<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{id}}');"><B>{{title}}</B></a>
+				</SPAN><br>
+				{{#cat}}<span class="smalltxt blue">{{cat}}</span>{{/cat}}
+			</TD>
+			{{#price_1}}
+			<TD class="text-right" title="{{price1}} {{valuta}}/{{edizm}}">
+						<span>
+							<b class="blue">{{price1}}</b>
+							{{#mcKolEdit}}&nbsp;<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=editone&tip=price');" title="Изменить" class="dleft1 gray"><i class="icon-pencil smalltxt"></i></a>{{/mcKolEdit}}
+						</span>
+			</TD>
+			{{/price_1}}
+			<TD class="text-right Bold"><span>{{kol}}</span></TD>
+			<TD>
+				<div class="ellipsis">{{{edizm}}}</div>
+			</TD>
+			<TD class="text-right Bold"><span>{{{res}}}</span></TD>
+			<TD>
+				<div title="{{content}}" class="ellipsis">{{content}}</div>
+			</TD>
+			<TD>
+				<div class="action--container">
+					<div class="action--block">
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=view');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
+						{{#mcCoordinator}}
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></A>
+						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить?');if (cf)delCat('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel red"></i></A>
+						{{/mcCoordinator}}
+					</div>
+				</div>
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+	<div class="h60" style="height:60px"></div>
+
+</script>
+
+<script id="zayavkaTpl" type="text/html">
+	<table class="list_header modules">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw40 text-left">
+				<div class="ellipsis hand" id="x-number" onclick="changesort('number')" title="Изменить порядок вывода">№</div>
+			</TH>
+			<TH class="yw60 text-left">
+				<div class="ellipsis hand" id="x-datum" onclick="changesort('datum')" title="Изменить порядок вывода">Дата</div>
+			</TH>
+			<TH class="yw80 text-center"><B>Срок</B></TH>
+			<TH class="yw20 text-center"><B>Тип</B></TH>
+			<TH class="text-left"><B>Название</B> / <B>Сделка</B></TH>
+			<TH class="yw120 text-left">
+				<div class="ellipsis hand" id="x-status" onclick="changesort('status')" title="Изменить порядок вывода">Статус</div>
+			</TH>
+			<TH class="yw40 text-left"></TH>
+			<TH class="yw100 text-center"><b>Автор</B> / <B>Ответств.</b></TH>
+			<TH class="yw120 text-left"><b>Комментарий</b></TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha {{{bg}}} th55" id="zayavka{{id}}">
+			<TD class="text-right">
+				<div class="Bold">{{number}}</div>
+			</TD>
+			<TD class="text-right tooltips" tooltip="<blue>Статус</blue><hr>{{dess}}" tooltip-position="top">
+				<div>{{{datum}}}</div>
+			</TD>
+			<TD class="text-right">
+				<div><b>{{{priority}}}</b>{{{de}}}</div>
+			</TD>
+			<TD class="text-center">
+				<div>{{{tip}}}</div>
+			</TD>
+			<TD>
+				{{#zTitle}}
+				<span class="ellipsis"><a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр"><b>{{zTitle}}</b></a></span><br>
+				{{/zTitle}}
+				{{#deal}}
+				<span class="ellipsis"><a href="javascript:void(0)" onclick="openDogovor('{{did}}','7');"><i class="icon-briefcase-1 blue"></i> {{deal}}</a></span><br>
+				{{#Complete}}
+				<span class="ellipsis fs-09 gray2"><a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavkacomplete&did={{did}}')" class="gray" title="Подробнее">Комплектность сделки: <b>{{Complete}}%</b></a></span>{{/Complete}}
+				{{/deal}}
+			</TD>
+			<TD>
+				<span class="ellipsis">
+					{{{hi}}}
+					<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр"><B class="{{{color}}}">{{status}}</B></a>
+				</span>
+				{{#mcCoordinator}}
+				{{#editor}}
+				{{#change}}
+				<span class="pull-aright"><a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavkastatus');" title="Изменить" class="gray"><i class="icon-ok smalltxt"></i></a></span>
+				{{/change}}
+				{{/editor}}
+				{{^editor}}
+				<span class="pull-aright"><i class="icon-ok-circled green smalltxt"></i></span>
+				{{/editor}}
+				{{/mcCoordinator}}
+				{{#isorder}}
+				<br><span class="ellipsis fs-09 gray2">Ордеры: {{{orderNum}}}</span>
+				{{/isorder}}
+			</TD>
+			<TD class="text-right">
+				<div title="{{persent}}% [ {{kols}} ] позиций находятся в приходных ордерах" class="{{{colr}}}">{{{persent}}}%</div>
+			</TD>
+			<TD>
+				<span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('{{iduser}}');"><i class="icon-user-1 blue"></i>{{user}}</a></span>
+				{{#sotrudnik}}
+				<br><span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('{{sotid}}');"><i class="icon-user-1 broun"></i><span class="broun">{{sotrudnik}}</span></a></span>
+				{{/sotrudnik}}
+				{{^sotrudnik}}
+				<br><span class="ellipsis gray"><i class="icon-user-1"></i>Не назначено</span>
+				{{/sotrudnik}}
+			</TD>
+			<TD class="text-left">
+				<div title="{{content}}" class="ellipsis">{{content}}</div>
+			</TD>
+			<TD>
+				<div class="action--container">
+					<div class="action--block">
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр" class="gray green"><i class="icon-eye blue"></i></A>
+						{{#toorder}}
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=editakt&tip=income&idz={{id}}');" title="Создать приходный ордер" class="gray blue"><i class="icon-forward-1"></i></A>
+						{{/toorder}}
+						{{#isorder}}
+						<A href="javascript:void(0)" title="Есть приходный ордер" class="gray red"><i class="icon-doc-text"></i></A>
+						{{/isorder}}
+						{{#change}}
+						{{#editor}}
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
+						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+						{{/editor}}
+						{{/change}}
+						{{^change}}
+						{{#editor}}
+						{{^isDo}}
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
+						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?\nБудет удалена заявка и связанные позиции заявки');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+						{{/isDo}}
+						{{#isDo}}
+						<!--<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите изменить ВЫПОЛНЕННУЮ заявку ');if (cf)doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
+		<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?\nБудет удалена ВЫПОЛНЕННАЯ заявка и связанные позиции заявки');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>-->
+						{{/isDo}}
+						{{/editor}}
+						{{/change}}
+					</div>
+				</div>
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="block h60" style="height:60px"></div>
+
+</script>
+
+<script id="pozTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw60 text-center"><B>Дата</B></TH>
+			<TH class="yw40 text-center"><B>№</B></TH>
+			<TH class="text-center"><B>Позиция</B></TH>
+			<TH class="yw80 text-center"><B>Кол-во</B></TH>
+			<TH class="yw160 text-left"><B>Статус</B></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha th40" id="poz{{id}}">
+			<TD class="text-right">
+				<div>{{{datum}}}</div>
+			</TD>
+			<TD class="text-right">
+				<div class="Bold">{{id}}</div>
+			</TD>
+			<TD>
+				<span class="ellipsis Bold fs-11"><A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');"><i class="icon-archive broun"></i>{{title}}</a></span>
+				{{#deal}}
+				<br><span class="ellipsis fs-09"><a href="javascript:void(0)" onclick="openDogovor('{{did}}');" class="gray"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a></span>
+				{{/deal}}
+			</TD>
+			<TD class="text-right">
+				<div class="Bold">{{kol}}</div>
+			</TD>
+			<TD>
+				<SPAN class="ellipsis"><B class="{{{color}}}">{{status}}</B></SPAN>
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="h60" style="height:60px"></div>
+
+</script>
+
+<script id="rezTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw60 text-center"><B>Дата</B></TH>
+			<TH class="text-center"><B>Позиция</B></TH>
+			<TH class="yw60 text-left"><B>Кол-во</B></TH>
+			<TH class="yw80 text-left">Склад</TH>
+			<TH class="yw60 text-right">Заявка</TH>
+			<TH class="yw60 text-right">Ордер</TH>
+			<TH class="yw40 text-center"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha th40" id="poz{{id}}">
+			<TD class="text-right">
+				<div>{{{datum}}}</div>
+			</TD>
+			<TD>
+				<span class="ellipsis fs-10"><A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');"><i class="icon-archive broun"></i>&nbsp;{{title}}</a></span>
+				<br><span class="ellipsis fs-09"><a href="javascript:void(0)" onclick="openDogovor('{{did}}');" class="gray"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a></span>
+			</TD>
+			<TD class="text-left">
+				<div>{{kol}}</div>
+			</TD>
+			<TD title="{{sklad}}">
+				<div class="ellipsis">{{sklad}}</div>
+			</TD>
+			<TD class="text-right">
+				<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id={{idz}}&action=viewzayavka');" title="Просмотр">{{zayavka}}</a>
+			</TD>
+			<TD class="text-right">
+				<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id={{ida}}&action=viewakt');" title="Просмотр">{{order}}</a>
+			</TD>
+			<TD class="w40 text-center">
+				{{#mcCoordinator}}
+				<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить из Резерва?');if (cf)removeReserve('{{id}}');" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+				{{/mcCoordinator}}
+				{{^mcCoordinator}}<i class="icon-cancel-circled gray" title="Нет доступа"></i>{{/mcCoordinator}}
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="h60" style="height:60px"></div>
+
+</script>
+
+<script id="offerTpl" type="text/html">
+	<table width="100%" cellpadding="5" cellspacing="0" border="0" class="list_header" height="30">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw40" align="center">№</TH>
+			<TH class="yw60" align="center">Дата</TH>
+			<TH align="center">Название</TH>
+			<TH class="yw80" align="center">Статус</TH>
+			<TH class="yw80" align="center"></TH>
+			<TH class="yw120" align="center">Ответственный</TH>
+			<TH class="yw60" align="center">&nbsp;</TH>
+			<TH class="yw200" align="left">Комментарий</TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha" height="40" id="poz{{id}}" background="{{bg}}">
+			<TD align="right">{{id}}</TD>
+			<TD align="right" class="smalltxt">{{{datum}}}</TD>
+			<TD>
+				<span class="ellipsis"><a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewoffer');" title="Просмотр"><b>{{zTitle}}</b></a></span>
+				{{{purl}}}
+			</TD>
+			<TD><span class="ellipsis"><B class="{{color}}">{{status}}</B></span></TD>
+			<TD>
+				{{#vote}}
+				<span style="font-size:0.95em;"><A href="javascript:void(0)" onClick="likeoffer('{{id}}');" title="Голосовать" class="blue"><i class="icon-thumbs-up"></i>&nbsp;<b>{{like}}</b></A></span>
+				{{/vote}}
+				{{^vote}}
+				<span style="font-size:0.95em;" class="green" title="Вы проголосовали"><i class="icon-thumbs-up"></i>&nbsp;{{likes}}</span>
+				{{/vote}}
+			</TD>
+			<TD>
+				<span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('{{iduser}}');"><i class="icon-user-1 blue"></i>{{user}}</a></span>
+			</TD>
+			<TD align="left">
+				<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewoffer');" title="Просмотр"><i class="icon-eye blue"></i></A>&nbsp;&nbsp;
+				{{#mcCoordinator}}
+				<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editoffer');" class="gray" title="Изменить"><i class="icon-pencil"></i></A>&nbsp;&nbsp;
+				{{/mcCoordinator}}
+			</TD>
+			<TD>
+				<div title="{{content}}" class="ellipsis">{{content}}</div>
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+	<div class="h60" style="height:60px"></div>
+</script>
+
+<script id="orderTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw60 text-left">
+				<div class="ellipsis hand" id="x-datum" onclick="changesort('datum')" title="Изменить порядок вывода">Дата</div>
+			</TH>
+			<TH class="yw60 text-left">
+				<div class="ellipsis hand" id="x-number" onclick="changesort('number')" title="Изменить порядок вывода">№ ордера</div>
+			</TH>
+			<TH class="yw60 text-right"><B>№ заявки</B></TH>
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-tip" onclick="changesort('tip')" title="Изменить порядок вывода">Тип</div>
+			</TH>
+			<TH class="yw120 text-center"><b>Принял</b></TH>
+			<TH class="yw120 text-center"><b>Сдал</b></TH>
+			<TH class="text-left"><b>Поставщик</b> / <b>Получатель</b></TH>
+			<TH class="w5">&nbsp;</TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha th55">
+			<TD class="text-right">
+				<div>{{{datum}}}</div>
+			</TD>
+			<TD class="text-right">
+				<div class="Bold">{{number}}</div>
+			</TD>
+			<TD class="text-right">
+				{{#numberZ}}
+				<div class="hand" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{idz}}&action=viewzayavka');">
+					<b>{{numberZ}}</b></div>
+				{{/numberZ}}
+				{{^numberZ}}
+				<div>-</div>
+				{{/numberZ}}
+			</TD>
+			<TD class="text-right">
+				<div>{{{tip}}}<br>{{{status}}}</div>
+			</TD>
+			<TD><span class="ellipsis" title="{{man1}}">{{man1}}</span></TD>
+			<TD><SPAN class="ellipsis" title="{{man2}}">{{man2}}</SPAN></TD>
+			<TD>
+				{{#contractor}}
+				<div title="Поставщик: {{contractor}}" class="ellipsis">
+					<a href="javascript:void(0)" onclick="openClient('{{posid}}')"><i class="icon-building broun"></i>&nbsp;{{contractor}}
+					</a>
+				</div>
+				{{/contractor}}
+				{{#client}}
+				<div title="Клиент: {{client}}" class="ellipsis">
+					<a href="javascript:void(0)" onclick="openClient('{{clid}}')"><i class="icon-building blue"></i>&nbsp;{{client}}
+					</a>
+				</div>
+				{{/client}}
+				{{#deal}}
+				<br>
+				<div title="{{deal}}" class="ellipsis paddtop5">
+					<a href="javascript:void(0)" onclick="openDogovor('{{did}}','7')"><i class="icon-briefcase blue"></i>&nbsp;{{deal}}
+					</a>
+				</div>
+				{{/deal}}
+			</TD>
+			<TD>
+				<div class="action--container">
+					<div class="action--block">
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewakt');" title="Просмотр" class="gray green"><i class="icon-eye"></i></A>
+						<A href="modules/modcatalog/printorder.php?id={{id}}&tip=order" title="Печать" target="blank" class="gray red"><i class="icon-print"></i></A>
+						{{#isdo}}
+						{{#skladpoz}}
+						{{#mcCoordinator}}
+						<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editaktperpoz');" title="Установить серийники" class="gray brounbg2"><i class="icon-list"></i></a>
+						{{/mcCoordinator}}
+						{{/skladpoz}}
+						<a href="javascript:void(0)" class="gray gray2"><i class="icon-ok blue"></i></a>
+						{{/isdo}}
+						{{^isdo}}
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editakt');" class="gray blue" title="Изменить"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить?');if (cf)removeOrder('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+						{{/isdo}}
+					</div>
+				</div>
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+	<div class="h60" style="height:60px"></div>
+</script>
+
+<script id="skladTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w15 hidden-netbook"><input type="checkbox" name="che" id="che" onclick="checkb()"></TH>
+			{{#mcSkladPoz}}
+			<TH class="yw60 text-left">
+				<div class="ellipsis hand" id="x-date_in" onclick="changesort('date_in')" title="Дата поступления">Дата поступления</div>
+			</TH>
+			<TH class="yw60 text-left">
+				<div class="ellipsis hand" id="x-date_out" onclick="changesort('date_out')" title="Дата отгрузки">Дата отгрузки</div>
+			</TH>
+			{{/mcSkladPoz}}
+			{{^mcSkladPoz}}
+			<TH class="text-left">
+				<div class="ellipsis hand" id="x-title" onclick="changesort('title')" title="Изменить порядок вывода">Название позиции</div>
+			</TH>
+			{{/mcSkladPoz}}
+			{{#mcSkladPoz}}
+			<TH class="text-left">
+				<div class="ellipsis hand" id="x-title" onclick="changesort('title')" title="Изменить порядок вывода">Название позиции</div>
+			</TH>
+			<TH class="yw160 text-left">
+				<div class="ellipsis hand" id="x-serial" onclick="changesort('serial')" title="Серийный номер">Серийный номер</div>
+			</TH>
+			<TH class="yw60 text-left">
+				<div class="ellipsis hand" id="x-date_create" onclick="changesort('date_create')" title="Изменить порядок вывода">Дата производства</div>
+			</TH>
+			<TH class="yw60 hidden text-left">
+				<div class="ellipsis hand" id="x-date_period" onclick="changesort('date_period')" title="Изменить порядок вывода">Дата поверки</div>
+			</TH>
+			<!--<TH align="center" class="yw100">
+				<div class="ellipsis hand" id="x-status" onclick="changesort('status')" title="Изменить порядок вывода"><i class="icon-angle-down"></i>Статус</div>
+			</TH>-->
+			{{/mcSkladPoz}}
+			<TH class="yw60 text-right">
+				<div class="ellipsis1 hand" id="x-kol" onclick="changesort('kol')" title="Изменить порядок вывода">Кол-во</div>
+			</TH>
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-sklad" onclick="changesort('sklad')" title="Изменить порядок вывода">Склад</div>
+			</TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha {{statuscolor}} th55" id="catalog{{id}}">
+			<TD class="hidden-netbook">
+				<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}" {{#in}}disabled{{/in}} />
+			</TD>
+			{{#mcSkladPoz}}
+			<TD>
+				{{#date_in}}
+				<div title="Дата поступления">{{date_in}}</div>
+				{{/date_in}}
+			</TD>
+			<TD>
+				{{#date_out}}
+				<div title="Дата выбытия">{{date_out}}</div>
+				{{/date_out}}
+			</TD>
+			{{/mcSkladPoz}}
+			<TD>
+				<SPAN class="ellipsis Bold" title="{{title}}"><A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');">{{title}}</A></SPAN>
+				{{#deal}}
+				<br><span class="ellipsis fs-09"><a href="javascript:void(0)" onclick="openDogovor('{{did}}','7');" class="gray"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a></span>
+				{{/deal}}
+			</TD>
+			{{#mcSkladPoz}}
+			<TD>
+				{{#serial}}
+				<div title="Серийный номер">{{serial}}</div>
+				{{/serial}}
+			</TD>
+			<TD>
+				{{#date_create}}
+				<div title="Дата производства">{{date_create}}</div>
+				{{/date_create}}
+			</TD>
+			<TD class="hidden">
+				{{#date_period}}
+				<div title="Дата поверки">{{date_period}}</div>
+				{{/date_period}}
+			</TD>
+			<!--<TD align="right">{{{status}}}</TD>-->
+			{{/mcSkladPoz}}
+			<TD class="text-right">
+				<div class="Bold">{{kol}}</div>
+			</TD>
+			<TD class="text-left">
+				<div class="ellipsis">{{sklad}}</div>
+				<br>
+				<div class="ellipsis">{{{status}}}</div>
+			</TD>
+			<TD>
+				<div class="action--container">
+					<div class="action--block">
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewskladpozone');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
+						{{#mcCoordinator}}
+						{{#mcSkladPoz}}
+						<!--Поштучный учет-->
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editskladpozone');" class="gray blue" title="Изменить"><i class="icon-pencil"></i></A>
+						{{/mcSkladPoz}}
+						{{^mcSkladPoz}}
+						<!--Валовый учет-->
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editskladpoz');" class="gray blue" title="Изменить количество"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить?');if (cf)deleteSkladpoz('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled"></i></A>
+						{{/mcSkladPoz}}
+						{{/mcCoordinator}}
+					</div>
+				</div>
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="h60" style="height:60px"></div>
+
+</script>
+
+<script id="moveTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-datum" onclick="changesort('datum')" title="Изменить порядок вывода">Дата</div>
+			</TH>
+			<TH class="yw160 text-left">
+				<div class="ellipsis1 hand" id="x-skladfrom" onclick="changesort('skladfrom')" title="Изменить порядок вывода">Со склада</div>
+			</TH>
+			<TH class="yw160 text-left">
+				<div class="ellipsis hand" id="x-skladto" onclick="changesort('skladto')" title="Изменить порядок вывода">На склад</div>
+			</TH>
+			<TH class="yw60 text-left">Кол. позиций</TH>
+			<TH class="yw60 text-left">Общее кол-во</TH>
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-user" onclick="changesort('user')" title="Изменить порядок вывода">Сотрудник</div>
+			</TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha th55" id="{{id}}">
+			<TD>
+				<div>{{{datum}}}</div>
+			</TD>
+			<TD>
+				<div>{{skladfrom}}</div>
+			</TD>
+			<TD>
+				<div>{{skladto}}</div>
+			</TD>
+			<TD>
+				<div>{{count}}</div>
+			</TD>
+			<TD>
+				<div>{{kol}}</div>
+			</TD>
+			<TD class="text-left">
+				<div class="ellipsis">{{user}}</div>
+			</TD>
+			<TD>
+				<div class="action--container">
+					<div class="action--block">
+						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=movetoskaldview');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
+					</div>
+				</div>
+			</TD>
+		</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="h60" style="height:60px"></div>
+
+</script>

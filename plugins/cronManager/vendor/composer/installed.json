@@ -1,0 +1,115 @@
+[
+    {
+        "name": "dragonmantank/cron-expression",
+        "version": "v2.3.0",
+        "version_normalized": "2.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dragonmantank/cron-expression.git",
+            "reference": "72b6fbf76adb3cf5bc0db68559b33d41219aba27"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/72b6fbf76adb3cf5bc0db68559b33d41219aba27",
+            "reference": "72b6fbf76adb3cf5bc0db68559b33d41219aba27",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^6.4|^7.0"
+        },
+        "time": "2019-03-31T00:38:28+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cron\\": "src/Cron/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            },
+            {
+                "name": "Chris Tankersley",
+                "email": "chris@ctankersley.com",
+                "homepage": "https://github.com/dragonmantank"
+            }
+        ],
+        "description": "CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due",
+        "keywords": [
+            "cron",
+            "schedule"
+        ]
+    },
+    {
+        "name": "peppeocchi/php-cron-scheduler",
+        "version": "v3.0",
+        "version_normalized": "3.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/peppeocchi/php-cron-scheduler.git",
+            "reference": "4aa28decf8a88f3d8ba66682d5bec5cfc8900ca8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/peppeocchi/php-cron-scheduler/zipball/4aa28decf8a88f3d8ba66682d5bec5cfc8900ca8",
+            "reference": "4aa28decf8a88f3d8ba66682d5bec5cfc8900ca8",
+            "shasum": ""
+        },
+        "require": {
+            "dragonmantank/cron-expression": "^2.3",
+            "php": "^7.1"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~5.7",
+            "satooshi/php-coveralls": "^1.0",
+            "swiftmailer/swiftmailer": "~5.4 || ^6.0"
+        },
+        "suggest": {
+            "swiftmailer/swiftmailer": "Required to send the output of a job to email address/es (~5.4 || ^6.0)."
+        },
+        "time": "2019-10-25T07:54:24+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "GO\\": "src/GO/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Giuseppe Occhipinti",
+                "email": "peppeocchi@gmail.com"
+            },
+            {
+                "name": "Carsten Windler",
+                "email": "carsten@carstenwindler.de",
+                "homepage": "http://carstenwindler.de",
+                "role": "Contributor"
+            }
+        ],
+        "description": "PHP Cron Job Scheduler",
+        "keywords": [
+            "cron job",
+            "scheduler"
+        ]
+    }
+]

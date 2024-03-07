@@ -1,0 +1,148 @@
+#telo{
+	margin-top: 5px;
+	grid-template-columns: 100%;
+}
+fieldset{
+	border:1px solid #ccc;
+	background: #FFF;
+	padding:15px 10px;
+}
+legend{
+	font-size: 1.3rem;
+}
+i{
+	position: static;
+}
+p, li{
+	font-size: 1.2rem;
+	line-height: 1.3em;
+}
+
+h2{
+	font-size: 1.4em;
+	margin-top: 30px;
+}
+h3{
+	color: var(--gray-darkblue);
+	font-size: 1.0em;
+	margin-top: 30px;
+}
+
+table th{
+	font-size: 0.9rem;
+	background: #E6E9ED;
+	border-bottom: 1px dotted #ccc;
+}
+table tbody td{
+	border-bottom: 1px dotted #ccc;
+}
+
+#dtabs ul{
+	display: unset;
+}
+.hidden{
+	display: none !important;
+}
+
+.foot{
+	position: fixed;
+	text-align: center;
+	bottom: 0; left:0;
+	box-sizing: border-box;
+	border-top:1px solid #ccc;
+	background: #FFF;
+	padding: 10px;
+	margin-top: 10px;
+	width: 100vw;
+}
+
+.period{
+	padding: 3px;
+	background: #FFF;
+	margin-top: -2px;
+}
+.period input{
+	width: 100px;
+	text-align: center;
+	border: 0;
+	vertical-align: baseline;
+	box-shadow: 0 0 0 !important;
+	-moz-box-shadow: 0 0 0 !important;
+	-webkit-box-shadow: 0 0 0 !important;
+}
+
+.infodiv #greenbutton a.button,
+.infodiv a.button,
+.infodiv a.button:link{
+	height: 21px;
+	font-weight: 700;
+	box-shadow: 0 0 0 !important;
+	-moz-box-shadow: 0 0 0 !important;
+	-webkit-box-shadow: 0 0 0 !important;
+}
+
+.smallbtn a.button.greenbtn,
+.smallbtn a.button,
+.smallbtn a.button:link{
+	height: 21px;
+	font-weight: 700;
+	box-shadow: 0 0 0 !important;
+	-moz-box-shadow: 0 0 0 !important;
+	-webkit-box-shadow: 0 0 0 !important;
+	padding: 5px 10px !important;
+	border-radius: 5px !important;
+}
+
+.wrapper,
+.wrapper2{
+	position: relative;
+	top: 0;
+	height: 450px;
+	overflow-x: auto;
+}
+
+.h10{height: 10px}
+
+#telo img {
+	outline: 0;
+	border: 0;
+	max-width: 100%;
+	padding: 10px;
+	background: #FFF;
+	box-sizing: border-box;
+}
+
+blockquote{
+	border: 1px solid #ccc;
+	border-left: 3px solid rgba(255,193,7 ,1);
+	padding-left: 50px;
+	margin-left: 0;
+	border-radius: 5px;
+	background: #FFF;
+	position : relative;
+}
+blockquote:before{
+	font-family: "fontello";
+	font-size: 2em;
+	position : absolute;
+	top: 20px;
+	left: 10px;
+	color: #ddd;
+	content: "\e8b8";
+}
+blockquote ul{
+	margin-left: 5px;
+	padding-left: 10px;
+	list-style: circle;
+}
+blockquote li{
+	margin-left: 5px;
+	padding: 0 !important;
+}
+blockquote h3,
+blockquote h2{
+	color: var(--red);
+	margin-top: 15px;
+	margin-bottom : -5px;
+	text-transform: uppercase;
+}

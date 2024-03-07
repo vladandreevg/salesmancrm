@@ -1,0 +1,773 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2018 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*         salesman.pro         */
+/*         ver. 2018.6          */
+/* ============================ */
+
+:root{
+	--scrollbar-width: calc(100vw - 100%);
+}
+
+body, html {
+	background : #F7F7EE;
+	padding    : 0;
+	margin     : 0;
+	height     : auto;
+}
+
+html {
+	overflow-y : auto !important;
+	/*scrollbar-width: thin;
+	scrollbar-color: var(--gray-darkblue);*/
+}
+
+body {
+	overflow-y : auto !important;
+	margin-top : 7em;
+	height     : calc(100vh - 7em);
+	scrollbar-width: auto;
+	scrollbar-color: var(--gray-darkblue);
+}
+
+i.sup {
+	position     : relative;
+	left         : -5px;
+	top          : -5px;
+	margin-right : -10px;
+	font-size    : 0.5em;
+}
+
+sup {
+	position    : relative;
+	left        : 5px;
+	font-size   : 0.8em;
+	font-weight : bold
+}
+
+b, strong {
+	font-weight : bold;
+}
+
+input, textarea, select {
+	font-size : 1.05em;
+}
+
+.ha .noborder td,
+#zebra .noborder td,
+.ha .noborder tr {
+	border-left  : 0;
+	border-right : 0;
+}
+
+a.button .fakebutton {
+	background : #DDD;
+	border     : 1px solid #CCC;
+	color      : #000;
+}
+
+.back2menu {
+	display      : inline-block;
+	width        : 30px;
+	height       : 30px;
+	margin-right : 10px;
+}
+
+.message {
+	right : 250px;
+}
+
+#resultdiv .smalltxt {
+	font-size : 0.8em;
+}
+
+.ui-datepicker td {
+	font-size : 1.0em;
+}
+
+.tsk td {
+	font-size : 0.95em;
+}
+
+.fixx {
+	position           : fixed;
+	top                : 0;
+	z-index            : 10;
+	background         : linear-gradient(
+			rgba(59, 110, 170, 0.5),
+			rgba(59, 110, 170, 0.9)
+	),
+	url(../images/bg/bluelight.png) repeat,
+	rgba(59, 110, 170, 1.0);
+	width              : 100%;
+	display            : block;
+	border-bottom      : 4px solid #F7F7EE;
+	
+	box-shadow         : 0 0 3px #999;
+	-webkit-box-shadow : 0 0 3px #222;
+	-moz-box-shadow    : 0 0 3px #222;
+}
+
+.fixx #ctitle {
+	color : #FFF;
+}
+.fixx #ctitle .blue,
+.fixx #ctitle a {
+	color : #BDC3C7;
+}
+
+.fixbg {
+	position   : fixed;
+	top        : 6.57em;
+	z-index    : 10;
+	height     : 10px;
+	width      : 100%;
+	display    : none;
+	background : url(../images/fixbg.png);
+}
+
+#head {
+	position  : relative;
+	display   : block;
+	height    : 50px;
+	/*padding-left:15px;*/
+	font-size : 1.5em;
+}
+#head #close {
+	position    : absolute;
+	top         : -1px;
+	right       : 5px;
+	border      : 1px solid #3B6EAA;
+	border-top  : 0;
+	background  : #F6BB42;
+	padding     : 5px 10px;
+	height      : 20px;
+	line-height : 20px;
+	font-size   : 0.75rem;
+	color       : #34495E;
+	cursor      : pointer;
+}
+#head #close:hover {
+	border     : 1px solid #34495E;
+	border-top : 0;
+	background : #FFF;
+	color      : #3B6EAA;
+}
+#head .print a {
+	color           : #E74B3B;
+	text-decoration : none;
+	font            : normal 1.0em tahoma, arial;
+}
+
+#ctitle {
+	position    : relative;
+	width       : 96vw;
+	margin      : 0 auto;
+	padding-top : 10px;
+	line-height : 30px;
+}
+
+/*Меню табов*/
+
+#dtabs {
+	width       : calc(96vw - var(--scrollbar-width));
+	margin      : 0 auto;
+	padding     : 0 1.6em;
+	font-size   : 1.15em;
+	line-height : 1.05;
+	border      : 0;
+	position    : relative;
+	display     : flex;
+}
+#dtabs ul {
+	list-style    : none;
+	margin        : 0;
+	padding       : 0;
+	border-bottom : 0;
+	width         : 100%;
+}
+#dtabs ul.right {
+	position : absolute;
+	bottom   : 0;
+	right    : 1.5%;
+	width    : initial;
+	display  : inline-block;
+	z-index  : 20;
+}
+
+#dtabs li {
+	display    : inline-block;
+	float      : left;
+	margin     : 0 5px 0 0;
+	padding    : 0.67em 1.25em;
+	background : #3498DB;
+	border     : 0;
+	color      : #FFF;
+	font-size  : 1.05em;
+}
+#dtabs li.green {
+	background : #1ABC9C;
+}
+#dtabs li.hidden-normal {
+	display : none !important;
+}
+#dtabs .current {
+	border-bottom : 1px solid #F7F7EE;
+	background    : #F7F7EE;
+	color         : #222;
+	font-weight   : bold;
+}
+#dtabs .current a {
+	color       : #222;
+	font-weight : bold;
+}
+#dtabs .current:hover {
+	border-bottom : 1px solid #F7F7EE;
+	background    : #F7F7EE;
+	font-weight   : bold;
+}
+#dtabs .current:active {
+	font-weight   : bold;
+	border-bottom : 1px solid #F7F7EE;
+}
+#dtabs li:hover {
+	color      : #FFF;
+	cursor     : pointer;
+	background : #FFC;
+	border     : 0;
+}
+#dtabs li a, #dtabs ul li a:active {
+	color           : #FFF;
+	text-decoration : none;
+}
+#dtabs li a:hover, #dtabs ul li:hover a, #dtabs ul li:hover {
+	color           : #222;
+	text-decoration : none;
+}
+
+/*Меню табов*/
+
+#telo {
+	width                 : 96vw;
+	margin                : 0 auto;
+	/*margin-top : 5px;*/
+	overflow              : hidden;
+	display               : grid;
+	grid-template-columns : 40% minmax(auto, 60%);
+	grid-gap              : 10px 10px;
+}
+#telo.l30 {
+	grid-template-columns : 30% minmax(auto, 70%);
+}
+
+.leftcol {
+	/*width        : 40%;
+	float        : left;
+	display      : inline-block;*/
+	padding-left : 5px;
+	box-sizing   : border-box;
+}
+.rightcol {
+	/*width      : 59%;
+	float      : right;
+	display    : inline-block;*/
+	color      : #333;
+	box-sizing : border-box;
+}
+
+.text-content_rev {
+	border-bottom : 0;
+	background    : #FFF;
+}
+
+.text-header {
+	border-bottom : 0;
+	color         : #607D8B;
+	font-style    : italic;
+}
+
+.leftcol .text-content_rev {
+	padding : 7px;
+}
+
+.batton-edit {
+	text-align : right;
+	font-size  : 1.05em;
+	color      : #2980B9;
+}
+
+fieldset {
+	/*position:relative;*/
+	display            : block;
+	border             : 1px solid #CCD1D9;
+	padding            : 0 10px 10px 10px;
+	background         : #F5F7FA;
+	margin-bottom      : 10px;
+	-webkit-box-shadow : 0 1px 1px #DDD;
+	-moz-box-shadow    : 0 1px 1px #DDD;
+	box-shadow         : 0 1px 1px #DDD;
+}
+
+fieldset table tr > td {
+	font-size     : 1.0em;
+	border-bottom : 1px dotted #CCC;
+}
+fieldset table tr:last-child > td {
+	border-bottom : 0 !important;
+}
+
+fieldset table thead,
+fieldset .header_contaner,
+fieldset table #bborder thead {
+	background : #E6E9ED;
+}
+
+fieldset div, .cherta {
+
+}
+fieldset .batton-edit a {
+	color       : #2980B9;
+	font-weight : 700;
+}
+fieldset .batton-edit a:hover {
+	color : #3F51B5;
+}
+fieldset .batton-del {
+	padding   : 0 5px;
+	font-size : 0.95em;
+	color     : #507192;
+}
+fieldset .batton-del a {
+	color : #507192;
+}
+fieldset .batton-del a:hover {
+	color : red;
+}
+fieldset fieldset {
+	background : #F5F7FA;
+}
+
+legend {
+	font-size   : 1.1em;
+	padding     : 10px 10px;
+	color       : #222;
+	font-weight : 700;
+}
+
+.fcontainer {
+	position      : relative;
+	border        : 1px solid #E6E9ED;
+	padding       : 10px;
+	/*margin-right: 5px;*/
+	background    : #FFF;
+	margin-bottom : 10px;
+}
+.fcontainer legend {
+	font-size   : 1.0em;
+	padding     : 5px;
+	font-weight : normal;
+	color       : #222;
+}
+
+.fcontainer .step {
+	display            : inline-table;
+	border             : unset;
+	font-size          : 0.85em;
+	text-align         : center;
+	cursor             : pointer;
+	box-sizing         : border-box;
+	-moz-box-sizing    : border-box;
+	-webkit-box-sizing : border-box;
+}
+.fcontainer .step.step {
+	width : 100%;
+}
+.fcontainer .step div {
+	display            : table;
+	border             : unset;
+	background         : rgba(255, 255, 255, 0.85);
+	padding            : 5px;
+	width              : 100%;
+	height             : 100%;
+	box-sizing         : border-box;
+	-moz-box-sizing    : border-box;
+	-webkit-box-sizing : border-box;
+}
+.fcontainer .step div:hover {
+	background : rgba(255, 255, 255, 0);
+}
+.fcontainer .step div.current {
+	background : rgba(255, 255, 255, 0);
+}
+
+.fcontainer thead,
+.fcontainer .header_contaner,
+.fcontainer #bborder thead {
+	background : #E6E9ED;
+}
+
+.fcontainer.header {
+	color      : #222;
+	background : #E6E9ED;
+	margin     : 0;
+}
+
+#history {
+	overflow : hidden;
+}
+#history:hover {
+	overflow : auto;
+}
+
+#ui-datepicker-div {
+	display : none
+}
+
+a.menu i {
+	padding-top : 4px;
+	font-size   : 1.0em;
+}
+
+.top-triangle-white {
+	position      : absolute;
+	z-index       : 101;
+	top           : -6px;
+	left          : 80%;
+	margin-left   : -7px;
+	border-bottom : 7px solid #FFF;
+	border-left   : 7px solid transparent;
+	border-right  : 7px solid transparent;
+	border-top    : 0;
+}
+.top-triangle {
+	position      : absolute;
+	z-index       : 100;
+	top           : -7px;
+	left          : 80%;
+	margin-left   : -7px;
+	border-bottom : 7px solid #CCC;
+	border-left   : 7px solid transparent;
+	border-right  : 7px solid transparent;
+	border-top    : 0;
+}
+
+.dleft {
+	float : left;
+}
+.dright {
+	float : right;
+	width: unset !important;
+}
+
+.taskhist {
+	margin     : 0 10px;
+	border     : 2px solid #BFCFFF;
+	padding    : 5px;
+	background : #F4F4F4;
+}
+
+.caller {
+	/*display: block;*/
+	position   : fixed;
+	bottom     : 10px;
+	min-height : 100px;
+}
+.caller:after, .caller:before {
+	bottom         : -13px;
+	left           : 20px;
+	border         : solid transparent;
+	content        : " ";
+	height         : 0;
+	width          : 0;
+	position       : absolute;
+	pointer-events : none;
+}
+.caller:after {
+	/*bottom:-13px;*/
+	border-color     : rgba(255, 255, 255, 0);
+	border-top-color : #FFF;
+	border-width     : 7px;
+	margin-left      : -7px;
+}
+.caller:before {
+	border-color     : rgba(136, 183, 213, 0);
+	border-top-color : #CCC;
+	border-width     : 6px;
+	margin-left      : -6px;
+}
+
+.caller {
+	position           : fixed;
+	display            : none;
+	z-index            : 12;
+	font-size          : 1.05em;
+	bottom             : 10px;
+	right              : 10px;
+	width              : 350px;
+	/*min-height         : 200px;*/
+	background         : #FFF;
+	border             : 1px solid rgba(13, 71, 161, 0.7);
+	-webkit-box-shadow : 0 1px 3px #222;
+	-moz-box-shadow    : 0 1px 3px #222;
+	box-shadow         : 0 1px 3px #222;
+	border-radius      : 5px;
+}
+.caller:before {
+	z-index      : 13;
+	position     : absolute;
+	bottom       : -4px;
+	right        : 15px;
+	content      : "";
+	display      : inline-block;
+	width        : 0;
+	height       : 0;
+	border-style : solid;
+	border-width : 7px 7px 0 7px;
+	border-color : #FFF transparent transparent transparent;
+}
+.caller:after {
+	position     : absolute;
+	bottom       : -7px;
+	right        : 15px;
+	content      : "";
+	display      : inline-block;
+	width        : 0;
+	height       : 0;
+	border-style : solid;
+	border-width : 7px 7px 0 7px;
+	border-color : rgba(13, 71, 161, 0.7) transparent transparent transparent;
+}
+#dialog .tags {
+	border     : 1px solid var(--white) !important;
+	background : var(--white);
+}
+
+.ui-datepicker .ui-datepicker-header, .ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header {
+	padding : 0.2em 0;
+}
+
+/*pop menu*/
+.pop {
+	height : 30px;
+}
+
+.popcontent .clink {
+	font-size   : 0.95em;
+	font-weight : 500;
+	padding     : 5px 20px 10px 20px;
+}
+
+tr.credit:last-child td {
+	border-bottom : 0;
+}
+
+.cardBlock {
+	transition         : all 100ms ease;
+	-webkit-transition : all 100ms ease;
+	-moz-transition    : all 100ms ease;
+}
+
+.introjs-helperLayer {
+	margin-top : 6.5em !important;
+}
+
+/**
+Прилипание элемента к верху родительского элемента
+НЕ работает для заголовков таблиц в Хроме (только для TH)
+ */
+.sticked--top {
+	box-shadow : 0 1px 2px -1px rgba(50, 50, 50, 0) !important;
+}
+tr.sticked--top {
+	-webkit-box-shadow : 0 1px 2px -1px rgba(50, 50, 50, 0) !important;
+}
+.sticked--bottom {
+	-moz-box-shadow  : 0 -2px 1px 0 rgba(50, 50, 50, 0);
+}
+div.sticked--top {
+	box-shadow : 0 4px 2px -3px rgba(50, 50, 50, 0);
+}
+
+/**
+Списки номеров телефонов в карточках
+ */
+.xpmt {
+	width: 100%;
+}
+.xpmt .phonec {
+	margin-bottom: 1px;
+	height: initial;
+	border: 1px dotted var(--gray-lite);
+	background: var(--gray-superlite);
+	margin-right: 5px;
+	border-radius: 2px;
+	padding: 2px 5px;
+	display: inline-block;
+}
+.xpmt .phonec:hover {
+	background : var(--white);
+}
+.xpmt .xitem-placeholder {
+	border     : 1px dashed var(--orange-dark);
+	background : var(--orange-lite);
+	height: calc(1.4em + 4px);
+	line-height: calc(1.4em + 4px);
+	width: 50px;
+	display: inline-block;
+}
+
+/**
+Тоже самое для браузеров на Хромиум
+ */
+@media screen and (-webkit-min-device-pixel-ratio : 0) {
+
+	.sticked--top th {
+		-webkit-box-shadow : 0 2px 2px -1px rgba(50, 50, 50, 0) !important;
+	}
+	.sticked--top tr:nth-child(2) th {
+		-webkit-box-shadow : 0 2px 2px -1px rgba(50, 50, 50, 0) !important;
+	}
+
+	.sticked--top td {
+		-webkit-box-shadow : 0 1px 2px -1px rgba(50, 50, 50, 0) !important;
+	}
+
+	.sticked--bottom tr:first-child td {
+		-webkit-box-shadow : 0 -1px 2px -2px rgba(50, 50, 50, 0) !important;
+	}
+
+}
+
+@media all and (-webkit-min-device-pixel-ratio : 0) {
+	BODY {
+		/*font-family: tahoma,arial,sans;*/
+		/*font-family: 'Roboto Condensed', 'Roboto', tahoma, sans, arial;*/
+		/*font-size: 1.05em;*/
+		/*text-shadow: transparent 0px 0px 0px, rgba(0,0,0, 0.38) 0px 0px 0px !important;*/
+		/*-webkit-font-smoothing: subpixel-antialiased !important;*/
+		/*-webkit-text-stroke-width: 0.13px !important;*/
+	}
+	
+	sup {
+		position    : relative;
+		left        : 5px;
+		font-size   : 0.65em;
+		font-weight : 600
+	}
+	
+	.sup {
+		position     : relative;
+		left         : -5px;
+		top          : -5px;
+		margin-right : -10px;
+		font-size    : 0.65em;
+	}
+	
+	i.sup {
+		position     : relative;
+		left         : -5px;
+		top          : -5px;
+		margin-right : -10px;
+		font-size    : 0.65em;
+	}
+	
+	#calendar sup {
+		position    : relative;
+		left        : 5px;
+		font-size   : 0.55em;
+		font-weight : 600
+	}
+	
+	#cal_day sup {
+		position    : relative;
+		left        : 5px;
+		font-size   : 0.55em;
+		font-weight : 600
+	}
+	
+	.sblue {
+		font-weight : normal;
+	}
+	
+	b, strong {
+		font-weight : bold;
+	}
+	
+	a.menu:link, a.menu:visited {
+		font-size : 1.0em;
+		/*font-weight:bold;*/
+	}
+	
+	fieldset {
+		font-size : 1.05em;
+	}
+	
+	fieldset .batton-edit {
+		top : 15px;
+	}
+	
+	.text-content_rev, .text-header {
+		font-size : 0.95em;
+	}
+	
+	.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header {
+		padding : 0.22em 0;
+	}
+	
+	.popcontent .clink {
+		font-size : 0.95em;
+	}
+}
+
+@media (min-width : 1024px) and (max-width : 1500px) {
+	
+	#telo {
+		grid-template-columns : 35% minmax(auto, 65%);
+	}
+	
+	/*.flex-vertical .flex-string:nth-child(2n) {
+		font-size: 1.0em;
+		font-weight: 700;
+	}*/
+	
+}
+
+@media (min-width : 768px) and (max-width : 1024px) {
+	
+	#dtabs, #dtabs ul li, #dtabs ul li i, .batton-edit {
+		font-size : 0.95em;
+	}
+	
+	.elipsis {
+		text-overflow    : ellipsis !important;
+		-o-text-overflow : ellipsis !important;
+		overflow         : hidden !important;
+		white-space      : nowrap;
+		width            : 88%;
+		margin-right     : -9999px;
+	}
+	
+	#dtabs ul li.hidden-ipad {
+		display : none;
+	}
+	
+	#telo.l30,
+	#telo {
+		grid-template-columns : 35% minmax(auto, 65%);
+	}
+	
+	h3 {
+		font-size : 1.2em;
+	}
+	
+	legend {
+		font-size : 0.95em;
+	}
+	
+	.fcontainer .step {
+		font-size : 0.65em;
+	}
+	
+}

@@ -1,0 +1,98 @@
+<script id="pipelineTpl" type="text/html">
+
+	<div id="salesteps">
+		{{#steps}}
+			<div style="width:{{stepwidth}}%;" class="steps stepBlock" title="{{stepcontent}}" data-step="{{stepid}}">
+
+				<div class="sheader {{stepcolor}} black" data-step="{{stepid}}">
+					<b>{{step}}%</b>
+					{{#next}}
+						<div class="next hidden"><i class="icon-right-open-big"></i></div>{{/next}}
+				</div>
+
+				<div class="subheader">{{stepcontent}}</div>
+				<div class="paddtop5 paddbot5 blue center-text mb10"><span class="stepsumma">{{summa}}</span> {{valuta}}
+				</div>
+
+				{{#deal}}
+					<div class="step {{state}} {{bgcolor}} {{white}}" data-did="{{did}}" data-oldstep="{{stepid}}" data-tip="{{tip}}" data-user="{{iduser}}" data-direction="{{direction}}" data-summa="{{summa}}" data-day="{{stepday}}" data-datum="{{datum}}">
+
+						<div class="flex-container box--child border-bottom">
+
+							<div class="flex-string wp90 hand">
+								<div class="ellipsis Bold fs-11 {{color}} wp90" onClick="viewDogovor('{{did}}')" title="Просмотр: {{title}}">
+									<span class="bullet-mini {{bgcolor}} hidden"></span>{{title}}</div>
+							</div>
+							<div class="flex-string wp10 text-center">
+
+								<div class="tagsmenuToggler hand relativ" data-id="fhelper{{did}}">
+
+									<span class="fs-11 text-right mt2 noBold ml5"><i class="icon-ellipsis-vert flh-11"></i></span>
+
+									<div class="tagsmenu r0 fly right hidden" id="fhelper{{did}}" style="right:0; top: 100%">
+
+										<div class="blok no-shadow">
+
+											<ul class="text-left">
+												<li onClick="openDogovor('{{did}}');" class="p5 hover nowrap">
+													<i class="icon-briefcase-1 broun"></i>&nbsp;{{language.all.Card}}
+												</li>
+												<li onClick="editDogovor('{{did}}','edit');" class="p5 hover nowrap">
+													<i class="icon-pencil blue"></i>&nbsp;{{language.all.Edit}}
+												</li>
+												<li onClick="addTask('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="p5 hover nowrap">
+													<i class="icon-calendar-1 green"></i>&nbsp;{{language.face.TodoName.0}}
+												</li>
+												<li onClick="addHistory('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="p5 hover nowrap">
+													<i class="icon-clock orange" title="Добавить активность"></i>&nbsp;{{language.all.Activity}}
+												</li>
+											</ul>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+							<div class="text-left mt5 fs-10">
+
+								<b class="{{color}}">{{datum}}</b><sup class="gray2" title="Статус изменен {{stepday}} дн. назад">{{stepday}} д.</sup>
+
+							</div>
+
+						</div>
+
+						<div class="fs-12 Bold flh-18">
+							<span class="fs-10 flh-07 hidden">&#8721; </span>{{summa}} {{valuta}}</div>
+
+						<div class="em fs-09 ellipsis">
+							<a href="javascript:void(0)" onClick="viewClient('{{clid}}')" title="Просмотр: {{client}}" class="blue"><i class="icon-building"></i>{{client}}
+							</a>
+						</div>
+						<br>
+						<div class="em fs-09 gray ellipsis" title="{{user}}"><i class="icon-user-1"></i>{{user}}</div>
+
+					</div>
+				{{/deal}}
+
+			</div>
+		{{/steps}}
+	</div>
+
+	<div id="pipelineSteps">
+		{{#steps}}
+
+			<div style="width:{{stepwidth}}%;" class="steps" title="{{stepcontent}}" data-step="{{stepid}}">
+				<div class="sheader {{stepcolor}} black">
+					<b>{{step}}%</b>
+					{{#next}}
+						<div class="next hidden"><i class="icon-right-open-big"></i></div>{{/next}}
+				</div>
+			</div>
+
+		{{/steps}}
+	</div>
+
+</script>

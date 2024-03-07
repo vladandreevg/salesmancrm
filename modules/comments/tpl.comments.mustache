@@ -1,0 +1,203 @@
+<script id="themesTpl" type="text/html">
+
+	<TABLE class="top">
+		<tbody>
+		{{#list}}
+			<tr class="ha hand messagelist th60" data-id="{{id}}" onclick="editComment('{{id}}','viewshort');" title="Просмотр">
+				<TD class="mp0">
+
+					<div class="pl10 mp0">
+
+						<div class="fs-07 gray2 mb10 text-right">{{datum}}</div>
+
+						<div class="mb10">
+							<b class="blue fs-12">{{title}}</b>
+							{{#isClose}}
+								<span class="isclose"><i class="icon-lock red" title="Завершено"></i><sup class="fs-07">{{{dateClose}}}</sup></span>
+							{{/isClose}}
+						</div>
+
+						<div class="pr10 mb5 text-wrap">
+
+							<div class="mb10 fs-11 mfh-09">{{{content}}}</div>
+
+						</div>
+
+						{{#sdatum}}
+
+							<div class="pr10 mb5 mt5">
+
+								<div class="mb5 fs-07 em gray2">Последний ответ {{{sdatum}}} от {{lastuser}}</div>
+
+							</div>
+
+						{{/sdatum}}
+
+						<div class="pr10 mb5">
+
+							<div class="fs-09 mt10 gray2">
+								<b>Автор:</b> <i class="icon-user-1 blue" title="Автор"></i>{{user}}
+
+								{{#ucount}}
+									<br><b>Участники:</b>
+
+									{{#userlist}}<i class="icon-user-1 blue"></i>{{{user}}}
+									{{else}}
+									{{/userlist}}
+
+								{{/ucount}}
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</TD>
+				<TD class="hidden-iphone">
+
+					<div class="action--container">
+						<div class="action--block">
+							<a href="javascript:void(0)" onclick="editComment('{{id}}','open'); return false;" title="В новом окне" class="gray green"><i class="icon-chat blue"></i></a>
+							{{#change}}
+								<a href="javascript:void(0)" onClick="editComment('{{id}}','edit'); return false;" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>
+								<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editComment('{{id}}','delete');" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+							{{/change}}
+						</div>
+					</div>
+				</TD>
+			</tr>
+		{{/list}}
+		{{^list}}
+			<div id="emptymessage" class="gray miditxt text-center">
+				<i class="icon-chat-empty icon-3x gray"></i><br><b class="red">Упс.</b>&nbsp;&nbsp;<b>Нет доступных обсуждений</b>
+			</div>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="themesTplOld" type="text/html">
+
+	<TABLE>
+		<thead>
+		<tr class="header_contaner">
+			<th class="w100"><b>Дата</b></th>
+			<th><b>Тема</b></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="halight th35">
+				<TD class="w100 text-center">
+					<SPAN><b>{{datum}}</b><br><br><i class="icon-calendar-1 gray2 icon-3x" title="Опубликовано"></i></SPAN>
+				</TD>
+				<TD>
+					<div class="pr10">
+						<SPAN class="ellipsis1" style="height:30px">
+							<A href="javascript:void(0)" onclick="editComment('{{id}}','open')" title="Открыть карточку"><B class="blue miditxt"><i class="icon-chat"></i>{{title}}</B></A>
+							{{#isClose}}
+								<i class="icon-lock red" title="Закрыта"></i><sup>{{{dateClose}}}</sup>
+							{{/isClose}}
+						</SPAN>
+						<hr>
+						{{{content}}}
+						<br><br>
+						<div class="text-right">
+							<a href="javascript:void(0)" onclick="editComment('{{id}}','open')" title="Открыть карточку"><i class="icon-chat broun"></i>&nbsp;<b class="blue">Перейти к обсуждению →</b></a>&nbsp;&nbsp;
+						</div>
+						<br>
+
+						{{#scontent}}
+							<hr>
+							<div class="infodiv">
+								<b>Последний комментарий:</b><br><br><i>{{scontent}}</i><br><br>
+								<div class="smalltxt">Автор: <i class="icon-user-1 blue"></i><b>{{lastuser}}</b>, Дата:
+									<b>{{sdatum}}</b> ( <b>{{day}}</b> назад )
+								</div>
+							</div>
+						{{/scontent}}
+
+						<hr>
+						<div class="smalltxt">
+							<b>Обсуждение начал:</b> <i class="icon-user-1 blue" title="Автор"></i>{{user}}
+
+							{{#ucount}}
+								<br><b>Участники обсуждения:</b>
+
+								{{#userlist}}<i class="icon-user-1 blue"></i>{{{user}}}
+								{{else}}
+								{{/userlist}}
+
+							{{/ucount}}
+
+						</div>
+						{{#client}}
+							<hr>
+							<b>Объект</b>:
+							<a href="javascript:void(0)" onclick="openClient('{{clid}}')"><i class="icon-building blue"></i>&nbsp;{{client}}</a>
+						{{/client}}
+						{{#person}}
+							<hr>
+							<b>Объект</b>:
+							<a href="javascript:void(0)" onclick="openPerson('{{pid}}')"><i class="icon-user-1 green"></i>&nbsp;{{person}}</a>
+						{{/person}}
+						{{#deal}}
+							<hr>
+							<b>Объект</b>:
+							<a href="javascript:void(0)" onclick="openDogovor('{{did}}')"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a>
+						{{/deal}}
+					</div>
+				</TD>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="commentsTpl" type="text/html">
+
+	<TABLE>
+		<thead>
+		<tr class="header_contaner">
+			<th class="yw100"><b>Дата</b></th>
+			<th class="text-left"><b>Комментарий</b></th>
+			<th class="yw250 text-left"><b>Тема</b></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="halight th35">
+				<td class="text-center"><b>{{datum}}</b></TD>
+				<td>
+					{{content}}
+					<hr>
+					<div class="ellipsis smalltxt Bold"><i class="icon-user-1 blue" title="Автор"></i>&nbsp;{{user}}</div>
+					<br>
+					<div class="text-right">
+						<a href="javascript:void(0)" onclick="editComment('{{idparent}}','open')" title="Открыть карточку"><i class="icon-chat broun"></i>&nbsp;<b class="blue">Перейти к обсуждению →</b></a>&nbsp;&nbsp;
+					</div>
+					<br>
+				</td>
+				<td>
+					<div class="ellipsis"><b class="blue">{{theme}}</b></div>
+					<br>
+					<div class="smalltxt">
+						<b>Дата:</b> {{tdatum}}, <br>
+						<b>Автор:</b> <i class="icon-user-1 blue"></i>&nbsp;{{author}}
+					</div>
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>

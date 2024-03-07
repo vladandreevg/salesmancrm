@@ -1,0 +1,67 @@
+<script id="listTpl" type="text/html">
+	<table id="zebraTable">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="yw100 text-center"><b>Дата проверки</b></th>
+			<th class="nowidth text-left">
+				<div class="ellipsis"><b>Проверяемая запись</b></div>
+			</th>
+			<th class="yw100 text-left">
+				<div class="ellipsis"><b>Ответственный</b></div>
+			</th>
+			<th class="yw100 text-left">
+				<div class="ellipsis"><b>Статус</b></div>
+			</th>
+			<th class="yw120 text-left">
+				<div class="ellipsis"><b>Совпадения</b></div>
+			</th>
+			<th class="yw250 hidden-netbook text-left">
+				<div class="ellipsis"><b>Возможные дубли</b></div>
+			</th>
+			<th class="w80"></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#client}}
+			<tr class="ha {{color}} th55" id="{{clid}}">
+				<td class="text-center">
+					<div class="" title="Дата проверки">{{{datum}}}</div>
+				</td>
+				<td>
+					{{#clid}}
+						<a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="{{icon}}"></i>{{clid}}: {{client}}
+						</a>{{/clid}}
+					{{#pid}}
+						<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть в новом окне"><i class="{{icon}}"></i>{{pid}}: {{person}}
+						</a>{{/pid}}
+				</td>
+				<td>
+					<div class="ellipsis">{{user}}</div>
+				</td>
+				<td>
+					<div class="ellipsis">{{status}}</div>
+				</td>
+				<td class="hand" onclick="doubleModule.view('{{id}}')" title="Просмотр">
+					<div class="fs-09 Bold black">{{{why}}}</div>
+				</td>
+				<td class="hidden-netbook">
+					{{#doubles}}
+						{{#client}}
+							<div>{{id}}: {{client}}</div>{{/client}}
+						{{#person}}
+							<div>{{id}}: {{person}}</div>{{/person}}
+					{{/doubles}}
+				</td>
+				<td>
+					<a href="javascript:void(0)" onClick="doubleModule.merge('{{id}}')" class="gray blue" title="Обработать"><i class="icon-docs"></i></a>
+					<A href="javascript:void(0)" onClick="doubleModule.ignore('{{id}}')" class="gray red" title="Игнорировать"><i class="icon-block"></i></A>&nbsp;
+				</td>
+			</tr>
+		{{/client}}
+		</tbody>
+	</table>
+</script>
+
+<script id="viewTpl" type="text/html">
+
+</script>

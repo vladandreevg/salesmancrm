@@ -1,0 +1,64 @@
+<script id="controlpointTpl" type="text/html">
+
+	<table id="list_header" class="contracts">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="yw100 text-left">
+				<div class="ellipsis hand" id="x-datum_credit" onclick="changesort('data_plan')" title="Изменить порядок вывода">{{{ord1}}}Дата план.</div>
+			</th>
+			<th class="yw100 text-left">
+				<div class="ellipsis hand" id="x-invoice" onclick="changesort('data_fact')" title="Изменить порядок вывода">{{{ord2}}}Дата факт.</div>
+			</th>
+			<th class="text-left">
+				<div class="ellipsis hand" id="x-invoice_chek" onclick="changesort('ccid')" title="Контрольная точка">{{{ord3}}}Контрольная точка</div>
+			</th>
+			<th class="yw60 text-left">
+				<div class="ellipsis">Сделано</div>
+			</th>
+			<th class="yw250 text-left">
+				<div class="ellipsis">Заказчик / Сделка</div>
+			</th>
+			<th class="yw100 text-left">
+				<div class="ellipsis">Ответств.</div>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha {{color}} th45">
+				<td class="text-left"><span>{{data_plan}}</span></td>
+				<td class="text-left">
+					{{#data_fact}}<span title="{{data_fact}}">{{data_fact}}</span>{{/data_fact}}
+					{{^data_fact}}<span>--</span>{{/data_fact}}
+				</td>
+				<td><span title="{{title}}" class="ellipsis"><B>{{title}}</B></span></td>
+				<td class="text-center">
+					<span>{{{ddo}}}</span>
+				</td>
+				<td>
+					{{#client}}
+						<span title="{{client}}" class="ellipsis"><A href="javascript:void(0)" onClick="viewClient('{{clid}}')" title="Заказчик"><i class="icon-building broun"></i>&nbsp;{{client}}</A></span>
+					{{/client}}
+					{{#person}}
+						<span title="{{person}}" class="ellipsis"><A href="javascript:void(0)" onClick="viewPerson('{{pid}}')" title="Заказчик"><i class="icon-user-1 broun"></i>&nbsp;{{person}}</A></span>';
+					{{/person}}
+					{{#payer}}
+						<br><span class="ellipsis"><i class="icon-building blue"></i><a href="javascript:void(0)" onclick="viewClient('{{payerid}}')" title="Плательщик">{{payer}}</a></span>
+					{{/payer}}
+					{{#deal}}
+						<br><span class="ellipsis paddtop5" title="{{deal}}"><a href="javascript:void(0)" title="Быстрый просмотр: {{deal}}" onClick="viewDogovor('{{did}}')">{{{close}}}
+						<i class="icon-briefcase blue"></i>&nbsp;{{deal}}</a></span>
+					{{/deal}}
+				</td>
+				<td title="{{user}}" class="ipad-user">
+					<div class="ellipsis"><a href="javascript:void(0)" onclick="viewUser('{{iduser}}');">{{user}}</a>
+					</div>
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</table>
+
+	<div class="space-40"></div>
+
+</script>

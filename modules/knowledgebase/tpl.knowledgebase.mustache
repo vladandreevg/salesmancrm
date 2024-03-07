@@ -1,0 +1,145 @@
+<script id="knowledgebaseTpl" type="text/html">
+
+	<TABLE id="list_header">
+		<thead>
+		<tr class="header_contaner">
+			<th class="w100"><b>Дата</b></th>
+			<th class="text-left"><b>Запись</b></th>
+			<th class="w5"></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+
+			{{#show}}
+				<TR class="ha th60">
+					<TD class="text-center">
+						<SPAN>
+							<i class="icon-calendar-1 gray icon-2x" title="Опубликовано"></i><br><br>
+							<span class="fs-12 gray2">{{datum}}</span>
+						</SPAN>
+					</TD>
+					<TD>
+						<div class="mb10">
+
+							<A href="javascript:void(0)" onClick="editKb('{{id}}','view');" title="Просмотр"><B class="blue fs-14">{{title}}</B></A>
+							{{#trash}}[&nbsp;<b class="red">Черновик</b>&nbsp;]&nbsp;{{/trash}}
+
+							{{#keys}}
+								<div class="broun">{{keys}}</div>
+							{{/keys}}
+
+						</div>
+
+						{{{content}}}
+
+						<div class="mt10 fs-09 gray2 em">
+							<i class="icon-user-1 blue" title="Автор"></i>{{author}},
+							<i class="icon-folder-open blue" title="Раздел"></i>{{category}}
+						</div>
+
+					</TD>
+					<TD>
+
+						<div class="action--container">
+
+							<div class="action--block">
+								{{#pin}}
+									<a href="javascript:void(0)" onclick="editKb('{{id}}','unpin');" title="Открепить" class="gray red"><i class="icon-star red"></i></a>
+								{{/pin}}
+								{{^pin}}
+									<a href="javascript:void(0)" onclick="editKb('{{id}}','pin');" title="Прикрепить" class="gray red"><i class="icon-star-empty red"></i></a>
+								{{/pin}}
+								<a href="javascript:void(0)" onclick="editKb('{{id}}','open');" title="В новом окне" class="gray green"><i class="icon-print blue"></i></a>
+								{{#change}}
+									<a href="javascript:void(0)" onClick="editKb('{{id}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>
+									<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editKb('{{id}}','delete');" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+								{{/change}}
+							</div>
+
+						</div>
+
+					</TD>
+				</TR>
+			{{/show}}
+
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div style="height:45px;"></div>
+
+</script>
+
+<script id="knowledgebaseshortTpl" type="text/html">
+	<TABLE cellpadding="5" cellspacing="0" border="0" width="100%" id="" height="35">
+		{{#list}}
+
+			{{#show}}
+				<TR class="ha hand messagelist" data-id="{{id}}" onclick="editKb('{{id}}','viewshort');" title="Просмотр">
+					<TD>
+
+						<div class="pl10 mp0">
+
+							<div class="mb10">
+								{{#trash}}
+									<div class="pull-aright fs-07">[&nbsp;<b class="red">Черновик</b>&nbsp;]</div>
+								{{/trash}}
+								<div class="fs-07 gray2 mb10">{{datum}}</div>
+								<div class="mb5">
+									{{#pin}}<i class="icon-star red" title="Закреплено"></i>{{/pin}}
+									<b class="blue fs-12 flh-11">{{title}}</b>
+								</div>
+								{{#keys}}
+									<div class="gray fs-09">{{keys}}</div>
+								{{/keys}}
+							</div>
+
+							{{{content}}}
+
+							<div class="mt10 mb10 fs-09 gray2">
+								<i class="icon-user-1 blue" title="Автор"></i>{{author}},
+								<i class="icon-folder-open blue" title="Раздел"></i>{{category}}
+							</div>
+
+						</div>
+
+					</TD>
+					<TD valign="middle" width="1" class="hidden-iphone">
+						<div class="action--container">
+							<div class="action--block">
+
+								{{#change}}
+									{{#pin}}
+										<a href="javascript:void(0)" onclick="editKb('{{id}}','unpin');" title="Закреплено. Открепить" class="gray red"><i class="icon-star red"></i></a>
+									{{/pin}}
+									{{^pin}}
+										<a href="javascript:void(0)" onclick="editKb('{{id}}','pin');" title="Закрепить" class="gray red"><i class="icon-star-empty red"></i></a>
+									{{/pin}}
+								{{/change}}
+								<a href="javascript:void(0)" onclick="editKb('{{id}}','open');" title="В новом окне" class="gray green"><i class="icon-print blue"></i></a>
+								{{#change}}
+									<a href="javascript:void(0)" onClick="editKb('{{id}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>
+									<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editKb('{{id}}','delete');" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+								{{/change}}
+
+							</div>
+						</div>
+					</TD>
+				</TR>
+			{{/show}}
+
+		{{/list}}
+	</TABLE>
+
+		{{^list}}
+
+		<div id="emptymessage" class="gray miditxt text-center">
+			<i class="icon-graduation-cap-1 icon-3x gray"></i><br><b class="red">Упс.</b>&nbsp;&nbsp;<b>Нет доступных знаний</b>
+		</div>
+
+		{{/list}}
+
+	<div style="height:45px;"></div>
+
+</script>

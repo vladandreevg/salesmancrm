@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+
+RewriteEngine on
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+
+RewriteRule ^viber/(.*)/(.*)/$ viber.php?apikey=$1&botid=$2
+
+</IfModule>

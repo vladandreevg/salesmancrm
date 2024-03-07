@@ -1,0 +1,109 @@
+{{#list}}
+	<div class="mb10 fcontainer p0 focused" data-pid="{{pid}}">
+
+		{{^isMobile}}
+			<DIV class="panel">
+
+				{{#accesse}}
+					<a href="javascript:void(0)" onclick="addTask('','{{clid}}','{{pid}}','');" class="gray green mr5"><i class="icon-calendar-1" title="Добавить напоминание"></i></a>
+				{{/accesse}}
+				{{#rights.edit}}
+					<A href="javascript:void(0)" onclick="editPerson('{{pid}}','edit');" title="Редактировать" class="gray blue mr5"><i class="icon-pencil blue"></i></A>
+				{{/rights.edit}}
+				{{#delete.edit}}
+					<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteCCD('person','{{pid}}','');" title="Удалить" class="gray red mr5"><i class="icon-cancel-circled red"></i></A>
+				{{/delete.edit}}
+				{{#accesse}}
+					<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Карточка"><i class="icon-user-1 green"></i></a>
+				{{/accesse}}
+
+			</DIV>
+		{{/isMobile}}
+
+		<div class="cardBlock" style="overflow: hidden" data-height="260">
+
+			<div class="fieldblocks p10 block pb15">
+
+				<div class="mb20 Bold blue p10 flex-container float hand" onclick="openPerson('{{pid}}')" title="Открыть карточку">
+
+					<div class="flex-string w40 fs-12">
+						<i class="icon-user-1 {{#isMain}}red{{/isMain}}{{^isMain}}blue{{/isMain}}"></i>
+					</div>
+					<div class="flex-string float">
+						<div class="fs-12 Bold">{{person}}</div>
+						<div class="fs-09 gray2 mt5 noBold">{{ptitle}}</div>
+					</div>
+
+				</div>
+
+				{{#inputs}}
+
+					<div class="flex-container ptb5lr15">
+
+						<div class="flex-string wp20 gray2 {{#isArray}}pt5{{/isArray}}">{{field}}</div>
+						<div class="flex-string wp80 Bold xpmt">
+
+							{{#format}}
+
+								{{#isPhone}}
+									<div class="phonec phonenumber {{#isMobile}}ismob{{/isMobile}}" data-pid="{{pid}}" data-clid="{{clid}}" data-phone="{{number}}">
+										{{{formated}}}
+									</div>
+								{{/isPhone}}
+								{{#isEmail}}
+									{{{link}}}{{#isMailer}}{{{appendix}}}{{/isMailer}}
+								{{/isEmail}}
+
+							{{/format}}
+
+							{{#isArray}}
+								{{#format}}
+									<div class="xtag">{{.}}</div>
+								{{/format}}
+							{{/isArray}}
+
+							{{#isSimple}}
+								{{#color}}<div class="colordiv" style="background-color:{{color}}"></div>&nbsp;{{/color}}{{text}}
+							{{/isSimple}}
+
+						</div>
+
+					</div>
+
+				{{/inputs}}
+
+				{{#isMobile}}
+					<DIV class="panel">
+
+						{{#accesse}}
+							<a href="javascript:void(0)" onclick="addTask('','{{clid}}','{{pid}}','');" class="gray green mr5"><i class="icon-calendar-1" title="Добавить напоминание"></i></a>
+						{{/accesse}}
+						{{#rights.edit}}
+							<A href="javascript:void(0)" onclick="editPerson('{{pid}}','edit');" title="Редактировать" class="gray blue mr5"><i class="icon-pencil blue"></i></A>
+						{{/rights.edit}}
+						{{#delete.edit}}
+							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteCCD('person','{{pid}}','');" title="Удалить" class="gray red mr5"><i class="icon-cancel-circled red"></i></A>
+						{{/delete.edit}}
+						{{#accesse}}
+							<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Карточка"><i class="icon-user-1 green"></i></a>
+						{{/accesse}}
+
+					</DIV>
+				{{/isMobile}}
+
+			</div>
+
+		</div>
+
+		<div class="div-center blue hand cardResizer fs-07 mt10 pb10 hidden" title="Развернуть" data-pozi="close">
+			<i class="icon-angle-down"></i>
+			<i class="icon-angle-down"></i>
+			<i class="icon-angle-down"></i>
+		</div>
+
+	</div>
+{{/list}}
+
+{{^list}}
+	<div class="fcontainer mp10">Нет контактов</div>
+{{/list}}

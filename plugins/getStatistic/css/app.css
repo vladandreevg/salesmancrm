@@ -1,0 +1,259 @@
+#telo{
+	margin-top: 5px;
+	grid-template-columns: 100%;
+}
+fieldset{
+	border:1px solid #ccc;
+	background: #FFF;
+	padding:15px 10px;
+}
+legend{
+	font-size: 1.3rem;
+}
+i{
+	position: static;
+}
+p, li{
+	font-size: 1.2rem;
+	line-height: 1.3em;
+}
+
+h1{
+	font-size: 1.7em;
+	margin-top: 30px;
+}
+h2{
+	font-size: 1.4em;
+	margin-top: 30px;
+}
+h3{
+	color: var(--gray-darkblue);
+	font-size: 1.0em;
+	margin-top: 30px;
+}
+
+table th{
+	font-size: 0.9rem;
+	background: #E6E9ED;
+	border-bottom: 1px dotted #ccc;
+}
+table tbody td{
+	border-bottom: 1px dotted #ccc;
+	font-size: 1.05em;
+}
+
+#dtabs ul{
+	display: unset;
+}
+
+.hidden{
+	display: none !important;
+}
+.relative{
+	position: relative;
+}
+
+.foot{
+	position: fixed;
+	text-align: center;
+	bottom: 0; left:0;
+	box-sizing: border-box;
+	border-top:1px solid #ccc;
+	background: #FFF;
+	padding: 10px;
+	margin-top: 10px;
+	width: 100vw;
+}
+
+.period{
+	padding: 3px;
+	background: #FFF;
+	margin-top: -2px;
+}
+.period input{
+	width: 120px;
+	text-align: center;
+	border: 0;
+	vertical-align: baseline;
+	box-shadow: 0 0 0 !important;
+	-moz-box-shadow: 0 0 0 !important;
+	-webkit-box-shadow: 0 0 0 !important;
+}
+
+.infodiv #greenbutton a.button,
+.infodiv a.button,
+.infodiv a.button:link{
+	height: 21px;
+	font-weight: 700;
+	box-shadow: 0 0 0 !important;
+	-moz-box-shadow: 0 0 0 !important;
+	-webkit-box-shadow: 0 0 0 !important;
+}
+
+.wrapper,
+.wrapper2{
+	position: relative;
+	top: 0;
+	height: 450px;
+	overflow-x: auto;
+}
+
+.row .row{
+	display: inline-table;
+	width: auto;
+}
+
+.h10{height: 10px}
+
+.tagsmenu{
+	position:absolute;
+	top: 30px;
+	right: 25px;
+	/*width:220px;*/
+	z-index:20;
+	background: #fff;
+	-webkit-box-shadow: 0 1px 3px #222;
+	-moz-box-shadow: 0 1px 3px #222;
+	box-shadow: 0 1px 3px #222;
+}
+.tagsmenu ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	max-height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: block;
+	box-sizing: border-box;
+}
+.tagsmenu li{
+	/*display: table;*/
+	padding:5px 10px 5px 5px;
+	border-bottom: 1px dotted #ccc;
+	cursor:pointer;
+	width: 100%;
+}
+.tagsmenu li:hover{
+	background: #d0e5f5;
+	transition:all 300ms ease;
+	-webkit-transition:all 300ms ease;
+	-moz-transition:all 300ms ease;
+}
+.tagsmenu:after, .tagsmenu:before {
+	position: absolute;
+	top: -11px;
+	right: 20px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	pointer-events: none;
+}
+.tagsmenu:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-bottom-color: #bbb;
+	border-width: 5px;
+	margin-left: -5px;
+}
+.tagsmenu:before {
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: #fff;
+	border-width: 6px;
+	margin-left: -6px;
+	right: 19px;
+	z-index: 21;
+}
+.tagsbox{
+	position: absolute;
+	right: 30px;
+	z-index: 10;
+}
+.contentbox > .tagsbox{
+	top: 17px;
+}
+.themebox > .tagsbox{
+	top: 10px;
+}
+
+.text-left{
+	text-align: left;
+}
+.text-center{
+	text-align: center;
+}
+.text-right{
+	text-align: right;
+}
+.text-middle{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.label{
+	position: absolute;
+	top: 10px;
+	left: 15px;
+	z-index: 10;
+	color: #9b9b9b;
+}
+input:not(.dateinput){
+	padding-left: 105px;
+	outline: none;
+}
+select{
+	padding-left: 100px;
+	outline: none;
+}
+
+div:not(#webhook) li{
+	padding-top: 10px;
+}
+div#webhook li{
+	padding-top: 0;
+}
+
+
+
+#telo img {
+	outline: 0;
+	border: 0;
+	max-width: 100%;
+	padding: 10px;
+	background: #FFF;
+	box-sizing: border-box;
+}
+
+blockquote{
+	border: 1px solid #ccc;
+	border-left: 3px solid rgba(255,193,7 ,1);
+	padding-left: 50px;
+	margin-left: 0;
+	border-radius: 5px;
+	background: #FFF;
+	position : relative;
+}
+blockquote:before{
+	font-family: "fontello";
+	font-size: 2em;
+	position : absolute;
+	top: 20px;
+	left: 10px;
+	color: #ddd;
+	content: "\e8b8";
+}
+blockquote ul{
+	margin-left: 5px;
+	padding-left: 10px;
+	list-style: circle;
+}
+blockquote li{
+	margin-left: 5px;
+	padding: 0 !important;
+}
+blockquote h3,
+blockquote h2{
+	color: var(--red);
+	margin-top: 15px;
+	margin-bottom : -5px;
+	text-transform: uppercase;
+}

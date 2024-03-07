@@ -1,0 +1,13 @@
+Options -Indexes
+
+Order Deny,Allow
+
+<Files "*.zip">
+Deny from all
+Allow from localhost
+</Files>
+
+<Files "*.sql">
+Deny from all
+Allow from localhost
+</Files>

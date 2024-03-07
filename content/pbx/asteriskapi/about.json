@@ -1,0 +1,9 @@
+{
+	"name": "Asterisk (API)",
+	"type": "asteriskapi",
+	"functions":["events","cdr","originate","play"],
+	"docs": "",
+	"comment": "Asterisk API является разработкой компании <a href=\"https://voxlink.ru\" title=\"Вокс Линк\" target=\"_blank\" class=\"Bold red\">Вокс Линк</a>. Для внедрения Asterisk API свяжитесь с компанией-разработчиком.",
+	"author": "Vladislav Andreev",
+	"autor_email": "a.vladislav.g@gmail.com"
+}

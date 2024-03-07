@@ -1,0 +1,8 @@
+{
+	"HOSTBD":"localhost",
+	"USERBD":"user",
+	"PASSBD":"password",
+	"DATABASE":"database",
+	"mode":"simple",
+	"timeOut":"2.5"
+}

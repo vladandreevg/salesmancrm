@@ -1,0 +1,9 @@
+{
+	"name": "Sipnet",
+	"type": "sipnet",
+	"functions":["originate"],
+	"docs": "https://salesman.pro/docs/97",
+	"comment": "",
+	"author": "Vladislav Andreev",
+	"autor_email": "a.vladislav.g@gmail.com"
+}

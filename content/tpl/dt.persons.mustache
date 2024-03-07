@@ -1,0 +1,70 @@
+<script id="personsTpl" type="text/html">
+
+	<table id="zebraTable">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			{{#header}}
+				<TH class="yw40 text-center"></TH>
+				<TH class="w30 text-center hidden-ipad"><i class="icon-smile" title="{{tip}}"></i></TH>
+				<TH class="nowidt text-center"><b>{{title}}</b></TH>
+				<TH class="yw100"><b>{{{phone}}}</b></TH>
+				<TH class="yw100"><b>{{{mob}}}</b></TH>
+				<TH class="yw120"><b>{{{email}}}</b></TH>
+				<TH class="ipad-user yw80">
+					<div class="ellipsis"><B>{{user}}</B></div>
+				</TH>
+				<TH class="ipad-title hidden-netbook yw200"><b>{{client}}</b></TH>
+				<th class="w5"></th>
+			{{/header}}
+		</tr>
+		</thead>
+		<tbody>
+		{{#person}}
+			<tr class="ha tsk th55">
+				<TD class="hidden-iphone text-center">
+					<A href="javascript:void(0)" onClick="openPerson('{{pid}}')" title="Открыть в новом окне"><i class="icon-user-1 broun"></i></A>
+				</TD>
+				<TD class="ha hidden-ipad text-center">
+					<div class="colordiv" title="{{relation}}" style="background-color:{{rcolor}}"></div>
+				</TD>
+				<TD class="nowidth">
+					<SPAN class="ellipsis fs-11" title="{{person}}"><A href="javascript:void(0)" onClick="viewPerson('{{pid}}')"><B>{{person}}</B></A></SPAN>
+					{{#ptitle}}
+						<br><SPAN class="ellipsis fs-10 gray" title="{{ptitle}}">{{ptitle}}</SPAN>
+					{{/ptitle}}
+				</TD>
+				<TD>
+					<div class="phone">{{#phone}}{{{phone}}}{{/phone}}{{^phone}}-{{/phone}}</div>
+				</TD>
+				<TD>
+					<div class="phone">{{#mob}}{{{mob}}}{{/mob}}{{^mob}}-{{/mob}}</div>
+				</TD>
+				<TD>
+					<div class="ellipsis">{{#email}}{{{email}}}{{/email}}{{^email}}-{{/email}}</div>
+				</TD>
+				<TD><SPAN class="ellipsis" title="{{user}}">{{user}}</SPAN></TD>
+				<TD class="ipad-title hidden-netbook">
+					{{#client}}
+						<SPAN class="ellipsis">
+						<A href="javascript:void(0)" onClick="openClient('{{clid}}')" title="Открыть в новом окне: {{client}}"><i class="icon-building broun"></i>{{client}}</A>&nbsp;
+						</SPAN>
+					{{/client}}
+				</TD>
+				<TD>
+					{{#change}}
+						<div class="action--container">
+							<div class="action--block">
+								<a href="javascript:void(0)" onClick="openPerson('{{pid}}');" title="Открыть" class="gray brounbg2"><i class="icon-user-1 broun"></i></a>
+								<a href="javascript:void(0)" onClick="editPerson('{{pid}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>
+								<a href="javascript:void(0)" onClick="addTask('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="gray green"><i class="icon-calendar-1" title="Добавить напоминание"></i></a>
+								<a href="javascript:void(0)" onClick="addHistory('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="gray orange"><i class="icon-clock" title="Добавить активность"></i></a>
+							</div>
+						</div>
+					{{/change}}
+				</TD>
+			</tr>
+		{{/person}}
+		</tbody>
+	</table>
+
+</script>

@@ -1,0 +1,359 @@
+body {
+	height     : calc(100vh);
+	overflow-y : auto;
+}
+
+.cron-main {
+	width                 : 100vw;
+	margin                : 0 auto;
+	display               : grid;
+	grid-template-columns : 100%;
+	grid-template-rows    : 100vh;
+}
+
+.cron-first {
+	width : 90%;
+	margin      : 0 auto;
+	padding-top : 20px;
+}
+
+.grid {
+	display               : grid;
+	grid-template-columns : repeat(auto-fill, calc(50% - 3px));
+	grid-gap              : 5px 5px;
+	box-sizing            : border-box;
+}
+
+.detales {
+	display               : grid;
+	grid-template-columns : repeat(auto-fill, calc(100% - 3px));
+	grid-gap              : 5px 5px;
+	box-sizing            : border-box;
+}
+
+.weeks{
+	display               : grid;
+	grid-template-columns : 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-gap              : 2px;
+	box-sizing            : border-box;
+}
+
+.cron-ellipsis {
+	position       : relative;
+	text-overflow  : ellipsis !important;
+	overflow       : hidden !important;
+	white-space    : nowrap;
+	display        : inline-block;
+	line-height    : 1.25em;
+	height         : 1.25em;
+	width          : 95%;
+	vertical-align : middle;
+	margin-right   : -9999px;
+}
+
+a.button.small{
+	margin:0 !important;
+	font-size: 0.8em;
+}
+.button--icon {
+	position                  : absolute;
+	z-index                   : 10;
+	top                       : -10px;
+	right                     : -10px;
+	color                     : var(--gray);
+	padding                   : 5px;
+	background                : var(--gray-superlite);
+	border-left               : 1px solid var(--gray);
+	border-bottom             : 1px solid var(--gray);
+	border-bottom-left-radius : 5px;
+}
+.button.small.dotted{
+	padding: 2px 5px !important;
+}
+
+.gray a.button {
+	border: 1px dotted var(--gray-litedarkblue) !important;
+}
+.gray:hover a > i {
+	color: inherit;
+}
+
+.flex-container.infodiv {
+	border     : 1px solid #E6E9ED !important;
+	box-sizing : border-box;
+}
+
+#help {
+	height   : 100vh;
+	z-index : 11;
+	box-shadow: -2px 2px 5px rgba(154, 147, 140, 0.5);
+}
+
+#helper,
+#helpcloser{
+	/*display: none;*/
+	position    : absolute;
+	top         : 10px;
+	right       : 30px;
+	z-index     : 11;
+	text-align  : center;
+	font-size   : 3em;
+	color       : var(--gray-darkblue);
+	cursor      : pointer;
+}
+
+@media (min-width : 1200px) {
+	
+	.cron-main {
+		grid-template-columns : 55% 45%;
+	}
+	
+	.cron-first {
+		width : 90%;
+	}
+	
+	#helper,
+	#helpcloser{
+		display: none;
+	}
+	
+}
+
+@media (max-width : 1200px) {
+	
+	body {
+		font-size: 14px;
+	}
+
+	.cron-main {
+		grid-template-columns : 100%;
+	}
+
+	.cron-first {
+		width : 90%;
+	}
+
+	#help {
+		position : absolute;
+		top      : 0;
+		right    : 0;
+		width    : 50%;
+		display  : none;
+		height   : 100vh;
+		z-index : 11;
+		box-shadow: -2px 2px 5px rgba(154, 147, 140, 0.5);
+	}
+
+	#helpcloser{
+		position : fixed;
+		z-index : 12;
+	}
+
+	#helper,
+	#helpcloser {
+		display : block;
+	}
+
+}
+
+@media (min-width : 1768px) {
+
+	body {
+		font-size: 13px;
+	}
+
+}
+
+@media (max-width : 768px) {
+
+	.cron-first {
+		width: 96%;
+	}
+	.cron-main {
+		width      : 100%;
+		margin     : 0;
+		box-sizing : border-box;
+		overflow-x: hidden;
+	}
+	
+	#help {
+		width    : 93vw;
+	}
+
+	#helper, #helpcloser {
+		display: none;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		z-index: 11;
+		text-align: center;
+		font-size: 1em;
+		color: var(--gray-darkblue);
+		cursor: pointer;
+	}
+
+	.row .column12:nth-child(2n+1){
+		padding: 0 15px 0 0;
+	}
+
+	.flex-container.p10{
+		padding: 5px;
+	}
+	
+}
+
+input[type="checkbox"] ~ label {
+	font-weight : bold;
+	color       : var(--blue);
+}
+
+span.select {
+	display : block;
+}
+span.label {
+	font-size      : 0.8em;
+	color          : var(--gray-darkblue);
+	font-weight    : bold;
+	text-transform : uppercase;
+}
+
+fieldset {
+	border     : 1px solid #CCC;
+	background : #FFF;
+	padding    : 15px 10px;
+}
+legend {
+	font-size : 1.3rem;
+}
+i {
+	position : static;
+}
+p, li {
+	font-size   : 1.2rem;
+	line-height : 1.3em;
+}
+
+h1 {
+	font-size  : 1.7rem;
+	margin-top : 30px;
+}
+h2 {
+	font-size  : 1.4rem;
+	margin-top : 30px;
+}
+h3 {
+	color      : var(--gray-darkblue);
+	font-size  : 1.0rem;
+	margin-top : 30px;
+}
+
+#help h1 {
+	font-size : 2em;
+}
+#help h2 {
+	font-size : 1.6em;
+}
+#help h3 {
+	color     : var(--blue);
+	font-size : 1.4em;
+}
+
+table th {
+	font-size     : 0.9rem;
+	background    : #E6E9ED;
+	border-bottom : 1px dotted #CCC;
+}
+table tbody td {
+	border-bottom : 1px dotted #CCC;
+	font-size     : 1.05em;
+}
+
+#help blockquote {
+	border        : 1px solid #CCC;
+	border-left   : 3px solid rgba(255, 193, 7, 1);
+	padding-left  : 50px;
+	padding-right : 10px;
+	margin-left   : 0;
+	border-radius : 5px;
+	background    : #FFF;
+	position      : relative;
+	display: block;
+	width: 89%;
+}
+#help blockquote:before {
+	font-family : "fontello";
+	font-size   : 2em;
+	position    : absolute;
+	top         : 20px;
+	left        : 10px;
+	color       : #DDD;
+	content     : "\e8b8";
+}
+#help blockquote ul {
+	margin-left  : 5px;
+	padding-left : 10px;
+	list-style   : circle;
+}
+#help blockquote li {
+	margin-left : 5px;
+	padding     : 0 !important;
+}
+#help blockquote > h3,
+#help blockquote > h2 {
+	color          : var(--red);
+	margin-top     : 15px;
+	margin-bottom  : -5px;
+	text-transform : uppercase;
+}
+
+.like-input,
+input,
+select,
+textarea {
+	padding     : 4px 5px;
+	border      : 2px solid var(--gray-lite);
+	font-size   : 1.2rem !important;
+	outline     : none;
+	font-weight : bold;
+	/*color: var(--blue);*/
+}
+
+.like-input:hover,
+input:focus,
+select:focus,
+textarea:focus {
+	padding            : 4px 5px;
+	border             : 2px solid var(--gray-darkblue);
+	box-shadow         : 0 0 0 var(--gray-darkblue);
+	-webkit-box-shadow : 0 0 0 var(--gray-darkblue);
+	-moz-box-shadow    : 0 0 0 var(--gray-darkblue);
+}
+
+#help pre{
+	font-size: 0.95em;
+	font-family: monospace;
+	background    : #FFF;
+	border        : 1px solid #CCC;
+	border-left   : 3px solid var(--biruza);
+	padding  : 20px 10px;
+	border-radius : 5px;
+	line-height: 1.2em;
+	box-sizing: border-box;
+	overflow-wrap         : break-word; /* не поддерживает IE, Firefox; является копией word-wrap */
+	word-wrap             : break-word;
+	line-break            : auto; /* auto; нет поддержки для русского языка */
+	hyphens               : auto; /* не работает в webkit */
+	/*word-break            : keep-all;*/ /* работает в webkit */
+	word-break            : break-word;
+	white-space           : break-spaces;
+	width                 : 99%;
+	/*word-break            : break-all !important;*/
+	hyphenate-limit-chars : 6 3 2; /*Ограничение длины слова и количества символов до и после переноса*/
+	hyphenate-limit-lines : 2; /*Ограничение числа последовательных переносов*/
+	hyphenate-limit-last  : always; /* Запрет переносов в последней строке абзаца */
+	hyphenate-limit-zone  : 10%;
+}
+.language-php {
+	font-size   : 0.95em;
+	font-family : monospace;
+}

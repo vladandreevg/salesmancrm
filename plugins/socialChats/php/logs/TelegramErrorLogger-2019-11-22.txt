@@ -1,0 +1,20 @@
+============[Date]============
+[ 2019-11-22 00:23:55  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:55001. (5)
+=========[Sent Data]==========
+[ref]
+ref.url= https://salesman.shn-host.ru/hook.php?key=t1xdeOwWSIqgDol70CkRdK3WD4N4cm
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3201): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(1715): Telegram->endpoint('setWebhook', Array, true)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(135): Telegram->setWebhook('https://salesma...')
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(310): Chats\TelegramProvider->setWebhook(Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\modal.php(233): Chats\Chats->setChannels('0', Array)
+#6 {main}
+

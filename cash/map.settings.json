@@ -1,0 +1,429 @@
+{
+  "welcome":{
+	"name":"Начало",
+	"url":"content/admin/welcome.php",
+	"icon":"icon-home",
+	"index":0,
+	"razdel":"base"
+  },
+  "settings":{
+	"name":"Общие настройки",
+	"url":"content/admin/settings.php",
+	"icon":"icon-cog-alt",
+	"index":0,
+	"razdel":"base"
+  },
+  "mycompany":{
+	"name":"Компании и Счета",
+	"url":"content/admin/mycompany.php",
+	"icon":"icon-building",
+	"index":0,
+	"razdel":"base"
+  },
+  "direction":{
+	"name":"Направления деятельности",
+	"url":"content/admin/direction.php",
+	"icon":"icon-briefcase",
+	"index":0,
+	"razdel":"base"
+  },
+  "contractsettings":{
+	"name":"Номера документов",
+	"url":"content/admin/contractsettings.php",
+	"icon":"icon-docs",
+	"index":0,
+	"razdel":"base"
+  },
+  "contracteditor":{
+	"name":"Типы документов",
+	"url":"content/admin/contracteditor.php",
+	"icon":"icon-docs",
+	"index":0,
+	"razdel":"base"
+  },
+  "contracttemplate":{
+	"name":"Шаблоны документов",
+	"url":"content/admin/contracttemplate.php",
+	"icon":"icon-docs",
+	"index":0,
+	"razdel":"base"
+  },
+  "invoiceeditor":{
+	"name":"Настройка счетов",
+	"url":"content/admin/invoiceeditor.php",
+	"icon":"icon-doc-text-inv",
+	"index":0,
+	"razdel":"base"
+  },
+  "akteditor":{
+	"name":"Настройка актов",
+	"url":"content/admin/akt_editor.php",
+	"icon":"icon-doc-text-inv",
+	"index":0,
+	"razdel":"base"
+  },
+  "contractstatus":{
+	"name":"Статусы документов",
+	"url":"content/admin/contractstatus.php",
+	"icon":"icon-tags",
+	"index":0,
+	"razdel":"base"
+  },
+  "otdel":{
+	"name":"Отделы",
+	"url":"content/admin/otdel.php",
+	"icon":"icon-sitemap",
+	"index":0,
+	"razdel":"base"
+  },
+  "office":{
+	"name":"Офисы",
+	"url":"content/admin/office.php",
+	"icon":"icon-coffee",
+	"index":0,
+	"razdel":"base"
+  },
+  "users":{
+	"name":"Управление пользователями",
+	"url":"content/admin/users.php",
+	"icon":"icon-users-1",
+	"index":0,
+	"razdel":"base"
+  },
+  "users.table":{
+	"name":"Акты",
+	"url":"content/admin/users.table.php",
+	"icon":"icon-users-1",
+	"index":0,
+	"razdel":"base"
+  },
+  "fields":{
+	"name":"Настройки форм",
+	"url":"content/admin/fields.php",
+	"icon":"icon-table",
+	"index":0,
+	"razdel":"base"
+  },
+  "efields":{
+	"name":"Настройка Экспресс-формы",
+	"url":"content/admin/efields.php",
+	"icon":"icon-table",
+	"index":0,
+	"razdel":"base"
+  },
+  "industry":{
+	"name":"Виды отраслей",
+	"url":"content/admin/industry.php",
+	"icon":"icon-commerical-building",
+	"index":0,
+	"razdel":"base"
+  },
+  "clientpath":{
+	"name":"Источник клиента",
+	"url":"content/admin/clientpath.php",
+	"icon":"icon-exchange",
+	"index":0,
+	"razdel":"base"
+  },
+  "loyalty":{
+	"name":"Типы лояльности",
+	"url":"content/admin/loyalty.php",
+	"icon":"icon-smile",
+	"index":0,
+	"razdel":"base"
+  },
+  "relations":{
+	"name":"Типы отношений",
+	"url":"content/admin/relations.php",
+	"icon":"icon-thumbs-up-alt",
+	"index":0,
+	"razdel":"base"
+  },
+  "territory":{
+	"name":"Территории",
+	"url":"content/admin/territory.php",
+	"icon":"icon-globe",
+	"index":0,
+	"razdel":"base"
+  },
+  "profile":{
+	"name":"Профили",
+	"url":"content/admin/profile.php",
+	"icon":"icon-user-md",
+	"index":0,
+	"razdel":"base"
+  },
+  "doubles":{
+	"name":"Поиск дублей",
+	"url":"content/admin/doubles.php",
+	"icon":"icon-search",
+	"index":0,
+	"razdel":"base"
+  },
+  "fields.deal":{
+	"name":"Настройка формы сделки",
+	"url":"content/admin/fields.deal.php",
+	"icon":"icon-table",
+	"index":0,
+	"razdel":"base"
+  },
+  "dealfieldsforstep":{
+	"name":"Настройка формы сделки",
+	"url":"content/admin/dealfieldsforstep.php",
+	"icon":"icon-table",
+	"index":0,
+	"razdel":"base"
+  },
+  "steps":{
+	"name":"Этапы сделок",
+	"url":"content/admin/steps.php",
+	"icon":"icon-chart-bar-1",
+	"index":0,
+	"razdel":"base"
+  },
+  "currency":{
+	"name":"Валюты",
+	"url":"content/admin/currency.php",
+	"icon":"icon-euro",
+	"index":0,
+	"razdel":"base"
+  },
+  "multisteps":{
+	"name":"МультиВоронка",
+	"url":"content/admin/multisteps.php",
+	"icon":"icon-sort-alt-down",
+	"index":0,
+	"razdel":"base"
+  },
+  "closedeals":{
+	"name":"Статусы закрытых сделок",
+	"url":"content/admin/closedeals.php",
+	"icon":"icon-medkit",
+	"index":0,
+	"razdel":"base"
+  },
+  "dealtip":{
+	"name":"Типы сделок",
+	"url":"content/admin/dealtip.php",
+	"icon":"icon-briefcase",
+	"index":0,
+	"razdel":"base"
+  },
+  "controlpoints":{
+	"name":"Контрольные точки",
+	"url":"content/admin/controlpoints.php",
+	"icon":"icon-briefcase",
+	"index":0,
+	"razdel":"base"
+  },
+  "deal.anketa":{
+	"name":"Анкеты по сделкам",
+	"url":"content/admin/deal.anketa.php",
+	"icon":"icon-doc-text",
+	"index":0,
+	"razdel":"base"
+  },
+  "fields.price":{
+	"name":"Настройка модуля Прайс",
+	"url":"content/admin/fields.price.php",
+	"icon":"icon-table",
+	"index":0,
+	"razdel":"base"
+  },
+  "report.editor":{
+	"name":"Управление отчетами",
+	"url":"content/admin/report.editor.php",
+	"icon":"icon-signal",
+	"index":0,
+	"razdel":"base"
+  },
+  "activities":{
+	"name":"Типы активности",
+	"url":"content/admin/activities.php",
+	"icon":"icon-calendar",
+	"index":0,
+	"razdel":"base"
+  },
+  "tpl.editor":{
+	"name":"Шаблоны для сообщений",
+	"url":"content/admin/tpl.editor.php",
+	"icon":"icon-comment-empty",
+	"index":0,
+	"razdel":"base"
+  },
+  "modules":{
+	"name":"Доступные модули",
+	"url":"content/admin/modules.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "entry":{
+	"name":"Обращения",
+	"url":"modules/entry/settings.entry.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "leads":{
+	"name":"Сборщик заявок",
+	"url":"modules/leads/settings.leads.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "modcatalog":{
+	"name":"Каталог-склад",
+	"url":"modules/modcatalog/settings.modcatalog.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "moddaycontrol":{
+	"name":"Учет узлов и приборов",
+	"url":"modules/moddaycontrol/settings.moddaycontrol.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "workplan":{
+	"name":"План работ",
+	"url":"modules/workplan/settings.modworkplan.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "projects":{
+	"name":"Проекты",
+	"url":"modules/projects/settings.projects.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "corpuniver":{
+	"name":"Корпоративный университет",
+	"url":"modules/corpuniver/settings.corpuniver.php",
+	"icon":"icon-town-hall",
+	"index":1,
+	"razdel":"module"
+  },
+  "wcdialog":{
+	"name":"Веб-консультант",
+	"url":"modules/wcdialog/settings.wcdialog.php",
+	"icon":"icon-tools",
+	"index":1,
+	"razdel":"module"
+  },
+  "callcenter":{
+	"name":"Центр исходящих звонков",
+	"url":"modules/callcenter/settings.callcenter.php",
+	"icon":"icon-phone",
+	"index":1,
+	"razdel":"module"
+  },
+  "webhook":{
+	"name":"Webhook",
+	"url":"content/admin/webhook.php",
+	"icon":"icon-shareable",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "webhooklog":{
+	"name":"Логи работы Webhook",
+	"url":"content/admin/webhooklog.php",
+	"icon":"icon-list",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "plugins":{
+	"name":"Плагины",
+	"url":"content/admin/plugins.php",
+	"icon":"icon-cog-alt",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "services.editor":{
+	"name":"Сервисы Рассылок",
+	"url":"content/admin/services.editor.php",
+	"icon":"icon-mail",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "smtp.editor":{
+	"name":"Почтовый сервер",
+	"url":"content/admin/smtp.editor.php",
+	"icon":"icon-asterisk",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "sip.editor":{
+	"name":"Телефония",
+	"url":"content/admin/sip.editor.php",
+	"icon":"icon-asterisk",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "sip.users":{
+	"name":"Телефония / Номера сотрудников",
+	"url":"content/admin/sip.users.php",
+	"icon":"icon-phone",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "mailer":{
+	"name":"Почтовик",
+	"url":"content/admin/mailer.php",
+	"icon":"icon-mail-alt",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "services.other":{
+	"name":"Разные интеграции",
+	"url":"content/admin/services.other.php",
+	"icon":"icon-article",
+	"index":2,
+	"razdel":"plugin"
+  },
+  "sysinfo":{
+	"name":"Информация о системе",
+	"url":"content/admin/sysinfo.php",
+	"icon":"icon-cog-alt",
+	"index":3,
+	"razdel":"service"
+  },
+  "error.logs":{
+	"name":"Лог ошибок",
+	"url":"content/admin/error.logs.php",
+	"icon":"icon-cog-alt",
+	"index":3,
+	"razdel":"service"
+  },
+  "system.logs":{
+	"name":"События в системе",
+	"url":"content/admin/system.logs.php",
+	"icon":"icon-book",
+	"index":3,
+	"razdel":"service"
+  },
+  "backup":{
+	"name":"Резервные копии",
+	"url":"content/admin/backup.php",
+	"icon":"icon-hdd",
+	"index":3,
+	"razdel":"service"
+  },
+  "cleaner":{
+	"name":"Обслуживание и очистка",
+	"url":"content/admin/cleaner.php",
+	"icon":"icon-trash",
+	"index":3,
+	"razdel":"service"
+  },
+  "soiskatel":{
+	"name":"Поиск сотрудника",
+	"url":"modules/soiskatel/settings.soiskatel.php",
+	"icon":"soiskatel.svg",
+	"index":1,
+	"razdel":"module"
+  }
+}

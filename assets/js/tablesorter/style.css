@@ -1,0 +1,16 @@
+.sortable {width:100%; border-left:1px solid #c6d5e1; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 auto 15px}
+.sortable .head  {background:url(images/sort.gif) 20px center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .desc, .sortable .asc {background: #A7988B}
+.sortable .desc  {background:url(images/desc.gif) 20px center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .asc  {background:url(images/asc.gif) 20px  center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .head:hover, .sortable .desc:hover, .sortable .asc:hover {color:black}
+.sortable .evenrow td {background:#fff}
+.sortable .oddrow td {background:#ecf2f6}
+.sortable td.evenselected {background:#ecf2f6}
+.sortable td.oddselected {background:#ecf2f6}
+tbody td:nth-child(6):hover, tbody td:nth-child(7):hover, tbody td:nth-child(8):hover
+{
+	background: rgba(158,158,158 ,0.5) !important;
+	color: black;
+	cursor:  pointer;
+}

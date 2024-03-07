@@ -1,0 +1,155 @@
+<html lang="ru">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+	<title>Анкета по заказу</title>
+	<LINK rel="stylesheet" type="text/css" href="/assets/css/app.css">
+	<link rel="stylesheet" href="/assets/css/fontello.css">
+	<style type="text/css">
+		<!--
+		body {
+			font-size          : 14px;
+			font-family        : arial, tahoma, sans-serif;
+			background-color   : #FFF;
+			color              : #000000;
+			box-shadow         : 0 1px 1px #999;
+			-webkit-box-shadow : 0 1px 1px #999;
+			-moz-box-shadow    : 0 1px 1px #999;
+			width              : 21cm;
+			height             : auto;
+			margin             : 0 auto;
+			padding            : 20px 40px 50px 60px;
+		}
+
+		html {
+			background : #CCCCCC;
+			padding    : 10px 10px 40px 10px;
+			font-size  : 12px;
+			height     : 100%;
+			overflow   : auto;
+		}
+
+		table, td {
+			border-collapse : collapse;
+			padding         : 2px;
+			font-size       : 12px;
+		}
+
+		.small td, .small tr {
+			font-size : 12px;
+		}
+
+		h1 {
+			font-size   : 22px;
+			line-height : 135%;
+		}
+
+		h2 {
+			font-size   : 16px;
+			line-height : 115%;
+		}
+
+		.w193 {
+			width : 100%;
+		}
+
+		div.table--newface .ablock {
+			border        : 1px dashed #222 !important;
+			border-radius : 5px;
+			display       : block;
+			margin-bottom : 5px;
+			background    : #F5F5F5 !important;
+		}
+
+		div.table--newface .ablock.bgwhite {
+			background : #F5F5F5 !important;
+		}
+
+		div.table--newface .viewdiv .ablock {
+			background : #F5F5F5 !important;
+		}
+
+		div.table--newface .tag {
+			border-radius : 5px;
+			display       : inline-block;
+		}
+
+		.viewdiv {
+			border : 1px dashed #222 !important;
+			margin-bottom : 5px;
+		}
+
+		.idel {
+			display : none;
+		}
+
+		@media print {
+			body {
+				font-size          : 14px;
+				background         : #FFFFFF;
+				padding            : 0;
+				margin             : 0 20px 20px 40px;
+				width              : auto;
+				height             : auto;
+				box-shadow         : 0 0 0 #FFFFFF;
+				-moz-box-shadow    : 0 0 0 #FFFFFF;
+				-webkit-box-shadow : 0 0 0 #FFFFFF;
+			}
+
+			html {
+				background : #FFFFFF;
+				padding    : 0;
+			}
+
+			.w193 {
+				width : 100%;
+			}
+
+			.w176 {
+				width : 17.6cm;
+			}
+
+			.pad1 {
+				padding : 0;
+			}
+		}
+
+		-->
+	</style>
+</head>
+<body>
+<div class="pad11 w193">
+
+	<table>
+		{{#dogTitle}}
+		<tr>
+			<td>
+				<h2>
+					<b>Заказ {{dogTitle}} от {{dogDateCreate}} г. </b>
+				</h2>
+				<hr>
+			</td>
+		</tr>
+		{{/dogTitle}}
+		{{#anketaTitle}}
+		<tr>
+			<td>
+				<h2><strong>Анкета "{{anketaTitle}}"</strong></h2>
+			</td>
+		</tr>
+		{{/anketaTitle}}
+		<tr>
+			<td>
+				<div class="mt20">{{{anketa}}}</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="space-100">&nbsp;</div>
+			</td>
+		</tr>
+	</table>
+
+</div>
+
+</body>
+</html>

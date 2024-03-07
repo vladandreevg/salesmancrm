@@ -1,0 +1,238 @@
+/*body {  	cursor: pointer; }*/
+html, body {
+	margin   : 0;
+	padding  : 0;
+	height   : 100vh !important;
+	overflow : hidden;
+}
+
+#gantt_here {
+	height : 400px;
+	width  : 80%;
+}
+
+/*спрятать кнопку добавления из шапки таблицы*/
+/*.gantt_grid_head_add{
+	display:none;
+}*/
+/*Предотвращение от добавления задач определенных уровней*/
+.nested_task .gantt_add {
+	display : none !important;
+}
+
+/*стили для иконки во весь экран*/
+.fixReloadButton {
+	display               : inline-block;
+	position              : fixed;
+	bottom                : 40px;
+	right                 : 15px;
+	width                 : 40px;
+	height                : 40px;
+	color                 : #FFF;
+	background            : #2E658D;
+	border                : 4px solid #D2E9FF;
+	text-decoration       : none;
+	text-align            : center;
+	line-height           : 40px;
+	cursor                : pointer;
+	-moz-border-radius    : 40px;
+	-webkit-border-radius : 40px;
+	border-radius         : 40px;
+	opacity               : 0.4;
+}
+
+/*для выходного дня*/
+.weekend {
+	background : #F4F7F4 !important;
+}
+
+/*цвет для правой панель(шапка)*/
+.day_scale {
+	background-color : #C3C7D4;
+}
+
+.week_scale {
+	background-color : #E5DFE8;
+}
+
+.month_scale {
+	background-color : #DFE8DF;
+}
+
+/**
+Цвета для модуля Проекты
+ */
+.statuscolor{
+	cursor     : pointer !important;
+}
+.statuscolor_broun{
+	border     : 2px solid #C68A00;
+	background : #C68A00;
+	color      : #FFF !important;
+}
+.statuscolor_blue{
+	background-color:#2980B9;
+	border     : 2px solid #2980B9;
+	color      : #FFF !important;
+}
+.statuscolor_bluemint{
+	background-color:var(--mint);
+	border     : 2px solid var(--mint);
+	color      : #FFF !important;
+}
+.statuscolor_lime{
+	background-color:#C0CA33;
+	border     : 2px solid #C0CA33;
+	color      : #FFF !important;
+}
+.statuscolor_green{
+	background-color:#349C5A;
+	border     : 2px solid #349C5A;
+	color      : #FFF !important;
+}
+.statuscolor_red{
+	background-color:#E74B3B;
+	border     : 2px solid #E74B3B;
+	color      : #FFF !important;
+}
+.statuscolor_gray{
+	background-color:#95A5A6;
+	border     : 2px solid #95A5A6;
+	color      : #FFF !important;
+}
+.statuscolor_gray2{
+	background-color:#607D8B;
+	border     : 2px solid #607D8B;
+	color      : #FFF !important;
+}
+.statuscolor_deepgray{
+	background-color:#2e4053;
+	border     : 2px solid #2e4053;
+	color      : #FFF !important;
+}
+.statuscolor_indigo {
+	background-color: #4B0082;
+	border     : 2px solid #4B0082;
+	color: #FFF !important;
+}
+.statuscolor_olive{
+	background-color:#808000;
+	border     : 2px solid #808000;
+	color      : #FFF !important;
+}
+.statuscolor_cyan{
+	background-color:#00ACC1;
+	border     : 2px solid #00ACC1;
+	color      : #FFF !important;
+}
+.statuscolor_pink{
+	background-color:#ef9a9a;
+	border     : 2px solid #ef9a9a;
+	color      : #FFF !important;
+}
+.statuscolor_purple{
+	background-color:#8E24AA;
+	border     : 2px solid #8E24AA;
+	color      : #FFF !important;
+}
+.statuscolor_darkhaki{
+	background-color:#BDB76B;
+	border     : 2px solid #BDB76B;
+	color      : #FFF !important;
+}
+.statuscolor_orange{
+	background-color:rgba(255, 193, 7, 1);
+	border     : 2px solid rgba(255, 193, 7, 1);
+	color      : #FFF !important;
+}
+.statuscolor_deepgreen{
+	background-color:#1B5E20;
+	border     : 2px solid #1B5E20;
+	color      : #FFF !important;
+}
+.statuscolor_deepbroun{
+	background-color:#4E342E;
+	border     : 2px solid #4E342E;
+	color      : #FFF !important;
+}
+.statuscolor_deeporange{
+	background-color:#E64A19;
+	border     : 2px solid #E64A19;
+	color      : #FFF !important;
+}
+.statuscolor_deeppink{
+	background-color:#880E4F;
+	border     : 2px solid #880E4F;
+	color      : #FFF !important;
+}
+.statuscolor_deeppurple{
+	background-color:#5E35B1;
+	border     : 2px solid #5E35B1;
+	color      : #FFF !important;
+}
+
+
+
+.statuscolor_gray .gantt_task_content{
+	color      : #222 !important;
+}
+.statuscolor_cancel {
+	border     : 2px solid #607D8B;
+	color      : #FFF !important;
+	background : #607D8B;
+	cursor     : pointer !important;
+}
+
+/*.meeting{
+	border:2px solid Blue;
+	color: #fff !important;
+	background: Blue;
+	cursor: pointer !important;
+}*/
+
+/*СТИЛИ ДЛЯ ПЕРЕДВИГАЮЩЕГОСЯ*/
+/*.gantt_task_line.gantt_dependent_task {
+	background-color: #65c16f;
+	border: 1px solid #3c9445;
+}*/
+
+.gantt_task_line.gantt_dependent_task .gantt_task_progress {
+	background-color : #46AD51;
+}
+
+.hide_project_progress_drag .gantt_task_progress_drag {
+	visibility : hidden;
+}
+
+/*.gantt_task_progress{
+	text-align:left;
+	padding-left:10px;
+	box-sizing: border-box;
+	color: white;
+	font-weight: bold;
+}*/
+
+/*для кнопак в шапке в левой панели)*/
+.fa {
+	cursor     : pointer;
+	font-size  : 14px;
+	text-align : center;
+	opacity    : 0.2;
+	padding    : 5px;
+}
+
+.fa:hover {
+	opacity : 1;
+}
+
+.fa-pencil {
+	color : #FFA011;
+}
+
+.fa-plus {
+	color : #328EA0;
+}
+
+.fa-times {
+	color : red;
+}

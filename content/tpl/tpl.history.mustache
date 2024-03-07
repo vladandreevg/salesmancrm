@@ -1,0 +1,51 @@
+<script id="historyTpl" type="text/html">
+
+	<table class="list_header" id="history">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="w120 text-center"><b>Дата</b></th>
+			<th class="w140 text-center"><b>Тип</b></th>
+			<th><b>Описание</b></th>
+			<th class="w140"><B>Сотрудник</B></th>
+			<th class="w250"><span class="ellipsis">Клиент / Контакт</span></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th40">
+				<td class="w120"><span class="ellipsis">{{datum}}</span></td>
+				<td class="w120">
+					<span title="{{tip}}" class="ellipsis" class="inline"><span style="color:{{{color}}}">{{{icon}}}&nbsp;</span>{{tip}}</span>
+				</td>
+				<td>
+					{{#tasktitle}}
+						<div class="ellipsis">
+							{{#status}}<span title="{{statusTooltip}}">{{{status}}}&nbsp;</span>{{/status}}
+							<A href="javascript:void(0)" onClick="viewTask('{{tid}}');" title="Напоминание: {{tasktitle}}"><i class="icon-calendar-inv broun"></i><b>{{tasktitle}}</b></a>
+						</div>
+						<br>
+					{{/tasktitle}}
+					<div class="noBold mfh-09 dot-ellipsis" title="{{content}}">
+						<a href="javascript:void(0)" onClick="viewHistory('{{cid}}')">{{{content}}}</a>
+					</div>
+				</td>
+				<td class="w100"><SPAN class="ellipsis" title="{{user}}">{{user}}</SPAN></td>
+				<td class="w250">
+					{{#client}}
+						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onClick="openClient('{{clid}}')"><i class="icon-building blue"></i>{{client}}</a></span><br>
+					{{/client}}
+					{{#person}}
+						<span class="ellipsis" title="{{person}}"><a href="javascript:void(0)" onClick="openPerson('{{pid}}')"><i class="icon-user-1 green"></i>{{person}}</a></span><br>
+					{{/person}}
+					{{#deal}}
+						<span class="ellipsis" title="{{deal}}"><a href="javascript:void(0)" onClick="openDogovor('{{did}}')"><i class="icon-briefcase broun"></i>{{deal}}</a></span>
+					{{/deal}}
+				</td>
+			</TR>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>

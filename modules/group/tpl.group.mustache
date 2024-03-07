@@ -1,0 +1,128 @@
+<script id="groupTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<th class="yw100">Дата</th>
+			<th>Название группы</th>
+			<th class="yw60"></th>
+			<th class="yw120 hidden-netbook">ID группы</th>
+			<th class="yw80"></th>
+			<TH width="5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th60" id="group{{id}}">
+				<td><span class="ellipsis">{{datum}}</span></td>
+				<td>
+					{{#name}}
+						<div class="ellipsis Bold fs-12" title="{{name}}">
+							<a href="#glist" onclick="loadGroup('{{id}}','{{name}}')" class="blue">{{name}}</a>
+						</div>
+					{{/name}}
+					{{^name}}
+						<div class="ellipsis Bold fs-12" title="{{name}}">
+							<a href="#glist" onclick="loadGroup('{{id}}','{{name}}')" class="blue">??? Без имени</a>
+						</div>
+					{{/name}}
+					<!--{{#service}}<br><div class="gray">{{service}}</div>{{/service}}
+					{{^service}}<br>
+						<div class="gray">Группа CRM</div>
+					{{/service}}-->
+				</td>
+				<td>{{{count}}}</td>
+				<td class="hidden-netbook">{{idservice}}</td>
+				<td>{{{count}}}{{{countapprove}}}</td>
+				<td valign="middle">
+					<div class="action--container">
+						<div class="action--block">
+
+							{{#change}}
+								<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf) editGroup('{{id}}','deletegroup');" title="Удалить" class="gray red"><i class="icon-cancel red"></i></A>
+							{{/change}}
+							{{#approve}}
+								<A href="javascript:void(0)" onclick="editGroup('{{id}}','editgroup');" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></A>
+							{{/approve}}
+							{{^approve}}
+								<A href="javascript:void(0)" title="Операция не доступна для этой Группы/Сервиса" class="gray gray2"><i class="icon-pencil gray"></i></A>
+							{{/approve}}
+
+						</div>
+					</div>
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="h40"></div>
+
+</script>
+
+<script id="glistTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<th class="hidden-netbook yw40"><input type="checkbox" name="che" id="che" onclick="checkb()"/></th>
+			<th class="yw60 hand text-left" title="Дата подписки" onclick="changesort('datum','{{id}}')">
+				<div class="sort" id="x-datum_credit">{{{ord1}}}</div>
+				<b>Дата</b></th>
+			<th class="hand text-left" onclick="changesort('user_name','{{id}}')">
+				<div class="sort" id="x-datum_credit">{{{ord2}}}</div>
+				Имя / Email
+			</th>
+			<th class="yw160 text-left">Группа</th>
+			<th class="yw200 text-left">Клиент</th>
+			<th class="yw120 text-left">Метки</th>
+			<TH width="5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th60" id="group{{id}}" data-type="row">
+				<td class="text-center hidden-netbook">
+					<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/></td>
+				<td><span class="ellipsis1 smalltxt">{{datum}}</span></td>
+				<td>
+					<span class="ellipsis Bold blue fs-12" title="{{name}}">{{name}}</span><br>
+					{{#email}}<span class="ellipsis" title="{{email}}">{{email}}</span>{{/email}}
+					{{#phone}}<span class="ellipsis" title="{{phone}}">{{phone}}</span>{{/phone}}
+				</td>
+				<td>
+					<div class="ellipsis" title="{{groupName}}"><B>{{groupName}}</B></div>
+					<br>
+					<div class="gray">{{groupService}}</div>
+				</td>
+				<td>
+					{{#client}}
+						<span title="{{client}}" class="ellipsis"><A href="javascript:void(0)" onclick="viewClient('{{clid}}')" title="Заказчик"><i class="icon-building broun"></i>&nbsp;{{client}}</A></span>
+					{{/client}}
+					{{#person}}
+						<span title="{{person}}" class="ellipsis"><A href="javascript:void(0)" onclick="viewPerson('{{pid}}')" title="Заказчик"><i class="icon-user-1 broun"></i>&nbsp;{{person}}</A></span>';
+					{{/person}}
+				</td>
+				<td>
+					<div class="ellipsis" title="{{tags}}">{{{tags}}}</div>
+				</td>
+				<td>
+					<div class="action--container">
+						<div class="action--block">
+
+							{{#service}}
+								<A href="javascript:void(0)" onclick="doLoad('modules/group/form.group.php?action=removefromGroup&id={{id}}&gid={{gid}}');" title="Удалить" class="gray red"><i class="icon-mail red"></i></A>
+							{{/service}}
+							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись? Действие удалит запись только из CRM');if (cf)removeFromList('{{id}}','{{gid}}');" title="Удалить запись из группы" class="gray orange"><i class="icon-cancel-circled-1 red"></i></A>
+
+						</div>
+					</div>
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="h40"></div>
+
+</script>

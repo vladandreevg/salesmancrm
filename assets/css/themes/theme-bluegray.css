@@ -1,0 +1,362 @@
+body, html,
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer{
+	background:#ECF0F1;
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content{
+	border-color:#ECF0F1;
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner{
+	background: #EEEEEE;
+}
+
+.tableHeader table{
+	border-top:1px solid #E6E9ED;
+}
+#last .tableHeader table{
+	border-top:0;
+}
+
+/*.ui-widget-content,*/
+.ui-widget-content > a.menu{
+	border-right:0;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+.ui-widget-content > a.menu:hover{
+	border-right:0;
+	background:#ECF0F1;
+	border-color:#ECF0F1;
+}
+
+.ui-layout-center{
+	border:transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv{
+	background: #FFFFFF;
+}
+
+.ui-layout-north{
+	background: rgba(97, 97, 97, 1.0);
+}
+
+.menu--block,
+#menu{
+	background:
+			linear-gradient(
+					rgba(97, 97, 97, 0.1),
+					rgba(97, 97, 97, 0.1)
+			),
+			url(/assets/images/bg/gray2.png) repeat,
+			rgba(97, 97, 97, 1.0);
+}
+
+/*фон меню*/
+#menu .hov{
+	border-right: 1px solid rgba(97, 120, 97, 0.3);
+}
+#menu ul:hover{
+	background: #536DFE;//#34495E;
+}
+#menu ul ul {
+	border-top:2px solid #e3e2e2;
+}
+#menu ul ul,
+#menu ul ul:hover,
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	color:#FFF;
+	background:#536DFE;//#34495E;
+}
+#menu ul a,
+#menu ul i{
+	/*color:#35342f;*/
+	/*text-shadow: 0 0 3px #35342f;*/
+}
+#menu a.navlink:hover{
+	color:#FFF;//#34495E;
+	background: #37474F;
+}
+#menu ul ul li.header{
+	color:#E6E9ED;
+}
+#menu ul > .top-triangle-white{
+	border-bottom: 7px solid #536DFE;//#34495E;
+}
+#menu hr{
+	border-bottom: 1px solid #536DFE;//#2C3E50;
+}
+#menu ul ul:after {
+	border-bottom-color: #536DFE;//#34495E;
+}
+#menu ul ul ul.sub{
+	background:#536DFE;
+}
+#menu ul ul ul.sub:after {
+	border-left-color: #536DFE;
+}
+	#menuavatar hr{
+	border-bottom: 1px solid #ECF0F1;
+	}
+	#menuavatar:hover{
+		background:#536DFE;//#34495E;
+	}
+	#menuavatar .avatar-subtext{
+		color:#ECF0F1;
+	}
+
+/**
+Меню аватара
+*/
+.avatar--menu{
+	color              : var(--white);
+	background         : #455A64;
+	border             : #37474F 1px solid;
+}
+.avatar--menu:after {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #34495E;
+}
+.avatar--menu:before {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #455A64;
+}
+.avatar--menu .item:first-child {
+	border-right : 1px solid #34495E;
+}
+
+.avatar--menu .item .string {
+	color                 : #FFF;
+	border-bottom         : 1px dotted #34495E;
+}
+.avatar--menu .item .string.green {
+	color      : #3F729B;
+}
+.avatar--menu .item .string .blue {
+	color      : var(--gray-darkblue);
+}
+.avatar--menu .item .string .gray2 {
+	color      : var(--gray);
+}
+.avatar--menu .item .string:hover {
+	background-color : #536DFE;
+}
+.avatar--menu .item .string:hover .blue{
+	color      : var(--mint);
+}
+.avatar--menu .item .title {
+	color          : var(--gray-litedarkblue);
+	border-bottom  : 1px solid #34495E;
+}
+.avatar--menu .item hr {
+	border-bottom   : 1px dotted var(--blue2);
+}
+.avatar--menu .product{
+	color: #222;
+}
+.avatar--menu .product a,
+.avatar--menu .product .blue{
+	color      : #FFF;
+}
+
+
+/*различные кнопки*/
+.bl2{
+	color:#FFF;
+	background: #9E9E9E;//#34495E;
+	border: 1px solid #9E9E9E;//#34495E;
+}
+.bl2:hover{
+	color:#FFF;
+	background: #536DFE;
+	border: 1px solid #536DFE;
+}
+
+/*a.button, input.button, a.button:link, a.button:visited{
+	color:#222;
+	background: #ECF0F1;
+	border: 1px solid #BDC3C7;
+	line-height: 20px;
+}
+a.button:hover {
+	background: #03A9F4;
+	border: 1px solid #2196F3;
+	color:#fff;
+}*/
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color:#222;
+	background: #FFCE54;
+	border:0px;
+	margin: 0px 2px;
+	padding: 10px;
+}
+.contaner > a.button:hover {
+	color:#222;
+	background: #F6BB42;
+}
+
+.ha:hover{
+	background: rgba(255, 207, 83, 0.3);
+}
+
+/*popup*/
+.popmenu, .popmenu-top, .submenu{
+
+}
+	.popmenu .popheader{
+		color:#FFF;
+		background: #536DFE;//#4A89DC;
+	}
+	.popmenu .popheader .blue{
+		color:#FFF;
+	}
+	.popcontent .clink a:hover,
+	.popcontent .clink:hover,
+	.submenu a.menu:hover{
+		background: #FFECB3;
+	}
+
+.triangle{
+	border-top: 7px solid #536DFE;//#4A89DC;
+}
+.top-triangle{
+	border-bottom: 7px solid #536DFE;//#4A89DC;
+}
+
+/*карточка*/
+#head #close{
+	/*top:-10px;*/
+	border:1px solid #9E9E9E;//#34495E;
+	border-top:0;
+	background:#F6BB42;
+	font-size:0.80em;
+	color: #35342f;//#34495E;
+	line-height: 0.95em;
+	padding: 5px 10px;
+}
+#head #close:hover{
+	border:1px solid #9E9E9E;//#34495E;
+	border-top:0;
+	background:#FFFFFF;
+	color: #9E9E9E;//#34495E;
+}
+
+.fixx{
+	color:#FFF;
+	background:
+			linear-gradient(
+					rgba(97, 97, 97, 0.1),
+					rgba(97, 97, 97, 0.1)
+			),
+			url(/assets/images/bg/gray2.png) repeat,
+			rgba(97, 97, 97, 1.0);
+}
+	.fixx #ctitle .blue,
+	.fixx #ctitle a{
+		color:#536DFE;
+	}
+
+#dtabs ul li {
+	color: #FFF;
+	background:#607D8B;//#2C3E50;
+}
+#dtabs ul li:hover {
+	border-bottom:0px;
+}
+#dtabs ul li a{
+	color: #FFF;
+}
+
+fieldset{
+	border-color: #BDC3C7;
+}
+
+fieldset .batton-edit a,
+fieldset .batton-edit a .blue{
+	color:#536DFE;//#2C3E50;
+}
+
+/*элементы ui.jquery*/
+.ui-state-active > #dialog, .ui-widget-content .ui-state-active > #dialog,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active,
+#accordion .ui-state-active{
+	border-color: #9E9E9E;
+}
+
+#accordion .ui-state-default{
+	border-color: #E0E0E0;
+}
+
+.ui-widget-header > #dialog{
+	border-bottom: 1px solid #9E9E9E;
+}
+
+.ui-state-default > #dialog,
+.ui-widget-content .ui-state-default > #dialog{
+	border-color: #E0E0E0;
+	color:#35342f;
+}
+
+#dttabs .ui-state-default a,
+#accordion .ui-state-default a{
+	color:#35342f;
+}
+#dttabs .ui-state-default:not(.ui-state-active) a:hover,
+#accordion .ui-state-default:not(.ui-state-active) a:hover{
+	color:#FFF;
+}
+#dttabs .ui-state-active a:hover,
+#accordion .ui-state-active a:hover{
+	color:#35342f;
+}
+
+#tab_container:hover,
+#dttabs .ui-state-default:not(.ui-state-active):hover,
+#accordion .ui-state-default:not(.ui-state-active):hover{
+	background: none;
+	background-color: #9E9E9E;
+	color:#fff;
+}
+.ui-state-default a > #dialog,
+.ui-state-default a:link > #dialog,
+.ui-state-default a:visited > #dialog{
+	color:#35342f;
+}
+
+#accordion .ui-state-active,
+#accordion .ui-widget-content .ui-state-active,
+.ui-state-active > #dialog,
+.ui-widget-content .ui-state-active > #dialog{
+	background: #E0E0E0;
+}
+
+#tab_container,
+#tab_container .blue{
+	color:#222;
+}
+
+/*список дел в левой панели*/
+#taskweek .header{
+	color:#222;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+

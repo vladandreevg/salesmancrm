@@ -1,0 +1,412 @@
+
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+/*.ui-widget-content,*/
+.ui-widget-header2,
+.ui-layout-resizer{
+	background:#ECF0F1;
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content{
+	border-color:#ECF0F1;
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner{
+	background: #EEEEEE;
+}
+
+.tableHeader table{
+	border-top:1px solid #BDC3C7;
+}
+#last .tableHeader table{
+	border-top:0;
+}
+
+.ui-widget-content{
+	border-right:0;
+}
+.ui-layout-center{
+	border:transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv{
+	background: #FFFFFF;
+}
+
+::-webkit-scrollbar { width: 5px; height: 3px;}
+::-webkit-scrollbar-button {  background-color: rgba(97,97,97 ,1); }
+::-webkit-scrollbar-track {  background-color: rgba(136,14,79 ,1);}
+::-webkit-scrollbar-track-piece { background-color: rgba(238,238,238 ,1);}
+::-webkit-scrollbar-thumb { height: 50px; background-color: rgba(136,14,79 ,1); border-radius: 3px;}
+::-webkit-scrollbar-corner { background-color: #999;}
+::-webkit-resizer { background-color: #34495E;}
+
+#resultdiv ::-webkit-scrollbar { width: 5px; height: 3px;}
+#resultdiv ::-webkit-scrollbar-button {  background-color: #999; }
+#resultdiv ::-webkit-scrollbar-track {  background-color: rgba(136,14,79 ,1);}
+#resultdiv ::-webkit-scrollbar-track-piece { background-color: #999;}
+#resultdiv ::-webkit-scrollbar-thumb { height: 50px; background-color: rgba(136,14,79 ,1); border-radius: 3px;}
+#resultdiv ::-webkit-scrollbar-corner { background-color: #999;}
+#resultdiv ::-webkit-resizer { background-color: #999;}
+
+/*фон меню*/
+.ui-layout-north{
+	background: #FF6F00;
+}
+.menu--block,
+#menu{
+	background: rgba(216,27,96 ,0.9);
+	background: -moz-linear-gradient(left, rgba(216,27,96 ,1.9) 0%, rgba(245,127,23 ,.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	background: -webkit-linear-gradient(left, rgba(216,27,96 ,1.9) 0%,rgba(245,127,23 ,0.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	background: linear-gradient(to right, rgba(216,27,96 ,1.9) 0%,rgba(245,127,23 ,0.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d81b60', endColorstr='#ff9800',GradientType=1 );
+}
+#menu .hov{
+	border-right: 1px solid rgba(255, 207, 83, 0.1);
+}
+#menu ul:hover{
+	background: rgba(194,24,91 ,1);
+}
+#menu ul ul {
+	border-top:2px solid #e3e2e2;
+}
+#menu ul ul,
+#menu ul ul:hover,
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	color:#FFF;
+	background:rgba(136,14,79 ,1);
+}
+#menu a.navlink:hover{
+	color:#FFF;
+	background: #FF5722;
+}
+#menu a.navlink:hover svg use{
+	fill: #FFF !important;
+}
+#menu ul ul li.header{
+	color:#ECF0F1;
+}
+#menu ul > .top-triangle-white{
+	border-bottom: 7px solid rgba(136,14,79 ,1);
+}
+#menu hr{
+	border-bottom: 1px solid rgba(136,14,79 ,1);
+}
+#menu ul ul:after {
+	border-bottom-color: rgba(136,14,79 ,1);
+}
+#menu ul ul ul.sub{
+	background:rgba(136,14,79 ,1);
+}
+#menu ul ul ul.sub:after {
+	border-left-color: rgba(136,14,79 ,1);
+}
+
+#menuavatar hr{
+	border-bottom: 1px solid #ECF0F1;
+}
+	#menuavatar:hover{
+		background:rgba(194,24,91 ,1);
+	}
+	#menuavatar .avatar-subtext{
+		color:#ECF0F1;
+	}
+	#menuavatar .submenu hr{
+		border:0 none;
+		height:1px;
+		border-bottom: 1px dotted rgba(194,24,91 ,1);
+		border-collapse: collapse;
+	}
+	#menuavatar .submenu{
+		color:#fff;
+		background: rgba(136,14,79 ,1);
+		border:rgba(194,24,91 ,1) 1px solid;
+		box-shadow: 0 1px 3px #222;
+		-webkit-box-shadow: 0 1px 3px #222;
+		-moz-box-shadow: 0 1px 3px #222;
+	}
+	#menuavatar .submenu .gray2{
+		color:#ECF0F1;
+	}
+	#menuavatar .submenu .stroka,
+	#menuavatar .submenu .istroka,
+	#menuavatar .submenu a,
+	#menuavatar .submenu i{
+		color: #FFF;
+	}
+	#menuavatar .submenu .halight:hover,
+	#menuavatar .submenu .stroka:hover,
+		/*#menu .submenu .istroka:hover,*/
+	#menuavatar .submenu a.menu:hover{
+		color: #fff !important;
+		background:rgba(194,24,91 ,1) !important;
+	}
+	#menuavatar .submenu .top-triangle-white {
+		border-bottom-color: rgba(136,14,79 ,1);
+	}
+	#menuavatar .submenu .top-triangle {
+		border-bottom-color: rgba(136,14,79 ,1);
+	}
+	#menuavatar ul ul ul.sub:after {
+		border-color: rgba(136, 183, 213, 0);
+		border-left-color: rgba(136,14,79 ,1);
+		border-width: 7px;
+		margin-top: -7px;
+	}
+	#menuavatar #subpan3 div.stroka:hover {
+		background-color: initial !important;
+	}
+
+/**
+Меню аватара
+*/
+.avatar--menu{
+	color              : var(--white);
+	background         : rgba(136,14,79 ,1);
+	border             : rgba(194,24,91 ,1) 1px solid;
+}
+.avatar--menu:after {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : rgba(194,24,91 ,1);
+}
+.avatar--menu:before {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : rgba(136,14,79 ,1);
+}
+.avatar--menu .item:first-child {
+	border-right : 1px dotted rgba(194,24,91 ,1);
+}
+
+.avatar--menu .item .string {
+	color                 : #FFF;
+	border-bottom         : 1px dotted rgba(194,24,91 ,1);
+}
+.avatar--menu .item .string.green {
+	color      : var(--green);
+}
+.avatar--menu .item .string .blue {
+	color      : #FFCE54;
+}
+.avatar--menu .item .string .gray2 {
+	color      : var(--gray);
+}
+.avatar--menu .item .string:hover {
+	color: var(--black);
+	background-color : #FFCE54;
+}
+.avatar--menu .item .string:hover .blue{
+	color      : var(--black);
+}
+.avatar--menu .item .title {
+	color          : #ECF0F1;
+	border-bottom  : 1px dotted rgba(194,24,91 ,1);
+}
+.avatar--menu .item hr {
+	border-bottom   : 1px dotted rgba(194,24,91 ,1);
+}
+.avatar--menu .product{
+	color: #222;
+}
+.avatar--menu .product a,
+.avatar--menu .product .blue{
+	color      : #FFCE54;
+}
+
+.dialog {
+	background: rgba(245,245,245 ,1);
+	border: 0;
+	box-shadow: 0 0 2px #222;
+	-webkit-box-shadow: 0 0 2px #222;
+	-moz-box-shadow: 0 0 2px #222;
+}
+.close {
+	top: 7px;
+}
+#divider b,
+#resultdiv{
+	background: rgba(245,245,245 ,1);
+}
+#resultdiv .zagolovok {
+	color: #FFF;
+	background: rgba(216,27,96 ,0.9);
+	background: -moz-linear-gradient(left, rgba(216,27,96 ,1.9) 0%, rgba(245,127,23 ,.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	background: -webkit-linear-gradient(left, rgba(216,27,96 ,1.9) 0%,rgba(245,127,23 ,0.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	background: linear-gradient(to right, rgba(216,27,96 ,1.9) 0%,rgba(245,127,23 ,0.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d81b60', endColorstr='#ff9800',GradientType=1 );
+	border: 0;
+	padding: 15px 10px;
+}
+#resultdiv .zagolovok .blue{
+	color:rgba(236,239,241 ,1);
+}
+
+#resultdiv #ytabs ul.gray.blue li.active {
+	color: #222;
+	border-bottom: 2px solid rgba(13,71,161 ,1);
+}
+
+input:focus, textarea:focus, select:focus {
+	outline: none;
+	border: 1px solid rgba(230,81,0 ,1);
+	box-shadow: 0 0 2px rgba(230,81,0 ,1);
+	-webkit-box-shadow: 0 0 2px rgba(230,81,0 ,1);
+	-moz-box-shadow: 0 0 2px rgba(230,81,0 ,1);
+}
+#orgspisok {
+	border: 1px solid rgba(230,81,0 ,0.5);
+}
+
+/*различные кнопки*/
+.bl2{
+	color:#FFF;
+	background: #1565C0;
+	border: 1px solid #1565C0;
+}
+.bl2:hover{
+	color:#FFF;
+	background: #FF5722;
+	border: 1px solid #FF5722;
+}
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color:#222;
+	background: #FFCE54;
+	border:0;
+	margin: 0 2px;
+	padding: 10px;
+}
+.contaner > a.button:hover {
+	color:#222;
+	background: #F6BB42;
+}
+
+.ha:hover{
+	background: rgba(255, 207, 83, 0.3);
+}
+
+/*popup*/
+.popmenu, .popmenu-top, .submenu{
+
+}
+	#rmenu .pophead,
+	.popmenu .popheader{
+		color:#FFF;
+		background: rgba(21,101,192 ,1);
+	}
+	.popmenu .popheader .blue{
+		color:#FFF;
+	}
+	.popcontent .clink:hover{
+		background: #BBDEFB;
+	}
+	.popcontent a.clink:hover{
+		color: #222;
+	}
+
+.triangle{
+	border-top: 7px solid rgba(21,101,192 ,1);
+}
+.top-triangle{
+	border-bottom: 7px solid rgba(21,101,192 ,1);
+}
+
+/*карточка*/
+#head #close{
+	/*top:-10px;*/
+	border:1px solid #F6BB42;
+	border-top:0;
+	background:#F6BB42;
+	font-size:0.80em;
+	color: #222;
+	line-height: 0.95em;
+	padding: 5px 10px;
+}
+#head #close:hover{
+	border:1px solid #C0392B;
+	border-top:0;
+	background:#FFFFFF;
+	color: #C0392B;
+}
+
+#ctitle .red{
+	color:#F6BB42;
+}
+
+.fixx{
+	color:#FFF;
+	background: rgba(216,27,96 ,0.5);
+	background: -moz-linear-gradient(left, rgba(216,27,96 ,1.9) 0%, rgba(245,127,23 ,.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	background: -webkit-linear-gradient(left, rgba(216,27,96 ,1.9) 0%,rgba(245,127,23 ,0.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	background: linear-gradient(to right, rgba(216,27,96 ,1.9) 0%,rgba(245,127,23 ,0.8) 100%), url(../../images/bg/orangegrad.png) repeat;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d81b60', endColorstr='#ff9800',GradientType=1 );
+}
+	.fixx #ctitle .blue,
+	.fixx #ctitle a{
+		color:#ECF0F1;
+	}
+
+#dtabs ul li {
+	color: #FFF;
+	background:rgba(173,20,87 ,1);
+}
+#dtabs ul li:hover {
+	border-bottom:0;
+}
+#dtabs ul li a{
+	color: #FFF;
+}
+
+fieldset .batton-edit a,
+fieldset .batton-edit a .blue{
+	color:#34495E;
+}
+
+/*элементы ui.jquery*/
+.ui-state-active, .ui-widget-content .ui-state-active,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active{
+	border-color: #BDC3C7;
+}
+
+#tab_container,
+#tab_container .blue{
+	color:#222;
+}
+
+/*список дел в левой панели*/
+#taskweek .header{
+	color:#222;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+
+#telo  #ytabs ul.gray.blue li.active{
+	border-bottom: 2px solid rgba(245,124,0 ,1);
+}
+#telo  #ytabs ul.gray.blue li:hover{
+	color:#FFF;
+}
+#telo  #ytabs ul.gray.blue li.active{
+	/*color:rgba(136,14,79 ,1);*/
+	border-bottom: 2px solid rgba(245,124,0 ,1);
+}
+#ytabs ul.gray.blue li:hover {
+	color: #fff;
+	background: rgba(245,124,0 ,1);
+	border-bottom: 2px solid rgba(245,124,0 ,1);
+	transition: border 300ms ease;
+	-webkit-transition: border 300ms ease;
+	-moz-transition: border 300ms ease;
+}

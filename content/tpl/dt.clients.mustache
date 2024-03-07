@@ -1,0 +1,93 @@
+<script id="clientsTpl" type="text/html">
+
+	<table id="zebraTable">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			{{#header}}
+				<th class="yw40 text-center"></th>
+				<th class="hidden-ipad yw40 text-center" title="{{tip}}"><i class="icon-smile"></i></th>
+				<th class="nowidth text-center"><b>{{title}}</b></th>
+				<th class="yw120 ipad-title text-center"><b>{{phone}}</b></th>
+				<th class="yw120 ipad-title text-center"><b>{{email}}</b></th>
+				<th class="hidden-netbook yw120 text-left">
+					<div class="ellipsis"><b>{{category}}</b></div>
+				</th>
+				<th class="hidden-ipad yw120 text-left">
+					<div class="ellipsis"><b>{{territory}}</b></div>
+				</th>
+				<th class="hidden-ipad yw60 text-left">
+					<div class="ellipsis"><b>{{user}}</b></div>
+				</th>
+				<th class="hidden-ipad yw60 text-left">
+					<div class="ellipsis"><b>{{history}}</b></div>
+				</th>
+				<th class="w5"></th>
+			{{/header}}
+		</tr>
+		</thead>
+		<tbody>
+		{{#client}}
+			<tr class="ha tsk th55" id="client{{clid}}">
+				<td class="hidden-iphone text-center">
+					<a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне">
+						<i class="icon-building broun"></i>{{{dostup}}}
+					</a>
+				</td>
+				<td class="hidden-ipad text-center">
+					<div class="tip_rel hand" style="background:{{rcolor}}" {{#change}} onclick="editClient('{{clid}}','change.relation')" {{/change}} title="{{relation}}">{{relationShort}}</div>
+				</td>
+				<td class="nowidth">
+					<div class="ellipsis">
+						{{#change}}
+							<span class="hidden-iphone">{{#task}}
+								<a href="javascript:void(0)" onclick="viewTaskList('','{{clid}}','');" title="Список дел"><i class="icon-calendar-2 green smalltxt"></i></a>{{/task}}
+								{{^task}}
+									<i class="icon-calendar-2 gray list smalltxt" title="По Клиенту нет напоминаний"></i>{{/task}}</span>
+						{{/change}}
+						<a onClick="viewClient('{{clid}}')" href="javascript:void(0)" title="Быстрый просмотр: {{client}}" class="fs-12"><b>{{client}}</b></a>
+					</div>
+					{{#person}}
+						<br>
+						<DIV class="ellipsis mt5 blue fs-09 hidden-iphone" title="{{person}}" onClick="viewPerson('{{pid}}')">
+							<i class="icon-user-1 "></i>&nbsp;{{person}}
+						</DIV>
+					{{/person}}
+				</td>
+				<td>
+					<div class="phone">{{#phone}}{{{phone}}}{{/phone}}{{^phone}}-{{/phone}}</div>
+				</td>
+				<td>
+					<div class="ellipsis">{{#email}}{{{email}}}{{/email}}{{^email}}-{{/email}}</div>
+				</td>
+				<td title="{{category}}" class="hidden-netbook">
+					<div class="ellipsis">{{category}}</div>
+				</td>
+				<td title="{{territory}}" class="hidden-ipad">
+					<div class="ellipsis">{{territory}}</div>
+				</td>
+				<td title="{{user}}" class="hidden-ipad">
+					<div class="ellipsis"><a href="javascript:void(0)" onclick="viewUser('{{iduser}}');">{{user}}</a>
+					</div>
+				</td>
+				<td class="hidden-ipad">
+					<div class="ellipsis des" title="{{history}}">{{{history}}}</div>
+				</td>
+				<td>
+					{{#change}}
+						<div class="action--container">
+							<div class="action--block">
+								<a href="javascript:void(0)" onClick="openClient('{{clid}}');" title="Открыть" class="gray brounbg2"><i class="icon-building broun"></i></a>
+								<a href="javascript:void(0)" onClick="editClient('{{clid}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>
+								<a href="javascript:void(0)" onClick="addTask('{{datum}}','{{clid}}','{{pid}}','{{did}}');" title="Добавить напоминание" class="gray green"><i class="icon-calendar-1"></i></A>
+								<a href="javascript:void(0)" onClick="addHistory('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="gray orange"><i class="icon-clock" title="Добавить активность"></i></a>
+								{{{deal}}}
+							</div>
+						</div>
+					{{/change}}
+				</td>
+			</tr>
+		{{/client}}
+		</tbody>
+	</table>
+
+</script>

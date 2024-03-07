@@ -1,0 +1,123 @@
+============[Date]============
+[ 2019-12-22 19:30:09  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:53996. (5)
+=========[Sent Data]==========
+[ref]
+ref.user_id= 115508148
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(1155): Telegram->endpoint('getUserProfileP...', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(532): Telegram->getUserProfilePhotos(Array)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1974): Chats\TelegramProvider->getUserInfo('115508148', Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(254): Chats\Chats->updateUserInfo(0, '115508148')
+#6 {main}
+
+============[Date]============
+[ 2019-12-22 19:30:10  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:53997. (5)
+=========[Sent Data]==========
+[ref]
+ref.file_id= 
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(1169): Telegram->endpoint('getFile', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(588): Telegram->getFile(NULL)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(536): Chats\TelegramProvider->getFileLink(NULL, Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1974): Chats\TelegramProvider->getUserInfo('115508148', Array)
+#6 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(254): Chats\Chats->updateUserInfo(0, '115508148')
+#7 {main}
+
+============[Date]============
+[ 2019-12-22 19:38:59  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:54616. (5)
+=========[Sent Data]==========
+[ref]
+ref.user_id= 115508148
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(1155): Telegram->endpoint('getUserProfileP...', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(532): Telegram->getUserProfilePhotos(Array)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1974): Chats\TelegramProvider->getUserInfo('115508148', Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(254): Chats\Chats->updateUserInfo(0, '115508148')
+#6 {main}
+
+============[Date]============
+[ 2019-12-22 19:39:00  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:60485. (5)
+=========[Sent Data]==========
+[ref]
+ref.file_id= 
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(1169): Telegram->endpoint('getFile', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(588): Telegram->getFile(NULL)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(536): Chats\TelegramProvider->getFileLink(NULL, Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1974): Chats\TelegramProvider->getUserInfo('115508148', Array)
+#6 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(254): Chats\Chats->updateUserInfo(0, '115508148')
+#7 {main}
+
+============[Date]============
+[ 2019-12-22 19:40:17  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:54726. (5)
+=========[Sent Data]==========
+[ref]
+ref.user_id= 115508148
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(1155): Telegram->endpoint('getUserProfileP...', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(532): Telegram->getUserProfilePhotos(Array)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1974): Chats\TelegramProvider->getUserInfo('115508148', Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(254): Chats\Chats->updateUserInfo(0, '115508148')
+#6 {main}
+
+============[Date]============
+[ 2019-12-22 19:40:17  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:53367. (5)
+=========[Sent Data]==========
+[ref]
+ref.file_id= 
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(1169): Telegram->endpoint('getFile', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(590): Telegram->getFile(NULL)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(538): Chats\TelegramProvider->getFileLink(NULL, Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1974): Chats\TelegramProvider->getUserInfo('115508148', Array)
+#6 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(254): Chats\Chats->updateUserInfo(0, '115508148')
+#7 {main}
+

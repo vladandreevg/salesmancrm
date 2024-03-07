@@ -1,0 +1,10 @@
+<ifModule mod_php.c>
+php_flag zlib.output_compression Off
+</ifModule>
+
+AddType audio/mpeg mp3
+AddType audio/mp4 m4a
+AddType audio/ogg ogg
+AddType audio/ogg oga
+AddType audio/webm webma
+AddType audio/wav wav

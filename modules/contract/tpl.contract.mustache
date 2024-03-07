@@ -1,0 +1,294 @@
+<script id="contractTpl" type="text/html">
+
+	<TABLE id="list_header" class="contracts">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw80 text-left">
+				<div class="ellipsis hand" id="x-datum_start" onclick="changesort('datum_start')" title="Изменить порядок вывода">Создан</div>
+			</TH>
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-datum_end" onclick="changesort('datum_end')" title="Изменить порядок вывода">Действует до</div>
+			</TH>
+			<TH class="yw160 text-left">
+				<div class="ellipsis hand" id="x-number" onclick="changesort('number')" title="Изменить порядок вывода">Номер</div>
+			</TH>
+			{{#isstatus}}
+				<TH class="yw100 text-left">
+					<div class="ellipsis hand" id="x-status" onclick="changesort('status')" title="Изменить порядок вывода">Статус</div>
+				</TH>
+			{{/isstatus}}
+			<TH class="yw200 text-center"><B>Название</B></TH>
+			<TH class="w20 text-center"></TH>
+			<TH class="text-left"><b>Заказчик</b>/<B>Сделка</B></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha {{color}} th40">
+				<td class="text-center"><span>{{datum_start}}</span></td>
+				<td class="text-center"><span>{{datum_end}}</span></td>
+				<td>
+					<span class="ellipsis Bold" title="{{number}}"><A href="javascript:void(0)" onclick="editContract('{{id}}','contract.view');">{{number}}</A></span>
+				</td>
+				{{#isstatus}}
+					<td>
+						{{#status}}
+							<div class="ellipsis" title="{{status}}">
+								<span class="hidden-iphone"><span class="bullet-mini" style="margin-bottom:1px; background-color:{{statuscolor}}"></span>&nbsp;&nbsp;</span>{{status}}
+							</div>
+						{{/status}}
+						{{#statuson}}
+							<span><a href="javascript:void(0)" onclick="editContract('{{id}}','contract.status')" class="pull-aright gray"><i class="icon-pencil"></i></a></span>{{/statuson}}
+					</td>
+				{{/isstatus}}
+				<td>
+					<span class="ellipsis" title="{{title}}"><A href="javascript:void(0)" onclick="editContract('{{id}}','contract.view');"><B>{{title}}</B></A></span><br>
+					<span class="ellipsis mt5 fray2 fs-09" title="{{company}}">{{company}}</span>
+				</td>
+				<td>
+					<A href="javascript:void(0)" onclick="editContract('{{id}}','contract.view');" class="gray"><i class="icon-eye"></i></A>
+				</td>
+				<td>
+					{{#client}}
+						<span title="{{client}}" class="ellipsis"><A href="javascript:void(0)" onclick="openClient('{{clid}}','15')" title="Заказчик"><i class="icon-building broun"></i>&nbsp;{{client}}</A></span>
+					{{/client}}
+					{{#person}}
+						<span title="{{person}}" class="ellipsis"><A href="javascript:void(0)" onclick="viewPerson('{{pid}}')" title="Заказчик"><i class="icon-user-1 broun"></i>&nbsp;{{person}}</A></span>
+					{{/person}}
+					{{#payer}}
+						<br><span class="ellipsis"><i class="icon-building blue"></i><a href="javascript:void(0)" onclick="openClient('{{payerid}}','15')" title="Плательщик">{{payer}}</a></span>
+					{{/payer}}
+					{{#deal}}
+						<br><span class="ellipsis paddtop5" title="{{dogovor}}"><a href="javascript:void(0)" title="Быстрый просмотр: {{deal}}" onclick="openDogovor('{{did}}','15')"><i class="icon-briefcase blue"></i>&nbsp;{{deal}}</a></span>
+					{{/deal}}
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="aktTpl" type="text/html">
+
+	<TABLE id="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w85 text-left">
+				<div class="ellipsis hand" id="x-datum" onclick="changesort('datum')" title="Изменить порядок вывода">Дата</div>
+			</TH>
+			<TH class="w85 text-left">
+				<div class="ellipsis hand" id="x-number" onclick="changesort('number')" title="Изменить порядок вывода">Номер</div>
+			</TH>
+			{{#isstatus}}
+				<TH class="w160 text-left">
+					<div class="ellipsis hand" id="x-status" onclick="changesort('status')" title="Изменить порядок вывода">Статус</div>
+				</TH>
+			{{/isstatus}}
+			<TH class="text-left">
+				<div id="x-invoice">Сделка</div>
+			</TH>
+			<TH class="w120 text-left">
+				<div class="ellipsis hand" id="x-summa" onclick="changesort('summa')" title="Изменить порядок вывода">Сумма, {{valuta}}</div>
+			</TH>
+			<TH class="w80 text-left">
+				<div class="ellipsis hand" id="x-invoice" onclick="changesort('invoice')" title="Изменить порядок вывода">№ счета</div>
+			</TH>
+			<TH class="w120 text-left">
+				<div class="ellipsis">Ответственный</div>
+			</TH>
+			<TH class="w60 text-left" title="Комплектность">
+				<div class="ellipsis">Комплектность</div>
+			</TH>
+			<TH class="w200 text-left hidden-netbook">
+				<div class="ellipsis">Заказчик</div>
+			</TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th40">
+				<td class="text-center"><span>{{datum}}</span></td>
+				<td class="text-right">
+					<span><span class="pull-left Bold"><a href="javascript:void(0)" onclick="editAkt('view','{{id}}','','{{did}}')"><i class="icon-eye broun"></i></a></span>&nbsp;</span>{{number}}
+				</td>
+				{{#isstatus}}
+					<td>
+						{{#status}}
+							<div class="ellipsis" title="{{statusTitle}}">
+								<span class="hidden-iphone"><span class="bullet-mini" style="margin-bottom:1px; background-color:{{statusColor}}"></span>&nbsp;&nbsp;</span>{{statusTitle}}
+							</div>
+						{{/status}}
+						{{#statuson}}
+							<a href="javascript:void(0)" onclick="editContract('{{id}}','contract.status')" class="pull-aright minline gray"><i class="icon-pencil"></i></a>
+						{{/statuson}}
+					</td>
+				{{/isstatus}}
+				<td>
+					{{#deal}}
+					<span class="ellipsis" title="{{deal}}">
+						<a href="javascript:void(0)" title="Карточка: {{deal}}" onclick="openDogovor('{{did}}')">{{#invoice}}
+							<i class="icon-arrows-cw green" title="Сервисная"></i>{{/invoice}}{{^invoice}}
+							<i class="icon-briefcase blue"></i>{{/invoice}}{{deal}}</a>
+					</span>
+					{{/deal}}
+					{{#client}}
+					<span title="{{client}}" class="ellipsis visible-netbook">
+						<A href="javascript:void(0)" onclick="viewClient('{{clid}}')" title="Заказчик"><i class="icon-building broun"></i>{{client}}</A>
+					</span>
+					{{/client}}
+				</td>
+				<td class="text-right">
+					<span title="{{summaf}}" class="ellipsis1">{{summaf}}</span>
+				</td>
+				<td class="text-right">
+					{{#invoice}}<span title="Счет №{{invoice}}" class="ellipsis1">{{invoice}}</span>{{/invoice}}
+					{{^invoice}}<span title="" class="gray">По сделке</span>{{/invoice}}
+				</td>
+				<td class="text-left">
+					<span title="{{user}}" class="ellipsis"><i class="icon-user-1 blue"></i>{{user}}</span>
+				</td>
+				<td class="text-right">
+					{{#complect}}<span title="Комплектность {{complect}}%" class="ellipsis1">{{complect}} %</span>{{/complect}}
+				</td>
+				<td class="hidden-netbook">
+					{{#client}}
+						<span title="{{client}}" class="ellipsis">
+							<A href="javascript:void(0)" onclick="viewClient('{{clid}}')" title="Заказчик"><i class="icon-building broun"></i>{{client}}</A>
+						</span>
+					{{/client}}
+					{{#person}}
+						<span title="{{person}}" class="ellipsis">
+							<A href="javascript:void(0)" onclick="viewPerson('{{pid}}')" title="Заказчик"><i class="icon-user-1 blue"></i>{{person}}</A>
+						</span>
+					{{/person}}
+					{{#payer}}
+						<br><span class="ellipsis">
+							<a href="javascript:void(0)" onclick="viewClient('{{payerid}}')" title="Плательщик"><i class="icon-building blue"></i>{{payer}}</a>
+						</span>
+					{{/payer}}
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="paymentTpl" type="text/html">
+
+	<TABLE id="list_header" class="budjet">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w85 text-left">
+				<div class="ellipsis hand" id="x-datum_credit" onclick="changesort('datum_credit')" title="Изменить порядок вывода">
+					<B>Дата план.</B></div>
+			</TH>
+			<TH class="w85 text-left">
+				<div class="ellipsis hand" id="x-invoice_date" onclick="changesort('invoice_date')" title="Изменить порядок вывода">
+					<B>Дата факт.</B></div>
+			</TH>
+			<TH class="w120 text-left">
+				<div class="ellipsis hand" id="x-invoice" onclick="changesort('invoice')" title="Изменить порядок вывода">
+					<b>№ счета</b></div>
+			</TH>
+			<TH class="w120 text-left">
+				<div class="ellipsis hand" id="x-invoice_chek" onclick="changesort('invoice_chek')" title="Изменить порядок вывода">
+					{{{ord4}}}<B>№ договора</B></div>
+			</TH>
+			<TH class="w120 text-left">
+				<div class="ellipsis hand" id="x-summa_credit" onclick="changesort('summa_credit')" title="Изменить порядок вывода">
+					<B>Сумма платежа</B></div>
+			</TH>
+			<TH class="w60 text-left">
+				<div class="ellipsis">Оплата</div>
+			</TH>
+			<TH class="w80 text-left">
+				<div class="ellipsis">Оплачено</div>
+			</TH>
+			<TH class="yw100 text-left hidden-netbook">
+				<div class="ellipsis">Компания</div>
+			</TH>
+			<TH class="text-left"><span class="ellipsis">Заказчик / Сделка</span></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha {{color}} th40">
+				<td class="text-center"><span>{{date_planf}}</span></td>
+				<td class="text-center">
+					<span>
+						{{#date_factf}}{{date_factf}}{{/date_factf}}
+						{{^date_factf}}--{{/date_factf}}
+					</span>
+				</td>
+				<td class="text-right">
+					<span title="{{invoice}}" class="ellipsis1 Bold">
+						{{#view}}
+							<a href="javascript:void(0)" onclick="editCredit('{{id}}','credit.view')" title="Просмотр" class="pull-left"><i class="icon-eye broun"></i></a>&nbsp;{{/view}}&nbsp;{{invoice}}
+					</span>
+					<div class="fs-09 blue">от {{date_createf}}</div>
+				</td>
+				<td>
+					{{#contract}}<span title="{{contract}}" class="ellipsis"><B>{{contract}}</B></span>{{/contract}}
+					{{^contract}}
+						<div class="ellipsis">без договора</div>
+					{{/contract}}
+				</td>
+				<td class="text-right"><span>{{summaf}}</span></td>
+				<td class="text-center" nowrap>
+					{{#do}}
+					<span><i class="icon-ok blue"></i></span>
+					{{/do}}
+					{{^do}}
+						{{^cando}}
+						<span><a href="javascript:void(0)" title="Вы не можете ставить оплаты"><i class="icon-minus-circled gray"></i></a></span>
+						{{/cando}}
+					{{/do}}
+					{{#cando}}
+					<span><a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите поставить отметку о поступлении платежа?');if (cf)editCredit('{{id}}','credit.doit');" title="Поставить отметку об оплате"><i class="icon-plus-circled red"></i></a></span>
+					{{/cando}}
+					{{#warning}}
+					<span><i class="icon-bitbucket red" title="Скорее всего счет не будет оплачен"></i></span>
+					{{/warning}}
+				</td>
+				<td class="text-right" nowrap>
+					{{#dole}}
+						<div class="fs-10 Bold" title="% от суммы счета">{{{dole}}}%</div>
+					{{/dole}}
+					{{#count}}
+						<div class="fs-09 gray2" title="% от суммы сделки">{{{count}}}</div>
+					{{/count}}
+				</td>
+				<td class="text-left hidden-netbook" title="{{company}}"><span class="ellipsis">{{company}}</span></td>
+				<td>
+					{{#client}}
+						<span title="{{client}}" class="ellipsis"><A href="javascript:void(0)" onclick="viewClient('{{clid}}')" title="Заказчик"><i class="icon-building broun"></i>&nbsp;{{client}}</A></span>
+					{{/client}}
+					{{#person}}
+						<span title="{{person}}" class="ellipsis"><A href="javascript:void(0)" onclick="viewPerson('{{pid}}')" title="Заказчик"><i class="icon-user-1 broun"></i>&nbsp;{{person}}</A></span>
+					{{/person}}
+					{{#payer}}
+						<br><span class="ellipsis"><i class="icon-building blue"></i><a href="javascript:void(0)" onclick="viewClient('{{payerid}}')" title="Плательщик">{{payer}}</a></span>
+					{{/payer}}
+					{{#deal}}
+					<br><span class="ellipsis paddtop5" title="{{deal}}">
+						<a href="javascript:void(0)" title="Быстрый просмотр: {{deal}}" onclick="viewDogovor('{{did}}')">
+							{{#isclose}}<i class="icon-lock" title="Закрыта"></i>{{/isclose}}
+							<i class="icon-briefcase blue"></i>&nbsp;{{deal}}
+						</a>
+					</span>
+					{{/deal}}
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>

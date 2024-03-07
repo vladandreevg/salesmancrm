@@ -1,0 +1,60 @@
+{
+	"name": "salesman/salesman_crm",
+	"description": "SalesMan CRM is probably the best CRM system for b2b",
+	"type": "project",
+	"keywords": ["crm","sales management","customer","sales","opportunity","црм"],
+	"homepage": "https://salesman.pro",
+	"license": "Apache-2.0",
+	"authors": [
+		{
+			"name": "Vladislav Andreev",
+			"email": "v@salesman.pro",
+			"role": "Author, Developer, Designer"
+		}
+	],
+	"support": {
+		"email": "support@salesman.pro",
+		"source": "https://salesman.pro/download/",
+		"docs": "https://salesman.pro/docs/"
+	},
+	"require": {
+		"andreskrey/readability.php": "v2.1.0",
+		"colshrapnel/safemysql": "@dev",
+		"phpmailer/phpmailer": "^v6.8.0",
+		"mustache/mustache": "v2.12.0",
+		"mobiledetect/mobiledetectlib": "2.8.33",
+		"pear/numbers_words": "dev-master",
+		"erusev/parsedown": "1.7.3",
+		"erusev/parsedown-extra": "0.7.1",
+		"nuovo/spreadsheet-reader": "0.5.11",
+		"dompdf/dompdf": "v2.0.1",
+		"icircle/docx-template-in-php": "v0.1.3",
+		"voku/php-hooks": "0.2.11",
+		"gumlet/php-image-resize": "1.9.*",
+		"comodojo/zip": "3.*",
+		"nicolab/php-ftp-client": "v1.5.3",
+		"league/oauth2-google": "3.0.3",
+		"eleirbag89/telegrambotphp": "1.3.11",
+		"shuchkin/simplexlsxgen": "1.2.15",
+		"shuchkin/simplexlsx": "1.*",
+		"shuchkin/simplexls": "0.*",
+		"bacon/bacon-qr-code": "2.0.4",
+		"tinybutstrong/opentbs": "1.*",
+		"ext-curl": "*",
+		"ext-json": "*",
+		"ext-dom": "*",
+		"ext-zip": "*",
+		"ext-simplexml": "*",
+		"ext-imap": "*",
+		"ext-iconv": "*",
+		"ext-fileinfo": "*",
+		"ext-openssl": "*",
+		"ext-gd": "*",
+		"ext-mysqli": "*",
+		"ext-ftp": "*",
+		"ext-libxml": "*",
+		"ext-mbstring": "*",
+		"ext-sockets": "*",
+		"php": ">=7.2"
+	}
+}

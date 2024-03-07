@@ -1,0 +1,345 @@
+
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+/*.ui-widget-content,*/
+.ui-widget-header2,
+.ui-layout-resizer{
+	background:#ECF0F1;
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content{
+	border-color:#ECF0F1;
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner{
+	background: #EEEEEE;
+}
+
+.tableHeader table{
+	border-top:1px solid #BDC3C7;
+}
+#last .tableHeader table{
+	border-top:0px;
+}
+
+.ui-widget-content{
+	border-right:0;
+}
+.ui-layout-center{
+	border:transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv{
+	background: #FFFFFF;
+}
+
+.ui-layout-north{
+	background: rgba(106, 27, 154, 1.0);
+}
+
+/*фон меню*/
+.menu--block,
+#menu {
+	background: linear-gradient(
+			rgba(106, 27, 154, 0.5),
+			rgba(106, 27, 154, 0.5)
+	),
+	url(/assets/images/bg/purple.png) repeat;
+}
+#menu .hov{
+	border-right: 1px solid rgba(106, 27, 154, 1.0);
+}
+#menu ul:hover{
+	background: #1976D2;
+}
+#menu ul ul {
+	border-top:2px solid #e3e2e2;
+}
+#menu ul ul,
+#menu ul ul:hover,
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	color:#FFF;
+	background:#1976D2;
+}
+#menu a.navlink:hover{
+	color:#FFF;
+	background: rgba(106, 27, 154, 1.0);
+}
+#menu a.navlink:hover svg use{
+	fill: #fff !important;
+}
+#menu ul ul li.header{
+	color:#F5F7FA;
+}
+#menu ul > .top-triangle-white{
+	border-bottom: 7px solid #1976D2;
+}
+#menu hr{
+	border-bottom: 1px solid #1976D2;
+}
+#menu ul ul:after {
+	border-bottom-color: #1976D2;
+}
+
+#menu ul ul ul.sub{
+	background:#1976D2;
+}
+#menu ul ul ul.sub:after {
+	border-left-color: #1976D2;
+}
+
+#menuavatar hr{
+	border-bottom: 1px solid #ECF0F1;
+}
+	#menuavatar:hover{
+		background:#1976D2;
+	}
+	#menuavatar .avatar-subtext{
+		color:#ECF0F1;
+	}
+
+/**
+Меню аватара
+*/
+.avatar--menu{
+	color              : var(--white);
+	background         : #1976D2;
+	border             : #01579B 1px solid;
+}
+.avatar--menu:after {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #34495E;
+}
+.avatar--menu:before {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #1976D2;
+}
+.avatar--menu .item:first-child {
+	border-right : 1px dotted var(--blue2);
+}
+
+.avatar--menu .item .string {
+	color                 : #FFF;
+	border-bottom         : 1px dotted var(--blue2);
+}
+.avatar--menu .item .string.green {
+	color      : #3F729B;
+}
+.avatar--menu .item .string .blue {
+	color      : var(--gray-darkblue);
+}
+.avatar--menu .item .string .gray {
+	color      : var(--gray) !important;
+}
+.avatar--menu .item .string .gray2 {
+	color      : var(--gray);
+}
+.avatar--menu .item .string:hover {
+	background-color : #673AB7;
+}
+.avatar--menu .item .string:hover .blue{
+	color      : var(--mint);
+}
+.avatar--menu .item .title {
+	color          : #34495E;
+	border-bottom  : 1px dotted var(--blue2);
+}
+.avatar--menu .item hr {
+	border-bottom   : 1px dotted var(--blue2);
+}
+.avatar--menu .product{
+	color: #222;
+}
+.avatar--menu .product a,
+.avatar--menu .product .blue{
+	color      : var(--mint);
+}
+
+/*различные кнопки*/
+.bl2{
+	color:#FFF;
+	background: #34495E;
+	border: 1px solid #34495E;
+}
+.bl2:hover{
+	color:#FFF;
+	background: #16A085;
+	border: 1px solid #16A085;
+}
+
+a.button > .dialog_container, input.button > .dialog_container, a.button:link > .dialog_container, a.button:visited > .dialog_container{
+	color:#FFF;
+	background: #673AB7;
+	border: 1px solid #673AB7;
+	line-height: 20px;
+}
+a.button:hover {
+	background: #F6BB42;
+	border: 1px solid #F6BB42;
+	color:#fff;
+}
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color:#222;
+	background: #FFCE54;
+	border:0;
+	margin: 0 2px;
+	padding: 10px;
+}
+.contaner > a.button:hover {
+	color:#222;
+	background: #F6BB42;
+}
+
+.ha:hover{
+	background: rgba(255, 207, 83, 0.3);
+}
+
+/*popup*/
+.popmenu, .popmenu-top, .submenu{
+
+}
+	.popmenu .popheader{
+		color:#FFF;
+		background: #3F51B5;
+	}
+	.popmenu .popheader .blue{
+		color:#FFF;
+	}
+	.popcontent .clink:hover{
+		background: rgba(255,206,84,0.4);
+	}
+	.popcontent a.clink:hover{
+		color: #C0392B;
+	}
+
+.triangle{
+	border-top: 7px solid #3F51B5;
+}
+.top-triangle{
+	border-bottom: 7px solid #3F51B5;
+}
+
+/*карточка*/
+#head #close{
+	/*top:-10px;*/
+	border:1px solid #F6BB42;
+	border-top:0;
+	background:#F6BB42;
+	font-size:0.80em;
+	color: #222;
+	line-height: 0.95em;
+	padding: 5px 10px;
+}
+#head #close:hover{
+	border:1px solid #C0392B;
+	border-top:0;
+	background:#FFFFFF;
+	color: #C0392B;
+}
+
+.fixx{
+	color:#FFF;
+	background: linear-gradient(
+		rgba(106, 27, 154, 0.5),
+		rgba(106, 27, 154, 0.5)
+		),
+		url(/assets/images/bg/purple.png) repeat;
+}
+	.fixx #ctitle .blue,
+	.fixx #ctitle a{
+		color:#ECF0F1;
+	}
+
+#dtabs ul li {
+	color: #FFF;
+	background:rgba(106, 27, 154, 0.5);//#2C3E50;
+}
+#dtabs ul li:hover,
+#dtabs ul li a:hover {
+	border-bottom:0;
+	color:#FFF;
+	background: #1976D2;
+}
+#dtabs ul li a,
+#dtabs ul li:hover a{
+	color: #FFF;
+}
+#dtabs ul li.current:hover a{
+	color: #2C3E50;
+	background:#F7F7EE;
+}
+
+/*элементы ui.jquery*/
+.ui-state-active, .ui-widget-content .ui-state-active,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active{
+	border-color: #BDC3C7;
+}
+
+#tab_container,
+#tab_container .blue{
+	color:#222;
+}
+
+/*список дел в левой панели*/
+#taskweek .header{
+	color:#222;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+
+#footpanel .adder{
+	color: #2E658D;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+#footpanel .adder:hover{
+	background: #F5F7FA;
+	color:#2E658D;
+}
+#footpanel .adder:hover a {
+	color: #2E658D;
+}
+
+#footpanel .pops {
+	background: rgba(59, 110, 170, 1);
+	border: 0 solid rgba(59, 110, 170, 1);
+}
+#footpanel .pops:after, #footpanel .pops:before {
+}
+#footpanel .pops:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: rgba(59, 110, 170, 1);
+}
+#footpanel .pops:before {
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: rgba(59, 110, 170, 1);
+}
+
+#footpanel .pops .clink i{
+	color: #fff;
+}
+#footpanel .pops .clink{
+	color: #F5F7FA;
+	border: 1px solid transparent;
+}
+#footpanel .pops .clink:hover{
+	color: #2980B9;
+	background: #fff;
+}
+#footpanel .pops .clink:hover i{
+	color: #2980B9;
+}

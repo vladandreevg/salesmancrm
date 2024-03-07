@@ -1,0 +1,411 @@
+<script id="corpuniverTpl" type="text/html">
+
+	<TABLE class="top">
+		{{#list}}
+
+			<TR class="ha hand th60 messagelist" data-id="{{id}}" onclick="editCourse('{{id}}','viewshort');" title="Просмотр">
+				<TD>
+
+					<div class="pl10 mp0">
+
+						<div class="mb10">
+
+							<div class="fs-07 gray2 mb10">{{date_edit}}</div>
+
+							<B class="blue fs-14">{{name}}</B>
+
+						</div>
+
+						{{{content}}}
+
+						<div class="mt10 mb10 fs-09 gray2">
+							<i class="icon-user-1 blue" title="Автор"></i>{{author}},
+							<i class="icon-folder-open blue" title="Раздел"></i>{{category}}
+						</div>
+
+						<div class="progressbarr wp100">
+							<div id="test" class="progressbar-completed progress-greenplus" style="width:{{progress}}%;" title="{{progress}}%">
+								<div class="status"></div>
+							</div>
+						</div>
+
+					</div>
+
+				</TD>
+				<TD class="w5 hidden-iphone">
+					<div class="action--container">
+						<div class="action--block">
+
+							<a href="javascript:void(0)" onclick="editCourse('{{id}}','view'); return false;" title="Инфо" class="gray green"><i class="icon-info-1 green"></i></a>
+							{{#change}}
+								<a href="javascript:void(0)" onClick="editCourse('{{id}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>
+								<a href="javascript:void(0)" data-tip="course" data-id="{{id}}" title="Удалить" class="gray red deleteItem"><i class="icon-cancel-circled"></i></a>
+							{{/change}}
+
+						</div>
+					</div>
+				</TD>
+			</TR>
+
+		{{/list}}
+	</TABLE>
+
+		{{^list}}
+
+		<div id="emptymessage" class="gray miditxt text-center">
+			<i class="icon-graduation-cap-1 icon-3x gray"></i><br><b class="red">Упс.</b>&nbsp;&nbsp;<b>Нет доступных курсов</b>
+		</div>
+
+		{{/list}}
+
+	<div style="height:45px;"></div>
+
+</script>
+
+<script id="courseListTpl" type="text/html">
+
+		{{#lecturelist}}
+
+		<h3 class="m0" aria-selected="true" aria-expanded="true" role="tab" data-id="base">
+			<a href="javascript:void(0)" class="shado flh-10" data-type="lection">
+				<span class="block fs-07 black uppercase">{{title}}</span>
+				{{lecture}}
+			</a>
+		</h3>
+		<div id="matlec" data-id="base" data-lec="{{num}}">
+
+			{{#materials}}
+				<a href="#{{slide}}" class="menu {{#isEnd}}greenbg-lite2{{/isEnd}}" title="{{name}}" data-id="{{id}}" data-type="material" data-slide="{{slide}}" id="slide">
+				<span class="flex-container float pt5 pb5">
+					<span class="flex-string w30"><i class="{{icon}} blue"></i></span>
+					<span class="flex-string float flh-10 pt2">
+						<div>{{#isEnd}}<i class="icon-ok green"></i> {{/isEnd}}{{name}}</div>
+						{{#isStart}}<span class="fs-07 gray2">Начат {{isStart}}</span>{{/isStart}}
+						{{#isEnd}}<span class="fs-07 gray2">Закончен {{isEnd}}</span>{{/isEnd}}
+					</span>
+				</span>
+				</a>
+			{{/materials}}
+
+			{{#haveTask}}
+				<div class="menudivider m0 text-center"><b>Задания</b></div>
+			{{/haveTask}}
+
+			{{#tasks}}
+				<a href="#{{slide}}" class="menu {{#isEnd}}greenbg-lite2{{/isEnd}}" title="{{title}}: {{name}}" data-id="{{id}}" data-type="task" data-slide="{{slide}}" id="slide">
+					<span class="flex-container float pt5 pb5">
+						<span class="flex-string w30"><i class="{{icon}}"></i></span>
+						<span class="flex-string float flh-10 pt2">
+							<div>{{#isEnd}}<i class="icon-ok green"></i> {{/isEnd}}{{name}}</div>
+							{{#isStart}}<span class="fs-07 gray2">Начат {{isStart}}</span>{{/isStart}}
+							{{#isEnd}}<span class="fs-07 gray2">Закончен {{isEnd}}</span>{{/isEnd}}
+						</span>
+					</span>
+				</a>
+			{{/tasks}}
+
+
+		</div>
+
+		{{/lecturelist}}
+
+</script>
+
+<script id="courseConstructorTpl" type="text/html">
+
+		{{#list}}
+		<DIV class="univeraction p10 hidden1">
+
+			<div class="gray inline hidden-iphone" data-action="close">
+
+				<a href="javascript:void(0)" onclick="$('.ui-layout-east').removeClass('open'); $('#contentdiv').find('tr').removeClass('current');" title=""><i class="icon-cancel-circled"></i> Закрыть</a>
+
+			</div>
+
+			<div class="pull-left blue fs-16 uppercase Bold hidden">
+				<i class="icon-graduation-cap-1"></i>&nbsp;{{name}}
+			</div>
+
+
+			{{#change}}
+			<div class="inline hidden-iphone pull-right zindex-30 panel m0" style="top: 0;right: 0;">
+
+				<div class="inline">
+
+					<a href="javascript:void(0)" class="tagsmenuToggler hand" title="Действия">
+						<i class="icon-angle-down" id="mapi"></i>&nbsp;<b>Действия</b>
+					</a>
+					<div class="tagsmenu toright hidden mr10">
+
+						<div class="items noBold fs-09">
+
+							{{#count}}
+								<div onclick="startCourse('{{id}}','{{name}}')" class="item ha hand" title="Начать изучение">
+									<i class=" icon-graduation-cap-1 green"></i>&nbsp;Начать изучение
+								</div>
+								<div onclick="setItemsState()" class="item ha hand togglerItems">
+									<i class="icon-shareable gray"></i>&nbsp;<span>???</span></div>
+							{{/count}}
+								<div onClick="editCourse('{{id}}','edit');" class="item ha hand" title="Изменить">
+									<i class="icon-pencil blue"></i>&nbsp;Редактировать
+								</div>
+								<div class="item ha hand deleteItem" data-tip="course" data-id="{{id}}" title="Удалить">
+									<i class="icon-cancel-circled red"></i>&nbsp;Удалить
+								</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+			{{/change}}
+
+		</DIV>
+
+		<div class="mb10 pt20 mp0 p10">
+
+			<div class="hidden" id="course">{{id}}</div>
+
+			<div class="flex-container">
+
+				<div class="flex-string wp100 text-center">
+
+					<h1 class="m0 fs-16 uppercase">
+						<i class="icon-graduation-cap-1 black"></i>&nbsp;{{name}}
+					</h1>
+
+					<div class="hidden-iphone fs-09 mt15">
+
+						<i class="icon-clock green"></i> {{edited}}
+						<i class="icon-user-1 blue"></i> {{autor}}
+
+					</div>
+
+				</div>
+
+				{{#count}}
+					{{^change}}
+						<div class="flex-string wp100 text-center mt20 pt20">
+
+							{{#progress}}
+								<div onclick="startCourse('{{id}}','{{name}}')" class="button greenbtn dotted ha hand pt10 pb10 fs-12" title="Начать изучение">
+									<i class="icon-graduation-cap-1"></i>&nbsp;{{startText}}
+								</div>
+							{{/progress}}
+
+							{{^progress}}
+								<div onclick="editCourse('{{id}}','statuser')" class="button redbtn dotted ha hand pt10 pb10 fs-12" title="Статистика и результаты">
+									<i class="icon-chart-line"></i>&nbsp;Статистика и результаты
+								</div>
+							{{/progress}}
+
+							<div onclick="editCourse('{{id}}','view');" class="button bluebtn dotted ha hand pt10 pb10 fs-12" title="О курсе">
+								<i class="icon-info"></i>&nbsp;О курсе
+							</div>
+
+						</div>
+					{{/change}}
+					{{#change}}
+						<div class="flex-string wp100 text-center mt20 pt20">
+
+							<div onclick="editCourse('{{id}}','stat');" class="button greenbtn dotted ha hand pt10 pb10 fs-12" title="О курсе">
+								<i class="icon-chart-line"></i>&nbsp;Статистика
+							</div>
+
+							<div onclick="editCourse('{{id}}','view');" class="button bluebtn dotted ha hand pt10 pb10 fs-12" title="О курсе">
+								<i class="icon-info"></i>&nbsp;О курсе
+							</div>
+
+						</div>
+					{{/change}}
+				{{/count}}
+
+			</div>
+
+			<div class="uppercase Bold fs-12 mt20 mb20 gray2 center-text">Cодержание курса</div>
+
+			<ul class="Lectures">
+
+				{{#lection}}
+					<li id="Lecture" data-id="{{idlection}}" data-lec="0" data-num="{{num}}" class="bgwhite no-shadow Lecture">
+
+						<ul class="lec simple sticked--top">
+
+							<li class="lec" id="editLecture-{{idlection}}">
+
+							{{#change}}
+								<span class="actions">
+									<a href="javascript:void(0)" class="up-lec gray yellow mpr0" title="Вверх" data-type="Lecture" data-lec="0"><i class="icon-up-big yellow"></i></a>
+									<a href="javascript:void(0)" class="down-lec gray yellow" title="Вниз" data-type="Lecture" data-lec="0"><i class="icon-down-big yellow"></i></a>
+									<a href="javascript:void(0)" data-tip="Lecture" data-id="{{idlection}}" title="Изменить" class="gray blue editItem"><i class="icon-pencil blue"></i></a>
+									<a href="javascript:void(0)" data-tip="Lecture" data-id="{{idlection}}" title="Удалить" class="gray red deleteItem"><i class="icon-cancel-circled"></i></a>
+								</span>
+							{{/change}}
+
+							<span class="openLec hand" title="Свернуть">
+								{{name}}<i class="icon-angle-up"></i>&nbsp;
+							</span>
+							<span class="pull-aright noBold">
+								{{#progressLecture}}Прогресс: <span class="Bold blue">{{progressLecture}}%</span>{{/progressLecture}}
+							</span>
+
+							</li>
+
+						</ul>
+						<ul class="Materials itemsLec" data-id="{{idlection}}">
+
+							{{#material}}
+								<li id="Material" data-id="{{idmaterial}}" data-num="{{num}}" data-lec="{{idlection}}" title="{{text}}">
+
+									<div href="javascript:void(0)" id="editMaterial-{{idmaterial}}" class="mat {{class}}">
+
+											<span class="actions">
+												{{^change}}
+													{{#isStart}}
+													<a href="javascript:void(0)" class="gray green mpr0 cu--preview" data-id="{{idmaterial}}" data-type="material" title="Просмотр">
+														<i class="icon-eye green"></i>
+													</a>
+													{{/isStart}}
+												{{/change}}
+												{{#change}}
+												<a href="javascript:void(0)" class="gray green mpr0 cu--preview" data-id="{{idmaterial}}" data-type="material" title="Просмотр">
+													<i class="icon-eye green"></i>
+												</a>
+												<a href="javascript:void(0)" class="up-lec gray yellow mpr0" title="Вверх" data-type="Material" data-lec="{{idlection}}">
+													<i class="icon-up-big yellow"></i>
+												</a>
+												<a href="javascript:void(0)" class="down-lec gray yellow" title="Вниз" data-type="Material" data-lec="{{idlection}}">
+													<i class="icon-down-big yellow"></i>
+												</a>
+												<a href="javascript:void(0)" data-tip="Material" data-id="{{idmaterial}}" data-lec="{{idlection}}" title="Изменить" class="gray blue editItem"><i class="icon-pencil blue"></i></a>
+												<a href="javascript:void(0)" data-tip="material" data-id="{{idmaterial}}" title="Удалить" class="gray red deleteItem"><i class="icon-cancel-circled"></i></a>
+												{{/change}}
+											</span>
+
+										<span class="flex-container float" title="{{host}}">
+											<span class="flex-string w30">
+												<i class="{{icon}}"></i>
+											</span>
+											<span class="flex-string float">
+												{{name}}
+											</span>
+										</span>
+
+									</div>
+
+								</li>
+							{{/material}}
+
+							{{#change}}
+								<div class="append relativ" id="appendMaterial-{{idlection}}">
+									<div class="fcontainer other-btn editItem text-center" data-tip="Material" data-id="0" data-lec="{{idlection}}" title="Добавить материал">
+										<i class="icon-plus"></i>Добавить материал
+									</div>
+								</div>
+							{{/change}}
+
+							<div class="hidden" id="countMaterial-{{idlection}}">{{materialCount}}</div>
+
+						</ul>
+						<ul class="Tasks itemsLec" data-id="{{idlection}}">
+
+							{{#task}}
+								<li id="Task" data-id="{{idtask}}" data-num="{{num}}" data-lec="{{idlection}}" title="{{text}}">
+
+									<div href="javascript:void(0)" id="editTask-{{idtask}}" class="tsk {{class}}">
+
+										{{#change}}
+											<span class="actions">
+												<a href="javascript:void(0)" class="gray green mpr0 cu--preview" data-id="{{idtask}}" data-type="task" title="Просмотр">
+													<i class="icon-eye green"></i>
+												</a>
+												<a href="javascript:void(0)" class="up-lec gray yellow mpr0" title="Вверх" data-type="Task" data-lec="{{idlection}}"><i class="icon-up-big yellow"></i></a>
+												<a href="javascript:void(0)" class="down-lec gray yellow" title="Вниз" data-type="Task" data-lec="{{idlection}}"><i class="icon-down-big yellow"></i></a>
+												<a href="javascript:void(0)" data-tip="Task" data-id="{{idtask}}" data-lec="{{idlection}}" title="Изменить" class="gray blue editItem"><i class="icon-pencil blue"></i></a>
+												<a href="javascript:void(0)" data-tip="Task" data-id="{{idtask}}" title="Удалить" class="gray red deleteItem"><i class="icon-cancel-circled"></i></a>
+											</span>
+										{{/change}}
+										{{^change}}
+
+											{{#rezult}}
+											<span class="pull-aright" title="{{comment}}">
+												<i class="{{icon}}"></i>
+											</span>
+											{{/rezult}}
+
+										{{/change}}
+
+										<span class="flex-container float" title="{{name}}">
+											<span class="flex-string w30">
+												<i class="{{icon}} blue"></i>
+											</span>
+											<span class="flex-string float">
+												{{#testCount}}<div class="bullet greenbg mr5">{{testCount}}</div>{{/testCount}}{{name}}
+											</span>
+										</span>
+
+									</div>
+
+								</li>
+							{{/task}}
+
+							{{#change}}
+								<div class="append relativ" id="appendTask-{{idlection}}">
+									<div class="fcontainer other-btn editItem text-center" data-tip="Task" data-id="0" data-lec="{{idlection}}" title="Добавить задание">
+										<i class="icon-plus"></i>Добавить задание
+									</div>
+								</div>
+							{{/change}}
+
+							<div class="hidden" id="countTask-{{idlection}}">{{taskCount}}</div>
+
+						</ul>
+
+						<ul class="simple mb20 hidden">
+							<li>
+								{{#change}}
+									<div class="append relativ" id="appendMaterial-{{idlection}}">
+										<div class="fcontainer other-btn editItem text-center" data-tip="Material" data-id="0" data-lec="{{idlection}}" title="Добавить материал">
+											<i class="icon-plus"></i>Добавить материал
+										</div>
+									</div>
+								{{/change}}
+							</li>
+							<li>
+								{{#change}}
+									<div class="append relativ" id="appendTask-{{idlection}}">
+										<div class="fcontainer other-btn editItem text-center" data-tip="Task" data-id="0" data-lec="{{idlection}}" title="Добавить задание">
+											<i class="icon-plus"></i>Добавить задание
+										</div>
+									</div>
+								{{/change}}
+							</li>
+						</ul>
+					</li>
+
+					<div class="hidden" id="countLecture-0">{{lectionCount}}</div>
+					<div class="space-10"></div>
+
+				{{/lection}}
+
+				{{#change}}
+					<li class="bgwhite">
+						<div id="appendLecture-{{idlection}}" style="position: relative; padding-left: 2.4em">
+							<div class="fcontainer other-btn editItem text-center" data-tip="Lecture" data-lec="0" title="Добавить лекцию">
+								<i class="icon-plus"></i>Добавить лекцию
+							</div>
+						</div>
+					</li>
+				{{/change}}
+
+			</ul>
+
+		</div>
+
+		<div class="space-100"></div>
+
+		{{/list}}
+
+</script>

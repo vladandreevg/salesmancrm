@@ -1,0 +1,13 @@
+AddDefaultCharset UTF-8
+
+RewriteEngine On
+
+RewriteRule ^call_events.*$ call_events.php [L]
+RewriteRule ^get_number_info.*$ get_number_info.php [L]
+
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME}\.php -f
+#RewriteRule ^(.*)$ $1.php
+
+# get_number_info
+# call_events

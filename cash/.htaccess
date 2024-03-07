@@ -1,0 +1,13 @@
+Options -Indexes
+
+Order Deny,Allow
+
+<Files "*.json">
+Deny from all
+Allow from localhost
+</Files>
+
+<Files "*.txt">
+Deny from all
+Allow from localhost
+</Files>

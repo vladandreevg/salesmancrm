@@ -1,0 +1,88 @@
+<script id="notifyPopTpl" type="text/html">
+
+	<div class="pt10 pb10 pl5 border-bottom fs-09 blue">
+
+		<a href="javascript:void(0)" onclick="$notify.list()" class="p0"><i class="icon-list-nested blue"></i> {{language.notify.All}}</a>
+
+	</div>
+	{{#list}}
+
+	<div class="flex-container float popblock-item relativ" {{#onclick}}onclick="$notify.mark('{{id}}'); {{onclick}};"{{/onclick}} data-id="{{id}}">
+
+		<div class="flex-string w30 fs-10 {{color}} pt20">
+
+			<i class="{{icon}}"></i>
+
+		</div>
+		<div class="flex-string float">
+
+			<div class="Bold fs-07 gray">{{datum}}</div>
+			<div class="Bold fs-11 blue1 mt5 mb10">{{{title}}}</div>
+			<div class="hidden">{{{content}}}</div>
+			<div class="fs-07 text-right gray2"><i class="icon-user-1"></i>{{autorName}}</div>
+
+		</div>
+
+	</div>
+
+	{{/list}}
+
+	{{^list}}
+
+	<div class="popblock-item cursor-default gray2">
+		{{language.notify.Nothing}}
+	</div>
+
+	{{/list}}
+
+</script>
+
+<script id="listTpl" type="text/html">
+
+	<div class="header uppercase pl10 text-center">
+		{{language.notify.Notify}}
+	</div>
+	<div class="body p0">
+
+		{{#list}}
+
+		<div class="flex-container float bgwhite hand p20 border-bottom ha relativ" {{#onclick}}onclick="$notify.mark('{{id}}'); {{{onclick}}}; e.stopPropagation();"{{/onclick}} data-id="{{id}}">
+
+			{{#status}}
+			<div class="corner corner-right"></div>
+			{{/status}}
+
+			<div class="flex-string w60 fs-14 {{color}} pt20">
+
+				<i class="{{icon}}"></i>
+
+			</div>
+			<div class="flex-string float">
+
+				<div class="Bold fs-07 gray">{{datum}}</div>
+				<div class="Bold fs-12 blue mt5 mb10">{{{title}}}</div>
+				<div class="mb10">{{{content}}}</div>
+				<div class="fs-09 text-right gray2"><i class="icon-user-1"></i>{{autorName}}</div>
+
+			</div>
+
+		</div>
+
+		{{/list}}
+
+		{{^list}}
+
+		<div id="emptymessage" class="gray miditxt text-center">
+			<i class="icon-graduation-cap-1 icon-3x gray"></i><br><b>{{{language.notify.NothingMore}}}</b>
+		</div>
+
+		{{/list}}
+
+	</div>
+	<div class="footer text-center">
+
+		<a href="javascript:void(0)" onclick="$notify.markall()" class="button">{{language.notify.CheckAll}}</a>
+
+	</div>
+
+</script>

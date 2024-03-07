@@ -1,0 +1,303 @@
+<script id="dashboardTpl" type="text/html">
+
+	<div class="dialoglist">
+
+		{{#list}}
+			<div class="chatlist" data-id="{{id}}" data-chat="{{chat_id}}" data-channel="{{channel_id}}">
+
+				<div class="uavatar mb5 pl15">
+
+					<div class="avatar--mini relativ" style="{{#avatar}}background-image: url('{{avatar}}'); background-size:cover; {{/avatar}} background-color: {{color}}" title="{{firstname}}">
+						<div class="chat--icon" style="background: url(assets/images/{{icon}}); background-size:cover;"></div>
+					</div>
+
+				</div>
+
+				<div class="uname mb5 relativ pr20">
+
+					<div class="time fs-07">{{lastmessage.datum}}</div>
+					<div class="fs-11 Bold">{{firstname}} {{lastname}}</div>
+					<div class="fs-09 gray mt10" data-id="lastmessage">{{lastmessage.content}}</div>
+					{{#unread}}
+						<div class="chat--unread">{{unread}}</div>{{/unread}}
+
+				</div>
+
+			</div>
+		{{/list}}
+
+	</div>
+
+</script>
+
+<script id="chatsTpl" type="text/html">
+
+		{{resetIndex}}
+		{{#list}}
+
+			{{#dateDivider}}
+			<div class="divider mt10 mb10">{{dateDivider}}</div>
+			{{/dateDivider}}
+
+		<div class="chatlist {{#dateDivider}}noborder{{/dateDivider}} {{#isnew}}newchat{{/isnew}}" data-id="{{id}}" data-chat="{{chat_id}}" data-channel="{{channel_id}}" data-avatar="{{avatar}}">
+
+			<div class="uavatar mb5 pl15">
+
+				<div class="avatar--mini relativ" style="{{#avatar}}background-image: url('{{avatar}}'); background-size:cover; {{/avatar}} background-color: {{color}}" title="{{firstname}}">
+					<div class="chat--icon" style="background: url(assets/images/{{icon}}); background-size:cover;"></div>
+				</div>
+
+			</div>
+
+			<div class="uname mb5 relativ pr25">
+
+				<div class="time fs-07">{{lastmessage.datum}}</div>
+				<div class="fs-11 Bold">{{firstname}} {{lastname}}</div>
+				<div class="fs-09 gray mt10" data-id="lastmessage">{{{lastmessage.content}}}</div>
+				<div class="chat--unread hidden">{{unread}}</div>
+				{{#isclosed}}<div class="chat--close"><i class="icon-lock red"></i></div>{{/isclosed}}
+
+			</div>
+
+		</div>
+		{{/list}}
+
+</script>
+
+<script id="messagesTpl" type="text/html">
+
+	{{#loadmore}}
+		<div class="loadmore" onclick="$mainFunc.dialogMore()">Загрузить более старые сообщения</div>
+	{{/loadmore}}
+
+		{{resetIndex}}
+		{{#list}}
+
+			{{#dateDivider}}
+			<div class="divider mt10 mb10 sticked">
+				<div class="text">{{dateDivider}}</div>
+			</div>
+			{{/dateDivider}}
+
+			<div class="answer" data-messageid="{{message_id}}" data-id="{{id}}">
+
+				<div class="userpic">
+
+					<div class="avatar--mini" style="{{#avatar}}background-image: url('{{avatar}}'); background-size:cover; {{/avatar}} background-color: {{background}};" title="{{name}}"></div>
+
+				</div>
+				<div class="dialogmessage">
+
+						<span class="dialogmessage--message {{boxbg}}">
+
+							<div class="Bold fs-12 {{color}} mr20 pr10">{{name}}</div>
+
+							{{#content}}
+								<div class="fs-11 flh-12 mt10 inline text-wrap1">{{{content}}}</div>
+							{{/content}}
+
+							{{#attachment}}
+								{{#document}}{{/document}}
+								{{#image}}{{/image}}
+								{{#video}}{{/video}}
+								{{#ptt}}{{/ptt}}
+								{{#audio}}{{/audio}}
+							{{/attachment}}
+
+							<div class="time">
+								{{date}}
+								<div><i class="{{diricon}} {{color}}"></i></div>
+							</div>
+
+							<div class="deletemessage" title="Удалить"><i class="icon-cancel-circled"></i></div>
+
+							{{#hasAttachment}}
+								<div class="attachments mt10 infodiv p0 bgwhite">
+									{{#attachment}}
+
+										{{#doc}}
+											<div class="p5 text-wrap"><a href="/content/helpers/get.file.php?attach={{url}}&name={{title}}" target="_blank"><i class="{{icon}}"></i>{{title}}</a></div>
+										{{/doc}}
+										{{#photo}}
+											<div class="p5 text-wrap"><a href="/content/helpers/get.file.php?attach={{url}}" target="_blank"><i class="{{icon}}"></i>{{title}}</a></div>
+										{{/photo}}
+
+									{{/attachment}}
+								</div>
+							{{/hasAttachment}}
+
+							{{#readability}}
+								<div class="readability">
+									{{#content}}
+										<div class="ra--text">
+											<div class="Bold fs-11 mb10">{{readability.title}}</div>
+											<div class="fs-09 mb10">{{readability.content}}</div>
+											<div class="Bold gray2">{{readability.url}}</div>
+										</div>
+									{{/content}}
+								</div>
+							{{/readability}}
+
+						</span>
+
+				</div>
+
+			</div>
+
+		{{/list}}
+		{{^total}}
+		<div class="attention bgwhite">диалог не начат</div>
+		{{/total}}
+
+		{{#chat.isnew}}
+		<div class="divider">Данный диалог не имеет куратора</div>
+		<div class="mt20 text-center">
+			<a href="javascript:void(0)" onclick="$mainFunc.chatSetUser()" class="button greenbtn">Взять в работу</a>
+		</div>
+		{{/chat.isnew}}
+
+	<div class="space-100"></div>
+
+</script>
+
+<script id="profileTpl" type="text/html">
+
+	<div class="Bold mb20">Персональная информация</div>
+	
+	<form action="php/chats.php" method="post" enctype="multipart/form-data" name="consumerForm" id="consumerForm">
+		<input type="hidden" id="clid" name="clid" value="{{clid}}">
+		<input type="hidden" id="pid" name="pid" value="{{pid}}">
+
+		<div class="flex-container flex-vertical">
+		{{#consumer}}
+			{{^hidden}}
+				<div class="flex-container wp100 mt10 cleared">
+
+					<div class="flex-string wp100 uppercase fs-07 Bold pl5">{{inputTitle}}</div>
+					<div class="flex-string wp100 relativ">
+
+						{{^havevariants}}
+						<input type="text" id="{{inputName}}" name="{{inputName}}" value="{{inputValue}}" class="wp100" placeholder="Добавить {{inputTitle}}">
+						{{#inputGoal}}
+							<span class="idel clearinputs pr10" data-goal="{{inputGoal}}" title="Очистить"><i class="icon-block-1 red"></i></span>
+						{{/inputGoal}}
+						{{/havevariants}}
+
+						{{#havevariants}}
+							<select name="{{inputName}}" id="{{inputName}}" class="wp100">
+								<option value="0">Выбрать</option>
+								{{#variants}}
+									<option value="{{id}}" {{#sel}}selected{{/sel}}>{{title}}</option>
+								{{/variants}}
+							</select>
+						{{/havevariants}}
+
+					</div>
+
+				</div>
+			{{/hidden}}
+			{{#hidden}}
+				<input type="hidden" name="{{inputName}}" value="{{inputValue}}">
+			{{/hidden}}
+		{{/consumer}}
+		</div>
+
+	</form>
+
+	<hr class="mt20">
+
+
+	<div class="a--group">
+		<a onclick="$mainFunc.consumerSave()" class="button greenbtn pt5 pb5">Сохранить</a>
+		{{#clid}}
+		<a onclick="openClient({{clid}})" class="button pt5 pb5"><i class="icon-building-filled"></i>Клиент</a>
+		{{/clid}}
+		{{#pid}}
+		<a onclick="openPerson({{pid}})" class="button redbtn pt5 pb5"><i class="icon-user-1"></i>Контакт</a>
+		{{/pid}}
+	</div>
+
+</script>
+
+<script id="cardTpl" type="text/html">
+
+	{{#list}}
+
+	<div class="answer" data-messageid="{{message_id}}" data-id="{{id}}">
+
+		<div class="userpic">
+
+			<div class="avatar--mini" style="{{#avatar}}background-image: url('{{avatar}}'); background-size:cover; {{/avatar}} background-color: {{background}};" title="{{name}}">
+				<div class="chat--icon" style="background: url(/plugins/socialChats/assets/images/{{icon}}); background-size:cover;"></div>
+			</div>
+
+
+		</div>
+		<div class="dialogmessage">
+
+			<span class="dialogmessage--message {{boxbg}}">
+
+				<div class="Bold fs-12 {{color}} mr20 pr10">{{name}}</div>
+
+				{{#content}}
+					<div class="fs-11 flh-12 mt10 inline text-wrap1">
+						{{{content}}}
+					</div>
+				{{/content}}
+
+				{{#attachment}}
+					{{#document}}{{/document}}
+					{{#image}}{{/image}}
+					{{#video}}{{/video}}
+					{{#ptt}}{{/ptt}}
+					{{#audio}}{{/audio}}
+				{{/attachment}}
+
+				<div class="time text-right">
+					<div class="fs-07 Bold">{{datum}}</div>
+					{{date}}
+					<div><i class="{{diricon}} {{color}}"></i></div>
+				</div>
+
+				{{#hasAttachment}}
+					<div class="attachments mt10 infodiv p0 bgwhite">
+						{{#attachment}}
+
+							{{#doc}}
+								<div class="p5 text-wrap"><a href="/content/helpers/get.file.php?attach={{url}}" target="_blank"><i class="{{icon}}"></i>{{title}}</a></div>
+							{{/doc}}
+							{{#photo}}
+								<div class="p5 text-wrap"><a href="/content/helpers/get.file.php?attach={{url}}" target="_blank"><i class="{{icon}}"></i>{{title}}</a></div>
+							{{/photo}}
+
+						{{/attachment}}
+					</div>
+				{{/hasAttachment}}
+
+				{{#readability}}
+					<div class="readability">
+						{{#content}}
+							<div class="ra--text">
+								<div class="Bold fs-11 mb10">{{readability.title}}</div>
+								<div class="fs-09 mb10">{{readability.content}}</div>
+								<div class="Bold gray2">{{readability.url}}</div>
+							</div>
+						{{/content}}
+					</div>
+				{{/readability}}
+
+			</span>
+
+		</div>
+
+	</div>
+
+	{{/list}}
+
+	<div class="space-100 hidden"></div>
+
+	{{^total}}
+	<div class="attention bgwhite">диалог не начат</div>
+	{{/total}}
+
+</script>

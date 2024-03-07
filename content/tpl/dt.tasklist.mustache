@@ -1,0 +1,136 @@
+<script id="taskTpl" type="text/html">
+
+	<TABLE id="zebraTable" class="top">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw60 text-left"><b>{{language.all.Time}}</b></TH>
+			<TH class="text-left"><B>{{language.all.Theme}}</B></TH>
+			<TH class="yw120 text-left"><B>{{language.all.Type}}</B></TH>
+			<TH class="w90 text-left"><B>{{language.all.Actions}}</B></TH>
+			{{#myotdel}}
+				<TH class="yw100 text-left"><B>{{language.all.User}}</B></TH>
+			{{/myotdel}}
+			<TH class="yw200 text-left"><b>{{language.all.Client}}</b></TH>
+		</TR>
+		</thead>
+		{{#events}}
+			<tr class="{{bg}} toggler hand sticked--top th45" data-id="t{{id}}">
+				<td colspan="{{#myotdel}}6{{/myotdel}}{{^myotdel}}5{{/myotdel}}"><i class="{{icon}} white"></i>&nbsp;&nbsp;<B class="uppercase">{{{title}}}</B>&nbsp;(
+					<b>{{count}}</b> )
+				</td>
+			</tr>
+			<tbody id="t{{id}}" class="{{state}}">
+			{{#data}}
+				<tr class="{{bg}} dayname th35">
+					<TD colspan="6">
+						<div class="pad51 Bold">{{{date}}} <span class="inline red">{{year}}</span></div>
+					</td>
+				</tr>
+				{{#event}}
+					<tr class="ha bgwhite {{#day}}greenbg-sub{{/day}} th40" {{#change}}data-type="task"{{/change}}>
+						<td class="text-center">
+							{{#change}}<span class="hidden"><input name="ch[]" type="checkbox" class="mc" id="ch_{{tid}}" value="{{tid}}"></span>{{/change}}
+							{{#day}}<i class="icon-flag green" title="Весь день"></i>{{/day}}
+							{{^day}}{{time}}{{/day}}
+						</td>
+						<td>
+							<div title="{{tip}}" class="hidden visible-iphone1 fs-09 em gray2">{{tip}}</div>
+
+							<div class="ellipsis1">
+								<div class="w20 inline hidden-iphone">{{{priority}}}{{{speed}}}</div>
+								{{#uicon}}{{{uicon}}}&nbsp;{{/uicon}}
+								<a href="javascript:void(0)" onClick="viewTask('{{tid}}');" title="{{title}}">
+									<b class="fs-11">{{title}}</b>{{#usercount}}<div class="inline gray2 mt5 em fs-09"><i class="icon-users-1 green" title="{{usercount}} участников"></i></div>{{/usercount}}
+								</a>
+							</div>
+
+							{{#address}}
+								<br>
+								<div class="ellipsis1 smalltext blue">
+									<div class="w15 inline"></div>
+									<i class="icon-location"></i>{{address}}
+								</div>
+							{{/address}}
+
+							{{#agenda}}
+								<div class="mt10 infodiv graybg-lite fs-09 gray2 scroll noscroll height--50">{{{agenda}}}</div>
+							{{/agenda}}
+
+							{{^myotdel}}
+								{{#users}}
+									<div class="ellipsis mt10 mb5 fs-09 gray2">
+										<div class="w15 inline"></div>{{{users}}}
+									</div>
+								{{/users}}
+							{{/myotdel}}
+
+						</td>
+						<td>
+							<span title="{{tip}}" style="color:{{color}}">{{{icon}}} {{tip}}</span>
+						</td>
+						<td>
+							<span class="mob-pull-right">
+							{{#readonly}}
+								<i class="icon-ok gray2" title="Только чтение"></i>&nbsp;
+								<i class="icon-user-1 green" title="Автор: {{autor}}"></i>
+							{{/readonly}}
+								{{^readonly}}
+									{{#do}}
+										<A href="javascript:void(0)" onClick="editTask('{{tid}}','doit');" class="vtip gray" title="Активно, пометить как сделанное"><i class="icon-ok blue" title="Активно, пометить как сделанное"></i></A>
+										{{#change}}
+										&nbsp;<A href="javascript:void(0)" onClick="editTask('{{tid}}','edit');" class="gray"><i class="icon-pencil green" title="Изменить"></i></A>
+										&nbsp;<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteTask('{{tid}}');" class="gray"><i class="icon-cancel-circled red" title="Удалить"></i></A>
+										{{/change}}
+									{{/do}}
+								{{/readonly}}
+							</span>
+						</td>
+						{{#myotdel}}
+							<td>
+								<span class="ellipsis" title="{{{user}}}">{{{user}}}</span>
+								{{#autor}}
+									<br><span class="ellipsis gray2 fs-09" title="Автор: {{{autor}}}">{{{autor}}}</span>
+								{{/autor}}
+							</td>
+						{{/myotdel}}
+						<td class="">
+							<div class="ellipsis">
+								{{#client}}
+								<A href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="icon-building blue"></i>{{client}}
+								</A>
+								{{/client}}
+								{{#person}}
+								<A href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть в новом окне"><i class="icon-user-1 blue"></i>{{person}}
+								</A>
+								{{/person}}
+							</div>
+							{{#did}}
+							<br>
+							<div class="ellipsis mt5 mb5">
+								<A href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Открыть в новом окне"><i class="icon-briefcase red"></i><sup class="gray mr5">{{step}}%</sup>&nbsp;{{deal}}
+								</A>
+							</div>
+							{{/did}}
+						</td>
+					</tr>
+				{{/event}}
+			{{/data}}
+			</tbody>
+		{{/events}}
+	</TABLE>
+
+		{{^events}}
+		<div class="fcontainer fs-09 gray">Нет напоминаний</div>
+		{{/events}}
+
+	<div class="space-60"></div>
+
+	<div class="multi--buttons box--child hidden">
+
+		<a href="javascript:void(0)" onclick="multiTaskMove()" class="button bluebtn box-shadow amultidel" title="Перенести"><i class="icon-shuffle"></i>Перенести <span class="task--count"></span></a>
+		<a href="javascript:void(0)" onclick="multiTaskDel()" class="button redbtn box-shadow amultidel" title="Удалить"><i class="icon-cancel-circled-1"></i>Удалить <span class="task--count"></span></a>
+		<a href="javascript:void(0)" onclick="multiTaskClearCheck()" class="button greenbtn box-shadow amultidel" title="Снять выделение"><i class="icon-th"></i>Снять выделение <span class="task--count"></span></a>
+
+	</div>
+
+</script>

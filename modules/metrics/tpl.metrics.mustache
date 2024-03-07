@@ -1,0 +1,440 @@
+<script id="usersTpl" type="text/html">
+		{{#list}}
+
+		<div class="userblock flex-container box--child border-bottom hand ha" data-id="{{iduser}}">
+			<div class="flex-string wp20 p5 pt10">
+				<div class="avatar--mini--resp mr5" style="background: url({{avatar}}); background-size:cover;"></div>
+			</div>
+			<div class="flex-string wp80 p10 text-left">
+				<div class="fs-12 Bold">
+					{{^active}}<i class="icon-cancel-circled red" title="Заблокирован"></i>{{/active}}{{title}}
+				</div>
+				<div class="fs-09 gray2 Bold mt10">{{tip}}</div>
+				<div class="fs-09 gray2">{{status}}</div>
+			</div>
+		</div>
+
+		{{/list}}
+</script>
+
+<script id="metricsTpl" type="text/html">
+		{{#list}}
+
+		<h2><i class="icon-user-1"></i> Данные пользователя <span class="blue hidden-iphone">{{list.name}}</span></h2>
+
+		<div class="avatarbig pull-aright mr20" style="background: url({{list.avatar}}); background-size:cover;"></div>
+
+		{{#user}}
+		<div class="flex-container box--child p10 fs-11" data-id="{{id}}">
+
+			<div class="flex-string wp20 nopad">{{name}}</div>
+			<div class="flex-string wp80 {{class}}">{{#value}}{{{value}}}{{/value}}{{^value}}
+				<span class="gray2">Не указано</span>{{/value}}</div>
+
+		</div>
+		{{/user}}
+
+		<div class="space-40" id="bplan"></div>
+
+		<h2>
+			<i class="icon-gauge"></i> План на <span class="blue">{{list.year}}</span> год {{#edit}}
+			<span class=""><a href="javascript:void(0)" onclick="$metrics.editPlan('{{iduser}}','{{list.year}}')" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a></span>{{/edit}}
+		</h2>
+
+		<div>
+
+			{{#haveplan}}
+
+				<div id="chart">xxx</div>
+
+				<div class="flex-container box--child p10 fs12 bluebg-dark white Bold">
+
+					<div class="flex-string wp20"></div>
+					<div class="flex-string wp40">Оборот</div>
+					<div class="flex-string wp40">Маржа</div>
+
+				</div>
+				<div class="flex-container box--child p10 fs12 bluebg white Bold">
+
+					<div class="flex-string wp20 hidden-iphone">Период</div>
+					<div class="flex-string wp20">План</div>
+					<div class="flex-string wp20">Факт</div>
+					<div class="flex-string wp20">План</div>
+					<div class="flex-string wp20">Факт</div>
+
+				</div>
+
+				{{#plan}}
+					<div class="flex-container box--child p10 border-bottom ha">
+
+						<div class="flex-string wp20 Bold nopad">{{month}}</div>
+						<div class="flex-string wp20">{{summa}}</div>
+						<div class="flex-string wp20">{{fsumma}}</div>
+						<div class="flex-string wp20">{{marga}}</div>
+						<div class="flex-string wp20">{{fmarga}}</div>
+
+					</div>
+				{{/plan}}
+				<div class="flex-container box--child p10 bluebg-lite border-bottom ha Bold">
+
+					<div class="flex-string wp20 nopad">Итого</div>
+					<div class="flex-string wp20">{{total.summa}}</div>
+					<div class="flex-string wp20">{{total.fsumma}}</div>
+					<div class="flex-string wp20">{{total.marga}}</div>
+					<div class="flex-string wp20">{{total.fmarga}}</div>
+
+				</div>
+
+
+			{{/haveplan}}
+			{{^haveplan}}
+				<div class="flex-container box--child p10">
+
+					<div class="flex-string">Не имеет финансового плана</div>
+
+				</div>
+			{{/haveplan}}
+
+		</div>
+
+		<div class="space-40" id="bkpi"></div>
+
+		<h2 class="mt20">
+			<i class="icon-article-alt"></i> Ключевые показатели <span class="hidden-iphone">сотрудника</span>
+			{{#editkpi}}<span class=""><a href="javascript:void(0)" onclick="$metrics.editKPI('0','{{iduser}}')" title="Добавить" class="gray blue"><i class="icon-plus-circled"></i></a></span>{{/editkpi}}
+		</h2>
+
+		{{#havekpi}}
+
+		<div class="fs-09 gray mt10 mb10 viewdiv">Без учета сезонных коэффициентов</div>
+
+		<div class="border-box">
+
+		<div class="flex-container box--child p10 fs12 bluebg-dark white wp100 border-box Bold">
+
+			<div class="flex-string wp50 hidden-iphone">Показатель</div>
+			<div class="flex-string wp10">Год</div>
+			<div class="flex-string wp30">Значение</div>
+			<div class="flex-string wp10"></div>
+
+		</div>
+
+		{{#kpi}}
+
+		<div class="kpilist flex-container box--child p10 border-bottom ha wp100 border-box" data-id="{{id}}" data-kpi="{{kpi}}">
+
+			<div class="flex-string wp50 hand nopad" onclick="$metrics.viewKPI('{{id}}','{{iduser}}')" title="Просмотр">
+				<div class="fs-12 Bold nopad">{{kpititle}}</div>
+				{{#isPersonal}}<div class="fs-10 gray2 nopad">Персональный</div>{{/isPersonal}}
+				{{^isPersonal}}<div class="fs-10 blue nopad">С учетом подчиненных</div>{{/isPersonal}}
+			</div>
+			<div class="flex-string wp10">
+				<div class="fs-12 gray2">{{year}}</div>
+			</div>
+			<div class="flex-string wp30">
+				<div class="fs-12"><b>{{value}}</b> {{edizm}} в {{periodname}}</div>
+			</div>
+			<div class="flex-string wp10">
+			{{#editkpi}}
+				<div class="fs-12 Bold">
+					<a href="javascript:void(0)" onclick="$metrics.editKPI('{{id}}','{{iduser}}')" title="Изменить" class="gray blue"><i class="icon-pencil"></i></a>&nbsp;
+					<a href="javascript:void(0)" onclick="$metrics.deleteKPI('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+				</div>
+			{{/editkpi}}
+			</div>
+
+		</div>
+
+		{{/kpi}}
+
+		</div>
+
+		{{/havekpi}}
+		{{^havekpi}}
+		<div class="flex-container box--child p10">
+
+			<div class="flex-string">
+				Не имеет KPI
+				<div class="inline ml20">
+					{{#editkpi}}<a href="javascript:void(0)" onclick="$metrics.editKPI('0','{{iduser}}')" class="button greenbtn">Добавить</a>{{/editkpi}}
+				</div>
+			</div>
+
+		</div>
+
+		<div class="userkpis hidden"></div>
+		{{/havekpi}}
+
+		<div class="h40" id="bkpifact"></div>
+
+		<div class="userkpis hidden"></div>
+
+		<div class="space-40"></div>
+
+		{{/list}}
+</script>
+
+<script id="kpisTpl" type="text/html">
+		{{#list}}
+
+		<div class="kpiblock flex-container box--child border-bottom hand ha" data-id="{{id}}">
+
+			<div class="flex-string wp100 p10 text-left">
+				<div class="fs-12 Bold">{{title}}</div>
+				<div class="fs-09 gray2">{{tipTitle}}</div>
+			</div>
+
+		</div>
+
+		{{/list}}
+</script>
+
+<script id="kpiTpl" type="text/html">
+
+		{{#list}}
+
+		<h2><i class="icon-article-alt"></i> Показатель "<span class="blue">{{title}}</span>"</h2>
+
+		<div class="kpiBase" data-id="{{id}}">
+
+			<div class="flex-container box--child p10 fs-11">
+
+				<div class="flex-string wp20 fs-12 Bold pt10">База:</div>
+				<div class="flex-string wp80">
+					<div class="viewdiv wp100 w0 mb5">{{tipname}}</div>
+				</div>
+
+			</div>
+			<div class="flex-container box--child p10 fs-11">
+
+				<div class="flex-string wp20 fs-12 Bold pt10">Варианты:</div>
+				<div class="flex-string wp80">
+					<div class="viewdiv wp100 w0 p0 mb5">
+						<ul class="list">
+							{{#values}}
+								<li>{{name}}</li>
+							{{/values}}
+							{{^values}}
+								--
+							{{/values}}
+						</ul>
+					</div>
+				</div>
+
+			</div>
+			<div class="flex-container box--child p10 fs-11">
+
+				<div class="flex-string wp20 fs-12 Bold pt10">Доп.варианты:</div>
+				<div class="flex-string wp80">
+					<div class="viewdiv wp100 w0 p0 mb5 graybg-sub blue">
+						<ul class="list">
+							{{#subvalues}}
+								<li>{{name}}</li>
+							{{/subvalues}}
+							{{^subvalues}}
+								--
+							{{/subvalues}}
+						</ul>
+					</div>
+				</div>
+
+			</div>
+
+			<hr>
+
+			<div class="flex-container box--child p10 fs-11">
+
+				<div class="flex-string wp20 fs-12 Bold pt10">Используется:</div>
+				<div class="flex-string wp80">
+					<div class="viewdiv wp100 w0 p0 mb5">
+						<ul class="list">
+							{{#users}}
+								<li><i class="icon-user-1 blue"></i>{{name}}</li>
+							{{/users}}
+							{{^users}}
+								--Не применяется--
+							{{/users}}
+						</ul>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="batton--pane">
+
+			<hr>
+
+			<a href="javascript:void(0)" onclick="$metrics.editKPIBase('{{id}}')" class="button" title="Редактировать"><i class="icon-pencil"></i>Редактировать</a>
+			<a href="javascript:void(0)" onclick="$metrics.deleteKPIBase('{{id}}')" class="button redbtn" title="Удалить"><i class="icon-cancel-circled"></i>Удалить</a>
+
+		</div>
+
+		<div class="space-100"></div>
+
+		{{/list}}
+
+</script>
+
+<script id="userkpisTpl" type="text/html">
+
+		{{#list}}
+
+		<h2 class="mt20" data-id="{{id}}">
+
+			<i class="icon-article-alt"></i>
+
+			<span class="hidden-iphone">Показатель </span><span class="green">{{kpiTitle}}</span>
+
+			{{#monthSelect}}
+				,&nbsp; Месяц:
+				<div class="monthSelect inline">
+					<span class="select">
+					<select id="month" name="month" class="clean mb5" onchange="$metrics.viewKPI('{{id}}','{{iduser}}')">
+						{{#months}}
+							<option value="{{name}}" {{selected}}>{{title}}</option>
+						{{/months}}
+					</select>
+					</span>
+				</div>
+			{{/monthSelect}}
+
+			<span class=""><a href="javascript:void(0)" onclick="$metrics.exportKPI('{{id}}','{{iduser}}')" title="Экспорт" class="gray green"><i class="icon-file-excel"></i></a></span>
+
+		</h2>
+
+		<div class="flex-container box--child p10 fs12 greenbg-dark white wp95 Bold">
+
+			<div class="flex-string wp20 hidden-iphone">Период</div>
+			<div class="flex-string wp20">Значение</div>
+			<div class="flex-string wp20">Выполнение</div>
+			<div class="flex-string wp40 hidden-iphone"></div>
+
+		</div>
+
+			{{#kpiDo}}
+
+			<div class="flex-container box--child p10 border-bottom ha wp95 kpido {{bgcolor}}" data-id="{{id}}" data-kpi="{{kpi}}">
+
+				<div class="flex-string wp20 nopad">
+					<div class="fs-12 Bold">{{period}}</div>
+					{{#periodDates}}<div class="fs-09 gray2 mt10">{{periodDates}}</div>{{/periodDates}}
+				</div>
+				<div class="flex-string wp20">
+					<div class="fs-12">{{value}} {{edizm}}</div>
+				</div>
+				<div class="flex-string wp20 percent">
+					<div class="fs-12">{{percent}}%</div>
+				</div>
+				<div class="flex-string wp40 hidden-iphone"></div>
+
+			</div>
+
+			{{/kpiDo}}
+
+		{{/list}}
+
+</script>
+
+<script id="kpiDialogTpl" type="text/html">
+
+		{{#list}}
+
+		<DIV class="zagolovok">
+			<i class="icon-article-alt"></i> Показатель {{title}}
+		</DIV>
+
+		<div id="formtabs" class="relativ" style="overflow-x: hidden; overflow-y: auto; max-height: 70vh" data-id="{{id}}">
+
+			<div class="flex-container box--child p10 fs-11">
+
+				<div class="flex-string wp100 fs-09 Bold">База:</div>
+				<div class="flex-string wp100 infodiv bgwhite mt5">
+
+					{{tipname}}
+
+				</div>
+
+			</div>
+			<div class="flex-container box--child p10 fs-11">
+
+				<div class="flex-string wp100 fs-09 Bold">Варианты:</div>
+				<div class="flex-string wp100 infodiv bgwhite mt5">
+
+					<ul class="list m0">
+						{{#values}}
+							<li>{{name}}</li>
+						{{/values}}
+						{{^values}}
+							<li>не указано</li>
+						{{/values}}
+					</ul>
+
+				</div>
+
+			</div>
+			<div class="flex-container box--child p10 fs-11">
+
+				<div class="flex-string wp100 fs-09 Bold">Доп.варианты:</div>
+				<div class="flex-string wp100 infodiv bgwhite mt5">
+
+					<ul class="list m0">
+						{{#subvalues}}
+							<li>{{name}}</li>
+						{{/subvalues}}
+						{{^subvalues}}<li>не указано</li>{{/subvalues}}
+					</ul>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		{{/list}}
+
+</script>
+
+<script id="userkpisDialogTpl" type="text/html">
+
+		{{#list}}
+
+		<DIV class="zagolovok">
+			<i class="icon-article-alt"></i> Показатель {{kpiTitle}}
+		</DIV>
+
+		<div id="formtabs" class="relativ" style="overflow-x: hidden; overflow-y: auto; max-height: 70vh" data-id="{{id}}">
+
+			<div class="flex-container box--child p10 fs-09 Header wp100 Bold">
+
+				<div class="flex-string wp20">Период</div>
+				<div class="flex-string wp40">Значение</div>
+				<div class="flex-string wp40">Выполнение</div>
+
+			</div>
+
+			{{#kpiDo}}
+
+			<div class="flex-container bgwhite box--child p10 border-bottom ha wp100 kpido {{bgcolor}}" data-id="{{id}}" data-kpi="{{kpi}}">
+
+				<div class="flex-string wp20">
+					<div class="fs-12 Bold">{{period}}</div>
+					{{#periodDates}}<div class="fs-09 gray2">{{periodDates}}</div>{{/periodDates}}
+				</div>
+				<div class="flex-string wp40">
+					<div class="fs-12">{{value}} {{edizm}}</div>
+				</div>
+				<div class="flex-string wp40 percent">
+					<div class="fs-12">{{percent}}%</div>
+				</div>
+
+			</div>
+
+			{{/kpiDo}}
+
+		</div>
+
+		{{/list}}
+
+</script>

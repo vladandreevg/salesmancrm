@@ -1,0 +1,90 @@
+<script id="entryTpl" type="text/html">
+
+	<TABLE cellpadding="5" cellspacing="0" border="0" width="100%" id="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w50 text-left"><B>№</B>&nbsp;</TH>
+			<TH class="w80 text-left"><B>Дата</B></TH>
+			<TH class="w80 text-left"><B>Обработан</B></TH>
+			<TH class="w80 text-left"><B>Статус</B></TH>
+			<TH class="text-left"><B>Комментарий</B></TH>
+			<TH class="yw80 text-left">Ответственный</TH>
+			<TH class="yw80 text-left">Автор</TH>
+			<TH class="yw160 text-left">Клиент</TH>
+			<TH class="yw100 text-left">Активность</TH>
+			<TH class="w5 text-center"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha h50">
+				<td class="text-left"><span class="ellipsis">{{ide}}&nbsp;</span></td>
+				<td class="text-left"><span class="">{{datum}}</span></td>
+				<td class="text-left">
+					{{#datum_do}}<span class="">{{datum_do}}</span>{{/datum_do}}
+					{{^datum_do}}<span>--</span>{{/datum_do}}
+				</td>
+				<td class="text-left"><span class="{{statusColor}} fs-09 Bold">{{statusName}}</span></td>
+				<td class="hand" onclick="editEntry('{{ide}}','view');" title="{{content}}">
+					<div class="ellipsis noBold mfh-09">{{{content}}}</div>
+				</td>
+				<td class="ha ipad-user text-left" title="{{user}}">
+					<div class="ellipsis">{{user}}</div>
+				</td>
+				<td class="ha ipad-user text-left" title="{{autor}}">
+					<div class="ellipsis">{{autor}}</div>
+				</td>
+				<td class="ha">
+					{{#person}}
+						<DIV class="ellipsis" title="{{person}}">
+							<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть"><i class="icon-user-1 broun"></i>&nbsp;{{person}}
+							</a>
+						</DIV>
+						<br>
+					{{/person}}
+					{{#client}}
+						<DIV class="ellipsis" title="{{client}}">
+							<A href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="icon-building broun"></i>&nbsp;{{client}}
+							</A></DIV>
+						<br>
+					{{/client}}
+					{{#deal}}
+						<DIV class="ellipsis paddtop5">
+							<A href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Открыть"><i class="icon-briefcase blue"></i>&nbsp;{{deal}}
+							</A></DIV>
+						';
+					{{/deal}}
+				</td>
+				<td class="">
+					<div class="ellipsis noBold mfh-09" title="{{history}}">{{{history}}}</div>
+				</td>
+				<td>
+					<div class="action--container">
+						<div class="action--block">
+
+							<A href="javascript:void(0)" onclick="editEntry('{{ide}}','view');" class="gray green"><i class="icon-eye" title="Просмотр"></i></A>
+							{{^deal}}
+								<A href="#" onClick="editDogovor('{{ide}}','fromentry');" class="gray orange"><i class="icon-briefcase-1" title="Преобразовать в Сделку"></i></A>
+								<A href="javascript:void(0)" onclick="editEntry('{{ide}}','edit');" class="gray blue"><i class="icon-pencil blue" title="Изменить"></i></A>
+							{{/deal}}
+							{{#deal}}
+								<A href="javascript:void(0)" class="gray gray2"><i class="icon-attention gray" title="Редактирование не доступно - преобразовано в Сделку"></i></A>
+							{{/deal}}
+							{{#status}}
+								<a href="javascript:void(0)" onclick="editEntry('{{ide}}','status')" title="Закрыть" class="gray brounbg2"><i class="icon-block"></i></a>
+							{{/status}}
+							{{#change}}
+								<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf) editEntry('{{ide}}','delete');" class="gray red"><i class="icon-cancel-circled red" title="Удалить"></i></A>
+							{{/change}}
+
+						</div>
+					</div>
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div style="height:65px;"></div>
+
+</script>

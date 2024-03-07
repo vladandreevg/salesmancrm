@@ -1,0 +1,514 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2018 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*         salesman.pro         */
+/*         ver. 2018.6          */
+/* ============================ */
+
+#mailComposer {
+	position : relative;
+	width    : 100%;
+	display               : grid;
+	grid-template-columns : calc(100% - 250px) 250px;
+	grid-gap              : 5px 5px;
+	padding: 0 5px;
+	box-sizing: border-box;
+}
+#mailComposer .filebox {
+	border : 0;
+	margin : 0;
+}
+#mailComposer select {
+	font-size   : 0.95em;
+	line-height : 1.05em;
+	margin      : 3px 0;
+	border      : 1px solid #B5B8C8;
+}
+#mailComposer input[type="file"] {
+	font-size   : 0.95em;
+	line-height : 1.0em;
+	border      : 0;
+	height      : 25px;
+	padding     : 0 15px 0 0;
+}
+#mailComposer .adresat {
+	background : #FFF;
+	border     : 1px solid #B5B8C8;
+	padding    : 1px;
+	cursor     : text;
+	display    : table;
+	width      : 99.5%;
+}
+#mailComposer .block {
+	width : 100%;
+}
+#mailComposer input {
+	width              : 100px;
+	display            : inline-block;
+	float              : left;
+	padding-bottom     : 0;
+	margin-bottom      : 0;
+	border             : 1px dotted transparent;
+	background         : none;
+	border-collapse    : collapse;
+	box-shadow         : 0 0 0 #FFF;
+	-webkit-box-shadow : 0 0 0 #FFF;
+	-moz-box-shadow    : 0 0 0 #FFF;
+}
+#mailComposer input:focus {
+	background : #FFF;
+	border     : 1px dotted transparent;
+}
+#mailComposer .adres {
+	height     : 53px;
+	max-height : 53px;
+	overflow-y : auto;
+	display    : block;
+}
+#mailComposer .adres input, #mailComposer .copy input {
+	/*width: 100px;*/
+	width          : 200px;
+	font-size      : 1.0em;
+	line-height    : 1.1em;
+	display        : inline-block;
+	float          : left;
+	padding-top    : 2px;
+	padding-bottom : 2px;
+	border         : 1px dotted transparent;
+	background     : unset;
+	overflow       : hidden;
+	
+	/*border:1px dotted red;*/
+}
+#mailComposer .adresat .delete {
+	position  : absolute;
+	right     : 1px;
+	top       : 4px;
+	font-size : 0.85em;
+	color     : #79B7E7;
+}
+#mailComposer #tagbox {
+	overflow-y : auto;
+}
+#mailComposer #tagbox .tags,
+#mailComposer #tagbox2 .tags {
+	border                : 1px solid #79B7E7;
+	background            : #D0E5F5;
+	color                 : #222;
+	padding               : 5px 20px 5px 5px;
+	display               : inline;
+	float                 : left;
+	font-size             : 1.0em;
+	font-weight           : 400;
+	line-height           : 1.0em;
+	margin-bottom         : 2px;
+	margin-right          : 2px;
+	-moz-border-radius    : 3px;
+	-webkit-border-radius : 3px;
+	border-radius         : 3px;
+	cursor                : pointer;
+	word-wrap             : break-word;
+	-moz-hyphens          : auto;
+	-webkit-hyphens       : auto;
+	-ms-hyphens           : auto;
+	overflow              : hidden !important;
+}
+#mailComposer #tagbox .tags:hover,
+#mailComposer #tagbox2 .tags:hover {
+	border : 1px solid #79B7E7;
+}
+#mailComposer .fnameCold {
+	margin-top : 5px;
+}
+#mailComposer .priority {
+	display    : block;
+	text-align : center;
+	margin     : 0 auto;
+}
+#mailComposer .but {
+	width              : 32.5%;
+	border             : 1px solid transparent;
+	box-sizing         : border-box;
+	-moz-box-sizing    : border-box;
+	-webkit-box-sizing : border-box;
+}
+#mailComposer .but.active, #mailComposer .but:hover {
+	background : #D0E5F5;
+	border     : 1px solid #79B7E7;
+}
+#mailComposer .fileboxx {
+	background : #FFF;
+	padding    : 5px 20px 5px 5px !important;
+	display: block;
+	height: auto;
+	line-height: inherit;
+	box-sizing: border-box;
+}
+#mailComposer #iuploads .fileboxx {
+	display: table;
+}
+/*
+#mailComposer .fileboxx input[type="file"]:empty{
+	background: #ddd;
+}
+*/
+#mailComposer .dfileboxx {
+	position     : absolute;
+	font-size    : 0.9em;
+	/*background   : #FFF;*/
+	padding-top  : 3px;
+	padding-left : 5px;
+	width        : 20px;
+	height       : 20px;
+	top          : 0;
+	right        : 0;
+}
+#mailComposer .dfileboxx.mini {
+	font-size    : 0.8em;
+	padding-top  : 3px;
+	padding-left : 5px;
+}
+#mailComposer .cke_bottom {
+	display : none;
+}
+#mailComposer .signature {
+	font-family : monospace;
+}
+
+#mailComposer .flex-container {
+	display         : flex;
+	flex-direction  : row;
+	justify-content : flex-start;
+	align-items     : flex-start;
+	flex-wrap       : wrap;
+}
+#mailComposer .flex-box {
+	overflow : hidden;
+}
+
+#mailComposer .docSelect {
+	position           : absolute;
+	top                : 0;
+	left               : 0;
+	z-index            : 10;
+	box-sizing         : border-box;
+	width              : 99.7%;
+	background         : #ECF0F1;
+	border             : 1px solid #3B6EAA;
+	-webkit-box-shadow : 0 1px 3px #4A89DC;
+	-moz-box-shadow    : 0 1px 3px #4A89DC;
+	box-shadow         : 0 1px 3px #4A89DC;
+}
+#mailComposer .docSelect .clos {
+	position : absolute;
+	top      : 0;
+	right    : 0;
+	color    : #3B6EAA;
+	cursor   : pointer;
+}
+#mailComposer .docSelect .clos:hover {
+	color : #3498DB;
+}
+#mailComposer .stroka {
+	padding       : 10px;
+	background    : #FFF;
+	position      : relative;
+	width         : 95%;
+	display       : block;
+	margin-bottom : 2px;
+}
+#mailComposer .stroka:hover {
+	background         : #D9F2FC;
+	transition         : all 300ms ease;
+	-webkit-transition : all 300ms ease;
+	-moz-transition    : all 300ms ease;
+}
+
+.mailfolder div:hover, .mailfolder div:hover i {
+	background : #D0E5F5;
+}
+.mailfolder a:link,
+.mailfolder a:visited {
+	color           : #222 !important;
+	text-decoration : none;
+}
+.mailfolder a:hover {
+	display : inline-block;
+}
+.mailfolder a.unread {
+	font-weight : 700;
+}
+.mailfolder .active,
+.mailfolder .active i {
+	background : #D0E5F5;
+}
+.mailfolder .mbutton {
+	padding : 7px 5px;
+}
+.mailfolder .mbutton:hover {
+	background : #D0E5F5;
+}
+.mailfolder .boxcount {
+	margin-right : 5px;
+}
+
+.messagelist {
+	position      : relative;
+	padding       : 5px;
+	border-bottom : 1px solid #B5B8C8;
+	height        : auto;
+}
+.messagelist.current {
+	background : #E6E9ED;
+}
+.messagelist.current .cnopka,
+.messagelist.current a,
+#contentdiv .messagelist.current a.gray,
+.messagelist.current .theme {
+	color : #8899A6;
+}
+.messagelist .data {
+	font-size   : 0.8em;
+	line-height : 1.6em;
+	color       : #666;
+}
+.messagelist .cnopka {
+	font-size : 0.8em;
+	color     : #666;
+}
+.messagelist .header {
+	display     : block;
+	color       : #222;
+	font-weight : 500;
+	margin      : 5px 0 1px 0;
+	padding     : 0 0 2px 0;
+}
+.messagelist .header span {
+	padding         : 2px auto;
+	font-weight     : 500;
+	-moz-hyphens    : auto;
+	-webkit-hyphens : auto;
+	-ms-hyphens     : auto;
+}
+.messagelist sup {
+	position    : relative;
+	top         : 3px;
+	left        : 0;
+	font-size   : 0.95em;
+	font-weight : bold;
+}
+.messagelist .theme {
+	font-weight : 700;
+	color       : #BBB;
+}
+.messagelist.unseen {
+	border-right : 2px solid #34495E;
+}
+.messagelist.unseen .theme {
+	font-weight : 700;
+	color       : #222;
+}
+#more {
+	border : 1px dotted red;
+}
+
+#deltMessButton, #trashMessButton, #trashAllMessButton {
+	font-size : 0.85em;
+	height    : 0.9em;
+	color     : #CC2424;
+}
+
+#messagediv {
+	height          : 100%;
+	overflow        : auto !important;
+	word-wrap       : break-word;
+	line-break      : anywhere;
+	-webkit-hyphens : auto;
+	-moz-hyphens    : auto;
+	hyphens         : auto;
+}
+#messagediv pre{
+	overflow-wrap         : break-word; /* не поддерживает IE, Firefox; является копией word-wrap */
+	word-wrap             : break-word;
+	line-break            : anywhere; /* auto; нет поддержки для русского языка */
+	hyphens               : auto; /* не работает в webkit */
+	word-break            : break-all; /* работает в webkit */
+	white-space: pre-wrap;
+	width                 : 99%;
+	/*word-break            : break-all !important;*/
+	hyphenate-limit-chars : 6 3 2; /*Ограничение длины слова и количества символов до и после переноса*/
+	hyphenate-limit-lines : 2; /*Ограничение числа последовательных переносов*/
+	hyphenate-limit-last  : always; /* Запрет переносов в последней строке абзаца */
+}
+#messagediv .mheader {
+	font-size                       : 0.95em;
+	border                          : 1px solid #DDD;
+	border-bottom                   : 0;
+	background                      : #EEE;
+	padding                         : 10px;
+	border-top-left-radius          : 2px;
+	border-top-right-radius         : 2px;
+	-webkit-border-top-left-radius  : 2px;
+	-webkit-border-top-right-radius : 2px;
+}
+#messagediv .mbody {
+	color                              : #222;
+	font-size                          : 14px;
+	line-height                        : 16px;
+	font-family                        : 'PT Sans', arial, tahoma, serif;
+	background                         : #FFF;
+	border                             : 1px solid #DDD;
+	padding                            : 10px 10px 20px 10px;
+	border-bottom-left-radius          : 2px;
+	border-bottom-right-radius         : 2px;
+	-webkit-border-bottom-left-radius  : 2px;
+	-webkit-border-bottom-right-radius : 2px;
+}
+#messagediv .mbody div, #messagediv .mbody p {
+	/*padding : 0;*/
+}
+#messagediv .mbody div,
+#messagediv .mbody p:empty,
+#messagediv .mbody p[content=" "],
+#messagediv .mbody p[content="&nbsp;"] {
+	padding: 0 0;
+}
+#messagediv .mbody hr {
+	width      : 102%;
+	border     : 0 none;
+	border-top : #CCC 1px dotted;
+	padding    : 0;
+	height     : 1px;
+	margin     : 5px -5px;
+	clear      : both;
+}
+#messagediv .mbody a, #messagediv .mbody a:visited, #messagediv .mbody a:link {
+	color   : #507192;
+	display : inline;
+}
+#messagediv .mbody a:active, #messagediv .mbody a:hover {
+	color : red;
+}
+#messagediv .mbody img {
+	height    : unset !important;
+	max-width : 100% !important;
+}
+#messagediv .attachments{
+	position : absolute;
+	top: 5px;
+	right: 0;
+}
+#messagediv .tools {
+	padding      : 5px;
+	font-size    : 0.950em;
+	font-weight  : 700;
+	background   : #EEE;
+	border-top   : 1px dotted #CCC;
+}
+#messagediv .tools a.batton {
+	color   : #CCC;
+	border  : 2px solid transparent;
+	padding : 5px 5px;
+	display : inline-block;
+}
+#messagediv .tools a.batton:hover {
+	color      : #222;
+	background : #FFF;
+	border     : 2px solid #FFF;
+}
+#messagediv .tools a.disabled {
+	color   : #CCC;
+	border  : 2px solid transparent;
+	padding : 5px 5px;
+	display : inline-block;
+}
+#messagediv .tools a.disabled:hover {
+	color      : #FFF;
+	border     : 2px solid transparent;
+	padding    : 5px 5px;
+	display    : inline-block;
+	background : var(--gray-sub);
+}
+#messagediv .tools a.disabled:hover i{
+	color      : #FFF !important;
+}
+#messagediv #emptymessage {
+	width              : 100%;
+	height             : 200px;
+	padding-top        : 60px;
+	text-align         : center;
+	box-sizing         : border-box;
+	-moz-box-sizing    : border-box;
+	-webkit-box-sizing : border-box;
+}
+
+#messagediv .quote {
+	display  : table;
+	/*border: 1px dotted #FF9800;*/
+	padding  : 5px;
+	height   : 1.4rem;
+	overflow : hidden !important;
+}
+#messagediv .quote blockquote {
+	margin-left : 5px !important;
+	padding      : 10px 20px 10px 20px;
+	border-left: 2px solid var(--blue);
+	font-size    : 1.0rem;
+	background   : var(--gray-superlite);
+	border-right : 3px;
+}
+#messagediv .quoteTitle {
+	display   : block;
+	margin    : -5px 0 0 0;
+	padding   : 5px !important;
+	color     : #FF9800;
+	cursor    : pointer;
+	font-size : 0.85rem;
+	height    : 1.4rem;
+}
+
+.ui-layout-east #messagediv {
+	border     : 1px solid #B5B8C8;
+	overflow-x : hidden !important;
+}
+
+.ymImagePreview {
+	display : flex;
+}
+.ymImagePreview .picpreview {
+	display         : inline-table;
+	box-sizing      : border-box;
+	margin          : 3px;
+	padding         : 3px;
+	width           : 33%;
+	height          : 150px;
+	background-size : cover !important;
+	border          : 1px dotted #37474F;
+	/*border-collapse: collapse;*/
+}
+.ymImagePreview .picpreview span {
+	word-break : break-all !important;
+	background : rgba(0, 0, 0, 0.5);
+	color      : #FFF;
+	padding    : 3px;
+}
+
+.ymailer {
+	/*border:1px solid #B5B8C8;*/
+	margin-bottom : 70px;
+}
+
+@media (min-width : 1700px) {
+
+}
+@media (min-width : 768px) and (max-width : 989px) {
+
+}
+@media (max-width : 767px) {
+
+}
+.my { position : absolute; left : 55%; top : 10px;font-size : 1em; font-weight : bold;background : #FFF}
+.my3 { position : absolute; left : 55%; top : 10px;font-size : 0.8em; font-weight : bold;background : #ECF0F1}
+.my2 { position : absolute; left : 35%; top : 7px;font-size : 1em; font-weight : bold}

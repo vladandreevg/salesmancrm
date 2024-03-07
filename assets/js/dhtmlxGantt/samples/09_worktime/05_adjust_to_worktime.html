@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<title>Correct task position on drag</title>
+</head>
+<script src="C:\Users\aziz\Desktop\Projet Gant\codebase\dhtmlxgantt.js" type="text/javascript" charset="utf-8"></script>
+<script src="C:\Users\aziz\Desktop\Projet Gant\samples\common\third-party\jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="C:\Users\aziz\Desktop\Projet Gant\codebase\dhtmlxgantt.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+<script type="text/javascript" src="../common/testdata.js"></script>
+
+<link rel="stylesheet" href="C:\Users\aziz\Desktop\Projet Gant\samples\common\third-party\bootstrap\3.2.0\css\bootstrap.min.css">
+
+
+<style type="text/css">
+	html, body { height: 100%; padding:0px; margin:0px; overflow: hidden; }
+
+	.gantt_task_cell.week_end{
+		background-color: #EFF5FD;
+		width: 0%;
+	}
+	.gantt_task_row.gantt_selected .gantt_task_cell.week_end{
+		background-color: #F8EC9C;
+	}
+	
+
+</style>
+<style type="text/css">
+		html, body{ height:100%; padding:0px; margin:0px; overflow: hidden;}
+        .busy{
+            background: #FFC8C7 !important;
+        }
+	</style>
+
+<style>
+#title1{
+  padding-left:35px;
+  color:black;
+  font-weight:bold;
+}
+#title2{
+  padding-left:15px;
+  color:black;
+  font-weight:bold;
+}
+</style>
+<style>
+    .filters_wrapper {
+        line-height: 12px;
+        font-size: 12px;
+    }
+    .filters_wrapper span {
+        font-weight: bold;
+        padding-right: 5px;
+    }
+    .filters_wrapper label {
+        padding-right: 3px;
+    }
+</style>
+
+<style type="text/css">
+	html, body{ height:100%; padding:0px; margin:0px; overflow: hidden;}
+
+    .high{
+        border:2px solid #d96c49;
+        color: #d96c49;
+        background: #d96c49;
+    }
+    .high .gantt_task_progress{
+        background: #db2536;
+    }
+
+    .medium{
+        border:2px solid #34c461;
+        color:#34c461;
+        background: #34c461;
+    }
+    .medium .gantt_task_progress{
+        background: #23964d;
+    }
+
+    .low{
+        border:2px solid #6ba8e3;
+        color:#6ba8e3;
+        background: #6ba8e3;
+    }
+    .low .gantt_task_progress{
+        background: #547dab;
+    }
+</style>
+
+<body>
+
+	<div class="panel-heading">
+					<h3 class="panel-title">Gantt info</h3>
+				</div>
+				<div class="panel-body">
+					<ul class="nav nav-pills nav-stacked" id="gantt_info">
+					</ul>
+				</div>
+
+<div >
+    <div class="filters_wrapper" id="filters_wrapper">
+        <span>Display tasks with priority:</span>
+        <label>
+            <input type="checkbox" name="1" checked />
+            High
+        </label>
+        <label>
+            <input type="checkbox" name="2" />
+            Normal
+        </label>
+        <label>
+            <input type="checkbox" name="3" />
+            Low
+        </label>
+    </div>
+</div>	
+
+
+			
+<div id="gantt_here" style='width:100%; height:100%;' ></div>
+
+
+
+<script type="text/javascript">
+
+
+
+    var filter_inputs = document.getElementById("filters_wrapper").getElementsByTagName("input");
+    for (var i=0; i<filter_inputs.length; i++) {
+        var filter_input = filter_inputs[i];
+
+        // attach event handler to update filters object and refresh data (so filters will be applied)
+        filter_input.onchange = function() {
+            gantt.refreshData();
+        }
+    }
+
+	function hasPriority(parent, priority){
+		if(gantt.getTask(parent).priority == priority)
+			return true;
+
+		var child = gantt.getChildren(parent);
+		for(var i = 0; i < child.length; i++){
+			if(hasPriority(child[i], priority))
+				return true;
+		}
+		return false;
+	}
+
+    gantt.attachEvent("onBeforeTaskDisplay", function(id, task){
+        for (var i=0; i<filter_inputs.length; i++) {
+            var filter_input = filter_inputs[i];
+
+
+            if (filter_input.checked){
+                if (hasPriority(id, filter_input.name)){
+                    return true;
+                }
+            }
+
+        }
+		return false;
+    });
+
+//---------------------------------------------
+
+
+	var getListItemHTML = function (type, count, active) {
+		return '<li'+(active?' class="active"':'')+'><a href="#">'+type+'s <span class="badge">'+count+'</span></a></li>';
+	};
+
+	var updateInfo = function () {
+		var state = gantt.getState(),
+				tasks = gantt.getTaskByTime(state.min_date, state.max_date),
+				types = gantt.config.types,
+				result = {},
+				html = "",
+				active = false;
+
+		// get available types
+		for (var t in types) {
+			result[types[t]] = 0;
+		}
+		// sort tasks by type
+		for (var i=0, l=tasks.length; i<l; i++) {
+			if (tasks[i].type && result[tasks[i].type] != "undefined")
+				result[tasks[i].type] += 1;
+			else
+				result[types.task] += 1;
+		}
+		// render list items for each type
+		for (var j in result) {
+			if (j == types.task)
+				active = true;
+			else
+				active = false;
+			html += getListItemHTML(j, result[j], active);
+		}
+
+		document.getElementById("gantt_info").innerHTML = html;
+	};
+
+//-------------------------------------------------------------
+
+  gantt.templates.task_class  = function(start, end, task){
+		switch (task.priority){
+			case "1":
+				return "high";
+				break;
+			case "2":
+				return "medium";
+				break;
+			case "3":
+				return "low";
+				break;
+		}
+	};
+
+
+//--------------------------------------------------
+gantt.locale.labels.section_template = "Details";
+    gantt.config.lightbox.sections = [
+        {name: "description", height: 38, map_to: "text", type: "textarea", focus: true},
+        {name:"template", height:16, type:"template", map_to:"my_template"},
+        {name: "time", type: "duration", map_to: "auto"}
+    ];
+    gantt.attachEvent("onBeforeLightbox", function(id) {
+    	var task = gantt.getTask(id);
+    	task.my_template = "<span id='title1'>Holders: </span>"+ task.users+"<span id='title2'> || Progress: </span>"+ task.progress*100 +" %";
+	return true;
+    });
+//---------------------------------------------------------
+	gantt.message("Try to move or resize task to not working time");
+
+	gantt.config.work_time = true;
+	gantt.config.correct_work_time = true;
+
+	gantt.config.scale_unit = "day";
+	gantt.config.date_scale = "%D, %d";
+	gantt.config.min_column_width = 60;
+	gantt.config.duration_unit = "day";
+	gantt.config.scale_height = 20*3;
+	gantt.config.row_height = 30;
+
+
+
+	gantt.config.columns = [
+			{name:"text", label:"Task name", tree:true ,width:"100%"},
+			{name:"start_date", align: "center" },
+			{name:"duration", align: "center" },
+			{name:"priority",   label:"Priority",   align: "center", template:function(obj){
+            if (obj.priority == 1){ return "High"}
+            if (obj.priority == 2){ return "Medium"}
+            return "Low"
+        } },
+
+			{name:"assigned", label:"Assigned to", align: "center",
+				template: function(item) {
+					if (!item.users) return "Nobody";
+					return item.users.join(", ");
+				}
+
+
+			}
+
+		];
+
+
+	var weekScaleTemplate = function(date){
+		var dateToStr = gantt.date.date_to_str("%d %M");
+		var weekNum = gantt.date.date_to_str("(week %W)");
+		var endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
+		return dateToStr(date) + " - " + dateToStr(endDate) + " " + weekNum(date);
+	};
+
+	gantt.config.subscales = [
+		{unit:"month", step:1, date:"%F, %Y"},
+		{unit:"week", step:1, template:weekScaleTemplate}
+
+	];
+
+	gantt.templates.task_cell_class = function(task, date){
+		if(!gantt.isWorkTime(date))
+			return "week_end";
+		return "";
+	};
+	
+
+	gantt.init("gantt_here");
+	gantt.parse(users_data);
+	updateInfo();
+	gantt.showLightbox(1);
+</script>
+</body>

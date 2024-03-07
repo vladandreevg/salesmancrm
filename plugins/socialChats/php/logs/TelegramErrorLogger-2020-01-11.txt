@@ -1,0 +1,44 @@
+============[Date]============
+[ 2020-01-11 01:23:35  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:54056. (5)
+=========[Sent Data]==========
+[ref]
+ref.text= привет
+ref.reply_to_message_id= 
+ref.parse_mode= HTML
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(196): Telegram->endpoint('sendMessage', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(392): Telegram->sendMessage(Array)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1741): Chats\TelegramProvider->sendMessage(Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(157): Chats\Chats->sendMessage(329)
+#6 {main}
+
+============[Date]============
+[ 2020-01-11 01:24:51  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:54128. (5)
+=========[Sent Data]==========
+[ref]
+ref.text= привет 2
+ref.reply_to_message_id= 
+ref.parse_mode= HTML
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(111): Telegram->sendAPIRequest('https://api.tel...', Array)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(196): Telegram->endpoint('sendMessage', Array)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(392): Telegram->sendMessage(Array)
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Chats.php(1741): Chats\TelegramProvider->sendMessage(Array)
+#5 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\chats.php(157): Chats\Chats->sendMessage(330)
+#6 {main}
+

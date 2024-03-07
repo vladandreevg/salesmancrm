@@ -1,0 +1,130 @@
+`Список продуктов сторонних разработчиков и их лицензии`
+
+# PHP классы
+( папка /vendor/ )
+
+### Классы с нестандартной лицензией
+
+#### AmiLib [ ami ]
+
+> Авторское право (c) 22/03/2008, Карлос Сезарио <carloscesario@gmail.com>
+> Все права защищены.
+>
+> Распространение и использование в исходном и двоичном виде, с изменениями или без изменений, разрешено при соблюдении следующих условий:
+> * При распространении исходного кода должно сохраняться вышеуказанное уведомление об авторских правах, этот список условий и следующий отказ от ответственности.
+> * При распространении в двоичной форме должно воспроизводиться вышеуказанное уведомление об авторских правах, этот список условий и следующий отказ от ответственности в документации и/или другие материалы, поставляемые с дистрибутивом.
+> * Ни название DagMoller, ни имена его авторов не могут быть использованы для одобрения или продвижения продуктов, созданных на основе этого программного обеспечения без специального предварительного письменного разрешения.
+
+### BSD 2-Clause "Simplified" License
+
+- QR Code generator [v2.0.4](https://github.com/bacon/bacon-qr-code)
+
+### Apache 2.0
+
+- Readability [v2.1.0](https://github.com/andreskrey/readability.php)
+- SafeMySQL [@dev](https://github.com/colshrapnel/safemysql)
+- DocxTemplate [v0.1.3](https://github.com/icircle/docx-template-in-php)
+
+### GNU LGPL v.2
+
+- PHPMailer [v6.8.0](https://github.com/phpmailer/phpmailer)
+- Dompdf [v2.0.1](https://github.com/dompdf/dompdf)
+
+### GNU LGPL v.3
+
+- TinyButStrong [v3.15.0](https://github.com/tinybutstrong/tinybutstrong)
+- OpenTBS [v1.11.3](https://github.com/tinybutstrong/opentbs)
+
+### GNU GPL v.3
+
+- PHP-Hooks [v0.2.11](https://github.com/voku/php-hooks)
+
+### MIT
+
+- Mystache PHP [v2.12.0](https://github.com/mustache/mustache)
+- Mobile Detect [v2.8.33](https://github.com/mobiledetect/mobiledetectlib)
+- Parsedown [v1.7.3](https://github.com/erusev/parsedown)
+- Parsedown Extra [v0.7.1](https://github.com/erusev/parsedown-extra)
+- Spreadsheet Reader [v0.5.11](https://github.com/nuovo/spreadsheet-reader)
+- php-image-resize [v1.9.2](https://github.com/gumlet/php-image-resize)
+- nicolab/php-ftp-client [v1.5.3](https://github.com/nicolab/php-ftp-client)
+- PHP League's OAuth 2.0 Client [v3.0.3](https://github.com/league/oauth2-google)
+- TelegramBotPHP [v1.3.11](https://github.com/eleirbag89/telegrambotphp)
+- SimpleXLSXGen [v1.2.15](https://github.com/shuchkin/simplexlsxgen)
+- SimpleXLSX class [v1.0.19](https://github.com/shuchkin/simplexlsx)
+- SimpleXLS class [v0.10.4](https://github.com/shuchkin/simplexls)
+- PHP-Excel [v1.1](https://github.com/emerinohdz/php-excel)
+- comodojo/zip [v3.1.1](https://github.com/comodojo/zip)
+- Adminer [v4.8.1](https://github.com/vrana/adminer/)
+
+### CC BY-SA 3.0
+
+- strip_tags_smart
+
+# JS скрипты и плагины
+( /assets/js/ )
+
+### Free
+
+- TinyTable [v3](https://github.com/leigeber) 
+
+### MIT
+
+- clipboard.js [v1.5.12](https://github.com/zenorocha/clipboard.js)
+- gauge.js [v2.1.5](https://github.com/Mikhus/canvas-gauges)
+- jquery.liTextLength.js [v2.0](http://masscode.ru/index.php/k2/item/24-litextlength)
+- jquery.peity.js [v3.2.0](http://benpickles.github.io/peity)
+- lodash.js [v4.0.0](https://github.com/lodash/lodash)
+- moment.js [v2.15.0](https://momentjs.com)
+- radialProgress.js [master](http://www.brightpointinc.com/clients/brightpointinc.com/library/radialProgress/download.html)
+- chartjs (Chart.js) [v1.0.2](https://github.com/chartjs/Chart.js/)
+- codemirror [v5.44.0](https://codemirror.net/)
+- d3.js [v5](https://d3js.org)
+- d3-funnel [v2.1.0](https://jakezatecky.github.io/d3-funnel/)
+- d3-relationshipgraph [v1.2.2](https://github.com/hkelly93/d3-relationshipgraph)
+- daterangepicker.js [v1](https://github.com/longbill/jquery-date-range-picker)
+- dimple.js [v2.2.0](https://github.com/PMSI-AlignAlytics/dimple)
+- dragtable.js [2.0.15](https://github.com/akottr/dragtable)
+- favico.js [v0.3.10](https://lab.ejci.net/favico.js/)
+- resizeend [v0.2.0](https://github.com/nielse63/jquery.resizeend)
+- sweet-alert2 [v8.3.0](https://sweetalert2.github.io/)
+- tableHeadFixer [master](http://tableheadfixer.github.io/)
+- timepickeraddon [v1.5.6](https://github.com/trentrichardson/jQuery-Timepicker-Addon)
+- visibility.js [vNA](https://travis-ci.org/ai/visibilityjs)
+- Mustache.js [v3.1.0](https://github.com/janl/mustache.js)
+- jQuery [v3.4.1](https://github.com/jquery/jquery)
+- jQuery Migrate [v3.0.0](https://github.com/jquery/jquery-migrate)
+- jQuery UI [v1.12.1](https://github.com/jquery/jquery-ui)
+- jQuery Mustache [v0.2.8](https://github.com/jonnyreeves/jquery-Mustache)
+- jQuery Actual [v1.0.18](https://github.com/dreamerslab/jquery.actual)
+- jQuery Autocomplete [v1.1](https://github.com/agarzola/jQueryAutocompletePlugin)
+- jQuery Color Picker [master](https://github.com/laktek/really-simple-color-picker)
+- jQuery Meio Mask [v1.1.11](https://github.com/fabiomcosta/jquery-meiomask)
+- jQuery nanoScroller [v0.8.7](https://jamesflorentino.github.io/nanoScrollerJS/)
+- jQuery ptTimeSelect [v1.4](https://pttimeselect.sourceforge.net/)
+- jQuery Resize [v0.5.3](https://github.com/sdecima/javascript-detect-element-resize)
+- jQuery ScrollTo [v1.4.3.1](https://github.com/flesler/jquery.scrollTo)
+- jQuery TableDnD [v0.5](https://github.com/isocra/TableDnD)
+- Swiper [v3.4.2](https://github.com/nolimits4web/Swiper/)
+
+### New BSD License
+
+- jQuery Sparklines [v2.1.2](http://omnipotent.net/jquery.sparkline/)
+
+### GNU GPL v.2
+
+- CKEditor [v4.6](https://ckeditor.com)
+- dhtmlxGantt Stardard [v4.1.0](https://github.com/mwasyou/Projet-Gant)
+
+### GNU LGPL v.2
+
+- jQuery Form [v4.2.2](https://github.com/jquery-form/form)
+
+### GNU AGPL v.3
+
+- intro.js [v2.3](https://introjs.com/)
+
+### ISC license
+
+- d3.js [vNA](https://d3js.org)
+

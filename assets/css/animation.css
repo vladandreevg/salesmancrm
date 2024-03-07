@@ -1,0 +1,68 @@
+.ani-rotate:hover{
+	animation-name: rotation;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+.ani-zoom:hover{
+	animation-name: zoomIn;
+	animation-duration: 0.5s;
+	animation-iteration-count: 1;
+	animation-timing-function: linear;
+}
+.icon-rotate{
+	animation-name: zoomIn;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+@keyframes rotation {
+	0% {
+		transform:rotate(0deg);
+		-webkit-transform:rotate(0deg);
+		-moz-transform:rotate(0deg);
+	}
+	100% {
+		transform:rotate(360deg);
+		-webkit-transform:rotate(360deg);
+		-moz-transform:rotate(360deg);
+	}
+}
+@keyframes zoomIn {
+	0% {
+		transform: scale(1.0, 1.0);
+		-webkit-transform: scale(1.0, 1.0);
+		-moz-transform:scale(1.0, 1.0);
+	}
+	100% {
+		transform: scale(1.2, 1.2);
+		-webkit-transform: scale(1.2, 1.2);
+		-moz-transform:scale(1.2, 1.2);
+	}
+}
+
+/* include this only once */
+@-webkit-keyframes spin {
+    0%   {
+        -webkit-transform: rotateY(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotateY(0deg);  /* IE 9 */
+        transform: rotateY(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotateY(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotateY(360deg);  /* IE 9 */
+        transform: rotateY(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}
+@keyframes spin {
+    0%   {
+        -webkit-transform: rotateY(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotateY(0deg);  /* IE 9 */
+        transform: rotateY(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotateY(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotateY(360deg);  /* IE 9 */
+        transform: rotateY(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}

@@ -1,0 +1,179 @@
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<title>АКТ №{order_num} от {order_date} года</title>
+	<style type="text/css">
+		<!--
+		body {
+			font-size: 14px;
+			font-family: arial, tahoma, sans-serif;
+			background-color: #FFF;
+			color: #000000;
+			box-shadow: 0 1px 1px #999;
+			-webkit-box-shadow: 0 1px 1px #999;
+			-moz-box-shadow: 0 1px 1px #999;
+			width: 21cm;
+			height: 29.7cm;
+			margin:0 auto;
+			padding: 20px 40px 20px 60px;
+		}
+		html{
+			background: #CCCCCC;
+			padding: 10px;
+		}
+		table, td {
+			border-collapse: collapse;
+			padding: 2px;
+			font-size: 12px;
+		}
+		.small td, .small tr {
+			font-size: 12px;
+		}
+		.bt {
+			border-top: 1px solid #333;
+		}
+		.bb {
+			border-bottom: 1px solid #333;
+		}
+		.br {
+			border-right: 1px solid #333;
+		}
+		.bl {
+			border-left: 1px solid #333;
+		}
+		h1 {
+			font-size: 22px;
+			line-height: 135%;
+		}
+		h2 {
+			font-size: 16px;
+			line-height: 115%;
+		}
+		.pad1 {
+			margin: 40px 20px 20px 40px;
+		}
+		.pull {
+			text-align: justify;
+		}
+		.w193{
+			width:100%;
+		}
+		.w176{
+			width: 95%;
+		}
+		@media print {
+			body {
+				font-size: 14px;
+				background: #FFFFFF;
+				padding: 0;
+				margin: 0 20px 20px 40px;
+				width: auto;
+				height: auto;
+				box-shadow: 0 0 0 #FFFFFF;
+				-moz-box-shadow: 0 0 0 #FFFFFF;
+				-webkit-box-shadow: 0 0 0 #FFFFFF;
+			}
+			html{
+				background: #FFFFFF;
+				padding: 0;
+			}
+			.w193{
+				width:100%;
+			}
+			.w176{
+				width: 17.6cm;
+			}
+			.pad1 {
+				padding: 0;
+			}
+		}
+		-->
+	</style>
+</head>
+<body>
+<div class="pad11 w193">
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+<tr><td>
+<h2><strong>{tip} №{order_num} от {order_date} г. </strong></h2>
+<hr align="center" noshade="noshade" size="2" style="color:black;margin:0" class="bb2" width="100%" />&nbsp;
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr>
+	<td width="83" class="pad1">Поставщик:</td>
+	<td class="pad1"><b>{castUrName}</b>, <b>ИНН: {castInn}</b>, <b>КПП: {castKpp}</b></td>
+</tr>
+<tr>
+	<td width="83" class="pad1">Счет-фактура:</td>
+	<td class="pad1">№ <b>{cFactura}</b> от {cDate}</td>
+</tr>
+<tr>
+	<td width="83" class="pad1">Получатель:</td>
+	<td class="pad1">{name_ur}</td>
+</tr>
+</table>
+
+<div style="margin-top:1.0pt; margin-bottom:15.0pt;">
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+<tbody>
+	<tr>
+		<td align="center" bgcolor="#E9E9E9" class="bt br bb bl" style="height:18pt" valign="middle" width="20"><b>№</b></td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle"><b>Наименование</b></td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="50"><b>Кол.</b></td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="50"><b>Ед.изм</b></td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="70"><b>Цена</b></td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="100"><b>Сумма</b></td>
+	</tr>
+	{stroka}
+	<tr>
+		<td align="center" bgcolor="#E9E9E9" class="bt br bb bl" style="height:18pt" valign="middle" width="20"</td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle"><b>Итого:</b></td>
+		<td align="right" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="50"><b>{kol_all}</b></td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="50"></td>
+		<td align="center" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="70"></td>
+		<td align="right" bgcolor="#E9E9E9" class="bt bb br" valign="middle" width="100"><b>{samma_all}</b></td>
+	</tr>
+</tbody>
+</table>
+</div>
+<p style="margin-top:5.0pt;">
+	Всего на сумму: <strong>{summa_propis}</strong>
+</p>
+<hr align="center" noshade="noshade" size="2" style="color:black;margin:0" class="bb2" width="100%" />&nbsp;<br><br>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+<tr>
+	<td width="80" valign="top">Принял</td>
+	<td width="10"></td>
+	<td width="201" valign="top" class="bb"></td>
+	<td width="29"></td>
+	<td width="250" align="center" class="bb">{prinal}</td>
+</tr>
+<tr>
+	<td valign="top"></td>
+	<td></td>
+	<td align="center" valign="top"><span style="font-size:10px">подпись</span></td>
+	<td></td>
+	<td align="center" valign="top"><span style="font-size:10px">расшифровка подписи</span></td>
+</tr>
+<tr>
+	<td colspan="6" height="60"></td>
+</tr>
+<tr>
+	<td valign="top">Сдал</td>
+	<td></td>
+	<td valign="top" class="bb"></td>
+	<td></td>
+	<td class="bb" align="center">{sdal}</td>
+</tr>
+<tr>
+	<td valign="top"></td>
+	<td></td>
+	<td align="center" valign="top"><span style="font-size:10px">подпись</span></td>
+	<td></td>
+	<td align="center" valign="top"><span style="font-size:10px">расшифровка подписи</span></td>
+</tr>
+</table>
+</td></tr>
+</table>
+</div>
+</body>
+</html>

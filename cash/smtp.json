@@ -1,0 +1,7 @@
+{
+"yandex.ru":{"host":"smtp.yandex.ru","port":"465","auth":"yes","secure":"ssl"},
+"gmail.com":{"host":"smtp.googlemail.com","port":"465","auth":"yes","secure":"ssl"},
+"mail.ru":{"host":"smtp.mail.ru","port":"465","auth":"yes","secure":"ssl"},
+"yahoo.com":{"host":"smtp.mail.yahoo.com","port":"465","auth":"yes","secure":"ssl"},
+"live.com":{"host":"smtp-mail.outlook.com","port":"587","auth":"yes","secure":"ssl"}
+}

@@ -1,0 +1,74 @@
+<script id="listTpl" type="text/html">
+<table id="zebraTable">
+<thead>
+<tr class="bluebg-dark white no-border">
+	<th class="nowidth no-border text-left"><div class="ellipsis pl10"><b>Сделка</b></div></th>
+	<th class="yw200 no-border text-left"><div class="ellipsis pl10"><b>Анкета</b></div></th>
+	<th class="yw200 no-border text-left"><div class="ellipsis pl10"><b>Клиент</b></div></th>
+	<th class="yw100 no-border text-left"><div class="ellipsis pl10"><b>Ответственный</b></div></th>
+	<th class="w80 no-border"></th>
+</tr>
+</thead>
+<tbody>
+{{#list}}
+<tr class="ha {{color}}" id="{{clid}}">
+	<td class="fs-11 Bold">
+		{{#did}}<a href="javascript:void(0)" onclick="openDogovor('{{did}}', '5')" title="Открыть в новом окне"><i class="icon-briefcase-1 broun"></i>&nbsp;{{deal}}</a>{{/did}}
+	</td>
+	<td class="hand text-left" onClick="$anketa.view('{{id}}','{{did}}')">
+		<div class="Bold" title="Анкета"><i class="icon-eye gray2"></i>&nbsp;{{{anketa}}}</div>
+	</td>
+	<td>
+		{{#clid}}
+			<div class="ellipsis"><a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="icon-building blue"></i>&nbsp;{{client}}</a></div>
+		{{/clid}}
+	</td>
+	<td><div class="ellipsis">{{user}}</div></td>
+	<td>
+		<a href="javascript:void(0)" onClick="$anketa.print('{{id}}','{{did}}')" class="gray broun" title="Просмотр"><i class="icon-print"></i></a>
+		<A href="javascript:void(0)" onClick="$anketa.edit('{{id}}','{{did}}')" class="gray blue" title="Редактировать"><i class="icon-pencil"></i></A>&nbsp;
+	</td>
+</tr>
+{{/list}}
+</tbody>
+</table>
+</script>
+
+<script id="anketaTpl" type="text/html">
+
+	<TABLE cellpadding="5" cellspacing="0" border="0" width="99%">
+	{{#list}}
+
+	<TR class="ha hand anketalist" data-id="{{id}}">
+	<TD>
+
+		<a href="javascript:void(0)" onclick="$anketa.baseprint('{{id}}');" title="Печать базовой анкеты" class="gray pull-aright"><i class="icon-print blue"></i></a>
+
+		<div class="pl10 mp0">
+
+			<div class="mb10">
+
+				<div class="mb5">
+					<b class="blue fs-12 flh-11">{{title}}</b>
+					<div class="fs-07 gray2 mt5">{{datum}}</div>
+				</div>
+
+			</div>
+
+			<div class="mb10 acontent">{{{content}}}</div>
+
+		</div>
+
+	</TD>
+	</TR>
+
+	{{/list}}
+	</TABLE>
+
+	{{^list}}
+
+	<div id="emptymessage" class="gray miditxt text-center"><i class="icon-graduation-cap-1 icon-3x gray"></i><br><b class="red">Упс.</b>&nbsp;&nbsp;<b>Нет доступных анкет</b></div>
+
+	{{/list}}
+
+</script>

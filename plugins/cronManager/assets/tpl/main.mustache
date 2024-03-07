@@ -1,0 +1,46 @@
+<script id="tasksTpl" type="text/html">
+
+	<div class="flex-container box--child p10 fs-09 Bold gray2 float bluebg-sub shadow sticked--top" data-id="{{id}}">
+
+		<div class="flex-string w100 hidden-ipad">Дата</div>
+		<div class="flex-string float">Название задания</div>
+		<div class="flex-string w160 hidden-ipad">Периодичность</div>
+		<div class="flex-string w120 hidden-ipad"></div>
+
+	</div>
+	{{resetIndex}}
+	{{#list}}
+	<div class="ha bgwhite border-bottom {{^active}}graybg gray no-border{{/active}}">
+
+		<div class="flex-container box--child p5 float" data-id="{{id}}">
+
+			<div class="flex-string w100 p5">{{datum}}</div>
+			<div class="flex-string float p5">
+				<div class="Bold fs-12">{{name}}</div>
+				<div class="fs-09 blue mt5">След. выполнение: {{next}}</div>
+				<div class="mt15">{{bin}}</div>
+			</div>
+			<div class="flex-string w160 p5">{{parentname}}</div>
+			<div class="flex-string w120 text-right p5">
+
+				<a href="javascript:void(0)" onclick="$app.editTask({{id}})" class="button small bluebtn dotted" title="Редактировать"><i class="icon-pencil"></i></a>
+				<a href="javascript:void(0)" onclick="$app.removeTask({{id}})" class="button small redbtn dotted" title="Удалить"><i class="icon-cancel-circled"></i></a>
+				<a href="javascript:void(0)" onclick="$app.logTask({{id}})" class="button small orangebtn dotted" title="Лог"><i class="icon-list-nested"></i></a>
+
+			</div>
+
+		</div>
+		<div class="flex-container box--child p10" data-id="{{id}}">
+			<div class="flex-string wp100 text-wrap viewdiv p0 pl10 pr10 fs-09" data-id="{{id}}">
+				<pre class="text-wrap">{{cmd}}</pre>
+			</div>
+		</div>
+
+	</div>
+	{{/list}}
+
+	{{^list}}
+		<div class="warning m0 mt5 dotted">Пока заданий нет. Добавь первое</div>
+	{{/list}}
+
+</script>

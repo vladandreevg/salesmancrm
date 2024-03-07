@@ -1,0 +1,19 @@
+{
+  "zero":{
+	"name":"",
+	"container":"",
+	"containerclass":"relativ",
+	"url":"",
+	"icon":"",
+	"tooltips":"",
+	"tooltips-position":"",
+	"actionPlus":"",
+	"class":"",
+	"expressReport":"",
+	"expressReportTitle":"",
+	"settingsURL":"",
+	"description":"",
+	"width":"",
+	"height":""
+  }
+}

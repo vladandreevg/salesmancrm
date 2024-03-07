@@ -1,0 +1,97 @@
+[
+  {
+	"name":"Новый клиент",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nДанные по клиенту:\r\n\r\n- Название: {{client}}\r\n{{#category}}- Отрасль: {{category}}{{/category}}\r\n{{#clientpath}}- Источник: {{clientpath}}{{/clientpath}}\r\n{{#territory}}- Территория: {{territory}}{{/territory}}\r\n{{#phone}}- Телефон: {{phone}}{{/phone}}\r\n{{#email}}- Email: {{email}}{{/email}}\r\n{{#relation}}- Тип отношений: {{relation}}{{/relation}}\r\n\r\nАвтор: {{user}}",
+	"event":"client.add"
+  },
+  {
+	"name":"Изменен клиент",
+	"content":"{{theme}} - {{{link}}}\r\n--------------------------------------\r\nКомментарий (что изменено): \r\n{{{comment}}}\r\n--------------------------------------\r\nДанные по клиенту:\r\n\r\n- Название: {{client}}\r\n{{#category}}- Отрасль: {{category}}{{/category}}\r\n{{#clientpath}}- Источник: {{clientpath}}{{/clientpath}}\r\n{{#territory}}- Территория: {{territory}}{{/territory}}\r\n{{#phone}}- Телефон: {{phone}}{{/phone}}\r\n{{#email}}- Email: {{email}}{{/email}}\r\n{{#relation}}- Тип отношений: {{relation}}{{/relation}}\r\n\r\nАвтор: {{autor}}",
+	"event":"client.edit"
+  },
+  {
+	"name":"Изменен ответственный клиента",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nКлиент: {{client}}\r\nНовый ответственный: {{user}} (Предыдущий: {{userold}})\r\n\r\nКомментарий: \r\n{{{comment}}}\r\n\r\nАвтор: {{autor}}",
+	"event":"client.change.user"
+  },
+  {
+	"name":"Изменен контакт",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nДанные по контакту:\r\n\r\n- ФИО: {{person}}\r\n- Дожность: {{status}}\r\n{{#phone}}- Телефон: {{phone}}{{/phone}}\r\n{{#email}}- Email: {{email}}{{/email}}\r\nКлиент: {{client}}\r\n\r\nКомментарий:\r\n{{{comment}}}\r\n\r\nАвтор: {{user}}",
+	"event":"person.edit"
+  },
+  {
+	"name":"Добавлен контакт",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nДанные по контакту:\r\n\r\n- ФИО: {{person}}\r\n- Дожность: {{status}}\r\n{{#phone}}- Телефон: {{phone}}{{/phone}}\r\n{{#email}}- Email: {{email}}{{/email}}\r\n{{#relation}}- Тип отношений: {{relation}}{{/relation}}\r\nКлиент: {{client}}\r\n\r\nАвтор: {{user}}",
+	"event":"person.add"
+  },
+  {
+	"name":"Добавлена сделка",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nДанные по сделке: {{title}}\r\n\r\n- Этап: {{step}}%\r\n- Дата план: {{datum_plan}}\r\n- Направление: {{direction}}\r\n- Тип сделки: {{tip}}\r\n- Сумма: {{kol}}\r\n- Прибыль: {{marga}}\r\n------------------------------\r\n- Клиент: {{client}}\r\n- Куратор: {{user}}\r\n\r\nАвтор: {{autor}}",
+	"event":"deal.add"
+  },
+  {
+	"name":"Изменена сделка",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nЧто изменено:\r\n\r\n{{{comment}}}\r\n\r\nДанные по сделке: <b>{{title}}</b>\r\n\r\n- Этап: {{step}}%\r\n- Дата план: {{datum_plan}}\r\n- Сумма: {{kol}}\r\n- Прибыль: {{marga}}\r\n- Направление: {{direction}}\r\n- Тип сделки: {{tip}}\r\n------------------------------\r\n- Клиент: {{client}}\r\n- Куратор: {{user}}\r\n\r\nАвтор: {{autor}}",
+	"event":"deal.edit"
+  },
+  {
+	"name":"Изменен этап сделки",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nСделка: <b>{{title}}</b>\r\n\r\nЧто изменилось:\r\n{{{comment}}}\r\n\r\nИнформация по сделке:\r\n- Дата план: {{datum_plan}}\r\n- Направление: {{direction}}\r\n- Тип сделки: {{tip}}\r\n- Сумма: {{kol}}\r\n- Прибыль: {{marga}}\r\n------------------------------\r\n- Клиент: {{client}}\r\n- Куратор: {{user}}\r\n\r\nАвтор: {{autor}}",
+	"event":"deal.change.step"
+  },
+  {
+	"name":"Изменен ответственный за сделку",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nСделка: {{title}}\r\nНовый ответственный: {{user}} (Предыдущий: {{userold}})\r\nКлиент: {{client}}\r\n\r\nКомментарий:\r\n{{{comment}}}\r\n\r\nАвтор: {{autor}}",
+	"event":"deal.change.user"
+  },
+  {
+	"name":"Добавлен счет",
+	"content":"{{theme}}: {{{link}}}\r\n\r\nНомер счета: {{invoice}} от {{date}}\r\nСумма счета: {{summa}}\r\n\r\nИнформация по счетам:\r\n{{invoiceStatus}}\r\n\r\nСделка: <b>{{deal.title}}</b>\r\n\r\n- Этап сделки: {{deal.step}}%\r\n- Дата план: {{deal.datum_plan}}\r\n- Сумма сделки: {{deal.kol}}\r\n- Клиент: {{deal.client}}\r\n- Куратор: {{deal.user}}\r\n\r\nАвтор: {{autor}}",
+	"event":"invoice.add"
+  },
+  {
+	"name":"Изменен счет",
+	"content":"{{theme}}: {{{link}}}\r\n\r\nНомер счета: {{invoice}} от {{date}}\r\nСумма счета: {{summa}}\r\n\r\nИнформация по счетам:\r\n{{invoiceStatus}}\r\n\r\nСделка: {{deal.title}}\r\n\r\n- Этап сделки: {{deal.title}}\r\n- Дата план: {{deal.datum_plan}}\r\n- Сумма сделки: {{deal.kol}}\r\n- Клиент: {{deal.client}}\r\n- Куратор: {{deal.user}}\r\n\r\nАвтор: {{autor}} ",
+	"event":"invoice.edit"
+  },
+  {
+	"name":"Оплачен счет",
+	"content":"{{theme}}: {{{link}}}\r\n\r\n<b>Платеж: {{summa}} руб.</b> {{#summaNew}} (не оплачено {{summaNew}} руб.) {{/summaNew}}\r\n\r\nДанные по счету: № {{invoice}} от {{date}}\r\n\r\nСумма счета: {{summaCredit}} руб.\r\nДата план: {{date_plan}}\r\n\r\nИнформация по счетам:\r\n{{invoiceStatus}}\r\n\r\nСделка: {{deal.title}}\r\n\r\n- Этап сделки: {{deal.step}}%\r\n- Дата план: {{deal.datum_plan}}\r\n- Сумма сделки: {{deal.kol}}\r\n- Клиент: {{deal.client}}\r\n- Куратор: {{deal.user}}\r\n\r\nАвтор: {{autor}} ",
+	"event":"invoice.doit"
+  },
+  {
+	"name":"Внесена оплата по сделке",
+	"content":"{{theme}}: {{{link}}}\r\n\r\n<b>Платеж: {{summa}} руб.</b>\r\n\r\nПо счету: № {{invoice}} от {{date}}\r\nСумма счета: {{summa}} руб.\r\n\r\nИнформация по счетам:\r\n{{invoiceStatus}}\r\n\r\n<b>Сделка: {{deal.title}}</b>\r\n\r\n- Этап сделки: {{deal.step}}%\r\n- Дата план: {{deal.datum_plan}}\r\n- Сумма сделки: {{deal.kol}}\r\n- Клиент: {{deal.client}}\r\n- Куратор: {{deal.user}}\r\n\r\nАвтор: {{autor}} ",
+	"event":"invoice.expressadd"
+  },
+  {
+	"name":"Закрыта сделка",
+	"content":"{{theme}} - {{{link}}}\r\n\r\nПараметры закрытия:\r\n\r\nСтатус закрытия: {{status}}\r\nФакт.сумма: {{kol_fact}}\r\n{{{comment}}}\r\n\r\nДанные по сделке: <b>{{title}}</b>\r\n\r\n- Этап: {{step}}%\r\n- Дата план: {{datum_plan}}\r\n- Сумма: {{kol}}\r\n- Прибыль: {{marga}}\r\n- Направление: {{direction}}\r\n- Тип сделки: {{tip}}\r\n------------------------------\r\n- Клиент: {{client}}\r\n- Куратор: {{user}}\r\n\r\nАвтор: {{autor}}",
+	"event":"deal.close"
+  },
+  {
+	"name":"Добавлено обращение",
+	"content":"{{theme}}: {{{link}}}\r\n\r\nНазначен ответственный: {{user}}\r\n\r\nКомментарий:\r\n{{{comment}}}\r\n\r\nАвтор: {{autor}}",
+	"event":"entry.add"
+  },
+  {
+	"name":"Обработано обращение",
+	"content":"{{theme}}: {{{link}}}\r\n\r\nКлиент: {{{client}}}\r\n{{#person}}Контакт: {{{person}}}{{/person}}\r\n{{#deal}}Сделка: {{{deal}}}{{/deal}}\r\n\r\nКомментарий:\r\n{{{comment}}}\r\n\r\nАвтор: {{autor}}",
+	"event":"entry.status"
+  },
+  {
+	"name":"Добавлена заявка",
+	"content":"{{theme}}: {{{link}}}\r\n\r\nКанал: {{clientpath}}\r\n\r\nКлиент: {{client}}\r\nКонтакт: {{person}}\r\n\r\nОтветственный: {{user}}\r\n\r\nСодержание заявки:\r\n{{{comment}}}",
+	"event":"lead.add"
+  },
+  {
+	"name":"Ответственный по заявке",
+	"content":"{{theme}}: {{{link}}}\r\n\r\nОтветственный: {{user}}\r\n\r\nСодержание заявки:\r\n{{{comment}}}",
+	"event":"lead.setuser"
+  },
+  {
+	"name":"Обработана заявка",
+	"content":"{{theme}}: {{{link}}}\r\n\r\n{{#status}}Статус заявки: {{status}}{{/status}}\r\n{{#statusClose}}Причина закрытия: {{statusClose}}{{/statusClose}}\r\n\r\nОтветственный: {{user}}\r\n\r\nСодержание:\r\n{{{comment}}}",
+	"event":"lead.do"
+  }
+]

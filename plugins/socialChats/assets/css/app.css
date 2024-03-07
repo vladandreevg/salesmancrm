@@ -1,0 +1,240 @@
+body {
+	height     : calc(100vh);
+	overflow-y : auto;
+}
+
+.chat-main {
+	width                 : 100vw;
+	margin                : 0 auto;
+	display               : grid;
+	grid-template-columns : 60% 40%;
+	grid-template-rows    : 100vh;
+}
+
+.chat-first {
+	width       : 80%;
+	margin      : 0 auto;
+	padding-top : 20px;
+}
+
+.grid {
+	display               : grid;
+	grid-template-columns : repeat(auto-fill, calc(50% - 3px));
+	grid-gap              : 5px 5px;
+	box-sizing            : border-box;
+}
+
+.chat-ellipsis {
+	position       : relative;
+	text-overflow  : ellipsis !important;
+	overflow       : hidden !important;
+	white-space    : nowrap;
+	display        : inline-block;
+	line-height    : 1.25em;
+	height         : 1.25em;
+	width          : 95%;
+	vertical-align : middle;
+	margin-right   : -9999px;
+}
+
+.button--icon {
+	position                  : absolute;
+	z-index                   : 10;
+	top                       : -10px;
+	right                     : -10px;
+	color                     : var(--gray);
+	padding                   : 5px;
+	background                : var(--gray-superlite);
+	border-left               : 1px solid var(--gray);
+	border-bottom             : 1px solid var(--gray);
+	border-bottom-left-radius : 5px;
+}
+
+.flex-container.infodiv {
+	border     : 1px solid #E6E9ED !important;
+	box-sizing : border-box;
+}
+
+#helper,
+#helpcloser{
+	display: none;
+	position    : absolute;
+	top         : 10px;
+	right       : 30px;
+	z-index     : 10;
+	text-align  : center;
+	font-size   : 3em;
+	color       : var(--gray-darkblue);
+	cursor      : pointer;
+}
+
+@media (max-width : 900px) {
+	
+	.chat-main {
+		grid-template-columns : 100%;
+	}
+	
+	.chat-first {
+		width : 90%;
+	}
+	
+	#help {
+		position : absolute;
+		top      : 0;
+		right    : 0;
+		width    : 50%;
+		display  : none;
+		height   : 100vh;
+		z-index : 11;
+		box-shadow: -2px 2px 5px rgba(154, 147, 140, 0.5);
+	}
+	
+	#helpcloser{
+		position : fixed;
+		z-index : 12;
+	}
+	
+	#helper,
+	#helpcloser {
+		display : block;
+	}
+	
+}
+
+@media (max-width : 768px) {
+	
+	.chat-main {
+		width      : 100%;
+		margin     : 0 auto;
+		box-sizing : border-box;
+	}
+	
+	#help {
+		width    : 93vw;
+	}
+	
+}
+
+input[type="checkbox"] ~ label {
+	font-weight : bold;
+	color       : var(--blue);
+}
+
+span.select {
+	display : block;
+}
+span.label {
+	font-size      : 0.8em;
+	color          : var(--gray-darkblue);
+	font-weight    : bold;
+	text-transform : uppercase;
+}
+
+fieldset {
+	border     : 1px solid #CCC;
+	background : #FFF;
+	padding    : 15px 10px;
+}
+legend {
+	font-size : 1.3rem;
+}
+i {
+	position : static;
+}
+p, li {
+	font-size   : 1.2rem;
+	line-height : 1.3em;
+}
+
+h1 {
+	font-size  : 1.7rem;
+	margin-top : 30px;
+}
+h2 {
+	font-size  : 1.4rem;
+	margin-top : 30px;
+}
+h3 {
+	color      : var(--gray-darkblue);
+	font-size  : 1.0rem;
+	margin-top : 30px;
+}
+
+#help h1 {
+	font-size : 2em;
+}
+#help h2 {
+	font-size : 1.6em;
+}
+#help h3 {
+	color     : var(--blue);
+	font-size : 1.4em;
+}
+
+table th {
+	font-size     : 0.9rem;
+	background    : #E6E9ED;
+	border-bottom : 1px dotted #CCC;
+}
+table tbody td {
+	border-bottom : 1px dotted #CCC;
+	font-size     : 1.05em;
+}
+
+#help blockquote {
+	border        : 1px solid #CCC;
+	border-left   : 3px solid rgba(255, 193, 7, 1);
+	padding-left  : 50px;
+	padding-right : 10px;
+	margin-left   : 0;
+	border-radius : 5px;
+	background    : #FFF;
+	position      : relative;
+	display: block;
+	width: 89%;
+}
+#help blockquote:before {
+	font-family : "fontello";
+	font-size   : 2em;
+	position    : absolute;
+	top         : 20px;
+	left        : 10px;
+	color       : #DDD;
+	content     : "\e8b8";
+}
+#help blockquote ul {
+	margin-left  : 5px;
+	padding-left : 10px;
+	list-style   : circle;
+}
+#help blockquote li {
+	margin-left : 5px;
+	padding     : 0 !important;
+}
+#help blockquote > h3,
+#help blockquote > h2 {
+	color          : var(--red);
+	margin-top     : 15px;
+	margin-bottom  : -5px;
+	text-transform : uppercase;
+}
+
+input,
+select,
+textarea {
+	padding     : 4px 5px;
+	border      : 2px solid var(--gray-lite);
+	font-size   : 1.2rem !important;
+	outline     : none;
+	font-weight : bold;
+	/*color: var(--blue);*/
+}
+input:focus,
+select:focus,
+textarea:focus {
+	padding            : 4px 5px;
+	border             : 2px solid var(--gray-darkblue);
+	box-shadow         : 0 0 0 var(--gray-darkblue);
+	-webkit-box-shadow : 0 0 0 var(--gray-darkblue);
+	-moz-box-shadow    : 0 0 0 var(--gray-darkblue);
+}

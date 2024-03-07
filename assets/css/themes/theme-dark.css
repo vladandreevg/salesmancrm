@@ -1,0 +1,299 @@
+body, html,
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer{
+	background:#ECF0F1;
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content{
+	border-color:#ECF0F1;
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner{
+	background: #EEEEEE;
+}
+
+.tableHeader table{
+	border-top:1px solid #E6E9ED;
+}
+#last .tableHeader table{
+	border-top:0;
+}
+
+/*.ui-widget-content,*/
+.ui-widget-content > a.menu{
+	border-right:0;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+.ui-widget-content > a.menu:hover{
+	border-right:0;
+	background:#ECF0F1;
+	border-color:#ECF0F1;
+}
+
+.ui-layout-center{
+	border:transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv{
+	background: #FFFFFF;
+}
+
+/*фон блока навигации по страницам*/
+/*.pagecontainer .mainbg,
+.pagecontainer .mainbg a{
+	border:0;
+	color:#FFF;
+	background:#34495E;
+}*/
+
+/*фон нижней панели*/
+/*#footpanel, .ui-layout-east{
+	background:#2C3E50;
+}
+#footpanel ul li > a{
+	color:#AAB2BD;
+}*/
+
+/*фон меню*/
+.ui-layout-north{
+	background: rgba(52,73,94, 1.0);
+}
+.menu--block,
+#menu{
+	background:
+			linear-gradient(
+					rgba(44,62,80,0.1),
+					rgba(44,62,80,0.3)
+			),
+			url(/assets/images/bg/dark2.png) repeat,
+			rgba(52,73,94, 1.0);
+}
+#menu .hov{
+	border-right: 1px solid rgba(52,73,94, 1.0);
+}
+#menu ul:hover{
+	background: #34495E;
+}
+#menu ul ul {
+	border-top:2px solid #e3e2e2;
+}
+#menu ul ul,
+#menu ul ul:hover,
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	color:#FFF;
+	background:#34495E;
+}
+#menu a.navlink:hover{
+	color:#34495E;
+	background: #FFF;
+}
+#menu ul ul li.header{
+	color:#E6E9ED;
+}
+#menu ul > .top-triangle-white{
+	border-bottom: 7px solid #34495E;
+}
+#menu hr{
+	border-bottom: 1px solid #2C3E50;
+}
+#menu ul ul:after {
+	border-bottom-color: #34495E;
+}
+
+#menuavatar hr{
+	border-bottom: 1px solid #ECF0F1;
+}
+	#menuavatar:hover{
+		background:#34495E;
+	}
+	#menuavatar .avatar-subtext{
+		color:#ECF0F1;
+	}
+	#menuavatar .submenu hr{
+		border:0 none;
+		height:1px;
+		border-bottom: 1px dotted #78909C;/*rgba(161, 136, 127, 0.5);*/
+		border-collapse: collapse;
+	}
+	#menuavatar .submenu{
+		color:#fff;
+		background: rgba(52,73,94, 1.0);
+		border:#37474F 1px solid;
+		box-shadow: 0 1px 3px #222;
+		-webkit-box-shadow: 0 1px 3px #222;
+		-moz-box-shadow: 0 1px 3px #222;
+	}
+	#menuavatar .submenu .gray2{
+		color:#ECF0F1;
+	}
+	#menuavatar .submenu .stroka,
+	#menuavatar .submenu .istroka,
+	#menuavatar .submenu a,
+	#menuavatar .submenu i{
+		color: #FFF;
+	}
+	#menuavatar .submenu .halight:hover,
+	#menuavatar .submenu .stroka:hover,
+		/*#menu .submenu .istroka:hover,*/
+	#menuavatar .submenu a.menu:hover{
+		color: #fff !important;
+		background:#039BE5 !important;
+	}
+	#menuavatar .submenu .top-triangle-white {
+		border-bottom-color: rgba(52,73,94, 1.0);
+	}
+	#menuavatar .submenu .top-triangle {
+		border-bottom-color: #37474F;
+	}
+
+#menu ul ul ul.sub{
+	background:#34495E;
+}
+#menu ul ul ul.sub:after {
+	border-left-color: #34495E;
+}
+
+/*различные кнопки*/
+.bl2{
+	color:#FFF;
+	background: #34495E;
+	border: 1px solid #34495E;
+}
+.bl2:hover{
+	color:#FFF;
+	background: #16A085;
+	border: 1px solid #16A085;
+}
+
+/*a.button, input.button, a.button:link, a.button:visited{
+	color:#222;
+	background: #ECF0F1;
+	border: 1px solid #BDC3C7;
+	line-height: 20px;
+}
+a.button:hover {
+	background: #03A9F4;
+	border: 1px solid #2196F3;
+	color:#fff;
+}*/
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color:#222;
+	background: #FFCE54;
+	border:0px;
+	margin: 0px 2px;
+	padding: 10px;
+}
+.contaner > a.button:hover {
+	color:#222;
+	background: #F6BB42;
+}
+
+.ha:hover{
+	background: rgba(255, 207, 83, 0.3);
+}
+
+/*popup*/
+.popmenu, .popmenu-top, .submenu{
+
+}
+	.popmenu .popheader{
+		color:#FFF;
+		background: #4A89DC;
+	}
+	.popmenu .popheader .blue{
+		color:#FFF;
+	}
+
+.triangle{
+	border-top: 7px solid #4A89DC;
+}
+.top-triangle{
+	border-bottom: 7px solid #4A89DC;
+}
+
+/*карточка*/
+#head #close{
+	/*top:-10px;*/
+	border:1px solid #34495E;
+	border-top:0;
+	background:#F6BB42;
+	font-size:0.80em;
+	color: #34495E;
+	line-height: 0.95em;
+	padding: 5px 10px;
+}
+#head #close:hover{
+	border:1px solid #34495E;
+	border-top:0;
+	background:#FFFFFF;
+	color: #34495E;
+}
+
+.fixx{
+	color:#FFF;
+	background:
+			linear-gradient(
+					rgba(44,62,80,0.1),
+					rgba(44,62,80,0.3)
+			),
+			url(/assets/images/bg/dark2.png) repeat;
+}
+	.fixx #ctitle .blue,
+	.fixx #ctitle a{
+		color:#BDC3C7;
+	}
+
+#dtabs ul li {
+	color: #FFF;
+	background:#2C3E50;
+}
+#dtabs ul li:hover {
+	border-bottom:0px;
+}
+#dtabs ul li a{
+	color: #FFF;
+}
+
+fieldset{
+	border-color: #BDC3C7;
+}
+
+fieldset .batton-edit a,
+fieldset .batton-edit a .blue{
+	color:#2C3E50;
+}
+
+/*элементы ui.jquery*/
+.ui-state-active, .ui-widget-content .ui-state-active,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active{
+	border-color: #BDC3C7;
+}
+
+#tab_container,
+#tab_container .blue{
+	color:#222;
+}
+
+/*список дел в левой панели*/
+#taskweek .header{
+	color:#222;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}

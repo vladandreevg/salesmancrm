@@ -1,0 +1,283 @@
+{{#list}}
+
+	<div class="fcontainer focused" data-did="{{did}}">
+
+		{{#showButtons}}
+			{{^isMobile}}
+			<div class="panel">
+
+				<a href="javascript:void(0)" onclick="viewDogovor('{{did}}')" title="Просмотр" class="gray green"><i class="icon-eye green"></i></a>&nbsp;&nbsp;
+				<a href="javascript:void(0)" onClick="addTask('add','{{clid}}','','{{did}}');" title="Добавить напоминание" class="gray blue"><i class="icon-clock blue"></i></a>&nbsp;&nbsp;
+				<a href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Карточка" class="gray broun"><i class="icon-briefcase broun"></i></a>
+
+			</div>
+			{{/isMobile}}
+		{{/showButtons}}
+
+		<div class="fs-12 mb20 Bold blue">
+
+			{{#close}}
+			<div class="fs-09 pt10 pb10 mb20 red">
+				<i class="icon-lock red"></i>Закрыта {{datum_closef}}
+			</div>
+			{{/close}}
+
+			<div>
+				<A href="javascript:void(0);" onclick="openDogovor('{{did}}')"><i class="icon-briefcase-1 blue"></i>{{title}}</A>
+				{{#uid}},&nbsp;<span class="Bold gray">UID {{uid}}</span>&nbsp;{{/uid}}
+			</div>
+			<div class="fs-09 gray2 mt15 noBold">
+				{{#step}}Этап:&nbsp;<b class="blue list" title="{{stepContent}}">{{step}}%</b>, {{/step}}
+				Открыта:<b> {{datumf}}</b>,
+				Плановая дата: <b class="red">{{datum_planf}}</b>
+			</div>
+
+		</div>
+
+		<div class="cardBlock" style="overflow: hidden" data-height="90">
+
+			<div class="fieldblocks block">
+
+				<div class="divider mb10">Детали</div>
+
+				{{#close}}
+					<div class="pt5 pb5">
+
+						<b>Оборот:</b> <b class="blue fs-12">{{kol_factf}} {{valuta}}</b>;
+						{{#showMarga}}
+						<b>Прибыль:</b>
+						<b class="blue fs-12">{{margaf}} &nbsp;{{valuta}}</b>
+						{{/showMarga}}
+
+					</div>
+
+					<div class="viewdiv mt10 mb10">
+
+						<div class="pt5 pb5">
+							<b>Результат:</b> <B class="red">{{closeStatus}}</B> - {{closeContent}}&nbsp;
+						</div>
+
+						{{#html_fact}}
+						<b>Комментарий:</b> {{html_fact}}
+						{{/html_fact}}
+
+					</div>
+
+				{{/close}}
+
+				{{^close}}
+
+					<div class="flex-container p5">
+
+						<div class="flex-string wp20">
+							<div class="gray">{{fieldsNames.kol}}</div>
+						</div>
+						<div class="flex-string wp80">
+							<div class="Bold blue">{{kolf}}&nbsp;{{valuta}}</div>
+						</div>
+
+					</div>
+
+					{{#showMarga}}
+					<div class="flex-container p5">
+
+						<div class="flex-string wp20">
+							<div class="gray">{{fieldsNames.marg}}</div>
+						</div>
+						<div class="flex-string wp80">
+							<div class="Bold blue">{{margaf}}&nbsp;{{valuta}}</div>
+						</div>
+
+					</div>
+					{{/showMarga}}
+
+				{{/close}}
+
+				{{#payer}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">Плательщик</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="blue">{{payerName}}</div>
+					</div>
+
+				</div>
+				{{/payer}}
+
+				{{#adres}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">{{fieldsNames.adres}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="blue"><i class="icon-location blue"></i>&nbsp;<a href="https://maps.google.ru/maps?hl=ru&tab=wl&q=<?= $da['adres'] ?>" target="_blank">{{adres}}</a></div>
+					</div>
+
+				</div>
+				{{/adres}}
+
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">{{fieldsNames.iduser}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="">
+							<B class="green">{{user}}</B>
+							{{#autor}}
+								&nbsp;(<b>Создана:</b>&nbsp;<B class="green">{{autorName}}&nbsp;</B>)
+							{{/autor}}
+						</div>
+					</div>
+
+				</div>
+
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">{{fieldsNames.mcid}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="">
+							{{company}}
+						</div>
+					</div>
+
+				</div>
+
+				{{#contract}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">Номер договора</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="">
+							{{contract.number}} от {{contract.datef}}
+						</div>
+					</div>
+
+				</div>
+				{{/contract}}
+
+				{{#content}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">{{fieldsNames.content}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="height--250">
+							{{{html}}}
+						</div>
+					</div>
+
+				</div>
+				{{/content}}
+
+				{{#showPeriod}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray"><?= {{fieldsNames.period}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="">
+							{{datum_startf}} - {{datum_endf}}
+						</div>
+					</div>
+
+				</div>
+				{{/showPeriod}}
+
+				{{#tipName}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">{{fieldsNames.tip}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="">
+							{{tipName}}
+						</div>
+					</div>
+
+				</div>
+				{{/tipName}}
+
+				{{#directionName}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">{{fieldsNames.direction}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="">
+							{{directionName}}
+						</div>
+					</div>
+
+				</div>
+				{{/directionName}}
+
+				{{#inputs}}
+				<div class="flex-container p5">
+
+					<div class="flex-string wp20">
+						<div class="gray">{{field}}</div>
+					</div>
+					<div class="flex-string wp80">
+						<div class="">
+
+							{{#isDate}}<b class="green">{{format}}</b>{{/isDate}}
+							{{#isDateTime}}<b class="blue">{{formattime}}</b>{{/isDateTime}}
+							{{#isAddress}}
+								<i class="icon-location blue"></i>&nbsp;<a href="https://maps.google.ru/maps?hl=ru&tab=wl&q={{value}}" target="_blank">{{value}}</a>
+							{{/isAddress}}
+							{{^isDate}}
+								{{^isDateTime}}
+									{{^isAddress}}
+										{{{html}}}
+									{{/isAddress}}
+								{{/isDateTime}}
+							{{/isDate}}
+
+						</div>
+					</div>
+
+				</div>
+				{{/inputs}}
+
+			</div>
+
+			{{#isMobile}}
+			<DIV class="wp100 mob-pull-right mb10">
+
+				<a href="javascript:void(0)" onclick="viewDogovor('{{did}}')" title="Просмотр" class="gray green"><i class="icon-eye green"></i></a>&nbsp;&nbsp;
+				<a href="javascript:void(0)" onClick="addTask('add','{{clid}}','','{{did}}');" title="Добавить напоминание" class="gray blue"><i class="icon-clock blue"></i></a>&nbsp;&nbsp;
+				<a href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Карточка" class="gray broun"><i class="icon-briefcase broun"></i></a>
+
+			</DIV>
+			{{/isMobile}}
+
+		</div>
+
+			<div class="div-center blue hand cardResizer fs-09 mt10" title="Развернуть" data-pozi="close">
+				<i class="icon-angle-down"></i>
+				<i class="icon-angle-down"></i>
+				<i class="icon-angle-down"></i>
+			</div>
+
+		</div>
+
+	</div>
+
+{{/list}}
+{{^list}}
+
+	<div class="fcontainer mp10">Данных пока нет</div>
+
+{{/list}}

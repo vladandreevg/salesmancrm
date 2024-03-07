@@ -1,0 +1,77 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2018 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*         salesman.pro         */
+/*         ver. 2018.6          */
+/* ============================ */
+
+body,
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer{
+	background:#ECF0F1;
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content{
+	border-color:#ECF0F1;
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner{
+	background: #EEEEEE;
+}
+
+.ui-widget-content > a.menu{
+	border-right:0;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+.ui-widget-content > a.menu:hover{
+	border-right:0;
+	background:#ECF0F1;
+	border-color:#ECF0F1;
+}
+
+#content{
+	background: #FFFFFF;
+}
+
+.contaner > a.button {
+	color:#222;
+	background: #FFCE54;
+	border:0;
+	margin: 0 2px;
+	padding: 10px;
+}
+.contaner > a.button:hover {
+	color:#222;
+	background: #F6BB42;
+}
+
+/*popup*/
+.popmenu, .popmenu-top, .submenu{
+	/*border:#4A89DC 1px solid;*/
+}
+	.popmenu .popheader{
+		color:#FFF;
+		background: #4A89DC;
+	}
+	.popmenu .popheader .blue{
+		color:#FFF;
+	}
+
+.triangle{
+	border-top: 7px solid #4A89DC;
+}
+.top-triangle{
+	border-bottom: 7px solid #4A89DC;
+}

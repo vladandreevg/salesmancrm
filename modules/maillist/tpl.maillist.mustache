@@ -1,0 +1,72 @@
+<script id="maillistTpl" type="text/html">
+
+	<table width="100%" cellpadding="5" cellspacing="0" border="0" class="list_header" height="30">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th width="100" align="center">Дата</th>
+			<th align="center">Название рассылки</th>
+			<th width="80" align="center">Текст</th>
+			<th width="100" align="center">Действие</th>
+			<th width="150" align="left">Описание</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha" height="40" id="maillist{{id}}">
+				<td><SPAN class="ellipsis">{{datum}}</SPAN></td>
+				<td>
+					<SPAN class="ellipsis" title="{{title}}"><A href="javascript:void(0)" onClick="editMaillist('{{id}}','view.info');">{{title}}</A></SPAN>
+				</td>
+				<td align="center">
+					<a href="javascript:void(0)" onClick="editMaillist('{{id}}','view.message');">просмотр</a></td>
+				<td align="right">
+					{{#change}}
+						{{#do}}
+							<A href="javascript:void(0)" onClick="editMaillist('{{id}}', 'edit');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;
+						{{/do}}
+						{{^do}}
+							<i class="icon-ok-circled gray" title="Рассылка произведена, редактирование не возможно."></i>&nbsp;&nbsp;
+						{{/do}}
+					{{/change}}
+					<A href="javascript:void(0)" onClick="editMaillist('{{id}}','edit', 'copy');" title="Создать новую с данными текущей"><i class="icon-docs green"></i></A>&nbsp;&nbsp;
+					<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить рассылку?');if (cf)editMaillist('{{id}}','delete');" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+				</td>
+				<td><SPAN title="{{content}}" class="ellipsis">{{content}}</SPAN></td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+	<div style="height:45px;"></div>
+
+</script>
+
+<script id="tpl.maillistTpl" type="text/html">
+
+	<table width="100%" cellpadding="5" cellspacing="0" border="0" class="list_header" height="30">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th width="250" align="center">Название шаблона</th>
+			<th width="70" align="center">Действие</th>
+			<th align="left">Содержание</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha" height="40" id="maillist{{id}}">
+				<td width="250" align="left">
+					<SPAN class="ellipsis" title="{{title}}"><A href="javascript:void(0)" onClick="editMaillist('{{id}}','tpl.view');">{{title}}</A></SPAN>
+				</td>
+				<td width="70" align="center" nowrap>
+					<A href="javascript:void(0)" onClick="editMaillist('{{id}}','tpl.edit');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить шаблон?'); if (cf)editMaillist('{{id}}','tpl.delete');" title="Удалить"><i class="icon-cancel red"></i></A>
+				</td>
+				<td>
+					<div class="ellipsis">{{{content}}}</div>
+				</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div style="height:45px;"></div>
+
+</script>

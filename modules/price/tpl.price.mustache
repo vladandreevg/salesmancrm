@@ -1,0 +1,82 @@
+<script id="priceTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH width="15" class="hidden-netbook"><input type="checkbox" name="che" id="che" onclick="checkb()"/></TH>
+			<TH class="yw80 text-left">
+				<div class="ellipsis hand" id="x-artikul" onclick="changesort('artikul')" title="Изменить порядок вывода">Артикул</div>
+			</TH>
+			<TH class="min100 text-left">
+				<div class="ellipsis hand" id="x-title" onclick="changesort('title')" title="Изменить порядок вывода">Название позиции</div>
+			</TH>
+			{{#header.nprice_in}}
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-price_in" onclick="changesort('price_in')" title="Изменить порядок вывода">{{header.nprice_in}}, {{header.valuta}}</div>
+			</TH>
+			{{/header.nprice_in}}
+			{{#header.nprice_1}}
+			<TH class="yw100 text-left">
+				<div class="ellipsis hand" id="x-price_1" onclick="changesort('price_1')" title="Изменить порядок вывода">{{header.nprice_1}}, {{header.valuta}}</div>
+			</TH>
+			{{/header.nprice_1}}
+			{{#header.nprice_2}}
+			<TH class="yw100 text-left hidden-ipad">
+				<div class="ellipsis hand" id="x-price_2" onclick="changesort('price_2')" title="Изменить порядок вывода">{{header.nprice_2}}, {{header.valuta}}</div>
+			</TH>
+			{{/header.nprice_2}}
+			{{#header.nprice_3}}
+			<TH class="yw100 text-left hidden-ipad">
+				<div class="ellipsis hand" id="x-price_3" onclick="changesort('price_3')" title="Изменить порядок вывода">{{header.nprice_3}}, {{header.valuta}}</div>
+			</TH>
+			{{/header.nprice_3}}
+			<TH class="hidden-netbook text-left yw80"><b>Описание</b></TH>
+			<TH width="5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha {{#archive}}graybg-sub{{/archive}} th60" id="price{{id}}">
+				<td class="hidden-netbook"><input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/></td>
+				<td><span class="ellipsis">{{artikul}}</span></td>
+				<td class="min100">
+					<span class="name-ellipsis Bold hand fs-11 mfh-10" title="{{title}}" onclick="editPrice('{{id}}','view');">
+						{{title}}
+					</span>
+					{{#category}}
+						<br><span class="smalltxt gray2">{{category}}</span>
+					{{/category}}
+				</td>
+				{{#header.nprice_in}}
+					<td class="text-right" title="{{price_in}} {{header.valuta}}/{{edizm}}"><span>{{price_in}}</span></td>
+				{{/header.nprice_in}}
+				{{#header.nprice_1}}
+					<td class="text-right" title="{{price_1}} {{header.valuta}}/{{edizm}}"><span>{{price_1}}</span></td>
+				{{/header.nprice_1}}
+				{{#header.nprice_2}}
+					<td class="text-right hidden-ipad" title="{{price_2}} {{header.valuta}}/{{edizm}}">{{price_2}}</td>
+				{{/header.nprice_2}}
+				{{#header.nprice_3}}
+					<td class="text-right hidden-ipad" title="{{price_3}} {{header.valuta}}/{{edizm}}">{{price_3}}</td>
+				{{/header.nprice_3}}
+				<td class="hidden-netbook">
+					<div title="{{content}}" class="ellipsis">{{content}}</div>
+				</td>
+				<TD valign="middle">
+					<div class="action--container">
+						<div class="action--block">
+
+							<A href="javascript:void(0)" onclick="editPrice('{{id}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></A>
+							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить файл?');if (cf)editPrice('{{id}}','delete')" title="Удалить" class="gray red"><i class="icon-cancel red"></i></A>
+
+						</div>
+					</div>
+				</TD>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+	
+	<div class="space-40"></div>
+	
+</script>

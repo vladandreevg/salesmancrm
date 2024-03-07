@@ -1,0 +1,22 @@
+<script id="sswinTpl" type="text/html">
+
+<div class="ss--window hidden">
+
+	<div class="ss--menu text-center">
+
+		<span class="fs-12 Bold blue mr10">Выбор скрипта:</span>
+		<span class="select">
+		<select id="ss-script" name="ss-script" class="wp40" onchange="ssFunc.ssLoadScript()">
+			<option value="">--не выбран--</option>
+			{{#scripts}}
+				<option value="{{id}}">{{name}}</option>
+			{{/scripts}}
+		</select>
+		</span>
+
+	</div>
+	<div class="ss--body"></div>
+
+</div>
+
+</script>

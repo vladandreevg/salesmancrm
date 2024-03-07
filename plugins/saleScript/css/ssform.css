@@ -1,0 +1,27 @@
+.ss--window{
+	position:fixed;
+	top:5px; right:5px;
+	height: calc(100vh - 10px); width: 40vw;
+	background:#fff;
+	z-index:30;
+	overflow: hidden;
+	transition:left 300ms ease;
+	-webkit-transition:left 300ms ease;
+	-moz-transition:left 300ms ease;
+}
+
+.ss--menu{
+	display: block;
+	padding: 10px;
+	height: 40px;
+	line-height: 40px;
+	background: #eee;
+	border-bottom: 1px dotted #ddd;
+}
+.ss--menu span{
+	height: 40px;
+	line-height: 40px;
+}
+.ss--body{
+	height: calc(95vh - 50px);
+}

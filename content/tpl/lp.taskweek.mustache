@@ -1,0 +1,108 @@
+<script id="taskweekTpl" type="text/html">
+		{{#data}}
+
+			{{^istoday}}
+
+				{{#day}}
+				<div class="header pad5 Bold"><i class="icon-calendar-1 blue"></i>{{{day}}}</div>
+				{{/day}}
+
+			{{/istoday}}
+
+			{{#cpoint}}
+			<DIV class="ha">
+				<div class="">
+					<div class="tskheader hand" onClick="doLoad('content/lists/dt.health.php?did={{did}}&action=view')">
+					<div class="row">
+						<div class="column grid-1">{{{icon}}}</div>
+						<div class="column grid-8 fs-10 flh-10">{{{title}}}</div>
+					</div>
+				</div>
+				<div class="ellipsis marg3 pad10">
+					<a href="javascript:void(0)" onClick="openDogovor('{{did}}')"><i class="icon-briefcase blue"></i>&nbsp;{{dogovor}}
+					</a>
+				</div>
+			</DIV>
+			{{/cpoint}}
+
+			{{#events}}
+			<DIV id="todo{{tid}}" class="ha mb5">
+
+				<div class="{{#day}}greenbg-sub{{/day}} border-bottom">
+					<div class="tskheader">
+						{{#day}}<i class="icon-flag green" title="Весь день"></i>{{/day}}
+						{{^day}}<b class="{{tcolor}}">{{time}}</b>{{/day}}
+						&nbsp;&nbsp;{{{priority}}}{{{speed}}}
+						<span class="pull-arightt smalltxt" title="{{tip}}"><span style="color:{{color}}">{{{icon}}}</span></span>
+
+						<div class="pull-aright fs-09 inline">
+							{{#readonly}}
+								<i class="icon-lock red" title="Только чтение"></i>&nbsp;
+								<i class="icon-user-1 green" title="Автор: {{autor}}"></i>
+							{{/readonly}}
+							{{^readonly}}
+								<A href="javascript:void(0)" onClick="editTask('{{tid}}','doit');" class="vtip" title="Активно, пометить как сделанное"><span class="blue"><i class="icon-ok"></i></span></A>
+								{{#change}}
+									&nbsp;<A href="javascript:void(0)" onClick="editTask('{{tid}}','edit');" class="vtip" title="Изменить"><span class="broun"><i class="icon-pencil"></i></span></A>
+								{{/change}}
+							{{/readonly}}
+						</div>
+
+					</div>
+					<div class="hand " onClick="viewTask('{{tid}}');">
+						<div class="ellipsis pad5">
+							{{title}}
+						</div>
+						<br>
+						<div class="pad3 smalltxt right-text paddright10">
+							{{#did}}
+								<span class="tooltips" tooltip="{{dogovor}}" tooltip-position="left"><i class="icon-briefcase-1 red" title="Привязана Сделка"></i></span>
+							{{/did}}
+							{{#clid}}
+								&nbsp;<span class="tooltips" tooltip="{{client}}" tooltip-position="left"><i class="icon-building blue" title="Привязан Клиент"></i></span>
+							{{/clid}}
+							{{#pids}}
+								&nbsp;<i class="icon-user-1 blue" title="Привязаны Контакты - {{pids}} шт."></i><sup>{{pids}}</sup>
+							{{/pids}}
+						</div>
+					</div>
+
+				</div>
+
+				{{#hid}}
+					<div class="smalltxt block pad5">
+						<div class="right-text">
+							{{#readonly}}
+								<i class="icon-lock red" title="Только чтение"></i>&nbsp;
+								<i class="icon-user-1 green" title="Автор: {{autor}}"></i>
+							{{/readonly}}
+							{{^readonly}}
+								<A href="javascript:void(0)" onClick="editTask('{{tid}}','doit');" class="vtip" title="Активно, пометить как сделанное"><span class="blue"><i class="icon-ok"></i>Выполнено</span></A>
+								{{#change}}
+									<A href="javascript:void(0)" onClick="editTask('{{tid}}','edit');" class="vtip" title="Изменить"><span class="broun"><i class="icon-pencil"></i>Изменить</span></A>
+								{{/change}}
+							{{/readonly}}
+						</div>
+					</div>
+				{{/hid}}
+
+			</DIV>
+			{{/events}}
+
+		{{/data}}
+
+		{{^data}}
+
+			{{#today}}
+			<div class="infodiv div-center margbot10">На сегодня дел нет</div>
+			<div id="greenbutton" class="div-center block">
+				<a href="javascript:void(0)" onClick="addTask();" class="button white"><i class="icon-plus"></i>Добавить?</a>
+			</div>
+			{{/today}}
+			{{^today}}
+			<div class="infodiv div-center margbot10">Активных дел нет</div>
+			{{/today}}
+
+		{{/data}}
+
+</script>

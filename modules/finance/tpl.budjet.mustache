@@ -1,0 +1,337 @@
+<script id="journalTpl" type="text/html">
+
+	<TABLE id="list_header1" class="budjet">
+	<thead class="sticked--top">
+	<TR class="header_contaner">
+		<TH class="w60">Период</TH>
+		<TH class="yw80">Дата</TH>
+		<TH class="yw80">Дата план</TH>
+		<TH class="w20">Тип</TH>
+		<TH class="text-left" id="journalTitle"><DIV class="ellipsis">Название</DIV></TH>
+		<TH class="yw40" title="Источник">Ист.</TH>
+		<TH class="yw160"><DIV class="ellipsis">Примечание</DIV></TH>
+		<TH class="yw100">Сумма, {{valuta}}</TH>
+		<TH class="yw80 hidden-netbook text-left"><DIV class="ellipsis">Ответственный</DIV></TH>
+		<TH class="w5"></TH>
+	</TR>
+	</thead>
+	<tbody>
+	{{#list}}
+	<tr class="ha {{color}} th55" data-month="{{mon}}">
+		<td class="text-right"><span class="Bold">{{period}}</span></td>
+		<td class="text-right">
+		{{^change}}
+		<span title="{{datum}}">{{datum}}</span>
+		{{/change}}
+		</td>
+		<TD class="text-center">
+			<div class="{{^do}}{{#isOverdue}}red{{/isOverdue}}{{/do}}">{{datePlan}}</div>
+			{{#invoice_paydate}}<div class="green Bold" title="Дата оплаты счета">{{invoice_paydate}}</div>{{/invoice_paydate}}
+		</TD>
+		<td class="text-center"><span>{{{tip}}}</span></td>
+		<td>
+			<div class="ellipsis1 fs-11 mfh-10">
+				<a href="javascript:void(0)" onclick="editBudjet('{{id}}','view')" title="Просмотр: {{title}}">ID {{id}}: <b>{{title}}</b></a>
+			</div>
+			<div class="ellipsis smalltxt" title="{{category}}"><em>{{category}}</em></div>
+			{{#content}}<br><DIV class="ellipsis smalltext blue" title="{{content}}">{{content}}</DIV>{{/content}}
+			{{#smove}}<br><DIV class="ellipsis smalltext blue" title="{{smove}}">{{smove}}</DIV>{{/smove}}
+			<span class="ellipsis hidden-normal smalltxt" title="{{user}}">Создал: <b>{{user}}</b></span>
+		<td class="text-center"><span>{{istochnik}}</span></td>
+		<td>
+			{{#deal}}
+			<span class="ellipsis" title="{{deal}}"><a href="javascript:void(0)" onclick="openDogovor('{{did}}',13)"><i class="icon-briefcase broun"></i>{{deal}}</a></span><br>
+			{{/deal}}
+			{{#provider}}
+			<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{conid}}')"><i class="icon-building blue"></i>{{provider}}</a></span><br>
+			{{/provider}}
+			{{#partner}}
+			<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{partid}}')"><i class="icon-building blue"></i>{{partner}}</a></span>
+			{{/partner}}
+		</td>
+		<td class="text-right"><span>{{summa}}</span></td>
+		<td class="hidden-netbook"><DIV class="ellipsis" title="{{user}}">{{user}}</DIV></td>
+		<td>
+			<div class="action--container">
+				<div class="action--block">
+
+					<a href="javascript:void(0)" onclick="editBudjet('{{id}}','view')" title="Просмотр: {{title}}" class="gray green"><i class="icon-eye green"></i></a>
+					{{{ddo}}}
+					{{#change}}
+					<a href="javascript:void(0)" onclick="editBudjet('{{id}}','edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
+					<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите Удалить расход?');if (cf)editBudjet('{{id}}','delete');" title="Удалить" class="gray red"><i class="icon-cancel red"></i></a>
+					{{/change}}
+
+					{{#clone}}
+					<a href="javascript:void(0)" onclick="editBudjet('{{id}}','clone')" title="Клонировать" class="gray brounbg2"><i class="icon-docs broun"></i></a>
+					{{/clone}}
+					<!--
+					{{#clone}}
+					<a href="javascript:void(0)" onclick="editBudjet('{{id}}','move')" title="Повторить" class="gray brounbg2"><i class="icon-docs broun"></i></a>
+					{{/clone}}
+					-->
+				</div>
+			</div>
+		</td>
+	</tr>
+	{{/list}}
+	{{^list}}
+	<tr class="graybg-sub th55">
+		<td colspan="9">Расходов нет</td>
+	</tr>
+	{{/list}}
+	</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="invoicesTpl" type="text/html">
+
+	<TABLE>
+	<thead class="sticked--top">
+	<TR class="header_contaner">
+		<TH class="yw60 text-center"><B>Дата факт.</B></TH>
+		<TH class="yw100 text-left"><b>№ счета</b></TH>
+		<TH class="min1001 text-left"><b>Сделка</b></TH>
+		<TH class="w120 text-center"><B>Сумма платежа</B></TH>
+		<TH class="w120 text-left"><B>Расч.счет</B></TH>
+		<TH class="w100 text-left"><B>Сотрудник</B></TH>
+		<TH class="w200 text-left"><b>Заказчик</b></TH>
+	</TR>
+	</thead>
+	<tbody>
+	{{#list}}
+	<tr class="ha th35" data-month="{{month}}">
+		<TD class="text-center"><span>{{datum}}</span></TD>
+		<TD>
+			{{#view}}
+			<SPAN title="{{invoice}}" onclick="window.open('get.doc.php?crid={{id}}&action=invoice.print&tip=print')" class="hand ellipsis"><i class="icon-eye broun"></i><B>&nbsp;{{invoice}}</B></SPAN>
+			{{/view}}
+			{{^view}}
+			<SPAN title="{{invoice}}" class="ellipsis"><i class="icon-eye broun"></i><B>&nbsp;{{invoice}}</B></SPAN>
+			{{/view}}
+		</TD>
+		<TD>
+			<span class="ellipsis">
+				<a href="javascript:void(0)" onclick="viewDogovor('{{did}}', 7)" title="Быстрый просмотр: {{deal}}"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a>
+			</span><br>
+			<SPAN title="{{contract}}" class="ellipsis em fs-09 gray2 paddleft20">&nbsp;{{contract}}</SPAN>
+		</TD>
+		<TD class="text-right"><span>{{summa}}</span></TD>
+		<TD nowrap>
+			<div class="ellipsis Bold">{{rs}}</div><br>
+			<div class="ellipsis fs-09 gray">{{mcid}}</div>
+		</TD>
+		<TD nowrap>
+			<div class="ellipsis">{{user}}</div>
+		</TD>
+		<TD>
+			{{#client}}
+			<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{clid}}')"><i class="icon-building blue"></i>{{client}}</a></span>
+			{{/client}}
+			{{#payer}}
+			<br><span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{payerid}}')"><i class="icon-building broun"></i>{{payer}}</a></span>
+			{{/payer}}
+		</TD>
+	</tr>
+	{{/list}}
+	</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="agentsTpl" type="text/html">
+
+	<TABLE class="budjet top">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw60 text-center">Срок оплаты</TH>
+			<TH class="yw60 text-center">Создан</TH>
+			<TH class="w30 text-center">Лог</TH>
+			<TH class="yw200">Контрагент</TH>
+			<TH class="yw100 text-center">Сумма, {{valuta}}</TH>
+			<TH class="yw100 text-center">Счет</TH>
+			<TH class="yw100 text-center">Куратор</TH>
+			<TH class="w40 text-center">Этап</TH>
+			<TH class="text-left">Заказчик/{{dealname}}</TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<tr class="ha {{bgcolor}} th45" data-month="{{month}}">
+			<TD class="text-center">
+				<div class="{{^do}}{{#isOverdue}}red{{/isOverdue}}{{/do}}">{{datePlan}}</div>
+				{{#invoice_paydate}}<div class="green Bold" title="Дата оплаты счета">{{invoice_paydate}}</div>{{/invoice_paydate}}
+			</TD>
+			<TD class="text-right">
+				<!--{{#period}}<span>{{period}}</span>{{/period}}
+				{{^period}}<span>--</span>{{/period}}-->
+				{{create}}
+			</TD>
+			<td>
+				{{#changelog}}<i class="icon-doc-text-inv blue" title="Есть лог"></i>{{/changelog}}
+				{{^changelog}}<i class="icon-doc-text-inv gray3" title="Лог пуст"></i>{{/changelog}}
+			</td>
+			<TD>
+				{{#bid}}
+				<div class="ellipsis Bold fs-11" title="{{title}}">
+					<a href="javascript:void(0)" onclick="editBudjet('{{bid}}','view')" title="Просмотр">{{bid}}: {{title}}</a>
+				</div><br>
+				{{/bid}}
+				<div class="mt5">
+					{{#providerId}}<a href="javascript:void(0)" onclick="openClient('{{providerId}}','cbudjet')" title="Карточка"><i class="icon-flag green"></i>{{providerTitle}}</a>{{/providerId}}<br>
+					<em class="fs-09 gray">{{providerTipName}}</em>
+				</div>
+			</TD>
+			<TD class="text-right"><span>{{summa}}</span></TD>
+			<TD class="text-right">
+				<div class="Bold fs-11">{{invoice}}</div>
+				<div class="fs-09 blue">{{invoice_date}}</div>
+			</TD>
+			<TD>
+				<div class="ellipsis" title="{{user}}">{{user}}</div>
+			</TD>
+			<TD>{{{progressbar}}}</TD>
+			<TD>
+				<DIV class="ellipsis">
+					{{#clid}}
+					<a href="javascript:void(0)" onclick="viewClient('{{clid}}')" title="Просмотр: {{client}}"><i class="icon-building broun"></i>&nbsp;{{client}}</a>
+					{{/clid}}
+					{{^clid}}
+					{{#pid}}
+					<a href="javascript:void(0)" onclick="viewPerson('{{pid}}')" title="Просмотр: {{person}}"><i class="icon-user-1 blue"></i>&nbsp;{{person}}</a>
+					{{/pid}}
+					{{/clid}}
+				</DIV>
+				{{#did}}
+				<br>
+				<div class="ellipsis pt5" title="{{deal}}">
+					<A href="javascript:void(0)" onclick="viewDogovor('{{did}}', 13)" title="Просмотр"><i class="icon-briefcase broun"></i>{{{icon}}}&nbsp;{{deal}}</a>
+				</div>
+				{{/did}}
+			</TD>
+			<td>
+				<div class="action--container">
+					<div class="action--block">
+
+						{{#edit}}
+						{{^bid}}
+							<a href="javascript:void(0)" onclick="editProvider('{{id}}','addprovider','{{did}}','{{providerId}}')" class="gray red" title="Добавить расход в бюджет"><i class="icon-plus-circled"></i></a>
+							<a href="javascript:void(0)" onclick="editProviderDeal('edit','{{id}}','{{providerTip}}','{{did}}')" class="gray blue" title="Изменить"><i class="icon-pencil"></i></a>
+						{{/bid}}
+						{{#bid}}
+							{{#do}}<a href="javascript:void(0)" onclick="editBudjet('{{bid}}','view')" class="gray green"><i class="icon-ok" title="Расход проведен. Просмотр"></i></a>{{/do}}
+							{{^do}}
+								<a href="javascript:void(0)" onclick="editBudjet('{{bid}}','view')" class="gray green"><i class="icon-eye" title="Расход проведен. Просмотр"></i></a>
+								<a href="javascript:void(0)" onclick="editBudjet('{{bid}}','edit', {xtip:'contragent'})" class="gray blue"><i class="icon-pencil" title="Редактировать"></i></a>
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editBudjet('{{bid}}','delete')" class="gray red"><i class="icon-cancel-circled" title="Удалить"></i></a>
+							{{/do}}
+						{{/bid}}
+						{{/edit}}
+
+					</div>
+				</div>
+			</td>
+		</tr>
+		{{/list}}
+		</tbody>
+		<tfoot>
+		<TR class="th40 greenbg-dark">
+			<TD class="text-right" nowrap>&nbsp;</TD>
+			<TD class="text-right" nowrap>&nbsp;</TD>
+			<TD class="text-right" nowrap>&nbsp;</TD>
+			<TD class="text-right" nowrap><b>ВСЕГО:</b></TD>
+			<TD class="text-right" nowrap><B>&nbsp;{{total}}</B></TD>
+			<TD class="text-right" nowrap>&nbsp;</TD>
+			<TD>&nbsp;</TD>
+			<TD>&nbsp;</TD>
+			<TD>&nbsp;</TD>
+		</TR>
+		</tfoot>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="statementTpl" type="text/html">
+
+	<TABLE class="budjet top">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w60">Период</TH>
+			<TH class="yw60">Дата</TH>
+			<TH class="w60">Тип</TH>
+			<TH class="text-left"><DIV class="ellipsis">Название</DIV></TH>
+			<TH class="yw40" title="Расч.счет">Расч.счет</TH>
+			<TH class="yw100 text-right">Сумма, {{valuta}}</TH>
+			<TH class="yw120">Контрагент</TH>
+			<TH class="w5 text-center"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha {{color}} th55" data-month="{{mon}}">
+				<td class="text-right"><span class="Bold">{{period}}</span></td>
+				<td class="text-right"><span title="{{datum}}">{{datumf}}</span></td>
+				<td class="text-center"><span>{{{tip}}}</span></td>
+				<td>
+					<div class="ellipsis1 fs-11 mfh-10">
+						{{#bid}}<a href="javascript:void(0)" onclick="editBudjet('{{bid}}','view')" title="Просмотр: {{title}}"><b>{{title}}</b></a>{{/bid}}
+						{{^bid}}<b>{{title}}</b>{{/bid}}
+					</div>
+					{{#category}}<div class="fs-07 gray2" title="{{category}}">{{category}}</div>{{/category}}
+					{{#content}}<div class="smalltext blue" title="{{content}}">{{content}}</div>{{/content}}
+				</td>
+				<td class="text-center"><span>{{rsName}}</span></td>
+				<td class="text-right">
+					<span class="Bold">{{summaf}}</span>
+					{{#crid}}
+						<div class="fs-09 mt5 blue hand" onclick="window.open('get.doc.php?crid={{crid}}&action=invoice.print&tip=print')" title="Просмотр: {{invoice}}">Счет №{{invoice}}</div>
+					{{/crid}}
+				</td>
+				<td>
+					{{#deal}}
+						<span class="ellipsis" title="{{deal}}"><a href="javascript:void(0)" onclick="openDogovor('{{did}}')"><i class="icon-briefcase broun"></i>{{deal}}</a></span><br>
+					{{/deal}}
+					{{#provider}}
+						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{conid}}')"><i class="icon-building blue"></i>{{provider}}</a></span><br>
+					{{/provider}}
+					{{#partner}}
+						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{partid}}')"><i class="icon-building blue"></i>{{partner}}</a></span>
+					{{/partner}}
+					{{#clid}}
+						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{clid}}')"><i class="icon-building blue"></i>{{client}}</a></span><br>
+					{{/clid}}
+					{{#contragent}}
+						<span class="ellipsis" title="{{contragent}}"><i class="icon-flag-1 broun"></i>{{contragent}}</span>
+					{{/contragent}}
+				</td>
+				<td>
+					<div class="action--container">
+						<div class="action--block">
+
+							{{#isnoclient}}<a href="javascript:void(0)" onclick="editBudjet('{{id}}','statement.edit')" title="Провести вручную" class="gray green"><i class="icon-plus-circled-1 green"></i></a>{{/isnoclient}}
+							{{#bid}}<a href="javascript:void(0)" onclick="editBudjet('{{id}}','statement.view')" title="Просмотр расхода" class="gray green"><i class="icon-eye green"></i></a>{{/bid}}
+
+						</div>
+					</div>
+				</td>
+			</tr>
+		{{/list}}
+		{{^list}}
+			<tr class="graybg-sub th55">
+				<td colspan="9">Расходов нет</td>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>

@@ -1,0 +1,17 @@
+@font-face {
+	font-family : 'PT Sans';
+	src         : url('PTS55F_W.ttf') format('truetype');
+}
+
+@font-face {
+	font-family : 'PT Sans';
+	font-style  : italic;
+	src         : url('PTS56F_W.ttf') format('truetype');
+}
+
+@font-face {
+	font-family : 'PT Sans';
+	font-style  : normal;
+	font-weight : bold;
+	src         : url('PTS75F_W.ttf') format('truetype');
+}

@@ -1,0 +1,124 @@
+/**
+Интерфейс в системе
+ */
+
+.chats--icon {
+	color                 : #FFF;
+	background            : #32BEA6;
+	border                : 2px solid #32BEA6;
+}
+
+.chats--icon .chats--bullet {
+	display               : inline-block;
+	position              : absolute;
+	z-index               : 1;
+	bottom                : 14px;
+	left                  : 16px;
+	width                 : 14px;
+	height                : 14px;
+	line-height           : 14px;
+	font-size             : 0.7em;
+	text-align            : center;
+	color                 : #FFF;
+	background            : var(--red);
+	padding               : 3px;
+	-moz-border-radius    : 20px;
+	-webkit-border-radius : 20px;
+	border-radius         : 20px;
+	cursor                : inherit;
+}
+
+/*фрейм для работы с карточками*/
+.chatframe--container {
+	position           : fixed;
+	top                : 0;
+	left               : 110vw;
+	height             : 100vh;
+	width              : 100vw;
+	background         : rgba(0, 0, 0, 0.8);
+	z-index            : 129;
+	overflow           : hidden;
+	border             : 0;
+	padding-right      : 40px;
+	transition         : left 300ms ease;
+	-webkit-transition : left 300ms ease;
+	-moz-transition    : left 300ms ease;
+}
+.chatframe--container .chatframe--close {
+	position  : absolute;
+	right     : 40px;
+	top       : 10px;
+	z-index   : 29;
+	color     : #FFF;
+	font-size : 2.0em;
+	cursor    : pointer;
+}
+.chatframe--container .chatframe--url {
+	position  : absolute;
+	right     : 40px;
+	top       : 50px;
+	z-index   : 29;
+	color     : #FFF;
+	font-size : 2.0em;
+	cursor    : pointer;
+}
+.chatframe--container #chatframe {
+	height             : 100vh;
+	width              : calc(100vw - 40px);
+	background         : #FFF;
+	overflow           : auto;
+	border             : 0;
+	transition         : left 300ms ease;
+	-webkit-transition : left 300ms ease;
+	-moz-transition    : left 300ms ease;
+}
+
+@media (max-width : 767px) {
+	
+	#subwindow.open {
+		width : 100vw;
+		left  : 0;
+		z-index: 29;
+	}
+	
+	.chatframe--container {
+		z-index : 101;
+	}
+	
+	.chatframe--container #chatframe {
+		width: 100vw;
+	}
+	
+	.chatframe--container .chatframe--close {
+		right: 50px;
+		top: unset;
+		bottom: 10px;
+		height: 30px;
+		width: 30px;
+		line-height: 30px;
+		color: #FFF;
+		background: rgba(30, 136, 229, .9);
+		border: 2px solid rgba(30, 136, 229, .9);
+		border-radius: 100px;
+		text-align: center;
+		font-size: 1.0em;
+		box-shadow: 0 0 3px 0 rgba(50, 50, 50, 0.75);
+	}
+	
+	.chatframe--container .chatframe--url {
+		right: 90px;
+		top: unset;
+		bottom: 10px;
+		height: 30px;
+		width: 30px;
+		line-height: 30px;
+		color: #FFF;
+		background: rgba(30, 136, 229, .9);
+		border: 2px solid rgba(30, 136, 229, .9);
+		border-radius: 100px;
+		text-align: center;
+		font-size: 1.0em;
+		box-shadow: 0 0 3px 0 rgba(50, 50, 50, 0.75);
+	}
+	
+}

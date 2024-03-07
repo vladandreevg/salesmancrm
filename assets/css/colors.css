@@ -1,0 +1,300 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2018 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*         salesman.pro         */
+/*         ver. 2018.6          */
+/* ============================ */
+
+.color-transparent {
+	color : transparent;
+}
+
+.color-black {
+	color : #22292F;
+}
+
+.color-grey-darkest {
+	color : #3D4852;
+}
+
+.color-grey-darker {
+	color : #606F7B;
+}
+
+.color-grey-dark {
+	color : #8795A1;
+}
+
+.color-grey {
+	color : #B8C2CC;
+}
+
+.color-grey-light {
+	color : #DAE1E7;
+}
+
+.color-grey-lighter {
+	color : #F1F5F8;
+}
+
+.color-grey-lightest {
+	color : #F8FAFC;
+}
+
+.color-white {
+	color : #FFF;
+}
+
+.color-red-darkest {
+	color : #3B0D0C;
+}
+
+.color-red-darker {
+	color : #621B18;
+}
+
+.color-red-dark {
+	color : #CC1F1A;
+}
+
+.color-red {
+	color : #E3342F;
+}
+
+.color-red-light {
+	color : #EF5753;
+}
+
+.color-red-lighter {
+	color : #F9ACAA;
+}
+
+.color-red-lightest {
+	color : #FCEBEA;
+}
+
+.color-orange-darkest {
+	color : #462A16;
+}
+
+.color-orange-darker {
+	color : #613B1F;
+}
+
+.color-orange-dark {
+	color : #DE751F;
+}
+
+.color-orange {
+	color : #F6993F;
+}
+
+.color-orange-light {
+	color : #FAAD63;
+}
+
+.color-orange-lighter {
+	color : #FCD9B6;
+}
+
+.color-orange-lightest {
+	color : #FFF5EB;
+}
+
+.color-yellow-darkest {
+	color : #453411;
+}
+
+.color-yellow-darker {
+	color : #684F1D;
+}
+
+.color-yellow-dark {
+	color : #F2D024;
+}
+
+.color-yellow {
+	color : #FFED4A;
+}
+
+.color-yellow-light {
+	color : #FFF382;
+}
+
+.color-yellow-lighter {
+	color : #FFF9C2;
+}
+
+.color-yellow-lightest {
+	color : #FCFBEB;
+}
+
+.color-green-darkest {
+	color : #0F2F21;
+}
+
+.color-green-darker {
+	color : #1A4731;
+}
+
+.color-green-dark {
+	color : #1F9D55;
+}
+
+.color-green {
+	color : #38C172;
+}
+
+.color-green-light {
+	color : #51D88A;
+}
+
+.color-green-lighter {
+	color : #A2F5BF;
+}
+
+.color-green-lightest {
+	color : #E3FCEC;
+}
+
+.color-teal-darkest {
+	color : #0D3331;
+}
+
+.color-teal-darker {
+	color : #20504F;
+}
+
+.color-teal-dark {
+	color : #38A89D;
+}
+
+.color-teal {
+	color : #4DC0B5;
+}
+
+.color-teal-light {
+	color : #64D5CA;
+}
+
+.color-teal-lighter {
+	color : #A0F0ED;
+}
+
+.color-teal-lightest {
+	color : #E8FFFE;
+}
+
+.color-blue-darkest {
+	color : #12283A;
+}
+
+.color-blue-darker {
+	color : #1C3D5A;
+}
+
+.color-blue-dark {
+	color : #2779BD;
+}
+
+.color-blue {
+	color : #3490DC;
+}
+
+.color-blue-light {
+	color : #6CB2EB;
+}
+
+.color-blue-lighter {
+	color : #BCDEFA;
+}
+
+.color-blue-lightest {
+	color : #EFF8FF;
+}
+
+.color-indigo-darkest {
+	color : #191E38;
+}
+
+.color-indigo-darker {
+	color : #2F365F;
+}
+
+.color-indigo-dark {
+	color : #5661B3;
+}
+
+.color-indigo {
+	color : #6574CD;
+}
+
+.color-indigo-light {
+	color : #7886D7;
+}
+
+.color-indigo-lighter {
+	color : #B2B7FF;
+}
+
+.color-indigo-lightest {
+	color : #E6E8FF;
+}
+
+.color-purple-darkest {
+	color : #21183C;
+}
+
+.color-purple-darker {
+	color : #382B5F;
+}
+
+.color-purple-dark {
+	color : #794ACF;
+}
+
+.color-purple {
+	color : #9561E2;
+}
+
+.color-purple-light {
+	color : #A779E9;
+}
+
+.color-purple-lighter {
+	color : #D6BBFC;
+}
+
+.color-purple-lightest {
+	color : #F3EBFF;
+}
+
+.color-pink-darkest {
+	color : #451225;
+}
+
+.color-pink-darker {
+	color : #6F213F;
+}
+
+.color-pink-dark {
+	color : #EB5286;
+}
+
+.color-pink {
+	color : #F66D9B;
+}
+
+.color-pink-light {
+	color : #FA7EA8;
+}
+
+.color-pink-lighter {
+	color : #FFBBCA;
+}
+
+.color-pink-lightest {
+	color : #FFEBEF;
+}

@@ -1,0 +1,740 @@
+:root {
+	--yellow        : rgba(255, 160, 0, 1);
+	--yellow-alfa08 : rgba(255, 160, 0, .8);
+	--yellow-alfa06 : rgba(255, 160, 0, .6);
+	--yellow-alfa04 : rgba(255, 160, 0, .4);
+	--yellow-alfa02 : rgba(255, 160, 0, .2);
+	--yellow-dark   : rgba(255, 111, 0, 1);
+	--yellow-lite   : rgba(255, 213, 79, 1);
+	--blue          : rgba(21, 101, 192, 1);
+	--blue2         : rgba(59, 110, 170, 1);
+	--blue-alfa10   : rgba(21, 101, 192, 1);
+	--blue-alfa08   : rgba(21, 101, 192, .8);
+	--blue-alfa06   : rgba(21, 101, 192, .6);
+	--blue-alfa04   : rgba(21, 101, 192, .4);
+	--blue-alfa02   : rgba(21, 101, 192, .2);
+	--red-alfa10    : rgba(211, 47, 47, 1);
+	--red-alfa08    : rgba(211, 47, 47, .8);
+	--red-alfa06    : rgba(211, 47, 47, .6);
+	--red-alfa04    : rgba(211, 47, 47, .4);
+	--red-alfa02    : rgba(211, 47, 47, .2);
+	--darkblue      : rgba(13, 71, 161, 1);
+	--liteblue      : rgba(33, 150, 243, 1);
+	--white         : rgba(255, 255, 255, 1);
+	--white-alfa01  : rgba(255, 255, 255, .1);
+	--scrollbar     : #999;
+	--black         : #222;
+	--gray          : #ECF0F1;
+	--gray2         : #EEE;
+	--gray3         : #2C3E50;
+	--gray4         : #607D8B;
+	--gray5         : #8899A6;
+	--gray6         : rgba(84, 110, 122, 0.6);
+	--gray7         : rgba(179, 229, 252, 0.3);
+	--green         : rgba(85, 139, 47, 1);
+	--green-alfa08  : rgba(85, 139, 47, .8);
+	--green-alfa06  : rgba(85, 139, 47, .6);
+	--green-alfa04  : rgba(85, 139, 47, .4);
+	--green-alfa02  : rgba(85, 139, 47, .2);
+	--green-dark    : rgba(51, 105, 30, 1);
+	--green-lite    : rgba(197, 225, 165, 1);
+	--orange        : #FFCE54;
+	--orange-dark   : #F6BB42;
+	--orange-lite   : #FFE082;
+	--mint          : #4FC3F7;
+	--biruza        : #90CAF9;
+	--biruza-lite   : #D0E5F5;
+}
+
+#logo {
+	/*
+	background      : url(/assets/images/logo.png) no-repeat center center !important;
+	background-size : contain !important;
+	*/
+	filter: brightness(100%);
+}
+
+body, html,
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer {
+	background : var(--gray);
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content {
+	border-color : var(--gray);
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner {
+	background : var(--gray2);
+}
+
+.tableHeader table {
+	border-top : 1px solid #E6E9ED;
+}
+
+#last .tableHeader table {
+	border-top : 0;
+}
+
+.ui-widget-content > a.menu {
+	border-right : 0;
+	background   : #F5F7FA;
+	border-color : #F5F7FA;
+}
+.ui-widget-content > a.menu:hover {
+	border-right : 0;
+	background   : #ECF0F1;
+	border-color : #ECF0F1;
+}
+
+.ui-layout-center {
+	border : transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv {
+	background : var(--white);
+}
+
+body,
+html,
+.ui-layout-center,
+#telo,
+#content,
+#contentdiv {
+	background : linear-gradient(
+			rgba(250, 250, 250, .92),
+			rgba(250, 250, 250, .95)
+	),
+	url(/assets/images/bg/winter-02.jpg) repeat;
+}
+
+/*фон меню*/
+#dttabs .ui-state-active a {
+	color : var(--black);
+}
+
+.ui-layout-north {
+	background : var(--blue);
+}
+
+.menu--block,
+#menu {
+	background : linear-gradient(
+			var(--blue-alfa06),
+			var(--blue-alfa10)
+	),
+	url(../../images/bg/winter-00.jpg) repeat
+}
+
+.menu--block,
+#menu {
+	background : rgba(25, 118, 210, 1);
+	background : -moz-linear-gradient(left, var(--blue-alfa08) 0%, var(--blue-alfa08) 100%), url(/assets/images/bg/winter-00.jpg) repeat;
+	background : -webkit-linear-gradient(left, var(--blue-alfa08) 0%, var(--blue-alfa08) 100%), url(/assets/images/bg/winter-00.jpg) repeat;
+	background : linear-gradient(to right, var(--blue-alfa08) 0%, var(--blue-alfa08) 100%), url(/assets/images/bg/winter-00.jpg) repeat;
+	filter     : progid:DXImageTransform.Microsoft.gradient(startColorstr='#d81b60', endColorstr='#ff9800', GradientType=1);
+}
+#menu .hov {
+}
+#menu ul li {
+}
+#menu ul li a {
+	color : var(--white);
+}
+#menu ul:hover {
+	background : var(--blue);
+	color      : var(--white);
+}
+#menu ul ul {
+	background : var(--blue);
+}
+#menu ul ul:before {
+	border-bottom-color : var(--white);
+}
+#menu ul ul:after {
+	border-bottom-color : var(--blue);
+}
+#menu ul ul li.header {
+	color : var(--biruza);
+}
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	background : var(--blue) !important;
+}
+#menu a.navlink:hover {
+	color      : var(--blue-alfa08);
+	background : var(--white) !important;
+}
+#menu a.navlink:hover svg use {
+	fill : var(--white) !important;
+}
+#menu ul > .top-triangle-white {
+	border-bottom : 7px solid var(--blue);
+}
+#menu hr {
+	background : var(--blue);
+}
+#menu .hov {
+	border-right : 0;
+}
+
+#menuavatar hr {
+	border-bottom : 1px solid var(--gray);
+}
+#menuavatar:hover {
+	background : var(--blue);
+}
+#menuavatar .avatar-user {
+	font-weight : bold;
+}
+#menuavatar .avatar-user,
+#menuavatar .avatar-subtext {
+	color : var(--white);
+}
+#menuavatar:hover .avatar-user,
+#menuavatar:hover .avatar-subtext {
+	color : var(--white);
+}
+
+/**
+Меню аватара
+*/
+.avatar--menu{
+	color              : var(--black);
+	background         : linear-gradient(
+			rgba(250, 250, 250, .8),
+			rgba(250, 250, 250, .85)
+	),
+	url(/assets/images/bg/winter-01.jpg) repeat;
+	border             : var(--blue) 1px solid;
+}
+.avatar--menu:after {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : var(--blue);
+}
+.avatar--menu:before {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #FFF;
+}
+.avatar--menu .item:first-child {
+	border-right : 1px dotted var(--blue);
+}
+
+.avatar--menu .item .string {
+	color : var(--blue);
+	border-bottom         : 1px dotted var(--blue);
+}
+.avatar--menu .item .string.green {
+	color      : #3F729B;
+}
+.avatar--menu .item .string .blue {
+	color      : var(--gray-darkblue);
+}
+.avatar--menu .item .string .gray2 {
+	color      : var(--gray-litedarkblue) !important;
+}
+.avatar--menu .item .string:hover {
+	color      : var(--white) !important;
+	background : var(--darkblue) !important;
+}
+.avatar--menu .item .string:hover .blue{
+	color      : var(--mint);
+}
+.avatar--menu .item .title {
+	color          : #34495E;
+	border-bottom  : 1px dotted var(--blue);
+}
+.avatar--menu .item hr {
+	border-bottom   : 1px dotted var(--blue);
+}
+.avatar--menu .product{
+	color: var(--blue2);
+}
+.avatar--menu .product a,
+.avatar--menu .product .blue{
+	color      : var(--black);
+}
+
+.redbg.toggler {
+	background : var(--red-alfa08);
+	color      : var(--gray) !important;
+}
+.bluebg.toggler {
+	background : var(--blue-alfa08);
+	color      : var(--gray) !important;
+}
+.greenbg.toggler {
+	background : var(--blue-alfa08);
+	color      : var(--gray) !important;
+}
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color      : var(--black);
+	background : var(--blue-alfa08);
+	border     : 0;
+	margin     : 0 2px;
+	padding    : 10px;
+}
+.contaner > a.button:hover {
+	color      : var(--black);
+	background : var(--biruza-lite);
+}
+
+.ha:hover {
+	background : var(--gray7);
+}
+
+/*popup*/
+.popmenu,
+.popmenu-top,
+.submenu {
+	border             : var(--blue) 1px solid;
+	-webkit-box-shadow : 0 1px 3px var(--black);
+	-moz-box-shadow    : 0 1px 3px var(--black);
+	box-shadow         : 0 1px 3px var(--black);
+}
+
+#rmenu {
+	background : linear-gradient(
+			rgba(250, 250, 250, .70),
+			rgba(250, 250, 250, .99)
+	),
+	url(/assets/images/bg/winter-01.jpg) repeat;
+}
+#rmenu .pophead {
+	color      : var(--black) !important;
+	background : url(/assets/images/bg/winter-01.jpg) repeat;;
+}
+#rmenu .popmenu .popheader {
+	color      : var(--black) !important;
+	background : var(--blue) !important;
+}
+#rmenu .popmenu .popcloser {
+	color : var(--black) !important;
+	
+}
+#rmenu .viewdiv {
+	border-radius : 1px !important;
+}
+#rmenu .popmenu .popheader .blue {
+	color : var(--black) !important;
+}
+#rmenu a:hover, #rmenu a.active, #rmenu a.active i, a:hover i.my {
+	background : var(--blue);
+}
+
+.popcontent .clink a:hover,
+.popcontent .clink:hover,
+.submenu a.menu:hover {
+	background : var(--gray) !important;
+}
+
+.triangle {
+	border-top : 7px solid var(--blue);
+}
+
+.top-triangle {
+	border-bottom : 7px solid var(--blue);
+}
+
+/*карточка*/
+#head #close {
+	border      : 0;
+	background  : var(--blue-alfa10);
+	font-size   : 0.70em;
+	color       : var(--white);
+	line-height : 1.15em;
+	padding     : 5px 10px;
+}
+
+#head #close:hover {
+	border     : 0;
+	background : var(--blue);
+	color      : var(--white);
+}
+
+.fixx {
+	color      : var(--black);
+	background : url(/assets/images/bg/winter-01.jpg) repeat;
+}
+
+.fixx #ctitle .elipsis {
+	color : var(--black);
+}
+
+.fixx #ctitle .blue,
+.fixx #ctitle a {
+	color : var(--white);
+}
+
+#dtabs ul li {
+	color      : var(--white);
+	background : var(--blue-alfa06);
+}
+
+#dtabs ul li:hover,
+#dtabs ul li a:hover {
+	border-bottom : 0;
+	color         : var(--white);
+	background    : var(--blue-alfa10);
+}
+
+#dtabs ul li a,
+#dtabs ul li:hover a {
+	color : var(--white);
+}
+
+#dtabs ul li.current:hover a {
+	color      : var(--black);
+	background : var(--gray);
+}
+
+#dtabs .current {
+	border-bottom : 1px solid var(--gray);
+	background    : var(--gray);
+}
+
+#dtabs .current:hover {
+	border-bottom : 1px solid var(--gray);
+	background    : var(--gray);
+	font-weight   : bold;
+}
+
+fieldset {
+}
+
+fieldset .batton-edit a,
+fieldset .batton-edit a .blue {
+}
+
+/*элементы ui.jquery*/
+.ui-state-active > #dialog, .ui-widget-content .ui-state-active > #dialog,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active,
+#accordion .ui-state-active {
+}
+
+#accordion .ui-state-default {
+}
+
+.ui-widget-header > #dialog {
+}
+
+.ui-state-default > #dialog,
+.ui-widget-content .ui-state-default > #dialog {
+}
+
+/*#dttabs .ui-state-default a,*/
+#accordion .ui-state-default a {
+}
+
+#accordion .ui-state-default:not(.ui-state-active) a:hover {
+	/*color:#FFF;*/
+}
+
+#accordion .ui-state-active a:hover {
+}
+
+#tab_container:hover,
+#accordion .ui-state-default:not(.ui-state-active):hover {
+	/*background: none;
+	color:#fff;*/
+}
+
+.ui-state-default a > #dialog,
+.ui-state-default a:link > #dialog,
+.ui-state-default a:visited > #dialog {
+}
+
+#accordion .ui-state-active,
+#accordion .ui-widget-content .ui-state-active,
+.ui-state-active > #dialog,
+.ui-widget-content .ui-state-active > #dialog {
+}
+
+#tab_container,
+#tab_container .blue {
+	color : var(--black);
+}
+
+/*список дел в левой панели*/
+#taskweek .header {
+	color        : var(--black);
+	background   : var(--gray);
+	border-color : var(--gray);
+}
+
+#entrybutton .button {
+	background : var(--liteblue);
+	color      : var(--white);
+}
+#entrybutton .button:hover {
+	background : var(--biruza-lite);
+}
+
+#swindow .header {
+	background : linear-gradient(
+			var(--blue-alfa08),
+			var(--blue-alfa04),
+	);
+	background : var(--biruza);
+	color      : var(--blue);
+}
+#swindow .closer {
+	color : var(--blue);
+}
+
+.tableHeader .header_contaner,
+.tableHeader .header_contaner a,
+.tableHeader .header_contaner a:link,
+.tableHeader .header_contaner a:visited,
+.tableHeader thead,
+.tableHeader thead th {
+	background   : var(--blue-alfa02) !important;
+	color        : var(--black) !important;
+	border-right : var(--blue) !important;
+}
+
+#resultdiv .header_contaner th {
+	background   : var(--blue-alfa02) !important;
+	color        : var(--black) !important;
+	border-right : var(--blue) !important;
+}
+
+#dtpCalFilter .blue {
+	color : var(--liteblue) !important;
+}
+
+/*скругленные элементы*/
+
+#rmenu .tabs a:not(.razdel),
+#rmenu .counters ul li {
+	background : var(--gray2) !important;
+}
+#rmenu .counters ul li:hover {
+	background : var(--blue) !important;
+}
+#rmenu .counters ul li:hover .pops {
+	color : var(--white) !important;
+}
+#rmenu .tabs a.lpToggler {
+	background : var(--blue-alfa04) !important;
+	color      : var(--white) !important;
+}
+#rmenu .tabs a:hover {
+	background : var(--blue) !important;
+}
+#rmenu .tabs a.razdel:not(.active):not(:hover) .bullet {
+	color : var(--black) !important;
+}
+#rmenu a.razdel.redbg-dark {
+	background : var(--red-alfa10) !important;
+}
+#rmenu a.razdel.greenbg-dark {
+	background : var(--blue-alfa04) !important;
+}
+#rmenu a.razdel .bullet {
+	color : var(--white) !important;
+}
+#rmenu a.razdel i {
+	position : relative;
+}
+#rmenu a.razdel i i {
+	/*position : absolute;*/
+	/*top      : -15px;*/
+	/*right    : -15px;*/
+}
+#rmenu a.active {
+	font-size : 0.7em;
+}
+#rmenu a.active i i {
+	background : transparent;
+}
+#rmenu .ymailer a.razdel i {
+	position : relative;
+}
+#rmenu .ymailer a.razdel i.sub.green {
+	color : var(--blue) !important;
+}
+#rmenu .ymailer a.razdel i.sub.blue {
+	color : var(--blue) !important;
+}
+#rmenu .popmenu {
+	color : var(--black);
+}
+#rmenu div:not(.leftpop) > a.razdel:not(.active) {
+	background : var(--gray2);
+}
+
+div.leftpop {
+	background : var(--gray2) !important;
+}
+div.leftpop:hover {
+	background : var(--blue) !important;
+}
+div.leftpop:hover:before {
+	background : var(--blue2);
+}
+
+@media (max-width : 1024px) {
+	
+	#rmenu a.razdel [class^="icon-"]::before,
+	#rmenu a.razdel [class*=" icon-"]::before {
+		/*margin-left: 0;*/
+	}
+	
+}
+
+a.button.bcancel {
+	color      : var(--white);
+	background : var(--gray4);
+}
+
+.flex-container a.button {
+	padding : 5px 10px !important;
+}
+
+.ui-layout-west input,
+.ui-layout-west select {
+	padding : 5px 15px;
+}
+
+#pid_list .del {
+	color      : var(--biruza);
+	background : var(--biruza-lite);
+}
+
+.filebox {
+	background : transparent !important;
+}
+
+#dialog {
+	border     : 0;
+	background : var(--gray);
+}
+#dialog #resultdiv {
+	background : var(--gray);
+}
+#dialog .zagolovok {
+	background : url(/assets/images/bg/winter-01.jpg) repeat;
+	border     : 0;
+	color      : var(--black);
+	padding    : 10px;
+}
+#dialog .zagolovok {
+	/*
+	background : linear-gradient(
+			var(--yellow),
+			var(--yellow-alfa06)
+	),
+	url(../../images/bg/555870fb447f530.jpg) repeat;
+	*/
+	background : var(--blue);
+	background : -moz-linear-gradient(left, var(--blue-alfa08) 0%, var(--white) 100%), url(/assets/images/bg/winter-00.jpg) repeat;
+	background : -webkit-linear-gradient(left, var(--blue-alfa08) 0%, var(--white) 100%), url(/assets/images/bg/winter-00.jpg) repeat;
+	background : linear-gradient(to right, var(--blue-alfa08) 0%, var(--white) 100%), url(/assets/images/bg/winter-00.jpg) repeat;
+	filter     : progid:DXImageTransform.Microsoft.gradient(startColorstr='#d81b60', endColorstr='#ff9800', GradientType=1);
+	border     : 0;
+	padding    : 15px;
+	color      : var(--white);
+}
+#dialog .close {
+	color : var(--blue);
+}
+#dialog .close:hover {
+	color      : var(--white);
+	background : var(--blue);
+}
+
+#divider b {
+	background : var(--gray);
+}
+
+.card--steps .tstep {
+	border : 1px outset transparent !important;
+}
+.card--steps .step div {
+	border : 1px solid #FFF;
+}
+
+input[type="submit"],
+a.period,
+a.button,
+a.button:link,
+a.button:visited {
+	padding : 10px 15px;
+	
+}
+
+#dialog input[type="submit"],
+#dialog a.period,
+#dialog a.button,
+#dialog a.button:link,
+#dialog a.button:visited {
+	padding    : 10px 15px;
+	margin     : 0 8px 3px 0;
+	color      : var(--black);
+	border     : 0 inset var(--black);
+	background : var(--blue);
+	background : var(--white);
+	background : url(/assets/images/bg/winter-01.jpg) repeat;
+}
+
+#dialog a.button:hover,
+#dialog a.button:link:hover,
+#dialog a.button:visited:hover {
+	color      : var(--white);
+	background : var(--blue);
+}
+
+#dialog a.button.bcancel {
+	color      : var(--white);
+	background : var(--gray4);
+	border     : 0;
+	background : var(--gray4);
+}
+
+#dialog a.button.bcancel:hover {
+	color      : var(--white);
+	background : var(--gray3);
+	border     : 0;
+}
+
+.viget {
+	background : linear-gradient(
+			rgba(250, 250, 250, .87),
+			rgba(250, 250, 250, .92)
+	),
+	url(/assets/images/bg/winter-01.jpg) repeat;
+}
+
+a.button:hover,
+a.button:link:hover,
+a.button:visited:hover {
+	background : var(--blue-alfa10);
+}
+
+a.button.bcancel {
+	color      : var(--white);
+	background : var(--gray4);
+	border     : 0;
+}
+
+a.button.bcancel:hover {
+	color      : var(--white);
+	background : var(--gray3);
+	border     : 0;
+}

@@ -1,0 +1,663 @@
+:root {
+	--blue         : rgba(21, 101, 192, 1);
+	--blue2        : rgba(59, 110, 170, 1);
+	--blue-alfa10  : rgba(21, 101, 192, 1);
+	--blue-alfa08  : rgba(21, 101, 192, .8);
+	--blue-alfa06  : rgba(21, 101, 192, .6);
+	--blue-alfa04  : rgba(21, 101, 192, .4);
+	--blue-alfa02  : rgba(21, 101, 192, .2);
+	--red-alfa10   : rgba(211, 47, 47, 1);
+	--red-alfa08   : rgba(211, 47, 47, .8);
+	--red-alfa06   : rgba(211, 47, 47, .6);
+	--red-alfa04   : rgba(211, 47, 47, .4);
+	--red-alfa02   : rgba(211, 47, 47, .2);
+	--darkblue     : rgba(13, 71, 161, 1);
+	--deepblue     : #2e6e9e;
+	--liteblue     : rgba(33, 150, 243, 1);
+	--white        : rgba(255, 255, 255, 1);
+	--white-alfa01 : rgba(255, 255, 255, .1);
+	--scrollbar    : #999;
+	--black        : #222;
+	--gray         : #ECF0F1;
+	--gray2        : #EEE;
+	--gray3        : #2C3E50;
+	--gray4        : #607D8B;
+	--gray5        : #8899A6;
+	--gray6        : rgba(84, 110, 122, 0.6);
+	--gray7        : rgba(179, 229, 252, 0.3);
+	--green        : rgba(0,137,123 ,1);
+	--green-alfa08 : rgba(0,105,92, .8);
+	--green-alfa06 : rgba(0,105,92, .6);
+	--green-alfa04 : rgba(0,105,92, .4);
+	--green-alfa02 : rgba(0,105,92, .2);
+	--green-dark   : rgba(0,77,64 ,1);
+	--green-lite   : rgba(77,182,172 ,1);
+	--orange       : #FFCE54;
+	--orange-dark  : #F6BB42;
+	--orange-lite  : #FFE082;
+	--mint         : #4FC3F7;
+	--biruza       : #90CAF9;
+	--biruza-lite  : #D0E5F5;
+}
+
+body, html,
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer {
+	background : var(--gray);
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content {
+	border-color : var(--gray);
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner {
+	background : var(--gray2);
+}
+
+.tableHeader table {
+	border-top : 1px solid #E6E9ED;
+}
+
+#last .tableHeader table {
+	border-top : 0;
+}
+
+.ui-widget-content > a.menu {
+	border-right : 0;
+	background   : #F5F7FA;
+	border-color : #F5F7FA;
+}
+
+.ui-widget-content > a.menu:hover {
+	border-right : 0;
+	background   : #ECF0F1;
+	border-color : #ECF0F1;
+}
+
+.ui-layout-center {
+	border : transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv {
+	background : var(--white);
+}
+
+/*фон меню*/
+#dttabs .ui-state-active a {
+	color : var(--blue);
+}
+
+.ui-layout-north {
+	background : var(--blue);
+}
+
+.menu--block,
+#menu {
+	background : linear-gradient(
+			var(--blue-alfa08),
+			var(--blue-alfa04)
+	),
+	url(/assets/images/bg/blue.png) repeat,
+	var(--gray3);
+}
+
+#menu .hov {
+}
+#menu ul li {
+}
+#menu ul li a {
+}
+#menu ul:hover {
+	background : var(--blue);
+	color      : var(--black);
+}
+#menu ul ul {
+	border-top : 2px solid var(--gray);
+	background : var(--blue) !important;
+}
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	background : var(--blue) !important;
+}
+#menu a.navlink:hover {
+	color      : var(--blue);
+	background : var(--white) !important;
+}
+#menu a.navlink:hover svg use {
+	fill : var(--white) !important;
+}
+#menu ul ul li.header {
+	color : var(--liteblue);
+}
+#menu ul > .top-triangle-white {
+	border-bottom : 7px solid var(--blue);
+}
+#menu hr {
+	background : var(--blue);
+}
+#menu ul ul:after {
+	border-bottom-color : var(--blue);
+}
+#menu .hov {
+	border-right : 0;
+}
+
+#menuavatar hr {
+	border-bottom : 1px solid var(--gray);
+}
+#menuavatar:hover {
+	background : var(--blue);
+}
+#menuavatar .avatar-subtext {
+	color : var(--gray);
+}
+
+
+/**
+Меню аватара
+*/
+.avatar--menu{
+	color              : var(--white);
+	background         : var(--blue);
+	border             : var(--darkblue) 1px solid;
+}
+.avatar--menu:after {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : var(--darkblue);
+}
+.avatar--menu:before {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : var(--blue);
+}
+.avatar--menu .item:first-child {
+	border-right : 1px dotted var(--blue2);
+}
+
+.avatar--menu .item .string {
+	color                 : #FFF;
+	border-bottom         : 1px dotted var(--blue2);
+}
+.avatar--menu .item .string.green {
+	color      : #3F729B;
+}
+.avatar--menu .item .string .blue {
+	color      : var(--gray-darkblue);
+}
+.avatar--menu .item .string .gray {
+	color      : var(--mint) !important;
+}
+.avatar--menu .item .string .gray2 {
+	color      : var(--gray);
+}
+.avatar--menu .item .string:hover {
+	background-color : var(--darkblue);
+}
+.avatar--menu .item .string:hover .blue{
+	color      : var(--mint);
+}
+.avatar--menu .item .title {
+	color          : var(--biruza);
+	border-bottom  : 1px dotted var(--blue2);
+}
+.avatar--menu .item hr {
+	border-bottom   : 1px dotted var(--blue2);
+}
+.avatar--menu .product{
+	color: #FFF;
+}
+.avatar--menu .product a,
+.avatar--menu .product .blue{
+	color      : var(--mint);
+}
+.avatar--menu .product .warning{
+	color: #222;
+}
+
+.redbg.toggler {
+	background : var(--red-alfa08);
+	color      : var(--gray) !important;
+}
+.bluebg.toggler {
+	background : var(--blue-alfa08);
+	color      : var(--gray) !important;
+}
+.greenbg.toggler {
+	background : var(--green-alfa08);
+	color      : var(--gray) !important;
+}
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color      : var(--black);
+	background : var(--orange-dark);
+	border     : 0;
+	margin     : 0 2px;
+	padding    : 10px;
+}
+
+.contaner > a.button:hover {
+	color      : var(--black);
+	background : var(--orange-dark);
+}
+
+.ha:hover {
+	background : var(--gray7);
+}
+
+/*popup*/
+.popmenu,
+.popmenu-top,
+.submenu {
+
+}
+
+#rmenu .pophead {
+	color      : var(--white) !important;
+	background : var(--green-lite) !important;
+}
+
+#rmenu .popmenu .popheader {
+	color      : var(--white) !important;
+	background : var(--green) !important;
+}
+
+#rmenu .viewdiv {
+	border-radius : 1px !important;
+}
+
+#rmenu .popmenu .popheader .blue {
+	color : var(--white) !important;
+}
+
+.popcontent .clink a:hover,
+.popcontent .clink:hover,
+.submenu a.menu:hover {
+	background : var(--gray) !important;
+}
+
+.triangle {
+	border-top : 7px solid var(--green);
+}
+
+.top-triangle {
+	border-bottom : 7px solid var(--green);
+}
+
+/*карточка*/
+#head #close {
+	border      : 1px solid var(--blue);
+	border-top  : 0;
+	background  : var(--orange-dark);
+	font-size   : 0.70em;
+	color       : var(--black);
+	line-height : 1.15em;
+	padding     : 5px 10px;
+}
+
+#head #close:hover {
+	border     : 1px solid var(--blue);
+	border-top : 0;
+	background : var(--white);
+	color      : var(--blue);
+}
+
+.fixx {
+	color      : var(--white);
+	background : linear-gradient(
+			var(--blue-alfa02),
+			var(--blue-alfa08)
+	),
+	var(--gray3)
+	/*url(../../images/bg/blue.png) repeat;*/
+}
+
+.fixx #ctitle .blue,
+.fixx #ctitle a {
+	color : var(--gray5);
+}
+
+#dtabs ul li {
+	color      : var(--white);
+	background : var(--blue-alfa06);
+}
+
+#dtabs ul li:hover,
+#dtabs ul li a:hover {
+	border-bottom : 0;
+	color         : var(--white);
+	background    : var(--red-alfa10);
+}
+
+#dtabs ul li a,
+#dtabs ul li:hover a {
+	color : var(--white);
+}
+
+#dtabs ul li.current:hover a {
+	color      : var(--black);
+	background : var(--gray);
+}
+
+#dtabs .current {
+	border-bottom : 1px solid var(--gray);
+	background    : var(--gray);
+}
+
+#dtabs .current:hover {
+	border-bottom : 1px solid var(--gray);
+	background    : var(--gray);
+	font-weight   : bold;
+}
+
+fieldset {
+}
+
+fieldset .batton-edit a,
+fieldset .batton-edit a .blue {
+}
+
+/*элементы ui.jquery*/
+.ui-state-active > #dialog, .ui-widget-content .ui-state-active > #dialog,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active,
+#accordion .ui-state-active {
+}
+
+#accordion .ui-state-default {
+}
+
+.ui-widget-header > #dialog {
+}
+
+.ui-state-default > #dialog,
+.ui-widget-content .ui-state-default > #dialog {
+}
+
+/*#dttabs .ui-state-default a,*/
+#accordion .ui-state-default a {
+}
+
+#accordion .ui-state-default:not(.ui-state-active) a:hover {
+	/*color:#FFF;*/
+}
+
+#accordion .ui-state-active a:hover {
+}
+
+#tab_container:hover,
+#accordion .ui-state-default:not(.ui-state-active):hover {
+	/*background: none;
+	color:#fff;*/
+}
+
+.ui-state-default a > #dialog,
+.ui-state-default a:link > #dialog,
+.ui-state-default a:visited > #dialog {
+}
+
+#accordion .ui-state-active,
+#accordion .ui-widget-content .ui-state-active,
+.ui-state-active > #dialog,
+.ui-widget-content .ui-state-active > #dialog {
+}
+
+#tab_container,
+#tab_container .blue {
+	color : var(--black);
+}
+
+/*список дел в левой панели*/
+#taskweek .header {
+	color        : var(--black);
+	background   : var(--gray);
+	border-color : var(--gray);
+}
+
+#entrybutton .button {
+	background : var(--liteblue);
+	color      : var(--white);
+}
+#entrybutton .button:hover {
+	background : var(--orange-dark);
+}
+
+#swindow .header {
+	background : linear-gradient(
+			var(--green-alfa08),
+			var(--green-alfa04),
+	);
+	background : var(--green-lite);
+	color      : var(--green-dark);
+}
+#swindow .closer {
+	color : var(--green-dark);
+}
+
+/*.tableHeader .header_contaner,
+.tableHeader .header_contaner a,
+.tableHeader .header_contaner a:link,
+.tableHeader .header_contaner a:visited,
+.tableHeader thead,
+.tableHeader thead th {
+	background   : var(--liteblue) !important;
+	color        : var(--white) !important;
+	border-right : var(--liteblue) !important;
+}
+
+#resultdiv .header_contaner th {
+	background   : var(--green-lite) !important;
+	color        : var(--black) !important;
+	border-right : var(--green-lite) !important;
+}*/
+
+#dtpCalFilter .blue {
+	color : var(--liteblue) !important;
+}
+
+/*скругленные элементы*/
+
+#rmenu .tabs a:not(.razdel),
+#rmenu .counters ul li {
+	background : var(--gray2) !important;
+}
+
+#rmenu .counters ul li:hover {
+	background : var(--blue2) !important;
+}
+#rmenu .counters ul li:hover .pops {
+	color      : var(--white) !important;
+	background : var(--blue2) !important;
+}
+#rmenu .tabs a.lpToggler {
+	background : var(--green-lite) !important;
+	color      : var(--white) !important;
+}
+#rmenu .tabs a:hover {
+	background : var(--blue2) !important;
+}
+#rmenu .tabs a.razdel:not(.active):not(:hover) .bullet {
+	color : var(--black) !important;
+}
+#rmenu a.razdel.redbg-dark {
+	background : var(--red-alfa10) !important;
+}
+#rmenu a.razdel.bluebg-dark {
+	background : var(--darkblue) !important;
+}
+#rmenu a.razdel.greenbg-dark {
+	background : var(--green-lite) !important;
+}
+#rmenu a.razdel .bullet {
+	color : var(--white) !important;
+}
+#rmenu a.razdel i {
+	position : relative;
+}
+#rmenu a.razdel i i {
+	/*position : absolute;*/
+	/*top      : -15px;*/
+	/*right    : -15px;*/
+}
+#rmenu a.active {
+	/*font-size : 0.7em;*/
+}
+#rmenu a.active i i {
+	background : transparent;
+}
+
+#rmenu .ymailer a.razdel i {
+	position : relative;
+}
+#rmenu .ymailer a.razdel i.sub.green {
+	/*color : var(--green) !important;*/
+}
+#rmenu .ymailer a.razdel i.sub.blue {
+	/*color : var(--blue) !important;*/
+}
+#rmenu .ymailer a.razdel i.sub {
+	background : inherit;
+}
+
+#rmenu .popmenu {
+	color : var(--black);
+}
+
+#rmenu div:not(.leftpop) > a.razdel:not(.active) {
+	background : var(--gray2);
+}
+
+div.leftpop {
+	background : var(--gray2) !important;
+}
+div.leftpop:hover {
+	background : var(--blue2) !important;
+}
+div.leftpop:hover:before {
+	background : var(--blue2);
+}
+
+@media (max-width : 1024px) {
+
+	#rmenu a.razdel [class^="icon-"]::before,
+	#rmenu a.razdel [class*=" icon-"]::before {
+		/*margin-left: 0;*/
+	}
+
+}
+
+a.button.bcancel {
+	color      : var(--white);
+	background : var(--gray4);
+}
+
+.flex-container a.button {
+	padding : 5px 10px !important;
+}
+
+.ui-layout-west input,
+.ui-layout-west select {
+	/*padding : 5px 15px;*/
+}
+
+#pid_list .del {
+	color      : var(--biruza);
+	background : transparent !important;/*var(--biruza-lite);*/
+}
+
+.filebox {
+	background : transparent !important;
+}
+
+#dialog {
+	border     : 0;
+	background : var(--gray);
+}
+#dialog #resultdiv {
+	background : var(--gray);
+}
+#dialog .zagolovok {
+	background : var(--green);
+	border     : 0;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 10px;
+}
+#dialog .close{
+	margin-top: 5px;
+	margin-right: 5px;
+}
+#dialog .close:hover {
+	color      : var(--black);
+	background : var(--orange-dark);
+}
+
+#tagbox .tags {
+	border     : 1px outset var(--deepblue);
+	background : var(--deepblue);
+	color: #FFF !important;
+	padding : 10px;
+}
+#tagbox .tags .red{
+	color: #FFF;
+}
+
+.tags .gray2 {
+	color: var(--orange);
+}
+
+#divider b {
+	background : var(--gray);
+}
+
+.card--steps .tstep {
+	border : 1px outset transparent !important;
+}
+.card--steps .step div {
+	border : 1px solid #FFF;
+}
+
+input[type="submit"],
+a.period,
+a.button,
+a.button:link,
+a.button:visited {
+	padding    : 10px 15px;
+	margin     : 0 8px 3px 0;
+	color      : var(--white);
+	border     : 0 inset var(--black);
+	background : var(--darkblue);
+}
+a.button:hover,
+a.button:link:hover,
+a.button:visited:hover {
+	background : var(--blue);
+}
+
+a.button.bcancel {
+	color: var(--white);
+	background: var(--gray4);
+	border: 0;
+}
+a.button.bcancel:hover {
+	color: var(--white);
+	background: var(--gray3);
+	border: 0;
+}
+
+#mailComposer #tagbox .tags {
+	border     : 1px outset var(--biruza) !important;
+	background : var(--biruza-lite) !important;
+	color: #222 !important;
+}

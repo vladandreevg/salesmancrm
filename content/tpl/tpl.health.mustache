@@ -1,0 +1,91 @@
+<script id="healthTpl" type="text/html">
+
+	<div class="flex-container box--child">
+
+		<div class="flex-string wp60">
+			<div class="fs-12 Bold black pt10"><i class="icon-medkit red"></i> Здоровье сделок</div>
+		</div>
+		<div class="flex-string wp40 relativ1 pr10">
+
+			<div id="chuser" class="ydropDown w200 p5 fs-11 pull-right zindex-20">
+				<span><i class="icon-users-1 black"></i></span>
+				<span class="ydropCount">0 выбрано</span>
+				<i class="icon-angle-down pull-aright"></i>
+				<div class="yselectBox zindex-20" style="max-height: 300px; top: calc(100%)" data-func="healthFilter">
+
+					<div class="right-text">
+						<div class="ySelectAll w0 inline" title="Выделить всё"><i class="icon-plus-circled"></i>Все</div>
+						<div class="yunSelect w0 inline" title="Снять выделение"><i class="icon-minus-circled"></i>Очистить</div>
+					</div>
+
+					{{#users}}
+					<div class="ydropString ellipsis w160">
+						<label class="{{#current}}greenbg-sub{{/current}}">
+							<input class="taskss" type="checkbox" name="hl-user[]" id="hl-user[]" value="{{iduser}}" {{#checked}}checked{{/checked}}>&nbsp;{{title}}
+						</label>
+					</div>
+					{{/users}}
+
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<TABLE id="zebraTable">
+		<thead class="sticked--top">
+		<TR class="header_contaner hidden-iphone">
+			<th class="w40"></th>
+			<th class="w80 text-center">Создана</th>
+			<th class="w80 text-center">Дата план.</th>
+			<th class="w80 text-center">Этап</th>
+			<th class="text-center">Сделка</th>
+			<th class="w150">Причины диагноза?</th>
+			<th class="w120">Ответственный</th>
+			<th class="w100 text-right hidden-ipad">Сумма</th>
+			<th class="w100 text-right hidden-ipad">Оплачено</th>
+			<th class="w60 text-right hidden">Дни</th>
+			<th class="w10"></th>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+		<TR class="ha {{color1}} filtered th55" data-user="{{iduser}}">
+			<TD class="text-center hidden-iphone">
+				<A href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Открыть в новом окне">{{{icon}}}</A>
+			</TD>
+			<TD class="text-center">
+				<span class="fs-09">{{datum}}</span></TD>
+			<TD class="text-center">
+				<span class="fs-09">{{datum_plan}}</span></TD>
+			<TD class="text-center" title="{{steptitle}}"><div>{{step}}%</div></TD>
+			<TD>
+				<div class="ellipsis fs-11 Bold hand" title="Быстрый просмотр: {{deal}}" onClick="viewDogovor('{{did}}')">
+					<span class="bullet-mini hidden-iphone {{color}}"></span><span class="hidden-iphone">&nbsp;&nbsp;</span>{{deal}}
+				</div>
+				<br>
+				<div class="ellipsis gray2 fs-10" title="{{client}}">{{client}}</div>
+			</TD>
+			<TD onClick="doLoad('content/desktop/dt.health.php?did={{did}}&action=view')" class="hand">
+				<div>
+					{{#cp}}
+						{{{plan}}}&nbsp;&nbsp;{{{complect}}}&nbsp;&nbsp;{{{invoice}}}&nbsp;&nbsp;{{{task}}}
+					{{/cp}}
+					{{{stepChange}}}
+				</div>
+			</TD>
+			<TD class="hidden-ipad1">
+				<div class="ellipsis">{{user}}</div>
+			</TD>
+			<TD class="text-right hidden-ipad1"><div>{{kol}}</div></TD>
+			<TD class="text-right hidden-ipad1"><div>{{summa}}</div></TD>
+			<TD class="text-right hidden"><div>{{day}}</div></TD>
+			<TD></TD>
+		</TR>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>

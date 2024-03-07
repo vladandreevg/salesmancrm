@@ -1,0 +1,7 @@
+{
+"yandex.ru":{"host":"imap.yandex.ru","port":"993","auth":"true","secure":"ssl","protocol":"imap"},
+"gmail.com":{"host":"imap.googlemail.com","port":"993","auth":"true","secure":"ssl","protocol":"imap"},
+"mail.ru":{"host":"imap.mail.ru","port":"993","auth":"true","secure":"ssl","protocol":"imap"},
+"yahoo.com":{"host":"imap.mail.yahoo.com","port":"993","auth":"true","secure":"ssl","protocol":"imap"},
+"live.com":{"host":"imap-mail.outlook.com","port":"993","auth":"true","secure":"ssl","protocol":"imap"}
+}

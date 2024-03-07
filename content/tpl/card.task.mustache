@@ -1,0 +1,112 @@
+<script id="taskTpl" type="text/html">
+
+	<TABLE id="zebraTable" class="top">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="yw60 text-left"><b>{{language.all.Time}}</b></TH>
+			<TH class="text-left"><B>{{language.all.Theme}}</B></TH>
+			<TH class="yw100 text-left"><B>{{language.all.Type}}</B></TH>
+			<TH class="yw80 text-left"><B>{{language.all.Actions}}</B></TH>
+		</TR>
+		</thead>
+		{{#events}}
+			<tr class="{{bg}} toggler hand sticked--top th45" data-id="t{{id}}">
+				<td colspan="4"><i class="{{icon}} white"></i>&nbsp;&nbsp;<B class="uppercase">{{{title}}}</B>&nbsp;(
+					<b>{{count}}</b> )
+				</td>
+			</tr>
+			<tbody id="t{{id}}" class="{{state}}">
+			{{#data}}
+				<tr class="{{bg}} dayname th35">
+					<TD colspan="4">
+						<div class="pad51 Bold">{{{date}}} <span class="inline red">{{year}}</span></div>
+					</td>
+				</tr>
+				{{#event}}
+					<tr class="ha bgwhite {{#day}}greenbg-sub{{/day}} th40" {{#change}}data-type="task"{{/change}}>
+						<td class="text-center">
+							{{#change}}<span class="hidden"><input name="ch[]" type="checkbox" class="mc" id="ch_{{tid}}" value="{{tid}}"></span>{{/change}}
+							{{#day}}<i class="icon-flag green" title="Весь день"></i>{{/day}}
+							{{^day}}{{time}}{{/day}}
+						</td>
+						<td>
+							<div title="{{tip}}" class="hidden visible-iphone1 fs-09 em gray2">{{tip}}</div>
+
+							<div class="ellipsis1">
+								<div class="w20 inline hidden-iphone">{{{priority}}}{{{speed}}}</div>
+								{{#uicon}}{{{uicon}}}&nbsp;{{/uicon}}
+								<a href="javascript:void(0)" onclick="viewTask('{{tid}}');" title="{{title}}">
+									<b class="fs-11">{{title}}</b>
+								</a>
+							</div>
+
+							{{#address}}
+							<br>
+							<div class="ellipsis1 smalltext blue">
+								<div class="w15 inline"></div>
+								<i class="icon-location"></i>{{address}}
+							</div>
+							{{/address}}
+
+							{{#agenda}}
+								<div class="mt10 infodiv graybg-lite fs-09 gray2 scroll noscroll height--50">{{{agenda}}}</div>
+							{{/agenda}}
+
+							<div class="mt10 mb5">
+								{{#did}}
+								<div class="hand mt5" onclick="openDogovor('{{did}}')" title="Открыть карточку">
+									<i class="icon-briefcase red"></i><sup class="gray mr5">{{step}}%</sup>&nbsp;{{deal}}
+								</div>
+								{{/did}}
+								{{#client}}
+								<div class="hand mt5" onclick="openClient('{{clid}}')" title="Открыть карточку">
+									<i class="icon-building broun"></i>{{client}}
+								</div>
+								{{/client}}
+							</div>
+
+							{{#user}}
+							<div class="fs-09 gray2 mt10 mb10 pl5">
+								<i class="icon-user-1"></i>{{user}}
+							</div>
+							{{/user}}
+							{{#users}}
+							<div class="fs-09 gray2 mt10 mb10 pl5">
+								{{{users}}}
+							</div>
+							{{/users}}
+
+						</td>
+						<td>
+							<span title="{{tip}}" style="color:{{color}}">{{{icon}}} {{tip}}</span>
+							{{#ismain}}<div class="gray">Контроль</div>{{/ismain}}
+						</td>
+						<td>
+							<span class="mob-pull-right">
+								{{#readonly}}
+								<i class="icon-ok gray2" title="Только чтение"></i>&nbsp;
+								<i class="icon-user-1 green" title="Автор: {{autor}}"></i>
+								{{/readonly}}
+								{{^readonly}}
+									{{#do}}
+										<A href="javascript:void(0)" onclick="editTask('{{tid}}','doit');" class="vtip" title="Активно, пометить как сделанное"><i class="icon-ok blue" title="Активно, пометить как сделанное"></i></A>
+										{{#change}}
+										&nbsp;<A href="javascript:void(0)" onclick="editTask('{{tid}}','edit');"><i class="icon-pencil green" title="Изменить"></i></A>
+										&nbsp;<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteTask('{{tid}}');"><i class="icon-cancel-circled red" title="Удалить"></i></A>
+										{{/change}}
+									{{/do}}
+								{{/readonly}}
+							</span>
+						</td>
+					</tr>
+				{{/event}}
+			{{/data}}
+			</tbody>
+		{{/events}}
+	</TABLE>
+
+		{{^events}}
+		<div class="fcontainer fs-09 gray">Нет напоминаний</div>
+		{{/events}}
+
+</script>

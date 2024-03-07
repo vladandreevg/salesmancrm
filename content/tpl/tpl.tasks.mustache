@@ -1,0 +1,273 @@
+<script id="taskTpl" type="text/html">
+
+	<TABLE id="zebraTable">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w120 text-left"><b>{{language.all.Time}}</b></TH>
+			<TH class="text-left"><B>{{language.all.Theme}}</B></TH>
+			<TH class="w160 text-left"><B>{{language.all.Type}}</B></TH>
+			<TH class="w180 text-left min100"><b>{{language.all.Client}}</b></TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+
+		{{#list}}
+
+			<tr class="{{bg}} {{#id}}toggler{{/id}} hand sticked--top" data-id="{{id}}">
+				<td colspan="5">
+					<i class="{{icon}} white"></i>&nbsp;&nbsp;<B class="uppercase">{{{title}}}</B>&nbsp;(
+					<b>{{count}}</b> )
+				</td>
+			</tr>
+			<tbody id="{{id}}" class="{{state}}">
+
+			{{#tasks}}
+
+				{{#name}}
+				<tr class="bluebg-sub tsk dayname th50">
+					<td colspan="5">
+						<div class="p5 Bold">{{{name}}}</div>
+					</td>
+				</tr>
+				{{/name}}
+
+				{{^name}}
+				<tr class="ha {{#day}}greenbg-sub{{/day}} th55 top" {{^readonly}}{{^do}}{{#change}}data-type="task"{{/change}}{{/do}}{{/readonly}}>
+					<td>
+
+						{{^readonly}}
+						{{^do}}
+						<span class="hidden"><input name="ch[]" type="checkbox" class="mc" id="ch_{{tid}}" value="{{tid}}"></span>
+						{{/do}}
+						{{/readonly}}
+
+						{{#histdate}}
+						<span class="fs-11 blue Bold mt5" title="{{statusTooltip}}">
+							{{#status}}<i class="icon-cancel-circled red"></i>{{/status}}{{^status}}<i class="icon-ok"></i>{{/status}}{{{histdate}}}
+						</span>
+						{{/histdate}}
+
+						<div class="p51 fs-09 mt5">{{#day}}<i class="icon-flag green" title="Весь день"></i>{{/day}} {{{date}}}</div>
+
+					</td>
+					<td>
+
+						<div title="{{tip}}" class="hidden visible-iphone1 fs-09 em gray2">{{tip}}</div>
+
+						<div class="ellipsis11 fs-11 mt5">
+							<div class="w20 inline hidden-iphone">{{{priority}}}{{{speed}}}</div>
+							<span class="hidden">{{{icon}}}</span>{{#iconuser}}&nbsp;{{{iconuser}}}{{/iconuser}}
+							{{#readonly}}<i class="icon-lock red" title="Только чтение"></i>{{/readonly}}
+							<a href="javascript:void(0)" onClick="viewTask('{{tid}}');" title="{{title}}" class="Bold">{{title}}</a>{{#usercount}}<div class="inline gray2 mt5 em fs-09"><i class="icon-users-1 green" title="{{usercount}} участников"></i></div>{{/usercount}}
+						</div>
+
+						{{#agenda}}
+							<div class="mt10 infodiv graybg-lite fs-09 gray2 scroll noscroll height--50">{{{agenda}}}</div>
+						{{/agenda}}
+
+						{{#rezult}}
+							<div class="mt10 infodiv graybg-lite fs-09 gray2 scroll noscroll height--100">{{{rezult}}}</div>
+						{{/rezult}}
+
+						{{#users}}
+							<div class="mt10 viewdiv1 fs-09 gray2">{{{users}}}</div>
+						{{/users}}
+						{{#user}}
+						<div class="mt10 viewdiv1 fs-09 em gray2">Исполнитель: {{user}}</div>
+						{{/user}}
+
+						{{#autor}}
+						<div class="ellipsis1 gray2 mt5 em fs-09">Автор: {{autor}}</div>
+						{{/autor}}
+
+					</td>
+					<td class="">
+						<span title="{{tip}}" class="ellipsis" style="color:{{color}}">{{{icon}}} {{tip}}</span>
+					</td>
+					<td class="">
+						<div class="ellipsis">
+							{{#client}}
+								<A href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="icon-commerical-building blue"></i>{{client}}
+								</A>
+							{{/client}}
+							{{#person}}
+								<A href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть в новом окне"><i class="icon-user-1 blue"></i>{{person}}</A>
+							{{/person}}
+						</div>
+						{{#did}}
+						<br>
+						<div class="ellipsis mt5">
+							<A href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Открыть в новом окне"><i class="icon-briefcase red"></i>{{deal}}
+							</A>
+						</div>
+						{{/did}}
+					</td>
+					<td>
+					{{^readonly}}
+						{{^do}}
+						<div class="action--container">
+							<div class="action--block">
+
+								{{#doit}}
+								<A href="javascript:void(0)" onClick="editTask('{{tid}}','doit');" class="gray blue" title="Активно, пометить как сделанное"><i class="icon-ok" title="Активно, пометить как сделанное"></i></A>
+								{{/doit}}
+								{{#change}}
+								<A href="javascript:void(0)" onClick="editTask('{{tid}}','edit');" class="gray green"><i class="icon-pencil" title="Изменить"></i></A>
+								<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteTask('{{tid}}');" class="gray red"><i class="icon-cancel" title="Удалить"></i></A>
+								{{/change}}
+							</div>
+						</div>
+						{{/do}}
+					{{/readonly}}
+					</td>
+				</tr>
+				{{/name}}
+
+			{{/tasks}}
+
+			</tbody>
+
+		{{/list}}
+
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>
+
+<script id="todoTpl" type="text/html">
+
+	<TABLE>
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w120 text-left hand" onclick="changesort()">
+				{{#ord}}<i class="icon-down-open-big"></i>{{/ord}}
+				{{^ord}}<i class="icon-up-open-big"></i>{{/ord}}
+				<b>{{language.all.Time}}</b>
+			</TH>
+			<TH class="text-left"><B>{{language.all.Theme}}</B></TH>
+			<TH class="w160 text-left"><B>{{language.all.Type}}</B></TH>
+			<TH class="w180 text-left min100"><b>{{language.all.Client}}</b></TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+
+		{{#list}}
+		<tr class="ha {{#day}}greenbg-sub{{/day}} {{#do}}graybg-sub{{/do}} th55 top" {{^readonly}}{{^do}}{{#change}}data-type="task"{{/change}}{{/do}}{{/readonly}}>
+			<td>
+
+				{{^readonly}}
+				{{^do}}
+				<span class="hidden"><input name="ch[]" type="checkbox" class="mc" id="ch_{{tid}}" value="{{tid}}"></span>
+				{{/do}}
+				{{/readonly}}
+
+				<div class="mt5">
+					{{#day}}
+					<div class="fs-11 blue Bold"><i class="icon-flag green" title="Весь день"></i> {{{date}}}</div>
+					{{/day}}
+					{{^day}}
+						{{^do}}
+						<div class="fs-11 blue Bold"><i class="icon-clock"></i>{{time}}</div>
+						<div class="fs-07 gray2 ml20">{{date}}</div>
+						{{/do}}
+						{{#do}}
+						<div class="fs-11 blue Bold">
+							{{#status}}<i class="icon-cancel-circled red"></i> {{/status}}
+							{{^status}}<i class="icon-ok green"></i> {{/status}}
+							{{time}}
+						</div>
+						<div class="fs-07 gray2 ml20 pl10">{{date}}</div>
+						{{/do}}
+					{{/day}}
+				</div>
+
+				{{#histdate}}
+				<div class="mt10 fs-10 gray2" title="Выполнено. {{statusTooltip}}">
+					<i class="icon-clock"></i> {{{histdate}}}
+				</div>
+				{{/histdate}}
+
+			</td>
+			<td>
+
+				<div title="{{tip}}" class="hidden visible-iphone1 fs-09 em gray2">{{tip}}</div>
+
+				<div class="ellipsis11 fs-11 mt5">
+					<div class="w20 inline hidden-iphone">{{{priority}}}{{{speed}}}</div>
+					<span class="hidden">{{{icon}}}</span>{{#iconuser}}&nbsp;{{{iconuser}}}{{/iconuser}}
+					{{#readonly}}<i class="icon-lock red" title="Только чтение"></i>{{/readonly}}
+					<a href="javascript:void(0)" onClick="viewTask('{{tid}}');" title="{{title}}" class="Bold">{{title}}</a>{{#usercount}}<div class="inline gray2 mt5 em fs-09"><i class="icon-users-1 green" title="{{usercount}} участников"></i></div>{{/usercount}}
+				</div>
+
+				{{#agenda}}
+				<div class="mt10 infodiv graybg-lite fs-09 gray2 scroll noscroll height--50">{{{agenda}}}</div>
+				{{/agenda}}
+
+				{{#rezult}}
+				<div class="mt10 infodiv graybg-lite fs-09 gray2 scroll noscroll height--100">{{{rezult}}}</div>
+				{{/rezult}}
+
+				{{#users}}
+				<div class="mt10 viewdiv1 fs-09 gray2">{{{users}}}</div>
+				{{/users}}
+				{{#user}}
+				<div class="mt10 viewdiv1 fs-09 em gray2">Исполнитель: {{user}}</div>
+				{{/user}}
+
+				{{#autor}}
+				<div class="ellipsis1 gray2 mt5 em fs-09">Автор: {{autor}}</div>
+				{{/autor}}
+
+			</td>
+			<td class="">
+				<span title="{{tip}}" class="ellipsis" style="color:{{color}}">{{{icon}}} {{tip}}</span>
+			</td>
+			<td class="">
+				<div class="ellipsis">
+					{{#client}}
+					<A href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="icon-commerical-building blue"></i>{{client}}
+					</A>
+					{{/client}}
+					{{#person}}
+					<A href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть в новом окне"><i class="icon-user-1 blue"></i>{{person}}</A>
+					{{/person}}
+				</div>
+				{{#did}}
+				<br>
+				<div class="ellipsis mt5">
+					<A href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Открыть в новом окне"><i class="icon-briefcase red"></i>{{deal}}
+					</A>
+				</div>
+				{{/did}}
+			</td>
+			<td>
+				{{^readonly}}
+				{{^do}}
+				<div class="action--container">
+					<div class="action--block">
+
+						{{#doit}}
+						<A href="javascript:void(0)" onClick="editTask('{{tid}}','doit');" class="gray blue" title="Активно, пометить как сделанное"><i class="icon-ok" title="Активно, пометить как сделанное"></i></A>
+						{{/doit}}
+						{{#change}}
+						<A href="javascript:void(0)" onClick="editTask('{{tid}}','edit');" class="gray green"><i class="icon-pencil" title="Изменить"></i></A>
+						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteTask('{{tid}}');" class="gray red"><i class="icon-cancel" title="Удалить"></i></A>
+						{{/change}}
+					</div>
+				</div>
+				{{/do}}
+				{{/readonly}}
+			</td>
+		</tr>
+
+		{{/list}}
+
+		</tbody>
+
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>

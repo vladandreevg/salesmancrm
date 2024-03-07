@@ -1,0 +1,176 @@
+/**
+Интерфейс основной
+ */
+.chat--dialogs {
+	position         : relative;
+	overflow-y       : auto;
+	background-color : var(--gray-superlite);
+}
+.chat--dialogs .answer {
+	display               : grid;
+	grid-template-columns : 60px auto;
+	grid-gap              : 0;
+	padding               : 20px;
+	margin-bottom         : 10px;
+	margin-left           : 10px;
+	max-width             : 80%;
+}
+.chat--dialogs .answer .avatar--mini {
+	background         : url('/plugins/socialChats/assets/images/man.svg') no-repeat center center;
+	background-size    : cover;
+	border-radius      : 50%;
+	-moz-box-shadow    : inset 0 0 10px #222;
+	-webkit-box-shadow : inset 0 0 10px #222;
+	box-shadow         : inset 0 0 10px #222;
+	position           : relative;
+	width              : 50px;
+	height             : 50px;
+}
+.chat--dialogs .answer .avatar--mini .chat--icon {
+	position      : absolute;
+	bottom        : 0;
+	right         : 0;
+	width         : 1.2em;
+	height        : 1.2em;
+	border-radius : 50%;
+}
+.chat--dialogs .answer .dialogmessage {
+	padding-top : 15px;
+}
+
+.chat--dialogs .answer .dialogmessage--message {
+	background    : var(--gray-liteblue);
+	border        : 1px solid var(--gray);
+	border-radius : 0 10px 10px 10px;
+	padding       : 10px 10px 10px 10px;
+	display       : inline-block;
+	max-width     : 90%;
+	position      : relative;
+}
+.chat--dialogs .answer .dialogmessage--message:after,
+.chat--dialogs .answer .dialogmessage--message:before {
+	right          : 100%;
+	top            : 10px;
+	border         : solid transparent;
+	content        : " ";
+	height         : 0;
+	width          : 0;
+	position       : absolute;
+	border-width   : 0 10px 10px 0;
+	pointer-events : none;
+}
+.chat--dialogs .answer .dialogmessage--message:before {
+	border-color       : transparent;
+	border-right-color : var(--gray);
+	margin-top         : -11px;
+	left               : -10px;
+}
+.chat--dialogs .answer .dialogmessage--message:after {
+	border-color       : transparent;
+	border-right-color : var(--gray-liteblue);
+	margin-top         : -10px;
+	left               : -8px;
+}
+.chat--dialogs .answer .dialogmessage--message.user:after {
+	border-color       : transparent;
+	border-right-color : var(--white);
+}
+
+.chat--dialogs .answer .dialogmessage--message.user {
+	background : var(--white);
+}
+.chat--dialogs .answer .dialogmessage--message .time {
+	position : absolute;
+	top      : 5px;
+	right    : -60px;
+}
+
+.chat--form .messagetext {
+	display               : grid;
+	grid-template-columns : 50px auto;
+	grid-gap              : 0;
+	background            : var(--gray-liteblue);
+	height                : 100%;
+	position              : relative;
+}
+.chat--form .messagetext textarea {
+	width         : 100%;
+	height        : 100px;
+	padding-right : 40px;
+}
+.chat--form .messagetext textarea:disabled {
+	background : var(--gray-lite);
+}
+.chat--form .messagetext .send {
+	position : absolute;
+	top      : 20px;
+	right    : 15px;
+	cursor   : pointer;
+}
+.chat--form .messagetext .description {
+	position   : absolute;
+	top        : 100px;
+	width      : 100%;
+	max-height : 300px;
+	border     : 1px solid var(--gray-liteblue);
+	background : var(--gray-lite);
+	z-index    : 10;
+}
+.chat--form .chat--tag {
+	border                : 1px solid var(--white);
+	background            : var(--gray-liteblue);
+	float                 : left;
+	padding               : 0.5em 1.0em;
+	overflow              : hidden !important;
+	margin-bottom         : 2px;
+	margin-right          : 2px;
+	-moz-border-radius    : 3px;
+	-webkit-border-radius : 3px;
+	border-radius         : 3px;
+	position              : relative;
+	cursor                : pointer;
+}
+.chat--form .chat--tag:hover,
+.chat--form .chat--tag.active {
+	background : var(--green-sublite);
+}
+
+.to--plugin {
+	position              : fixed;
+	bottom                : 40px;
+	right                 : 100px;
+	display               : inline-block;
+	width                 : 40px;
+	height                : 40px;
+	text-decoration       : none;
+	text-align            : center;
+	line-height           : 40px;
+	padding               : 0;
+	cursor                : pointer;
+	-moz-border-radius    : 40px;
+	-webkit-border-radius : 40px;
+	border-radius         : 40px;
+	color                 : #FFF;
+	background            : var(--green);
+	box-shadow    : 0 0 3px 0 rgba(50, 50, 50, 0.75);
+}
+
+#chatpages #pages {
+	text-align : center;
+}
+
+.readability {
+	background  : var(--gray-lite);
+	padding     : 10px;
+	border-left : 2px solid var(--green);
+	margin-top  : 10px;
+	/*display: grid;
+	grid-template-columns: auto 30%;*/
+}
+.readability .ra--img {
+	height      : 100%;
+	margin-left : 10px;
+}
+.readability .ra--text {
+
+}

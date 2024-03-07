@@ -1,0 +1,166 @@
+<script id="dealsTpl" type="text/html">
+
+	<table id="list_header" class="top">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<th class="w30 hidden-ipad div-center"><input type="checkbox" name="che" id="che"></th>
+			<th class="w50 hidden-ipad"></th>
+
+			{{#head}}
+			<th class="{{clas}} text-left {{#width}}w{{width}}{{/width}} drag--accept" id="{{id}}">
+				<div class="divhead ellipsis {{#sort}}hand{{/sort}}" title="{{title}}" {{#sort}}onclick="changesort('{{sort}}')"{{/sort}}>
+					{{#sort}}
+						<div class="sort" id="x-{{sort}}">
+							<i class="icon icon-angle-{{desc}}"></i>
+						</div>
+					{{/sort}}
+					<b>{{title}}</b>
+				</div>
+				<div class="thandler" title="Переместить колонку"></div>
+			</th>
+			{{/head}}
+
+			<th class="w5 text-center"></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#deal}}
+
+			<tr class="ha th50" id="deal{{did}}" data-type="row">
+				<td class="w30 hidden-ipad div-center">
+					<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{did}}">
+				</td>
+				<td class="hidden-ipad text-center relativ hand" onclick="openDogovor('{{did}}')" title="Открыть карточку">
+					<i class="{{icon}} {{#change}}{{icolor}}{{/change}}{{^change}}gray{{/change}}"></i>{{#status}}<i class="icon-cancel-circled supp" title="Закрыта"></i>{{/status}}{{^status}}<i class="icon-ok-circled blue supp"></i>{{/status}}{{^change}}<i class="icon-lock broun sup"></i>{{/change}}{{{dostup}}}
+				</td>
+
+				{{#columns}}
+
+					{{#isString}}
+					<td class="{{clas}}" title="{{title}}">
+						{{#title}}
+						<div class="ellipsis {{class}}">{{title}}</div>
+						{{/title}}
+					</td>
+					{{/isString}}
+
+					{{#isDplan}}
+					<td class="{{clas}}">
+						<div class="ellipsis {{class}} Bold" title="Дата плановая: {{title}}">{{title}}</div>
+						{{#frozenDate}}<div class="blue fs-07">до {{frozenDate}}</div>{{/frozenDate}}
+						{{#comment}}
+							<br><div class="ellipsis smalltxt gray" title="Дата закрытия: {{comment}}"><em>{{comment}}</em></div>
+						{{/comment}}
+					</td>
+					{{/isDplan}}
+
+					{{#isTitle}}
+					<td class="{{clas}} min100">
+						{{#task}}
+							<a href="javascript:void(0)" onclick="viewTaskList('','','{{did}}');" class="hidden-ipad" title="Список дел"><i class="icon-calendar-1 green"></i></a>
+						{{/task}}
+						{{^task}}
+							<i class="icon-calendar-2 gray list hidden-ipad" title="Нет напоминаний"></i>
+						{{/task}}
+						<div class="ellipsis hand" onclick="viewDogovor('{{id}}')" title="Просмотр: {{title}}">
+						<b class="fs-11">{{title}}</b></div>
+						{{#status}}
+							<br><div class="ellipsis Bold pr10">{{{status}}}</div>
+						{{/status}}
+						{{#sub}}
+						{{#client}}
+							<br>
+							<div class="ellipsis paddtop5" title="{{client}}">
+								<a href="javascript:void(0)" onclick="viewClient('{{clid}}')" class="gray"><i class="icon-building gray"></i>&nbsp;{{client}}</a>
+							</div>
+						{{/client}}
+						{{^client}}
+						{{#person}}
+							<br>
+							<div class="ellipsis paddtop5" title="{{person}}">
+								<a href="javascript:void(0)" onclick="viewPerson('{{pid}}')" class="gray"><i class="icon-user-1 gray"></i>&nbsp;{{person}}</a>
+							</div>
+						{{/person}}
+						{{/client}}
+						{{/sub}}
+						{{#adres}}
+						<br>
+						<div class="ellipsis paddtop5 smalltxt blue" title="Россия, Пермь"><i class="icon-location"></i>&nbsp;<em><a href="https://www.google.ru/maps/place/{{adres}}" title="{{adres}}" class="blue" target="blank">{{adres}}</a></em>
+						</div>
+						{{/adres}}
+					</td>
+					{{/isTitle}}
+
+					{{#isClient}}
+					<td class="{{clas}}">
+						<div class="ellipsis" title="{{title}}">
+							{{^isperson}}
+							<a href="javascript:void(0)" onclick="openClient('{{id}}')"><i class="icon-building broun"></i>{{title}}</a>
+							{{/isperson}}
+							{{#isperson}}
+								<a href="javascript:void(0)" onclick="openPerson('{{id}}')"><i class="icon-user-1 blue"></i>{{title}}</a>
+							{{/isperson}}
+						</div>
+					</td>
+					{{/isClient}}
+
+					{{#isStep}}
+					<td class="{{clas}}" title="{{title}}">
+						<div class="progressbarr wp95">{{value}}%<sup class="gray" title="Статус изменен {{day}} дн. назад">{{day}} д.</sup>
+							<div id="test" class="progressbar-completed {{bgcolor}}" style="width:{{value}}%; max-width: 100%;" title="{{value}}% - {{title}}">
+								<div class="status"></div>
+							</div>
+						</div>
+					</td>
+					{{/isStep}}
+
+					{{#isHistory}}
+					<td class="{{clas}}">
+						{{#title}}
+						<div class="ellipsis {{class}}" title="{{title}}">{{title}}</div>
+						{{#comment}}
+						<br>
+						<div class="ellipsis blue" title="{{{comment}}}">{{{comment}}}</div>
+						{{/comment}}
+						{{/title}}
+					</td>
+					{{/isHistory}}
+
+					{{#isLastHistory}}
+					<td class="{{clas}}">
+						{{#title}}
+						<div class="ellipsis {{class}}" title="{{title}}">{{title}}</div>
+						{{#comment}}
+						<br>
+						<div class="ellipsis blue" title="{{{comment}}}">{{{comment}}}</div>
+						{{/comment}}
+						{{/title}}
+					</td>
+					{{/isLastHistory}}
+
+					{{#isCredit}}
+					<td class="{{clas}}">
+						{{{title}}}
+					</td>
+					{{/isCredit}}
+
+				{{/columns}}
+
+				<td>
+					{{#change}}
+					<div class="action--container">
+						<div class="action--block">
+							<a href="javascript:void(0)" onclick="editDogovor('{{did}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></a>&nbsp;<a onclick="addTask('','{{clid}}','0','{{did}}');" href="javascript:void(0)" title="Добавить напоминание" class="gray green"><i class="icon-calendar green"></i></a>&nbsp;<a href="javascript:void(0)" onclick="addHistory('','{{clid}}','0','{{did}}');" class="gray brounbg2"><i class="icon-clock broun" title="Добавить активность"></i></a>&nbsp;
+						</div>
+					</div>
+					{{/change}}
+				</td>
+			</tr>
+
+		{{/deal}}
+		</tbody>
+	</table>
+
+	<div class="space-40"></div>
+
+</script>

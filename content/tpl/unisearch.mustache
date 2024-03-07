@@ -1,0 +1,82 @@
+<script id="uniSearchTpl" type="text/html">
+
+	{{#text}}
+	<div class="infodiv">{{{text}}}</div>
+	<div class="space-10"></div>
+	{{/text}}
+
+	{{#result}}
+
+	<div class="divider mt15 mb15"><i class="icon-building broun"></i>Клиенты</div>
+	<div class="border--bottom">
+
+		{{#client}}
+		<div class="flex-container float p5 pt10 pb10 ha">
+			<div class="flex-string w40">{{num}}</div>
+			<div class="flex-string float hand" onclick="openClient('{{clid}}')" title="Открыть">
+				<div class="Bold fs-12 text-wrap">{{#trash}}<i class="icon-bitbucket red"></i>&nbsp;{{/trash}}{{{title}}}<i class="icon-popup blue fs-07"></i></div>
+				<div class="em gray fs-09 mt10">{{{attach}}}</div>
+				<div class="em fs-07 mt10 blue text-right"><i class="icon-user-1"></i>&nbsp;{{user}}</div>
+			</div>
+		</div>
+		{{/client}}
+		{{^client}}
+		<div class="fs-07 uppercase gray Bold p10">Не найдено</div>
+		{{/client}}
+
+	</div>
+
+	<div class="divider mt15 mb15"><i class="icon-user-1 blue"></i>Контакты</div>
+	<div class="border--bottom">
+
+		{{#person}}
+		<div class="flex-container float p5 pt10 pb10 ha">
+			<div class="flex-string w40">{{num}}.</div>
+			<div class="flex-string float">
+				<div class="Bold fs-12 text-wrap hand" onclick="openPerson('{{pid}}')" title="Открыть">{{{title}}}<i class="icon-popup blue fs-07"></i></div>
+				<div class="em gray fs-09 mt5">{{{attach}}}</div>
+				{{#clid}}
+				<div class="mt10 fs-09 blue Bold"><a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть"><i class="icon-building broun fs-09 flh-11"></i>{{{client}}}</a></div>
+				{{/clid}}
+				<div class="em fs-07 mt10 blue text-right"><i class="icon-user-1"></i>&nbsp;{{user}}</div>
+			</div>
+		</div>
+		{{/person}}
+		{{^person}}
+		<div class="fs-07 uppercase gray Bold p10">Не найдено</div>
+		{{/person}}
+
+	</div>
+
+	<div class="divider mt15 mb15"><i class="icon-briefcase-1 green"></i>Сделки</div>
+	<div class="border--bottom">
+
+		{{#deal}}
+		<div class="flex-container float p5 pt10 pb10 ha">
+			<div class="flex-string w40">{{num}}.</div>
+			<div class="flex-string float">
+				<a href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Открыть" class="Bold fs-12 text-wrap">{{#close}}<i class="icon-lock red"></i>&nbsp;{{/close}}{{{title}}}<i class="icon-popup blue fs-07"></i></a>
+				<div class="gray2 fs-07 mt5 pl5">Этап: {{step}}%; План: {{dateplan}}; Сумма: {{summa}}</div>
+				{{#attach}}
+				<div class="em gray fs-09 mt5">{{{attach}}}</div>
+				{{/attach}}
+				{{#clid}}
+				<div class="gray fs-09 Bold mt5">
+					<div class="mt10 fs-11 text-wrap"><a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть" class="inline blue"><i class="icon-building broun fs-09 flh-11"></i>{{{client}}}<i class="icon-popup broun smalltxt"></i></a></div>
+				</div>
+				{{/clid}}
+				<div class="em fs-07 mt10 blue text-right"><i class="icon-user-1"></i>&nbsp;{{user}}</div>
+			</div>
+		</div>
+		{{/deal}}
+		{{^deal}}
+		<div class="fs-07 uppercase gray Bold p10">Не найдено</div>
+		{{/deal}}
+
+	</div>
+
+	{{/result}}
+
+	<div class="space-100"></div>
+
+</script>

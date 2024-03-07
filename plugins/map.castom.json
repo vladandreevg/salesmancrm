@@ -1,0 +1,18 @@
+{
+  "aconf": {
+	"name": "Asterconf",
+	"url": "plugins/aconf/",
+	"content": "Плагин для разработчика",
+	"icon": "icon-asterisk",
+	"interface": "yes",
+	"js": ""
+  },
+  "": {
+	"name": "",
+	"url": "",
+	"content": "",
+	"icon": "icon-tools",
+	"interface": "",
+	"js": ""
+  }
+}

@@ -1,0 +1,46 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2018 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*         salesman.pro         */
+/*         ver. 2018.6          */
+/* ============================ */
+
+body {
+	color:#222;
+	font-size: 14px;
+	line-height:18px;
+	font-family: arial, tahoma;
+	background:#FFF;
+	padding:10px;
+	margin:5px;
+}
+div{
+	padding:5px 0;
+	margin:0;
+	display:block;
+}
+p{
+	padding:5px 0;
+}
+hr{
+	width:102%;
+	border:0px none;
+	border-top: #ccc 1px dotted;
+	padding:0px; height:1px;
+	margin:5px -5px;
+	clear:both;
+}
+a, a:visited, a:link{
+	color: #507192;
+	display:inline;
+}
+a:active, a:hover{
+	color:red;
+}
+
+blockquote{
+	padding-left: 5px;
+	border-left: 2px solid blue;
+}

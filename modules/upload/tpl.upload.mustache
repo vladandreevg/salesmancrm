@@ -1,0 +1,74 @@
+<script id="uploadTpl" type="text/html">
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<th class="w15 hidden-ipad"><input type="checkbox" name="che" id="che"/></th>
+			<TH class="w100 text-left">
+				<div class="ellipsis hand" id="x-fid" onclick="changesort('fid')" title="Изменить порядок вывода">Дата</div>
+			</TH>
+			<TH class="w30 text-center">&nbsp;</TH>
+			<TH>
+				<div class="ellipsis hand" id="x-ftitle" onclick="changesort('ftitle')" title="Изменить порядок вывода">Название файла</div>
+			</TH>
+			<TH class="w100 text-center">Размер, kb</TH>
+			<TH class="yw250 hidden-netbook">Родитель</TH>
+			<TH class="w5"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th60" id="file{{id}}">
+				<td class="w15 hidden-ipad">
+					<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/>
+				</td>
+				<TD class="text-right"><span>{{{datum}}}</span></TD>
+				<TD class="text-center hidden-iphone"><span class="hidden-iphone">{{{icon}}}</span></TD>
+				<TD>
+					<span class="ellipsis fs-11" title="{{title}}"><b><a href="javascript:void(0)" onClick="editUpload('{{id}}','info')">{{title}}</a></b></span><br>
+					<span class="smalltxt gray"><i class="icon-folder"></i> {{folder}}</span>&nbsp;<span class="smalltxt gray hidden-iphone"><i class="icon-user-1"></i> {{user}}</span>
+				</TD>
+				<TD class="text-right"><span>{{size}}&nbsp;</span></TD>
+				<TD class="hidden-netbook">
+					{{#client}}
+						<DIV class="ellipsis" title="{{client}}">
+							<A href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="icon-building broun"></i>&nbsp;{{client}}
+							</A></DIV>
+						<br>
+					{{/client}}
+					{{#person}}
+						<DIV class="ellipsis" title="{{person}}">
+							<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть"><i class="icon-user-1 broun"></i>&nbsp;{{person}}
+							</a>
+						</DIV>
+						<br>
+					{{/person}}
+					{{#deal}}
+						<DIV class="ellipsis paddtop5">
+							<A href="javascript:void(0)" onclick="openDogovor('{{did}}')" title="Открыть"><i class="icon-briefcase blue"></i>&nbsp;{{deal}}
+							</A></DIV>
+						';
+					{{/deal}}
+				</TD>
+				<TD>
+					<div class="action--container">
+						<div class="action--block">
+
+							{{#view}}
+								<A href="javascript:void(0)" onclick="fileDownload('{{id}}','download','','{{title}}')" title="Просмотр" class="gray orange"><i class="icon-eye broun"></i></A>
+							{{/view}}
+							<A href="javascript:void(0)" onclick="fileDownload('{{id}}','download','yes','{{title}}')" title="Скачать" class="gray green"><i class="icon-download blue"></i></A>
+							{{#change}}
+								<A href="javascript:void(0)" onClick="editUpload('{{id}}','edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></A>
+								<A href="javascript:void(0)" onClick="cf=confirm('Удалить файл?');if (cf)editUpload('{{id}}','delete')" title="Удалить" class="gray red"><i class="icon-cancel-circled-1 red"></i></A>
+							{{/change}}
+							&nbsp;
+
+						</div>
+					</div>
+				</TD>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+	<div style="height:45px;"></div>
+</script>

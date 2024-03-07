@@ -1,0 +1,403 @@
+{{#list}}
+
+	{{#isAkt}}
+
+		<DIV class="container1 mb5 focused" data-id="{{deid}}">
+
+			<div class="fcontainer p0 pt10 border--bottom">
+
+				{{^isMobile}}
+
+					{{#isAccess}}
+					<DIV class="panel">
+
+						<a href="javascript:void(0)" onclick="editAkt('edit','{{id}}','','{{did}}')" title="{{Language.all.Edit}}"><i class="icon-pencil blue"></i></a>&nbsp;
+						<a href="javascript:void(0)" onclick="editAkt('mail','{{id}}','','{{did}}')" title="Отправить Акт по Email"><i class="icon-mail-alt broun"></i></a>&nbsp;
+						<a href="javascript:void(0)" onclick="editAkt('print','{{id}}','','{{did}}')" title="На печать"><i class="icon-print green"></i></a>&nbsp;
+
+						{{#canBeDeleted}}
+							<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить Документ ?'); if (cf)editAkt('delete','{{id}}','','{{did}}')" title="{{Language.all.Delete}}"><i class="icon-cancel-circled red"></i></a>&nbsp;
+						{{/canBeDeleted}}
+						{{^canBeDeleted}}
+							<a href="javascript:void(0)" class="gray2 list" title="Удалить может только администратор"><i class="icon-cancel-circled gray"></i></a>
+						{{/canBeDeleted}}
+
+					</DIV>
+					{{/isAccess}}
+
+				{{/isMobile}}
+
+				<div class="fs-12 mb20 Bold gray2 mp10 ptb5lr15">
+
+					<b><span class="uppercase blue">{{title}}</span> № {{number}}</b>
+
+				</div>
+
+				<div class="flex-container mb10 mt20 box--child">
+
+					<div class="flex-string wp20 ptb5lr15 gray2">{{Language.all.Created}}:</div>
+					<div class="flex-string wp80 ptb5lr15 relativ">{{datumFormated}}&nbsp;года</div>
+
+				</div>
+
+				{{#company}}
+				<div class="flex-container mb10 mt10 box--child">
+
+					<div class="flex-string wp20 ptb5lr15 gray2">Компания:</div>
+					<div class="flex-string wp80 ptb5lr15 relativ">{{company}}</div>
+
+				</div>
+				{{/company}}
+
+				{{#signer}}
+					<div class="flex-container mb10 mt10 box--child">
+
+						<div class="flex-string wp20 ptb5lr15 gray2">Подписант:</div>
+						<div class="flex-string wp80 ptb5lr15 relativ">{{signer.title}}</div>
+
+					</div>
+				{{/signer}}
+
+				{{#haveStatus}}
+				<div class="flex-container mb10 mt10 box--child">
+
+					<div class="flex-string wp20 ptb5lr15 gray2">Статус документа:</div>
+					<div class="flex-string wp80 ptb5lr15">
+
+						{{#status}}
+						<div class="colordiv" style="background-color:{{color}}"></div>&nbsp;{{title}}
+						{{#isAccess}}
+						<a href="javascript:void(0)" onclick="editContract('{{deid}}','contract.status')" class="pull-aright gray"><i class="icon-pencil blue"></i>{{Language.all.Edit}}</a>
+						{{/isAccess}}
+
+						<div class="tagsmenuToggler hand mr15 pull-aright relativ" data-id="fhelper">
+
+							<span class="fs-10 blue"><i class="icon-help-circled"></i> Лог</span>
+
+							<div class="tagsmenu fly right hidden" id="fhelper" style="right:0; top: 100%">
+
+								<div class="blok p10 w350">
+
+									{{#statuslog}}
+										<div class="flex-container border-bottom fs-09 mt5">
+											<div class="flex-string wp25">{{datum}}</div>
+											<div class="flex-string wp75">
+												<div class="Bold fs-11 ellipsis"><div class="colordiv" style="background-color:{{color}}"></div>&nbsp;{{status}}</div>
+												<div class="gray2 fs-09 em">{{des}}</div>
+											</div>
+										</div>
+									{{/statuslog}}
+
+								</div>
+
+							</div>
+
+						</div>
+						{{/status}}
+
+					</div>
+
+				</div>
+				{{/haveStatus}}
+				{{^haveStatus}}
+					<div class="flex-container mb10 mt10 box--child">
+
+						<div class="flex-string wp20 ptb5lr15 gray2">Статус документа:</div>
+						<div class="flex-string wp80 ptb5lr15">
+
+							<div class="colordiv" style="background-color:#ccc"></div>&nbsp;Не установлен
+							<a href="javascript:void(0)" onclick="editContract('{{id}}','contract.status')" class="pull-aright gray">{{Language.all.Edit}}</a>
+
+						</div>
+
+					</div>
+				{{/haveStatus}}
+
+				{{#isCardClient}}
+				{{#deal}}
+				<div class="flex-container mb10 mt10 box--child">
+
+					<div class="flex-string wp20 ptb5lr15 gray2">Сделка:</div>
+					<div class="flex-string wp80 ptb5lr15 relativ">
+						<a href="javascript:void(0)" onclick="viewDogovor('{{did}}')" title="Просмотр"><i class="{{icon}}"></i>&nbsp;{{title}}</a>
+					</div>
+
+				</div>
+				{{/deal}}
+				{{/isCardClient}}
+
+				{{#complect}}
+				<div class="flex-container mb10 mt10 box--child">
+
+					<div class="flex-string wp20 ptb5lr15 gray2">Комплектность:</div>
+					<div class="flex-string wp80 ptb5lr15 relativ Bold">
+						{{complect}}%
+					</div>
+
+				</div>
+				{{/complect}}
+
+				{{^isPeriodic}}
+				<div class="flex-container mb10 mt10 box--child">
+
+					<div class="flex-string wp20 ptb5lr15 gray2">Шаблон:</div>
+					<div class="flex-string wp80 ptb5lr15 relativ Bold">
+						{{template}}
+					</div>
+
+				</div>
+				{{/isPeriodic}}
+
+				{{#isPeriodic}}
+				<div class="flex-container mb10 mt10 box--child">
+
+					<div class="flex-string wp20 ptb5lr15 gray2">К счету:</div>
+					<div class="flex-string wp80 ptb5lr15 relativ">
+						№ <b>{{invoice}}</b>&nbsp;от<b>{{invoiceDatumFormated}}</b>
+					</div>
+
+				</div>
+				{{/isPeriodic}}
+
+				{{#isMobile}}
+					{{#isAccess}}
+
+						<div class="flex-container1 mb10 mt10 ptb5 box--child">
+
+							<div class="wp100 mob-pull-right mb10">
+
+								<a href="javascript:void(0)" onclick="editAkt('edit','{{id}}','','{{did}}')" title="'.$lang['all']['Edit'].'"><i class="icon-pencil blue"></i></a>&nbsp;
+								<a href="javascript:void(0)" onclick="editAkt('mail','{{id}}','','{{did}}')" title="Отправить Акт по Email"><i class="icon-mail-alt broun"></i></a>&nbsp;
+								<a href="javascript:void(0)" onclick="editAkt('print','{{id}}','','{{did}}')" title="На печать"><i class="icon-print green"></i></a>&nbsp;
+
+								{{#canBeDeleted}}
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить Документ?'); if (cf)editAkt('delete','{{id}}','','{{did}}')" title="Language.all.Delete"><i class="icon-cancel-circled red"></i></a>&nbsp;
+								{{/canBeDeleted}}
+								{{^canBeDeleted}}
+								<a href="javascript:void(0)" class="gray2 list" title="Удалить может только администратор"><i class="icon-cancel-circled gray"></i></a>
+								{{/canBeDeleted}}
+
+							</div>
+
+						</div>
+
+					{{/isAccess}}
+				{{/isMobile}}
+
+			</div>
+
+		</DIV>
+
+	{{/isAkt}}
+
+	{{#isDocument}}
+
+		<DIV class="container1 mb5 focused p5 {{color}}" data-id="{{deid}}">
+
+			<div class="fcontainer p0 m0 pt10">
+
+				{{^isMobile}}
+					{{#isAccess}}
+						<DIV class="panel">
+
+							<a href="javascript:void(0)" onclick="editContract('{{id}}','contract.edit');" title="{{Language.all.Edit}}"><i class="icon-pencil blue"></i></a>&nbsp;
+							{{#canBeDeleted}}
+							<a href="javascript:void(0)" onclick="cf=confirm('Удалить Документ?'); if (cf)editContract('{{id}}','contract.delete');" title="{{Language.all.Delete}}"><i class="icon-cancel-circled red"></i></a>&nbsp;
+							{{/canBeDeleted}}
+							{{^canBeDeleted}}
+							<a href="javascript:void(0)" class="gray2 list" title="Удалить может только администратор"><i class="icon-cancel-circled gray"></i></a>&nbsp;
+							{{/canBeDeleted}}
+
+						</DIV>
+					{{/isAccess}}
+				{{/isMobile}}
+
+				<div class="fs-12 mb20 gray2 ptb5lr15 mp10">
+
+					<div class="Bold"><span class="uppercase blue">{{title}}</span> № {{number}}</div>
+					<div class="gray2 fs-07 mt5">Тип: {{typeTitle}}</div>
+
+				</div>
+
+				<DIV class="box--child border--bottom mt10">
+
+					<div class="flex-container mb10 mt10 ptb5">
+
+						<div class="flex-string wp20 ptb5lr15 gray2">{{Language.all.Created}}:</div>
+						<div class="flex-string wp80 ptb5lr15 relativ">
+							{{startFormated}}&nbsp;года
+						</div>
+
+					</div>
+
+					{{#company}}
+						<div class="flex-container mb10 mt10 box--child">
+
+							<div class="flex-string wp20 ptb5lr15 gray2">Компания:</div>
+							<div class="flex-string wp80 ptb5lr15 relativ Bold blue">{{company}}</div>
+
+						</div>
+					{{/company}}
+
+					{{#signer}}
+						<div class="flex-container mb10 mt10 box--child">
+
+							<div class="flex-string wp20 ptb5lr15 gray2">Подписант:</div>
+							<div class="flex-string wp80 ptb5lr15 relativ">{{signer.title}}</div>
+
+						</div>
+					{{/signer}}
+
+					{{#haveStatus}}
+						<div class="flex-container mb10 mt10 box--child">
+
+							<div class="flex-string wp20 ptb5lr15 gray2">Статус документа:</div>
+							<div class="flex-string wp80 ptb5lr15">
+
+								{{#status}}
+								<div class="colordiv" style="background-color:{{color}}"></div>&nbsp;{{title}}
+								<a href="javascript:void(0)" onclick="editContract('{{deid}}','contract.status')" class="pull-aright gray"><i class="icon-pencil blue"></i>{{Language.all.Edit}}</a>
+
+								<div class="tagsmenuToggler hand mr15 pull-aright relativ" data-id="fhelper">
+									<span class="fs-10 blue"><i class="icon-help-circled"></i> Лог</span>
+									<div class="tagsmenu fly right hidden" id="fhelper" style="right:0; top: 100%">
+										<div class="blok p10 w350">
+
+											{{#statuslog}}
+												<div class="flex-container border-bottom fs-09 mt5">
+													<div class="flex-string wp25">{{datum}}</div>
+													<div class="flex-string wp75">
+														<div class="Bold fs-11 ellipsis"><div class="colordiv" style="background-color:{{color}}"></div>&nbsp;{{status}}</div>
+														<div class="gray2 fs-09 em">{{des}}</div>
+													</div>
+												</div>
+											{{/statuslog}}
+
+										</div>
+									</div>
+								</div>
+								{{/status}}
+
+							</div>
+
+						</div>
+					{{/haveStatus}}
+					{{^haveStatus}}
+						<div class="flex-container mb10 mt10 box--child">
+
+							<div class="flex-string wp20 ptb5lr15 gray2">Статус документа:</div>
+							<div class="flex-string wp80 ptb5lr15">
+
+								<div class="colordiv" style="background-color:#ccc"></div>&nbsp;Не установлен
+								{{#isAccess}}
+								<a href="javascript:void(0)" onclick="editContract('{{deid}}','contract.status')" class="pull-aright gray"><i class="icon-pencil blue"></i>{{Language.all.Edit}}</a>
+								{{/isAccess}}
+
+							</div>
+
+						</div>
+					{{/haveStatus}}
+
+					{{#isCardClient}}
+					{{#deal}}
+						<div class="flex-container mb10 mt10 box--child">
+
+							<div class="flex-string wp20 ptb5lr15 gray2">Сделка:</div>
+							<div class="flex-string wp80 ptb5lr15 relativ">
+								<a href="javascript:void(0)" onclick="viewDogovor('{{did}}')" title="Просмотр"><i class="{{icon}}"></i>&nbsp;{{title}}</a>
+							</div>
+
+						</div>
+					{{/deal}}
+					{{/isCardClient}}
+
+					{{#datum_end}}
+					<div class="flex-container mb10 mt10">
+
+						<div class="flex-string wp20 ptb5lr15 gray2">Действует до:</div>
+						<div class="flex-string wp80 ptb5lr15 relativ {{^color}}green{{/color}}{{#color}}red{{/color}}" style="word-wrap: break-word;">
+							{{endFormated}}&nbsp;года
+						</div>
+
+					</div>
+					{{/datum_end}}
+
+					{{#payer}}
+					<div class="flex-container mb10 mt10">
+
+						<div class="flex-string wp20 ptb5lr15 gray2">Плательщик:</div>
+						<div class="flex-string wp80 ptb5lr15 relativ" style="word-wrap: break-word;">
+							<a href="javascript:void(0)" onclick="openClient('{{payer.id}}')" title="Плательщик"><b class=blue">{{payer.name}}</b></a>
+						</div>
+
+					</div>
+					{{/payer}}
+
+					{{#des}}
+					<div class="flex-container mb10 mt10">
+
+						<div class="flex-string wp20 ptb5lr15 gray2">Описание:</div>
+						<div class="flex-string wp80 ptb5lr15 relativ" style="word-wrap: break-word;">
+							{{des}}
+						</div>
+
+					</div>
+					{{/des}}
+
+					{{#haveFiles}}
+					<div class="flex-container mb10 mt10">
+
+						<div class="flex-string wp20 ptb5lr15 gray2">{{Language.face.Files}}:</div>
+						<div class="flex-string wp80 ptb5lr15 relativ" style="word-wrap: break-word;">
+
+							{{#files}}
+
+								<div class="pb5">
+									&nbsp;<A href="javascript:void(0)" onclick="fileDownload('','{{file}}','yes','{{name}}')" title="Скачать">{{{icon}}}&nbsp;<B>{{name}}</B></A>&nbsp;[ {{sizeKb}}kb ]
+									{{#view}}
+										&nbsp;[ <A href="javascript:void(0)" onclick="fileDownload('','{{file}}','','{{name}}')" title="Просмотр"><i class="icon-eye broun"></i></A> ]&nbsp;
+									{{/view}}
+									{{#topdf}}
+										&nbsp;[ <A href="javascript:void(0)" onclick="doc2PDF('','{{file}}','','{{name}}','{{id}}')" title="Преобразовать в PDF"><i class="icon-file-pdf red"></i>в PDF</A> ]&nbsp;
+									{{/topdf}}
+								</div>
+
+							{{/files}}
+
+						</div>
+
+					</div>
+					{{/haveFiles}}
+
+					{{#isMobile}}
+						{{#isAccess}}
+
+							<div class="flex-container1 mb10 mt10 ptb5 box--child">
+
+								<div class="wp100 mob-pull-right mb10">
+
+									<a href="javascript:void(0)" onclick="editContract('{{id}}','contract.edit');" title="{{Language.all.Edit}}"><i class="icon-pencil blue"></i></a>
+
+									{{#canBeDeleted}}
+										<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить Документ?'); if (cf)editContract('{{id}}','contract.delete')" title="Language.all.Delete"><i class="icon-cancel-circled red"></i></a>&nbsp;
+									{{/canBeDeleted}}
+									{{^canBeDeleted}}
+										<a href="javascript:void(0)" class="gray2 list" title="Удалить может только администратор"><i class="icon-cancel-circled gray"></i></a>
+									{{/canBeDeleted}}
+
+								</div>
+
+							</div>
+
+						{{/isAccess}}
+					{{/isMobile}}
+
+				</DIV>
+
+			</div>
+
+		</DIV>
+
+	{{/isDocument}}
+
+{{/list}}

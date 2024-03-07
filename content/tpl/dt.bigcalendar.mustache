@@ -1,0 +1,156 @@
+<script id="bigcalendarTpl" type="text/html">
+
+	{{!--Заголовок. Названия дней недели--}}
+	<div class="weeks sticked--top">
+
+		<div class="week weekName wStart">{{language.face.WeekName.0}}</div>
+		<div class="week weekName wStart">{{language.face.WeekName.1}}</div>
+		<div class="week weekName wStart">{{language.face.WeekName.2}}</div>
+		<div class="week weekName wStart">{{language.face.WeekName.3}}</div>
+		<div class="week weekName wStart">{{language.face.WeekName.4}}</div>
+		<div class="week weekName wEnd">{{language.face.WeekName.5}}</div>
+		<div class="week weekName wEnd">{{language.face.WeekName.6}}</div>
+
+	</div>
+
+	<div class="weeks">
+
+		{{!--Тело--}}
+		{{#calendar}}
+
+		{{!--Колонка. Неделя--}}
+		<div class="week day {{bg}}">
+
+			{{#date}}
+
+				{{!--День--}}
+				<div class="dayblock-dv">
+
+					<div class="dayname pl5">
+
+						<div class="date">{{date}}</div>
+
+						<div style="float:right" class="smalltxt mt10 mr5">
+							{{#add}}
+								<a href="javascript:void(0)" onClick="addTask('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="gray"><i class="icon-plus-circled" title="{{language.all.Add}}"></i></a>
+							{{/add}}
+							{{#list}}
+								<a href="javascript:void(0)" onClick="viewTaskList('{{datum}}');" title="{{language.face.BusList}}" class="gray"><i class="icon-th-list"></i></a>
+							{{/list}}
+						</div>
+
+					</div>
+					<div class="daytask">
+
+						<div class="event {{scope}}" data-datum="{{datum}}">
+
+							{{#event}}
+								<div class="wevent hand {{#allday}} {{drg}} {{scope}} bluebg-dark{{/allday}}{{^allday}}todoevent greenbg-dark white{{/allday}}" title="{{^allday}}{{age}} - {{title}}{{/allday}}" {{#iduser}}onClick="viewUser('{{iduser}}');"{{/iduser}} {{#pid}}onClick="viewPerson('{{pid}}');"{{/pid}} {{#clid}}onClick="viewClient('{{clid}}');"{{/clid}} {{#allday}}onClick="viewTask('{{tid}}');" data-tid="{{tid}}" data-old="{{datum}}"{{/allday}}>
+
+									<div class="wtime w40 text-center">
+										<div class="ellipsis1">{{{age}}}</div>
+									</div>
+									<div class="wtitle">{{{tip}}}{{title}}</div>
+
+								</div>
+							{{/event}}
+							{{#cpoint}}
+								<div class="wevent hand fioletbg" onClick="doLoad('content/desktop/dt.health.php?did={{did}}&action=view')" title="{{language.face.ControlPoint}}: {{title}}">
+
+									<div class="wtime w40 text-center">КТ</div>
+									<div class="wtitle">{{{tip}}}{{title}}</div>
+
+								</div>
+							{{/cpoint}}
+							{{#calendar}}
+
+								<div class="wevent hand {{drg}} {{scope}}" onClick="viewTask('{{tid}}');" style="background: {{color}}" data-tid="{{tid}}" data-old="{{datum}}" title="{{title}} {{#tooltip}}{{{tooltip}}}{{/tooltip}}">
+
+									<div class="wtime w40 text-center">{{time}}</div>
+									<div class="wtitle">
+										{{{tip}}}
+										{{^drg}}<i class="icon-lock m0 p0"></i>{{/drg}}
+										{{title}}
+									</div>
+
+								</div>
+							{{/calendar}}
+
+						</div>
+
+					</div>
+
+				</div>
+
+			{{/date}}
+
+		</div>
+
+		{{/calendar}}
+
+		{{!--2 недели следующего месяца--}}
+		{{#next}}
+		<div class="week day {{bg}}">
+
+			{{#date}}
+			<div class="dayblock-dv">
+
+				<div class="dayname {{bg}}">
+
+					<div class="date next">{{date}}</div>
+					<div style="float:right" class="smalltxt mt5 mr5">
+						{{#add}}
+							<a href="javascript:void(0)" onClick="addTask('{{datum}}','{{clid}}','{{pid}}','{{did}}');" class="gray"><i class="icon-plus-circled" title="{{language.all.Add}}"></i></a>
+						{{/add}}
+						{{#list}}
+							<a href="javascript:void(0)" onClick="viewTaskList('{{datum}}');" title="{{language.face.BusList}}" class="gray"><i class="icon-th-list"></i></a>
+						{{/list}}
+					</div>
+
+				</div>
+				<div class="daytask">
+
+					<div class="event {{scope}}" data-datum="{{datum}}">
+						{{#event}}
+							<div class="wevent hand todoevent {{#allday}}bluebg-dark{{/allday}}" {{^allday}}title="{{age}} - {{title}}"{{/allday}} {{#iduser}}onClick="viewUser('{{iduser}}');"{{/iduser}} {{#pid}}onClick="viewPerson('{{pid}}');"{{/pid}} {{#clid}}onClick="viewClient('{{clid}}');"{{/clid}} {{#allday}}onClick="viewTask('{{tid}}');"{{/allday}}>
+
+								<div class="wtime w40 text-center">
+									<div class="ellipsis1 fs-09 flh-09 white">{{{age}}}</div>
+								</div>
+								<div class="wtitle">{{{tip}}}{{title}}</div>
+
+							</div>
+						{{/event}}
+						{{#cpoint}}
+							<div class="wevent hand fioletbg" onClick="doLoad('content/desktop/dt.health.php?did={{did}}&action=view')" title="{{language.face.ControlPoint}}: {{title}}">
+
+								<div class="wtime w40 text-center">КТ</div>
+								<div class="wtitle">{{{tip}}}{{title}}</div>
+
+							</div>
+						{{/cpoint}}
+						{{#calendar}}
+							<div class="wevent hand {{drg}} {{scope}}" onClick="viewTask('{{tid}}');" style="background: {{color}}" data-tid="{{tid}}" data-old="{{datum}}" title="{{title}} {{#tooltip}}{{{tooltip}}}{{/tooltip}}">
+
+								<div class="wtime w40 text-center">{{time}}</div>
+								<div class="wtitle">
+									{{{tip}}}
+									{{^drg}}<i class="icon-lock m0 p0"></i>{{/drg}}
+									{{title}}
+								</div>
+
+							</div>
+						{{/calendar}}
+					</div>
+
+				</div>
+
+			</div>
+			{{/date}}
+
+		</div>
+		{{/next}}
+
+	</div>
+
+</script>

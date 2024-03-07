@@ -1,0 +1,9 @@
+{
+	"name": "Ростелеком",
+	"type": "rostelecom",
+	"functions":["events","cdr","originate","play"],
+	"docs": "https://salesman.pro/docs/146",
+	"comment": "",
+	"author": "Vladislav Andreev",
+	"autor_email": "a.vladislav.g@gmail.com"
+}

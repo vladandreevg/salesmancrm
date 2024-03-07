@@ -1,0 +1,47 @@
+{
+  "datum": {
+    "name": "Дата создания",
+    "width": "80",
+    "on": "yes"
+  },
+  "name": {
+    "name": "Наименование",
+    "width": "200",
+    "on": "yes"
+  },
+  "type": {
+    "name": "Тип",
+    "width": "140",
+    "on": "yes"
+  },
+  "content": {
+    "name": "Описание",
+    "width": "",
+    "on": "yes"
+  },
+  "status": {
+    "name": "Статус",
+    "width": "100",
+    "on": "yes"
+  },
+  "date_start": {
+    "name": "Дата.Старт",
+    "width": "80",
+    "on": "yes"
+  },
+  "date_end": {
+    "name": "Дата.План",
+    "width": "80",
+    "on": "yes"
+  },
+  "date_fact": {
+    "name": "Дата.Факт",
+    "width": "80",
+    "on": "yes"
+  },
+  "workers": {
+    "name": "Исполнители",
+    "width": "120",
+    "on": "yes"
+  }
+}

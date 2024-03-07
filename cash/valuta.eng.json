@@ -1,0 +1,83 @@
+{
+  "nul": "zero",
+  "ten": [
+	[
+	  "",
+	  "one",
+	  "two",
+	  "three",
+	  "four",
+	  "five",
+	  "six",
+	  "seven",
+	  "eight",
+	  "nine"
+	],
+	[
+	  "",
+	  "one",
+	  "two",
+	  "three",
+	  "four",
+	  "five",
+	  "six",
+	  "seven",
+	  "eight",
+	  "nine"
+	]
+  ],
+  "a20": [
+	"ten",
+	"eleven",
+	"twelve",
+	"thirteen",
+	"fourteen",
+	"fifteen",
+	"sixteen",
+	"seventeen",
+	"eighteen",
+	"nineteen"
+  ],
+  "tens": {
+	"2": "twenty",
+	"3": "thirty",
+	"4": "forty",
+	"5": "fifty",
+	"6": "sixty",
+	"7": "seventy",
+	"8": "eighty",
+	"9": "ninety"
+  },
+  "hundred": [
+	"",
+	"one hundred",
+	"two hundred",
+	"three hundred",
+	"four hundred",
+	"five hundred",
+	"six hundred",
+	"seven hundred",
+	"eight hundred",
+	"nine hundred"
+  ],
+  "unit": [
+	[
+	  "thousand",
+	  "thousands",
+	  "thousands",
+	  1
+	],
+	[
+	  "million",
+	  "millions",
+	  "millions",
+	  0
+	],
+	[
+	  "billion",
+	  "billion",
+	  "billion",
+	  0
+	]
+  ]
+}

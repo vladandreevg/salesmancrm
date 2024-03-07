@@ -1,0 +1,93 @@
+<script id="listTpl" type="text/html">
+
+		{{resetIndex}}
+		{{#list}}
+		<tr height="40" class="ha hand ydeal ylog" data-user="{{user}}" data-id="{{id}}">
+			<td>{{index}}</td>
+			<td><b class="blue">{{datum}}</b></td>
+			<td>
+				{{#clid}}
+					<div class="p5"><a href="../../../../card.client.php?clid={{clid}}" title="{{client}}" target="_blank"><i class="icon-building broun"></i> {{client}}</a></div>
+				{{/clid}}
+				{{#pid}}
+					<div class="p5"><a href="../../../../card.person.php?pid={{pid}}" title="{{person}}" target="_blank"><i class="icon-user-1 green"></i> {{person}}</a></div>
+				{{/pid}}
+				{{#did}}
+					<div class="p5"><a href="../../../../card.deal.php?did={{did}}" title="{{deal}}" target="_blank"><i class="icon-briefcase red"></i> {{deal}}</a></div>
+				{{/did}}
+			</td>
+			<td>{{content}}</td>
+			<td>{{get}}</td>
+			<td>{{user}}<br>ID чата: {{uid}}</td>
+		</tr>
+		{{/list}}
+
+</script>
+
+<script id="tplTpl" type="text/html">
+
+		{{resetIndex}}
+		{{#list}}
+		<tr height="40" class="ha" data-id="{{id}}">
+			<td>{{index}}</td>
+			<td>{{name}}</td>
+			<td><b class="blue">{{event}}</b></td>
+			<td class="hand tplview">{{content}}</td>
+			<td><b class="blue">{{date}}</b></td>
+			<td align="center">
+				<div style="z-index: 0;">
+					<a href="javascript:void(0)" title="Редактировать" class="yedit" data-action="tpl.form">Изменить</a>&nbsp;&nbsp;<span class="gray">/&nbsp;&nbsp;</span><a href="javascript:void(0)" title="Редактировать" class="ydelete" data-action="tpl.delete">Удалить</a>
+				</div>
+			</td>
+		</tr>
+		{{/list}}
+
+</script>
+
+<script id="botTpl" type="text/html">
+
+		{{resetIndex}}
+		{{#list}}
+		<tr height="40" class="ha hand ydeal" data-id="{{id}}">
+			<td>{{index}}</td>
+			<td>{{botid}}</td>
+			<td>{{name}}</td>
+			<td>{{tip}}</td>
+			<td><b class="blue">{{date}}</b></td>
+			<td align="center">
+				<div style="z-index: 0;">
+					<a href="javascript:void(0)" title="Инфо" class="yedit" data-action="bot.info">Инфо</a>&nbsp;&nbsp;<span class="gray">/&nbsp;&nbsp;</span><a href="javascript:void(0)" title="Редактировать" class="yedit" data-action="bot.form">Изменить</a>&nbsp;&nbsp;<span class="gray">/&nbsp;&nbsp;</span><a href="javascript:void(0)" title="Редактировать" class="ydelete" data-action="bot.delete">Удалить</a>
+				</div>
+			</td>
+		</tr>
+		{{/list}}
+
+</script>
+
+<script id="userTpl" type="text/html">
+
+		{{resetIndex}}
+		{{#list}}
+		<tr height="40" class="ha hand ydeal" data-id="{{id}}">
+			<td>{{index}}</td>
+			<td><b>{{botid}}</b> / {{bottip}}</td>
+			<td>{{userid}}</td>
+			<td>{{chatid}}{{^chatid}}--{{/chatid}}</td>
+			<td>{{username}}</td>
+			<td>
+				{{#isunlock}}<i class="icon-user-1 blue" title="Пользователь деактивирован"></i>{{/isunlock}}
+				{{^isunlock}}<i class="icon-user-1 gray" title="Пользователь активен"></i>{{/isunlock}}
+				{{#active}}<a href="javascript:void(0)" class="ydelete" data-action="user.activate"><i class="icon-lock-open green" title="Подписка активна. Заблокировать?"></i></a>{{/active}}
+				{{^active}}<a href="javascript:void(0)" class="ydelete" data-action="user.activate"><i class="icon-lock red" title="Подписка заблокирована. Активировать?"></i></a>{{/active}}
+				{{user}}
+			</td>
+			<td><b class="blue">{{date}}</b></td>
+			<td align="center">
+				<div style="z-index: 0;">
+					<a href="javascript:void(0)" title="Редактировать" class="yedit" data-action="user.form">Изменить</a>&nbsp;&nbsp;<span class="gray">/&nbsp;&nbsp;</span><a href="javascript:void(0)" title="Редактировать" class="ydelete" data-action="user.delete">Удалить</a>
+				</div>
+			</td>
+		</tr>
+		{{/list}}
+
+</script>

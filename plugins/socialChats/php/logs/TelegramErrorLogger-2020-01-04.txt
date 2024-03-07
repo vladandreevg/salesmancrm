@@ -1,0 +1,18 @@
+============[Date]============
+[ 2020-01-04 01:44:10  Asia/Yekaterinburg ] 
+==========[Response]==========
+ok:			False
+curl_error_code:		7
+curl_error:		Can't complete SOCKS5 connection to 192.168.156.22:25503. (5)
+=========[Sent Data]==========
+[ref]
+
+
+============[Trace]===========
+#0 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(3207): TelegramErrorLogger::log(Array, Array)
+#1 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(113): Telegram->sendAPIRequest('https://api.tel...', Array, false)
+#2 F:\OpenServer\domains\sm2018.crm\vendor\eleirbag89\telegrambotphp\Telegram.php(128): Telegram->endpoint('getMe', Array, false)
+#3 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\Class\Providers\TelegramProvider.php(213): Telegram->getMe()
+#4 F:\OpenServer\domains\sm2018.crm\plugins\socialChats\php\modal.php(175): Chats\TelegramProvider->check(Array)
+#5 {main}
+

@@ -1,0 +1,13 @@
+AddDefaultCharset UTF-8
+
+<ifModule mod_php.c>
+php_flag zlib.output_compression On
+php_value zlib.output_compression_level 5
+
+Options -Indexes
+php_value register_globals off
+php_value allow_url_fopen 0
+php_value memory_limit 250M
+
+php_flag display_errors off
+</ifModule>

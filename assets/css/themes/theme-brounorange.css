@@ -1,0 +1,448 @@
+body, html,
+.mainbg,
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer{
+	background:#ECF0F1;
+}
+
+#lmenu,
+#lmenu .contaner,
+.ui-widget-header2,
+.ui-layout-resizer,
+.ui-widget-content{
+	border-color:#ECF0F1;
+}
+
+.ui-layout-west,
+#lmenu,
+#lmenu .contaner{
+	background: #EEEEEE;
+}
+
+.tableHeader table{
+	border-top:1px solid #E6E9ED;
+}
+#last .tableHeader table{
+	border-top:0;
+}
+
+/*.ui-widget-content,*/
+.ui-widget-content > a.menu{
+	border-right:0;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+.ui-widget-content > a.menu:hover{
+	border-right:0;
+	background:#ECF0F1;
+	border-color:#ECF0F1;
+}
+
+.ui-layout-center{
+	border:transparent;
+}
+
+/*основной контент*/
+#content, #contentdiv{
+	background: #FFFFFF;
+}
+
+/*фон блока навигации по страницам*/
+/*.pagecontainer .mainbg,
+.pagecontainer .mainbg a{
+	border:0;
+	color:#FFF;
+	background:#34495E;
+}*/
+
+/*фон нижней панели*/
+/*#footpanel, .ui-layout-east{
+	background:#2C3E50;
+}
+#footpanel ul li > a{
+	color:#AAB2BD;
+}*/
+
+/*фон меню*/
+#dttabs .ui-state-active a{
+	color:#4E342E;
+}
+.ui-layout-north{
+	background: rgba(78, 52, 46, 1.0);
+}
+.menu--block,
+#menu{
+	background:
+			linear-gradient(
+					rgba(78, 52, 46, 0.5),
+					rgba(78, 52, 46, 0.3)
+			),
+			url(/assets/images/bg/broun.png) repeat,
+			rgba(78, 52, 46, 1.0);
+	/*background: rgba(78, 52, 46, 1.8);*/
+}
+#menu .hov{
+	border-right: 1px solid #4E342E;//#34495E;
+}
+#menu ul li{
+}
+#menu ul li a{
+}
+#menu ul:hover{
+	background: #FFA000;//#34495E;
+	color:#4E342E;
+}
+#menu ul ul {
+	border-top:2px solid #e3e2e2;
+	background: #4E342E !important;
+}
+/*#menu ul ul,
+#menu ul ul:hover,*/
+#menu a.navlink:link,
+#menu a.navlink:visited {
+	color:#fff;
+	/*background:#FFA000;//#34495E;*/
+	background: #4E342E !important;
+}
+#menu a.navlink:hover{
+	color:#fff;//#34495E;
+	background: #039BE5 !important;
+}
+#menu a.navlink:hover svg use{
+	fill: #FFF !important;
+}
+#menu ul ul li.header{
+	color:#E6E9ED;
+}
+#menu ul > .top-triangle-white{
+	border-bottom: 7px solid #3E2723;//#34495E;
+}
+#menu hr{
+	border-bottom: 1px solid #4E342E;
+
+}
+#menu ul ul:after {
+	border-bottom-color: #3E2723;
+}
+
+#menu ul ul ul.sub{
+	background:#3E2723;
+}
+#menu ul ul ul.sub:after {
+	border-left-color: #3E2723;
+}
+
+#menuavatar hr{
+	border-bottom: 1px solid #ECF0F1;
+}
+	#menuavatar:hover{
+		color          : #3E2723;
+		background:#FFA000;
+	}
+	#menuavatar .avatar-subtext{
+		color:#ECF0F1;
+	}
+
+/**
+Меню аватара
+*/
+.avatar--menu{
+	color              : var(--white);
+	background         : #795548;
+	border             : #3E2723 1px solid;
+}
+.avatar--menu:after {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #3E2723;
+}
+.avatar--menu:before {
+	border-color        : rgba(255, 255, 255, 0);
+	border-bottom-color : #795548;
+}
+.avatar--menu .item:first-child {
+	border-right : 1px dotted #8D6E63;
+}
+
+.avatar--menu .item .string {
+	color                 : #FFF;
+	border-bottom         : 1px dotted #8D6E63;
+}
+.avatar--menu .item .string.green {
+	/*color      : #3F729B;*/
+}
+.avatar--menu .item .string .blue {
+	/*color      : var(--gray-darkblue);*/
+}
+.avatar--menu .item .string .gray {
+	color      : var(--black);
+}
+.avatar--menu .item .string .gray2 {
+	color      : var(--gray);
+}
+.avatar--menu .item .string:hover {
+	color          : #3E2723;
+	background-color : #FFA000;
+}
+.avatar--menu .item .string:hover .blue{
+	/*color      : var(--mint);*/
+}
+.avatar--menu .item .title {
+	color          : #3E2723;
+	border-bottom  : 1px dotted #8D6E63;
+}
+.avatar--menu .item hr {
+	border-bottom   : 1px dotted #8D6E63;
+}
+.avatar--menu .product{
+	color: #222;
+}
+.avatar--menu .product a,
+.avatar--menu .product .blue{
+	color      : #FFF;
+}
+
+/*различные кнопки*/
+.bl2:hover{
+	color:#FFF;
+	background: #0D47A1;//#34495E;
+	border: 1px solid #0D47A1;//#34495E;
+}
+.bl2{
+	color:#FFF;
+	background: #536DFE;
+	border: 1px solid #536DFE;
+}
+
+/*a.button, input.button, a.button:link, a.button:visited{
+	color:#222;
+	background: #ECF0F1;
+	border: 1px solid #BDC3C7;
+	line-height: 20px;
+}
+a.button:hover {
+	background: #03A9F4;
+	border: 1px solid #2196F3;
+	color:#fff;
+}*/
+
+/*Кнопка Добавить обращение*/
+.contaner > a.button {
+	color:#222;
+	background: #FFCE54;
+	border:0;
+	margin: 0 2px;
+	padding: 10px;
+}
+.contaner > a.button:hover {
+	color:#222;
+	background: #F6BB42;
+}
+
+.ha:hover{
+	/*background: rgba(255, 207, 83, 0.3);*/
+	background: rgba(179,229,252,0.3);
+}
+
+/*popup*/
+.popmenu, .popmenu-top, .submenu{
+
+}
+	.popmenu .popheader{
+		color:#FFF;
+		background: #039BE5;//#4A89DC;
+	}
+	.popmenu .popheader .blue{
+		color:#FFF;
+	}
+	.popcontent .clink a:hover,
+	.popcontent .clink:hover,
+	.submenu a.menu:hover{
+		background: #E1F5FE;
+	}
+
+.triangle{
+	border-top: 7px solid #039BE5;//#4A89DC;
+}
+.top-triangle{
+	border-bottom: 7px solid #039BE5;//#4A89DC;
+}
+
+/*карточка*/
+#head #close{
+	/*top:-10px;*/
+	border:1px solid #3E2723;//#34495E;
+	border-top:0;
+	background:#F6BB42;
+	font-size:0.80em;
+	color: #3E2723;//#34495E;
+	line-height: 0.95em;
+	padding: 5px 10px;
+}
+#head #close:hover{
+	border:1px solid #3E2723;//#34495E;
+	border-top:0;
+	background:#FFFFFF;
+	color: #3E2723;//#34495E;
+}
+
+.fixx{
+	color:#FFF;
+	/*background:#3E2723;*/
+	background:
+			linear-gradient(
+					rgba(78, 52, 46, 0.5),
+					rgba(78, 52, 46, 0.9)
+			),
+			url(/assets/images/bg/broun.png) repeat;
+}
+	.fixx #ctitle .blue,
+	.fixx #ctitle a{
+		color:#BDC3C7;
+	}
+
+#dtabs ul li {
+	color: #FFF;
+	background:rgba(109,76,65 ,0.5);//#2C3E50;
+}
+#dtabs ul li:hover,
+#dtabs ul li a:hover {
+	border-bottom:0;
+	color:#FFF;
+	background: #039BE5;
+}
+#dtabs ul li a,
+#dtabs ul li:hover a{
+	color: #FFF;
+}
+#dtabs ul li.current:hover a{
+	color: #3E2723;
+	background:#F7F7EE;
+}
+
+fieldset{
+	border-color: #BDC3C7;
+}
+
+fieldset .batton-edit a,
+fieldset .batton-edit a .blue{
+	color:#3E2723;//#2C3E50;
+}
+
+/*элементы ui.jquery*/
+.ui-state-active > #dialog, .ui-widget-content .ui-state-active > #dialog,
+.mainbg .contaner,
+.mainbg .ui-tabs-nav,
+#tab_container,
+#dttabs .ui-state-active,
+#accordion .ui-state-active{
+	border-color: #BDC3C7;
+}
+
+#accordion .ui-state-default{
+	border-color: #D7CCC8;
+}
+
+.ui-widget-header > #dialog{
+	border-bottom: 1px solid #BDC3C7;
+}
+
+.ui-state-default > #dialog,
+.ui-widget-content .ui-state-default > #dialog{
+	border-color: #D7CCC8;
+	color:#3E2723;
+}
+
+/*#dttabs .ui-state-default a,*/
+#accordion .ui-state-default a{
+	color:#3E2723;
+}
+/*#dttabs .ui-state-default:not(.ui-state-active) a:hover,*/
+#accordion .ui-state-default:not(.ui-state-active) a:hover{
+	color:#FFF;
+}
+/*#dttabs .ui-state-active a:hover,*/
+#accordion .ui-state-active a:hover{
+	color:#3E2723;
+}
+
+#tab_container:hover,
+/*#dttabs .ui-state-default:not(.ui-state-active):hover,*/
+#accordion .ui-state-default:not(.ui-state-active):hover{
+	background: none;
+	background-color: #A1887F;
+	color:#fff;
+}
+.ui-state-default a > #dialog,
+.ui-state-default a:link > #dialog,
+.ui-state-default a:visited > #dialog{
+	color:#3E2723;
+}
+
+#accordion .ui-state-active,
+#accordion .ui-widget-content .ui-state-active,
+.ui-state-active > #dialog,
+.ui-widget-content .ui-state-active > #dialog{
+	background: #D7CCC8;
+}
+
+#tab_container,
+#tab_container .blue{
+	color:#222;
+}
+
+/*список дел в левой панели*/
+#taskweek .header{
+	color:#222;
+	background:#F5F7FA;
+	border-color:#F5F7FA;
+}
+
+#entrybutton .button{
+	background: #039BE5;
+	color: #fff;
+}
+#entrybutton .button:hover{
+	background: #FFA000;
+}
+
+#footpanel .adder{
+	color: #2E658D;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+#footpanel .adder:hover{
+}
+#footpanel .adder:hover a {
+	color: #2E658D;
+}
+
+#footpanel .pops {
+	background: #2980B9;
+	border: 0 solid #2980B9;
+}
+#footpanel .pops:after, #footpanel .pops:before {
+}
+#footpanel .pops:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: #2980B9;
+}
+#footpanel .pops:before {
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #fff;
+}
+
+#footpanel .pops .clink i{
+	color: #fff;
+}
+#footpanel .pops .clink{
+}
+#footpanel .pops .clink:hover{
+	opacity: 1.0;
+	color: #2980B9;
+	background: #fff;
+}
+#footpanel .pops .clink:hover i{
+	color: #2980B9;
+}

@@ -1,0 +1,55 @@
+<ul class="hov" onclick="window.location.assign('index.php')">
+	<li>
+
+		<ul class="relativ" id="{{subid}}">
+
+			<li>
+				<a href="index.php" class="navlink">
+					<span><i class="icon-home"></i></span>
+					<span>Рабочий стол</span>
+				</a>
+			</li>
+
+		</ul>
+
+	</li>
+</ul>
+
+{{#list}}
+
+	{{#accesse}}
+	<ul class="hov" id="{{id}}">
+		<li class="{{main.class}}">
+
+			<div class="head">
+
+				&nbsp;{{{main.icon}}}&nbsp;{{main.title}}
+
+			</div>
+
+			{{#subid}}
+			<ul class="relativ" id="{{subid}}">
+
+				{{#sub}}
+				{{#accesse}}
+
+					{{#ismenu}}
+					<li class="{{class}}" data-type="{{type}}">
+						<a href="{{#url}}{{url}}{{/url}}{{^url}}javascript:void(0){{/url}}" class="navlink"{{#onclick}} onClick="{{{onclick}}}"{{/onclick}} {{#target}}target="{{target}}"{{/target}}>
+							<span>{{{icon}}}</span>
+							<span class="{{spanclass}}"{{#spanstyle}} style="{{spanstyle}}"{{/spanstyle}}>{{title}}</span>
+						</a>
+					</li>
+					{{/ismenu}}
+
+				{{/accesse}}
+				{{/sub}}
+
+			</ul>
+			{{/subid}}
+
+		</li>
+	</ul>
+	{{/accesse}}
+
+{{/list}}

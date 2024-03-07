@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="php-slack" default="build" basedir="../../">
+    <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd,tests"/>
+
+    <property name="codebase" value="" />
+
+    <target name="clean" description="Cleanup build artifacts">
+        <delete dir="${basedir}/build/ci/logs/tests"/>
+        <delete dir="${basedir}/build/ci/logs"/>
+    </target>
+    <target name="prepare" depends="clean" description="Prepare for build">
+        <mkdir dir="${basedir}/build/ci/logs"/>
+        <mkdir dir="${basedir}/build/ci/logs/tests"/>
+    </target>
+
+    <!-- "php -l" => Sintax check only (lint) -->
+    <target name="lint">
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+            <fileset dir="${basedir}/src">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+            <fileset dir="${basedir}/tests">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+        </apply>
+    </target>
+
+    <!-- Measuring the size and analyzing the structure. -->
+    <target name="phploc" description="Measure project size using PHPLOC">
+        <exec executable="phploc">
+            <arg value="--log-csv" />
+            <arg value="${basedir}/build/ci/logs/phploc.csv" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <!-- PHP Mess Detector -->
+    <target name="phpmd"
+            description="Perform project mess detection using PHPMD creating a
+            log file for the continuous integration server">
+        <exec executable="phpmd">
+            <arg path="${basedir}/src" />
+            <arg value="xml" />
+            <arg value="${basedir}/build/ci/phpmd.xml" />
+            <arg value="--reportfile" />
+            <arg value="${basedir}/build/ci/logs/pmd.xml" />
+        </exec>
+    </target>
+
+    <!-- PHP Code Sniffer -->
+    <target name="phpcs"
+            description="Find coding standard violations using PHP_CodeSniffer
+            creating a log file for the continuous integration server">
+        <exec executable="phpcs" output="/dev/null">
+            <arg value="--report=checkstyle" />
+            <arg value="--report-file=${basedir}/build/ci/logs/checkstyle.xml" />
+            <arg value="--standard=${basedir}/build/ci/phpcs.xml" />
+            <arg value="--extensions=php" />
+            <arg path="${basedir}/src" />
+            <arg path="${basedir}/tests" />
+        </exec>
+    </target>
+
+    <!-- PHP Copy/Paster detector -->
+    <target name="phpcpd" description="Find duplicate code using PHPCPD">
+        <exec executable="phpcpd">
+            <arg value="--log-pmd" />
+            <arg value="${basedir}/build/ci/logs/pmd-cpd.xml" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <!-- PHP Unit -->
+    <target name="tests" description="Run tests with PHPUnit">
+        <exec executable="phpunit" failonerror="true">
+            <arg value="-c"/>
+            <arg path="${basedir}"/>
+            <arg value="--coverage-html"/>
+            <arg path="${basedir}/build/ci/logs/tests/"/>
+            <arg value="--coverage-clover"/>
+            <arg path="${basedir}/build/ci/logs/tests/clover.xml"/>
+        </exec>
+    </target>
+</project>

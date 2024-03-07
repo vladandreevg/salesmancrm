@@ -1,0 +1,9 @@
+{
+	"name": "Гравител",
+	"type": "gravitel",
+	"functions":["events","cdr","originate","play"],
+	"docs": "https://salesman.pro/docs/125",
+	"comment": "Поддерживаются провайдеры: МегаФон, МГТС, Гравител, Дом.ру, Энфорта, ТТК, Virgin Connect, Гарс Телеком, Наука-связь, RiNet, Сибирские Сети, Авантел, Вест Колл СПб, ВестКолл Москва, Омские Кабельные Сети, Новотелеком, Деловая Сеть Иркутск.",
+	"author": "Vladislav Andreev",
+	"autor_email": "a.vladislav.g@gmail.com"
+}

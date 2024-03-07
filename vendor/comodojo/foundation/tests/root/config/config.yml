@@ -1,0 +1,20 @@
+static-config: config
+env-config: envconfig.yml
+routing-table-cache: false
+routing-table-ttl: 86400
+log:
+    enable: true
+    name: dispatcher
+    providers:
+        local :
+            type: StreamHandler
+            level: info
+            stream: logs/dispatcher.log
+cache:
+    enable: true
+    pick_mode: PICK_FIRST
+    providers:
+        local:
+            type: Filesystem
+            cache_folder: cache
+mock-version-name: 42 is the new black

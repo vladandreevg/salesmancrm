@@ -1,0 +1,81 @@
+<script id="callsTpl" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<tr class="header_contaner">
+			<TH class="yw80 text-center"><b>Дата</b></TH>
+			<TH class="w40 text-center"><span class="visible-iphone">Направление вызова</span></TH>
+			<TH class="w40 text-center"><span class="visible-iphone">Результат</span></TH>
+			<TH class="hidden yw120 text-center"><b>Наш номер</b></TH>
+			<TH class="yw160 text-center"><b>Источник</b></TH>
+			<TH class="yw160 text-center"><b>Назначение</b></TH>
+			<TH class="yw60 text-center">
+				<i class="icon-clock" title="Продолжительность, мин."></i><span class="visible-iphone">Длительность, мин.</span>
+			</TH>
+			<TH class="yw60 text-center"><b>Запись</b></TH>
+			<TH class="hidden-netbook yw100">
+				<div class="ellipsis"><B>Сотрудник</B></div>
+			</TH>
+			<TH class="">
+				<div class="ellipsis"><B>Клиент/Персона</B></div>
+			</TH>
+			<th class="w5"></th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th40" data-id="{{id}}">
+				<td class="text-center">
+					<div class="smalltxt">{{datum}}</div>
+				</td>
+				<td class="text-center">
+					<span>{{{direct}}}</span>
+				</td>
+				<td class="text-center"><span class="Bold {{color}}">{{{rezult}}}</span></td>
+				<td class="hidden">{{{did}}}</td>
+				<td>
+					<div class="ellipsis Bold enable--select">{{{src}}}</div>
+					{{#did}}<br>
+						<div title="Номер линии" class="fs-09 gray-dark ellipsis hidden-iphone pt5">{{{did}}}</div>
+					{{/did}}
+				</td>
+				<td>
+					<div class="ellipsis Bold enable--select">{{{dst}}}</div>
+				</td>
+				<td class="text-right">
+					<span>{{{dur}}}</span>
+				</td>
+				<td class="text-center"><span>{{{play}}}</span></td>
+				<td class="hidden-netbook"><SPAN class="ellipsis" title="{{user}}">{{user}}</SPAN></td>
+				<td>
+					{{#client}}
+						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{clid}}')"><i class="icon-building blue"></i>{{client}}</a></span>
+					{{/client}}
+					{{#person}}
+						<br><span class="ellipsis paddtop5" title="{{person}}"><a href="javascript:void(0)" onclick="openPerson('{{pid}}')"><i class="icon-user-1 green"></i>{{person}}</a></span>
+					{{/person}}
+				</td>
+				<TD>
+					{{#add}}
+						<div class="action--container">
+							<div class="action--block">
+
+								<a href="javascript:void(0)" onclick="expressClient('{{phone}}')" class="gray blue" title="{{phone}}. Добавить экспресс"><i class="icon-plus-circled"><i class="icon-paper-plane sup"></i></i></a>
+								<a href="javascript:void(0)" onclick="editEntry('','edit','{{phone}}')" class="gray green" title="{{phone}}. Добавить обращение"><i class="icon-phone-squared"><i class="icon-plus-circled sup"></i></i></a>
+								<!--
+					<a href="javascript:void(0)" onclick="editEntry('','toclient','{{phone}}')" class="gray broun" title="{{phone}}. Добавить к киенту"><i class="icon-building"><i class="icon-plus-circled sup"></i></i></a>
+					<a href="javascript:void(0)" onclick="editEntry('','toperson','{{phone}}')" class="gray red" title="{{phone}}. Добавить к контакту"><i class="icon-user"><i class="icon-plus-circled sup"></i></i></a>
+					-->
+
+							</div>
+						</div>
+					{{/add}}
+				</TD>
+			</TR>
+		{{/list}}
+		</tbody>
+	</TABLE>
+
+	<div class="space-40"></div>
+
+</script>

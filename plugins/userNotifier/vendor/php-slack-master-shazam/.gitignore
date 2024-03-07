@@ -1,0 +1,6 @@
+vendor
+build/ci/logs
+build/ci/api
+*.swp
+*.swo
+cache.properties

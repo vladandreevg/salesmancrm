@@ -1,0 +1,87 @@
+{
+    "date_create": {
+        "name": "Создан",
+        "width": "80px",
+        "on": "yes"
+    },
+    "title": {
+        "name": "Название",
+        "width": "",
+        "on": "yes"
+    },
+    "pid": {
+        "name": "Осн.контакт",
+        "width": "100px",
+        "on": "yes"
+    },
+    "tip_cmr": {
+        "name": "Тип отношений",
+        "width": "20px",
+        "on": "yes"
+    },
+    "idcategory": {
+        "name": "Отрасль",
+        "width": "120px",
+        "on": ""
+    },
+    "iduser": {
+        "name": "Ответственный",
+        "width": "100px",
+        "on": "yes"
+    },
+    "phone": {
+        "name": "Телефон",
+        "width": "130px",
+        "on": "yes"
+    },
+    "mail": {
+        "name": "Почта",
+        "width": "130px",
+        "on": ""
+    },
+    "site": {
+        "name": "Сайт",
+        "width": "120px",
+        "on": ""
+    },
+    "territory": {
+        "name": "Территория",
+        "width": "100px",
+        "on": ""
+    },
+    "clientpath": {
+        "name": "Источник клиента",
+        "width": "100px",
+        "on": ""
+    },
+    "last_dog": {
+        "name": "Дней с последней сделки",
+        "width": "60px",
+        "on": "yes"
+    },
+    "last_history": {
+        "name": "Последняя активность",
+        "width": "100px",
+        "on": "yes"
+    },
+    "last_history_descr": {
+        "name": "Описание активности",
+        "width": "100px",
+        "on": "yes"
+    },
+    "zakaz_kol": {
+        "name": "Число заказов",
+        "width": "60px",
+        "on": "yes"
+    },
+    "zakaz_sum": {
+        "name": "Сумма заказов",
+        "width": "80px",
+        "on": "yes"
+    },
+    "address": {
+        "name": "Адрес",
+        "width": "80px",
+        "on": ""
+    }
+}

@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+
+RewriteEngine on
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+
+RewriteRule ^webhooks/(.*)/(.*)/(.*)/$ webhooks.php?channel=$1&api_key=$2&botid=$3 [L,QSA]
+
+</IfModule>

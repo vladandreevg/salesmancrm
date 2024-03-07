@@ -1,0 +1,242 @@
+<div class="fullscreen hand paddright10 hidden-ipad" title="На весь экран" onclick="fullScreen()">
+	<i class="icon-resize-full" id="fsc"></i>
+</div>
+
+<DIV class="zagolovok"><B>Написать письмо</B></DIV>
+
+{{#exit}}
+	<div class="warning">Упс! Не найден Email</div>
+{{/exit}}
+
+{{^exit}}
+
+	<FORM action="modules/mailer/core.mailer.php" method="post" enctype="multipart/form-data" name="eForm" id="eForm">
+		<INPUT type="hidden" id="action" name="action" value="compose.on">
+		<INPUT type="hidden" id="isDraft" name="isDraft" value="no">
+		<INPUT type="hidden" id="id" name="id" value="{{id}}">
+		<input type="hidden" name="parentmid" id="parentmid" value="{{parentmid}}">
+		<input type="hidden" name="tocount" id="tocount" value="{{tocount}}">
+		<input type="hidden" name="copycount" id="copycount" value="{{copycount}}">
+		<input type="hidden" name="did" id="did" value="{{did}}">
+
+		<DIV id="mailComposer">
+
+			<div id="mesLeft">
+
+				<div id="aTbl" class="tooltips" tooltip-type="orange" tooltip="<b>Чтобы добавить произвольный email нажмите клавиши Ctrl+Enter</b><br>Или начинайте вводить название Клиента, Контакта или email и выбирайте из найденных в базе." tooltip-position="bottom">
+
+					<div class="adresat adres mb2 relativ no--overflow">
+
+						<div id="tagbox" class="no--overflow">
+
+							<div class="tg inline">
+								{{#to}}
+									<div id="mess{{i}}" class="tags relativ black flex-box" title="{{email}}">
+										{{name}}
+										<input type="hidden" name="email[]" id="email[]" value="{{email}}">
+										<input type="hidden" name="name[]" id="name[]" value="{{name}}">
+										{{#pid}}
+											<input type="hidden" name="pid[]" id="pid[]" value="{{pid}}">{{/pid}}
+										{{#clid}}
+											<input type="hidden" name="clid[]" id="clid[]" value="{{clid}}">{{/clid}}
+										<div class="delete delItem"><i class="icon-cancel-circled"></i></div>
+									</div>
+								{{/to}}
+							</div>
+							<div id="flexinput" class="inline flex-box" style="flex-grow:2; align-self: stretch;">
+
+								<INPUT name="adresTo" type="text" id="adresTo" value="" placeholder="Адресат" onkeydown="if(event.keyCode==13 && event.ctrlKey){ addEmail(); return false }">
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<div id="copyPole" class="adresat copy mb2 {{^copy}}hidden{{/copy}}">
+
+						<div id="tagbox2">
+
+							{{#copy}}
+								<div id="mess{{i}}" class="tags relativ black flex-box" title="{{email}}">
+									{{name}}
+									<input type="hidden" name="email[]" id="email[]" value="{{email}}">
+									<input type="hidden" name="name[]" id="name[]" value="{{name}}">
+									{{#pid}}<input type="hidden" name="pid[]" id="pid[]" value="{{pid}}">{{/pid}}
+									{{#clid}}
+										<input type="hidden" name="clid[]" id="clid[]" value="{{clid}}">{{/clid}}
+									<div class="delete delItem"><i class="icon-cancel-circled"></i></div>
+								</div>
+							{{/copy}}
+
+						</div>
+						<INPUT name="copyTo" type="text" id="copyTo" value="" placeholder="Добавить">
+
+					</div>
+
+					<div class="adresat mb2" id="theme">
+
+						<INPUT name="theme" type="text" id="theme" value="{{subject}}" class="required theme p5 wp100" placeholder="Тема сообщения">
+
+					</div>
+
+				</div>
+
+				<div id="mesSubLeft" style="height:300px; max-height:300px; overflow: auto !important;">
+
+					<textarea name="content" id="content" style="height:100%">{{content}}</textarea>
+
+				</div>
+
+			</div>
+			<div id="mesRight" style="height:400px; max-height:400px; overflow-y: auto; border:0;" class="pr5">
+
+				<div class="flex-container box--child">
+
+					<div class="flex-string wp100 label hidden"></div>
+					<div class="flex-string wp100 adresat" title="Приоритет">
+
+						<div id="psdiv" class="priority div-center flex-container">
+
+							<input type="hidden" id="priority" name="priority" value="{{priority}}">
+							<div class="but flex-string yelw text-center" id="pr5" title="Низкий Приоритет" onClick="setPS('priority','5')" data-priority="5">
+								<i class="icon-down-big"></i>Низкий
+							</div>
+							<div class="but flex-string blue text-center" id="pr3" title="Обычный Приоритет" onClick="setPS('priority','3')" data-priority="3">
+								<i class="icon-ok"></i>Норма
+							</div>
+							<div class="but flex-string red text-center" id="pr1" title="Высокий Приоритет" onClick="setPS('priority','1')" data-priority="1">
+								<i class="icon-up-big"></i>Высокий
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="flex-string wp100 label">Шаблоны</div>
+					<div class="flex-string wp100 block">
+
+						<select name="tplId" class="required wp100" id="tplId" onchange="selectTpl()">
+							<option value="0">--Выбор--</option>
+							{{#tpl}}
+								<option value="{{id}}">{{name}}{{#share}} [Общий]{{/share}}</option>
+							{{/tpl}}
+						</select>
+
+					</div>
+
+					<div class="flex-string wp100 label">Вложения</div>
+					<div class="flex-string wp100">
+
+						<div class="adresat border-box">
+
+							{{#diskLimit}}
+								<div id="iuploads" style="max-height:100px; overflow: auto;">
+
+									<div class="fileboxx relativ ha wp100 p5 border-box">
+										<input name="file[]" id="file[]" type="file" class="file wp100" onchange="addfile();" multiple>
+										<div class="dfileboxx hand clearUploadbox mt5" title="Очистить">
+											<i class="icon-cancel-circled red"></i>
+										</div>
+									</div>
+
+								</div>
+							{{/diskLimit}}
+							{{^diskLimit}}
+								<div class="warning smalltxt text-center">
+									<b class="red">Превышен лимит использования диска</b></div>
+							{{/diskLimit}}
+
+							<div class="infodiv hidden pad5 fs-07 description border-box" style="overflow: auto; max-height:200px"></div>
+
+						</div>
+						<div class="fs-07 gray">
+							Максимальный размер файла: <b>{{maxupload}} Mb</b>
+						</div>
+
+					</div>
+
+					<div class="flex-string wp100 label">Вложенные файлы</div>
+					<div class="flex-string wp100" id="existfile">
+
+						<div class="adresat border-box p5">
+
+							{{!--Загруженные в сообщение файлы ( вне системы )--}}
+							<div id="fuploads" style="max-height:100px; overflow: auto;">
+
+								{{#attach}}
+									<div class="fileboxx ellipsis wp100 relativ" style="display: block;">
+
+										<input name="fid[]" type="hidden" class="file" id="fid[]" value="{{id}}">
+										<a href="getfile.php?file=ymail/{{file}}" target="blank" title="Открыть"><i class="{{icon}}"></i>{{name}}
+										</a>
+
+										<div class="dfileboxx hand mini deleteFilebox" title="Удалить">
+											<i class="icon-cancel-circled red"></i>
+										</div>
+
+									</div>
+								{{/attach}}
+
+								{{^attach}}
+									<div class="fs-09 gray nofile pt5 no--overflow">Нет вложений</div>
+								{{/attach}}
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="flex-string wp100 label">Из каталога файлов</div>
+					<div class="flex-string wp100">
+
+						<div id="docs" class="adresat relativ border-box">
+
+							<div id="duploads">
+
+								{{!-- Файлы из каталога файлов ( в системе )--}}
+								<div class="filebox wp100 border-bottom">
+
+									{{#files}}
+										<div id="doc-{{j}}" class="fileboxx ha relativ p5 ellipsis wp100 border-box">
+											<input name="xfid[]" id="xfid[]" type="hidden" value="{{fid}}">
+											<i class="{{icon}}"></i>{{name}}
+											<div class="dfileboxx hand deleteDocbox" title="Очистить">
+												<i class="icon-cancel-circled red"></i></div>
+										</div>
+									{{/files}}
+
+								</div>
+
+								<div class="p5">
+
+									<A href="javascript:void(0)" onClick="appendFiles()" class="sbutton greenbg">Добавить</A>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</DIV>
+
+		<div class="bottom">
+
+			<hr>
+
+			<span id="orangebutton" class="pull-left"><A href="javascript:void(0)" onClick="saveDraft()" class="button">Сохранить черновик</A></span>&nbsp;
+			<A href="javascript:void(0)" onClick="sendMessagef()" class="button">Отправить</A>&nbsp;
+			<A href="javascript:void(0)" onClick="DClose2()" class="button">Отмена</A>
+
+		</div>
+
+	</FORM>
+{{/exit}}
+

@@ -1,0 +1,60 @@
+<script id="channelTpl" type="text/html">
+
+		{{resetIndex}}
+		{{#list}}
+		<div class="flex-container float infodiv {{#active}}bgwhite{{/active}}{{^active}}graybg-sub{{/active}} ha p10" data-id="{{id}}">
+
+			<div class="flex-string w60">
+
+				<div class="avatar--mini" style="background: url(assets/images/{{icon}}); background-size:cover;" title="{{title}}"></div>
+
+			</div>
+			<div class="flex-string float relativ">
+
+				<div class="Bold fs-12"><span class="chat-ellipsis">{{name}}</span></div>
+				<div class="fs-10 blue mt5"><span class="chat-ellipsis">{{type}}</span></div>
+				<div class="fs-09 gray mt5">{{uid}}</div>
+
+				<div class="button--icon">
+
+					<!--<a href="javascript:void(0)" onclick="$app.infoChannels({{id}})" title="Инфо" class="gray blue" data-action="channel.info"><i class="icon-info-circled-1"></i></a>-->
+					<a href="javascript:void(0)" onclick="$app.editChannel({{id}})" title="Редактировать" class="gray blue" data-action="channel.edit"><i class="icon-pencil"></i></a>
+					<a href="javascript:void(0)" onclick="$app.removeChannel({{id}})" title="Удалить" class="gray red" data-action="channel.delete"><i class="icon-cancel-circled-1"></i></a>
+
+				</div>
+
+			</div>
+
+
+		</div>
+		{{/list}}
+
+</script>
+
+<script id="userTpl" type="text/html">
+
+		{{resetIndex}}
+		{{#list}}
+		<div class="flex-container float infodiv bgwhite ha p10" data-id="{{iduser}}">
+
+			<div class="flex-string w60">
+				<div class="avatar--mini" style="background: url({{avatar}}); background-size:cover;" title="{{title}}"></div>
+			</div>
+			<div class="flex-string float relativ">
+
+				<div class="Bold fs-12"><span class="chat-ellipsis">{{title}}</span></div>
+				<div class="fs-09 gray2 mt5"><span class="chat-ellipsis">{{tip}}</span></div>
+
+				<div class="button--icon">
+					<a href="javascript:void(0)" onclick="$app.removeUser({{iduser}})" title="Удалить" class="gray red" data-action="user.delete"><i class="icon-cancel-circled-1"></i></a>
+				</div>
+
+			</div>
+
+		</div>
+		{{/list}}
+		{{^list}}
+			<div class="attention bgwhite">Операторы не заданы</div>
+		{{/list}}
+
+</script>

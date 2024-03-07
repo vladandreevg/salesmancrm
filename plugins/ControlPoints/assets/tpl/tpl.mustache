@@ -1,0 +1,55 @@
+<script id="popControlPointTpl" type="text/html">
+
+	<li class="pop donthidee" data-id="controlpoints" title="Контрольные точки">
+
+		<div class="pops">
+			<span><i class="icon-check"></i></span>
+			<span class="bullet point--bullet">0</span>
+		</div>
+
+		<div class="popmenu yw350">
+
+			<div class="left-triangle-before"></div>
+			<div class="left-triangle-after"></div>
+
+			<div class="pophead">
+				Контрольные точки
+				<span class="link">
+					<a href="cpoint" title="Перейти к разделу" target="blank"><i class="icon-check pull-aright"></i></a>
+				</span>
+			</div>
+			<div class="popbody">
+				<div class="popcontent cursor-default" data-id="cplist"></div>
+			</div>
+
+		</div>
+
+	</li>
+
+</script>
+
+<script id="listControlPointTpl" type="text/html">
+
+	{{#list}}
+	<div class="flex-container box--child border-bottom ha hand" onclick="openDogovor({{did}})">
+
+		<div class="flex-string wp100 p5 pl10 pr10 relativ">
+
+			<div class="date blue mt5 Bold" title="Плановая дата">{{rudate}}</div>
+			<div class="{{color}} rounded inline p5 pl10 pr10 white fs-07 Bold pull-right"><i class="icon-calendar-inv"></i> {{days}} д.</div>
+
+		</div>
+		<div class="flex-string wp100 p5 pl10 pr10">
+
+			<div class="fs-12 Bold text-wrap">{{point}}</div>
+			<div class="ellipsis fs-09 mt5 gray"><i class="icon-briefcase broun"></i>{{deal}}</div>
+			{{#user}}<div class="fs-09 mt5 gray text-right"><i class="icon-user-1 blue"></i>{{user}}</div>{{/user}}
+
+		</div>
+
+	</div>
+	{{/list}}
+
+	<div class="space-100"></div>
+
+</script>

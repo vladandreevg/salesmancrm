@@ -1,0 +1,104 @@
+<script id="weekcalendarTpl" type="text/html">
+
+<div class="weeks block sticked--top">
+
+	<div class="week time graybg">{{language.all.Time}}</div>
+	<div class="weekNames">
+
+		{{#header}}
+		<div class="week weekName {{class}}">
+			{{name}}, {{{date}}}
+		</div>
+		{{/header}}
+
+	</div>
+
+</div>
+
+<div class="timepanel">
+
+	<div class="time dayly sticked--top" title="События на весь день"><i class="icon-clock"></i></div>
+
+	{{#hours}}
+		<div class="time {{class}} {{#today}}today{{/today}}" data-hour="{{h}}" >{{h}}</div>
+	{{/hours}}
+
+</div>
+
+<div class="taskpanel sticked--top">
+
+	{{#calendar}}
+
+		<div class="day">
+
+			<div class="hour--block wevent dayly" data-datum="{{datum}}">
+				{{#event}}
+					{{#allday}}
+					<div class="wevent mb1 hand bluebg-dark" onClick="viewTask('{{tid}}');" data-tid="{{tid}}" data-old="{{datum}}">
+
+						<div class="wtime w40 text-left"><div class="ellipsis">{{{age}}}</div></div>
+						<div class="wtitle">{{{tip}}}{{title}}</div>
+
+					</div>
+					{{/allday}}
+					{{^allday}}
+					<div class="wevent mb1 hand" title="{{comment}} {{age}}: {{title}}" style="background:{{color}}" {{#iduser}}onClick="viewUser('{{iduser}}');"{{/iduser}} {{#pid}}onClick="viewPerson('{{pid}}');"{{/pid}} {{#clid}}onClick="viewClient('{{clid}}');"{{/clid}}>
+
+						<div class="wtime w40 text-left pl5"><div class="ellipsis">{{{age}}}</div></div>
+						<div class="wtitle">{{{tip}}}{{title}}</div>
+
+					</div>
+					{{/allday}}
+				{{/event}}
+			</div>
+
+		</div>
+
+	{{/calendar}}
+
+</div>
+
+<div class="taskpanel">
+
+	<!--День недели-->
+	{{#calendar}}
+
+	<div class="day">
+
+		{{#cal}}
+
+			<!--Час-->
+			{{#events}}
+
+			<div class="hour--block {{class}} {{scope}} wevent" data-hours="{{time}}" data-datum="{{datum}}">
+
+				{{#scope}}<div class="actions" title="Добавить напоминание"><i class="icon-plus-circled"></i></div>{{/scope}}
+
+				<div class="hour-events">
+
+					<!--События-->
+					{{#hour}}
+					<div class="hour--event {{scope}} {{drg}} hand flex-container1 float1" onClick="viewTask('{{tid}}');" style="background: {{color}}" data-tid="{{tid}}" data-old="{{datum}}" title="{{title}}{{#tooltip}}{{{tooltip}}}{{/tooltip}}">
+
+						<div class="flex-string1 wtime w40  text-center">{{time}}</div>
+						<div class="flex-string1 wtitle float1 ">{{{tip}}}{{^drg}}<i class="icon-lock m0 p0"></i>{{/drg}}{{title}}</div>
+
+					</div>
+					{{/hour}}
+					{{^hour}}{{/hour}}
+
+				</div>
+
+			</div>
+
+			{{/events}}
+
+		{{/cal}}
+
+	</div>
+
+	{{/calendar}}
+
+</div>
+
+</script>

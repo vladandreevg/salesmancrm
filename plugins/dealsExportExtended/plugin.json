@@ -1,0 +1,15 @@
+{
+  "package": "dealsExportExtended",
+  "version": "1.0",
+  "author": "SalesMan Team",
+  "authorurl": "https://salesman.pro/",
+  "link": "https://salesman.pro/docs/",
+  "request": "2022.2",
+  "name": "Экспорт сделок++",
+  "description": "Плагин позволяет производить выгрузку сделок, аналогично стандартной выгрузке, обходя ограничения веб-сервера. Работает в связке с плагином Планировщик заданий",
+  "textdomain": "dealsexportextended",
+  "screenshot": "",
+  "icon": "icon-download-1",
+  "menu": false,
+  "iconSVGinBase64": ""
+}

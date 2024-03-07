@@ -1,0 +1,232 @@
+<script id="templateTpl" type="text/html">
+
+	<div id="inpeerlist">
+
+		<ul>
+
+			{{#inpeers}}
+
+				<li>
+
+					<div class="infodiv">
+
+						<div class="pl5 pb5">
+							<span class="blue Bold"><i class="icon-phone"></i>&nbsp;{{phone}}</span> {{#direction}}[ {{{icon}}} {{direction}} ]{{/direction}}
+						</div>
+
+						<hr>
+
+						<div class="pl0">
+
+							{{#client}}
+							<div><b>{{client}}</b>&nbsp;[<a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Карточка клиента">Клиент</a>]</div>
+							{{/client}}
+
+							{{#person}}
+								<div><b>{{person}}</b>&nbsp;[<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Карточка контакта">Контакт</a>]</div>
+							{{/person}}
+
+							{{#isuser}}
+								<div><b>{{user}}</b>&nbsp;[Сотрудник]</div>
+							{{/isuser}}
+
+							{{#unknown}}
+								<div><b>Неизвестный клиент</b></div>
+							{{/unknown}}
+
+							{{#operator}}
+								<hr>
+								<div class="mt10 gray2 fs-09 infodiv bgwhite" title="Оператор, на которого идет звонок">
+									<i class="icon-target"></i>&nbsp;{{operator}} [ {{ophone}} ]
+								</div>
+							{{/operator}}
+
+						</div>
+
+					</div>
+
+				</li>
+
+			{{/inpeers}}
+			{{^inpeers}}
+
+				<li>
+					<div class="p10 gray2">Звонков нет</div>
+				</li>
+
+			{{/inpeers}}
+
+		</ul>
+
+	</div>
+
+	<div class="zag paddbott10 white" id="peerhead">
+
+		<b>Разговоры</b>
+
+	</div>
+
+	<div id="peerlist">
+
+		<ul>
+
+			{{#peers}}
+
+				<li>
+					<div class="infodiv">
+
+						<div class="blue Bold pl5 pb5">
+							<i class="icon-phone smalltxt"></i>{{phone}}
+						</div>
+
+						<hr>
+
+						<div class="pl5">
+
+							{{#client}}
+								<div><b>{{client}}</b>&nbsp;[<a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Карточка клиента">Клиент</a>]</div>
+							{{/client}}
+
+							{{#person}}
+								<div><b>{{person}}</b>&nbsp;[<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Карточка контакта">Контакт</a>]</div>
+							{{/person}}
+
+							{{#isuser}}
+								<div><b>{{user}}</b>&nbsp;[Сотрудник]</div>
+							{{/isuser}}
+
+							{{#unknown}}
+								<div><b>Неизвестный клиент</b></div>
+							{{/unknown}}
+
+							{{#leadtitle}}
+								<div class="pad3"><i class="icon-user-1 broun"></i><b>{{leadtitle}}</b> [из заявок]</div>
+							{{/leadtitle}}
+
+							<hr>
+
+							<div class="flex-container fs-09">
+
+								<div class="a--group">
+
+								{{#entry}}
+									{{^unknown}}
+									<a href="javascript:void(0)" class="button greenbtn" onClick="editEntry('','edit', '{{phone}}');" title="Добавить обращение"><i class="icon-plus-circled"></i>&nbsp;Обращение</a>
+									{{/unknown}}
+								{{/entry}}
+
+								{{#lead}}
+									<a href="javascript:void(0)" class="button" onClick="editLead('{{lead}}', 'workit');" title="Обработать заявку"><i class="icon-tools"></i>&nbsp;Обработать</a>
+								{{/lead}}
+
+								{{#unknown}}
+									<a href="javascript:void(0)" class="button greenbtn" onClick="editEntry('','edit', '{{phone}}');" title="Добавить обращение"><i class="icon-plus-circled"></i>&nbsp;Обращение</a>
+									<a href="javascript:void(0)" class="button" onClick="expressClient('{{phone}}');" title="Экспресс-форма"><i class="icon-plus"></i>&nbsp;Экспресс</a>
+								{{/unknown}}
+
+								{{#ismobile}}
+									<a href="javascript:void(0)" class="button redbtn" onClick="doLoad('plugins/smsSender/index.php?phone={{phone}}&action=sms.compose.ext');" title="Отправить СМС"><i class="icon-paper-plane"></i>&nbsp;SMS</a>
+								{{/ismobile}}
+
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+				</li>
+
+			{{/peers}}
+			{{^peers}}
+
+				<li>
+					<div class="p10 gray2">Разговоров нет</div>
+				</li>
+
+			{{/peers}}
+
+		</ul>
+
+	</div>
+
+	{{#debager}}
+
+	<div class="zag paddbott10 white"><b>Ответ сервера</b></div>
+	<div class="pad3 Bold">входящие</div>
+	<div class="pad3 fs-09" style="overflow:auto; max-height:30vh">
+		{{&ringing}}
+	</div>
+	<hr>
+	<div class="pad3 Bold">разговоры</div>
+	<div class="pad3 fs-09" style="overflow:auto; max-height:30vh">
+		{{&talk}}
+	</div><br>
+
+	{{/debager}}
+
+</script>
+
+<script id="lastcollsTpl" type="text/html">
+
+	<div style="max-height: 160px; overflow-y: auto">
+
+		<table width="100%" cellpadding="5" cellspacing="0" class="smalltxt border-bottom">
+
+		{{#list}}
+
+			<tr class="ha">
+				<td width="40">{{&icon}}&nbsp;{{&rez}}</td>
+				<td width="60" align="right">{{&time}}</td>
+				<td>
+					<b class="blue">{{&phone}}</b>
+
+					{{&link}}
+
+					{{^unknown}}
+						<!--
+						<span class="pull-aright">
+							<a href="javascript:void(0)" title="Не доступно: Добавить экспресс"><i class="icon-plus-circled gray"></i>&nbsp;</a>
+						</span>
+						-->
+					{{/unknown}}
+					{{#unknown}}
+						<span class="pull-aright">
+							<a href="javascript:void(0)" onClick="expressClient('{{phone}}');" title="Добавить экспресс"><i class="icon-plus-circled blue"></i></a>
+						</span>
+					{{/unknown}}
+
+					{{#entry}}
+						<span class="pull-aright">
+							<a href="javascript:void(0)" onClick="editEntry('', 'edit', '{{phone}}')" title="Добавить обращение"><i class="icon-plus-circled green"></i></a>
+						</span>
+					{{/entry}}
+
+					{{#ismobile}}
+						{{#sms}}
+							<a href="javascript:void(0)" class="navlink" onClick="doLoad('plugins/smsSender/index.php?phone={{phone}}&action=sms.compose.ext');" title="Отправить СМС"><i class="icon-paper-plane red"></i></a>
+						{{/sms}}
+					{{/ismobile}}
+
+				</td>
+				<td width="50">
+					{{#client}}
+						<A href="javascript:void(0)" onclick="openClient('{{clid}}')" title="{{client}}"><i class="icon-building broun"></i></A>
+					{{/client}}
+
+					{{#person}}
+						<A href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="{{person}}"><i class="icon-user-1 broun"></i></A>
+					{{/person}}
+				</td>
+			</tr>
+
+		{{/list}}
+
+		{{^list}}
+			<tr><td>Записей не обнаружено</td></tr>
+		{{/list}}
+
+		</table>
+
+	</div>
+
+</script>

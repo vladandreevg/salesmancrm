@@ -1,0 +1,474 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2018 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*         salesman.pro         */
+/*         ver. 2018.6          */
+/* ============================ */
+
+.ui-layout-pane {
+	border           : 0;
+	padding          : 0;
+	BACKGROUND-COLOR : #E6E6E6;
+	OVERFLOW         : auto;
+}
+.ui-layout-resizer {
+	BACKGROUND : #E6E6E6;
+}
+.ui-layout-toggler {
+	background : #FFD111;
+}
+.ui-layout-toggler:hover {
+	background : #FF4242 /*url(../images/myui/resizable-w.gif) repeat-y center*/;
+}
+.ui-border {
+	border-bottom : 1px solid #C3CCCC;
+}
+.ui-border-2 {
+	border-bottom : 1px solid #C3CCCC;
+	border-left   : 1px solid #C3CCCC;
+	border-right  : 1px solid #C3CCCC;
+}
+.ui-border3 {
+	border : 1px outset #C3CCCC;
+}
+.ui-padding {
+	padding : 3px;
+}
+.ui-layout-center, #tasklist {
+	background-color : #FFF;
+}
+
+.ui-slider-horizontal {
+	height        : 1px !important;
+	border-bottom : 2px dotted #3E79D5 !important;
+	background    : transparent !important;
+}
+.ui-slider-horizontal .ui-slider-handle {
+	top : -.5em !important;
+}
+.ui-slider .ui-slider-handle {
+	/*width: auto !important;*/
+	height     : 1.2em !important;
+	border     : 0 !important;
+	background : #2E6E9E !important;
+	color      : #FFF !important;
+}
+#slider > .ui-slider-handle {
+	width   : auto !important;
+	padding : 2px 4px;
+}
+
+/**
+ * FILE: jquery.ptTileSelect.css
+ * 	Default style for the timeselect container.
+ *
+ *  LAST UPDATED:
+ *
+ * 		- $Date: 2009/04/12 20:23:02 $
+ * 		- $Author: paulinho4u $
+ * 		- $Revision: 1.1 $
+ */
+#ptTimeSelectCntr {
+	width              : 20.8em;
+	font-size          : .9em;
+	position           : absolute;
+	z-index            : 1500000;
+	display            : none;
+	box-shadow         : 1px 1px 1px RGB(153, 153, 153);
+	-webkit-box-shadow : 1px 1px 1px RGB(153, 153, 153);
+	-moz-box-shadow    : 1px 1px 1px #999;
+}
+#ptTimeSelectCntr .ui-widget {
+	padding : .2em;
+}
+#ptTimeSelectCntr .ui-widget-header {
+	padding : .2em;
+}
+#ptTimeSelectCntr #ptTimeSelectUserTime {
+	font-size    : 2.0em;
+	padding      : .2em;
+	padding-left : 1em;
+	text-align   : center;
+}
+#ptTimeSelectCntr #ptTimeSelectCloseCntr {
+	display : block;
+	padding : .2em;
+}
+#ptTimeSelectCntr #ptTimeSelectCloseCntr a {
+	display : block;
+	padding : .2em;
+}
+#ptTimeSelectCntr .ui-widget-content {
+	margin-top    : .1em;
+	margin-bottom : .1em;
+	padding       : .2em;
+}
+#ptTimeSelectCntr .ui-widget.ui-widget-content {
+	margin-top : 0;
+}
+#ptTimeSelectCntr .ptTimeSelectLeftPane.ui-widget-content {
+	border-top         : none;
+	border-bottom      : none;
+	border-left        : none;
+	border-right-width : 0px;
+}
+#ptTimeSelectCntr .ptTimeSelectRightPane.ui-widget-content {
+	border : none;
+}
+#ptTimeSelectCntr .ptTimeSelectHrCntr a,
+#ptTimeSelectCntr .ptTimeSelectMinCntr a {
+	display         : block;
+	float           : left;
+	padding         : .35em;
+	width           : 1.35em;
+	margin          : 1px;
+	text-align      : center;
+	text-decoration : none;
+	font-size       : 1.0em;
+	font-weight     : bold;
+}
+#ptTimeSelectCntr .ptTimeSelectMinCntr a {
+	width : 2.1em;
+}
+#ptTimeSelectCntr .ptTimeSelectHrAmPmCntr a {
+	text-align : center;
+	margin     : 1px;
+}
+#ptTimeSelectCntr .ptTimeSelectTimeLabelsCntr {
+	font-weight : bold;
+	font-size   : 1.3em;
+}
+#ptTimeSelectCntr #ptTimeSelectSetButton {
+	padding-top    : .2em;
+	padding-bottom : .2em;
+}
+#ptTimeSelectCntr #ptTimeSelectSetButton a {
+	display    : block;
+	padding    : .5em .2em;
+	width      : 30%;
+	text-align : center;
+	float      : right;
+	background : #1C6697;
+	color      : #FFF;
+}
+#ptTimeSelectCloseCntr a {
+	border : 0;
+}
+
+.ac_results {
+	padding            : 0;
+	border             : 1px solid #B5B8C8;
+	background-color   : white;
+	overflow           : hidden;
+	z-index            : 99999;
+	-webkit-box-shadow : 0 1px 3px #2387CA;
+	-moz-box-shadow    : 0 1px 3px #2387CA;
+	box-shadow         : 0 1px 3px #2387CA;
+}
+.ac_results ul {
+	width               : 100%;
+	list-style-position : outside;
+	list-style          : none;
+	padding             : 0;
+	margin              : 0;
+}
+.ac_results li {
+	margin      : 0;
+	padding     : 5px 5px;
+	cursor      : default;
+	display     : block;
+	font        : menu;
+	font-size   : 1.0em;
+	line-height : 1.2em;
+	overflow    : hidden !important;
+}
+.ac_loading {
+	background : white url('../images/loading.gif') right center no-repeat;
+}
+.ac_odd {
+	background-color : #EEE;
+}
+.ac_over {
+	background-color : #79B7E7;
+}
+
+/* Multiselect*/
+.ui-multiselect {
+	border    : 0;
+	font-size : 1.0em;
+	padding   : 10px
+}
+.ui-multiselect ul {
+	-moz-user-select : none;
+}
+.ui-multiselect li {
+	margin      : 0;
+	padding     : 0;
+	cursor      : default;
+	line-height : 24px;
+	height      : 24px;
+	font-size   : 0.90em;
+	list-style  : none;
+}
+.ui-multiselect li .elps {
+	line-height       : 24px;
+	height            : 24px;
+	width             : calc(100% - 25px);
+	text-overflow     : ellipsis !important;
+	overflow          : hidden !important;
+	cue-after         : url(../images/pixel000.gif);
+	-ms-text-overflow : ellipsis;
+	-o-text-overflow  : ellipsis;
+}
+.ui-multiselect li a {
+	color           : #999;
+	text-decoration : none;
+	padding         : 0;
+	display         : block;
+	float           : left;
+	cursor          : pointer;
+}
+.ui-multiselect li.ui-draggable-dragging {
+	padding-left : 10px;
+}
+.ui-multiselect div.selected {
+	position : relative;
+	padding  : 0;
+	margin   : 0;
+	border   : 0;
+	float    : left;
+}
+.ui-multiselect ul.selected {
+	position   : relative;
+	padding    : 0;
+	overflow   : auto;
+	overflow-x : hidden; /*background: #fff;*/
+	margin     : 0;
+	list-style : none;
+	border     : 0;
+	width      : 100%;
+}
+.ui-multiselect ul.selected li {
+}
+.ui-multiselect div.available {
+	position    : relative;
+	padding     : 0 0 0 3px;
+	margin      : 0;
+	border      : 0;
+	float       : left;
+	border-left : #CCC 0 solid;
+}
+.ui-multiselect ul.available {
+	position   : relative;
+	padding    : 0;
+	overflow   : auto;
+	overflow-x : hidden; /*background: #fff;*/
+	margin     : 0;
+	list-style : none;
+	border     : 0;
+	width      : 100%;
+}
+.ui-multiselect ul.available li {
+	padding-left : 10px;
+}
+.ui-multiselect .ui-state-default {
+	border        : none;
+	margin-bottom : 1px;
+	position      : relative;
+	padding-left  : 20px;
+}
+.ui-multiselect .ui-state-hover {
+	border : none;
+}
+.ui-multiselect .ui-widget-header {
+	border        : none;
+	font-size     : 11px;
+	margin-bottom : 1px;
+}
+.ui-multiselect .add-all {
+	float   : right;
+	padding : 7px;
+	color   : blue;
+}
+.ui-multiselect .remove-all {
+	float   : right;
+	padding : 7px;
+	color   : #CCC;
+}
+.ui-multiselect .search {
+	float   : left;
+	padding : 4px;
+}
+.ui-multiselect .count {
+	float   : left;
+	padding : 7px;
+	color   : red;
+}
+.ui-multiselect li span.ui-icon-arrowthick-2-n-s {
+	position : absolute;
+	left     : 2px;
+	top      : 8px
+}
+.ui-multiselect li a.action {
+	position : absolute;
+	right    : 2px;
+	top      : 3px;
+}
+.ui-multiselect input.search {
+	padding : 1px;
+	opacity : 0.5;
+	width   : 100px;
+}
+.multiselect {
+	width  : 460px;
+	height : 200px;
+}
+.ui-multiselect li a.action.hidden {
+	display    : inline !important;
+	visibility : visible !important;
+}
+.ui-multiselect .ui-state-default {
+	font-weight : normal;
+	padding     : 5px 5px 5px 25px;
+	color       : #222;
+	border      : 1px solid rgb(195, 204, 204);
+}
+.ui-multiselect .ui-state-default a {
+	color : #222;
+}
+.ui-multiselect .ui-state-default a:hover {
+	color : #507192;
+}
+.ui-multiselect .ui-state-active {
+	border      : 1px solid rgb(195, 204, 204);
+	background  : rgb(249, 249, 249);
+	font-weight : bold;
+}
+.ui-multiselect .ui-state-active a {
+	color : #507192;
+}
+.ui-multiselect .ui-state-active:after {
+	content    : " ";
+	position   : absolute;
+	bottom     : 0;
+	left       : 0;
+	width      : 100%;
+	height     : 5px;
+	background : rgb(249, 249, 249);
+}
+.ui-multiselect .ui-state-hover {
+	background  : #ECEFF1;
+	color       : #507192;
+	font-weight : 700;
+}
+
+#switcher {
+	margin-top : 20px;
+}
+
+div.color_picker {
+	height      : 16px;
+	width       : 16px;
+	padding     : 0 !important;
+	border      : 1px solid #CCC;
+	background  : url(../images/myui/arrow.gif) no-repeat top right;
+	cursor      : pointer;
+	line-height : 16px;
+}
+div#color_selector {
+	width            : 306px;
+	position         : absolute;
+	z-index          : 100000;
+	border           : 1px solid #598FEF;
+	background-color : #EFEFEF;
+	padding          : 2px;
+}
+div#color_custom {
+	width : 100%;
+	float : left
+}
+div#color_custom label {
+	font-size : 95%;
+	color     : #2F2F2F;
+	margin    : 5px 2px;
+	width     : 25%
+}
+div#color_custom input {
+	margin    : 5px 2px;
+	padding   : 0;
+	font-size : 95%;
+	border    : 1px solid #000;
+	width     : 65%;
+}
+div.color_swatch {
+	height      : 12px;
+	width       : 12px;
+	border      : 1px solid #000;
+	margin      : 2px;
+	float       : left;
+	cursor      : pointer;
+	line-height : 12px;
+}
+
+.ui-datepicker-title {
+	margin         : 0 2.3em;
+	text-align     : center;
+	padding-top    : 1px;
+	padding-bottom : 1px;
+	height         : 2.2rem !important;
+}
+.ui-datepicker-title select {
+	padding : initial;
+}
+
+#ui-datepicker-div {
+	/* Minimum of '5' is required */
+	z-index : 11;
+}
+.ui-widget-header {
+	border-bottom : 1px solid rgb(195, 204, 204) !important;
+}
+#accordion .ui-state-active {
+	background   : rgba(236, 239, 241, 1) !important;
+	border-color : rgba(207, 216, 220, 1) !important;
+}
+#accordion .ui-state-active a,
+#accordion .ui-state-active a:link,
+#accordion .ui-state-active a:visited {
+	/*color: rgba(120,144,156 ,1) !important;*/
+	color : var(--blue);
+}
+#accordion .ui-state-default {
+	background   : rgba(236, 239, 241, 0.5) !important;
+	border-color : rgba(207, 216, 220, 1) !important;
+	/*color: rgba(120,144,156 ,0.5) !important;*/
+}
+#accordion .ui-state-default a,
+#accordion .ui-state-default a:link,
+#accordion .ui-state-default a:visited {
+	color : rgba(120, 144, 156, 1);
+}
+/*#accordion .ui-state-default a,
+#accordion .ui-state-default a:link{
+	color: rgba(207,216,220 ,1) !important;
+}*/
+#accordion .ui-state-active a,
+.ui-accordion .ui-accordion-header-active {
+	/*color: #222 !important;*/
+	color : var(--blue) !important;
+}
+.ui-widget-content > a.menu.current {
+	color       : var(--blue) !important;
+	font-weight : 700;
+}
+
+/* remove label borders in IE6 because IE6 does not support transparency */
+* html .ui-ymultiselect-checkboxes label {
+	border : none
+}
+
+.gantt_task_progress {
+	background: rgba(0,0,0, 0.3) !important;
+}

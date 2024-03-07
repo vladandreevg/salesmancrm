@@ -1,0 +1,257 @@
+.ydropDown {
+	position      : relative;
+	display       : block;
+	padding       : 5px 0;
+	padding-left  : 8px !important;
+	font-size     : 0.95em;
+	font-weight   : 700;
+	height        : 1.6em;
+	line-height   : 1.6em;
+	background    : #FFF;
+	/*border        : 1px solid transparent;*/
+	border: 1px inset #FFF;
+	border-bottom : 1px solid #ECF0F1;
+	margin-bottom : 5px;
+	cursor        : pointer;
+}
+.ydropDown > i {
+	color       : #2980B9;
+	font-size   : 0.7em;
+	font-weight : 700;
+}
+.ydropString > i {
+	/*color: unset;*/
+}
+
+#flyitbox .yselectBox,
+.ydropDown .yselectBox {
+	display            : none;
+	position           : absolute;
+	top                : calc(1.6em + 10px);/*2.35em;*/
+	left               : -1px;
+	width              : 205px;
+	z-index            : 100;
+	max-height         : 40vh;
+	overflow-y         : auto;
+	overflow-x         : hidden;
+	color              : #222;
+	font-weight        : 500;
+	border             : 1px solid #BBB;
+	background         : #FFF;
+	cursor             : auto;
+	box-sizing         : border-box;
+	-moz-box-sizing    : border-box;
+	-webkit-box-sizing : border-box;
+	/*-webkit-box-shadow : 0 3px 3px -1px rgba(0, 0, 0, 0.50);
+	-moz-box-shadow    : 0 3px 3px -1px rgba(0, 0, 0, 0.50);
+	box-shadow         : 0 3px 3px -1px rgba(0, 0, 0, 0.50);*/
+	box-shadow: 1px 1px 3px #BBB;
+	-webkit-box-shadow: 1px 1px 3px #BBB;
+	-moz-box-shadow: 1px 1px 3px #BBB;
+}
+.ydropDown .yselectBox.top {
+	bottom : calc(100% + 0.3em);
+	top    : auto;
+}
+#flyitbox .ydropString,
+.ydropDown .ydropString {
+	display       : table;
+	font-size     : 0.9em;
+	color         : #222;
+	border-bottom : 1px dotted #DDD;
+	width         : 100% !important;
+}
+#flyitbox .ydropString label,
+.ydropDown .ydropString label {
+	display          : block;
+	height           : 1.5em;
+	line-height      : 1.5em;
+	padding          : 5px 5px 5px 10px;
+	position         : relative;
+	text-overflow    : ellipsis !important;
+	-o-text-overflow : ellipsis !important;
+	overflow         : hidden !important;
+	white-space      : nowrap;
+	width            : 90%;
+	vertical-align   : middle;
+	margin-right     : -9999px;
+}
+#flyitbox .ydropString:hover,
+.ydropDown .ydropString:hover {
+	background : #D2E9FF;
+}
+#flyitbox .ydropCount,
+.ydropDown .ydropCount {
+	font-size     : 0.85em;
+	font-weight   : 500;
+	line-height   : 1.8em;
+	margin-left   : 5px;
+	margin-bottom : 3px;
+	color         : #507192;
+}
+#flyitbox .ydropText,
+.ydropDown .ydropText {
+	display          : inline-block;
+	font-size        : 0.85em;
+	font-weight      : 500;
+	line-height      : 1.8em;
+	height           : 1.8em;
+	margin-left      : 5px;
+	margin-bottom    : 3px;
+	color            : #507192;
+	text-overflow    : ellipsis !important;
+	-o-text-overflow : ellipsis !important;
+	overflow         : hidden !important;
+	white-space      : nowrap;
+	width            : 70%;
+	vertical-align   : middle;
+	margin-right     : -9999px;
+}
+#flyitbox .yunSelect,
+#flyitbox .ySelectAll,
+.ydropDown .yunSelect,
+.ydropDown .ySelectAll {
+	display     : table;
+	font-size   : 0.95em;
+	font-weight : 500;
+	line-height : 1.6em;
+	padding     : 5px;
+	text-align  : right;
+	cursor      : pointer;
+	width       : 95%;
+	color       : #2980B9;
+}
+#flyitbox .yunSelect:hover,
+#flyitbox .ySelectAll:hover,
+.ydropDown .yunSelect:hover,
+.ydropDown .ySelectAll:hover {
+	color : #507192;
+}
+.ydropDown .action.yDoit {
+	position : absolute;
+	top      : 2px;
+	left     : inherit;
+	right    : -5px !important;
+}
+
+#flyitbox {
+	position : relative;
+	overflow : auto !important;
+	z-index  : 100000;
+	clear    : both;
+}
+#flyitbox .yselectBox {
+	position : fixed;
+}
+
+.ydropDown input[type="text"] {
+	font-size  : 0.95em;
+	/*margin-top:-2px;*/
+	display    : block;
+	width      : 95%;
+	border     : 0;
+	background : transparent;
+}
+.ydropDown input[type="checkbox"] {
+	vertical-align : middle;
+}
+.ydropDown .action {
+	
+	position    : absolute;
+	z-index     : 20;
+	top         : 0;
+	left        : 100%;
+	color       : #FFF;
+	background  : #1565C0;
+	border      : #1565C0 solid 1px;
+	font-size   : 0.90em;
+	line-height : 1.6em;
+	padding     : 3px 7px;
+	
+}
+.ydropDown.pipeline {
+	font-size     : 1.05em;
+	background    : rgba(245, 245, 245, 1);
+	border        : 1px solid #ECF0F1;
+	margin-bottom : 5px;
+	margin-top    : 5px;
+	width         : 200px;
+}
+
+.ui-layout-west .ydropDown,
+.ydropDown.border {
+	padding            : 3px;
+	border             : 1px inset #FFF;
+	font-size          : 1.1em;
+	box-shadow         : 0 0 0 #BBB;
+	-webkit-box-shadow : 0 0 0 #BBB;
+	-moz-box-shadow    : 0 0 0 #BBB;
+	/*box-shadow: 0 1px 1px #bbb;
+	-webkit-box-shadow: 0 1px 1px #bbb;
+	-moz-box-shadow: 0 1px 1px #bbb;*/
+}
+
+.ydropDown.like-input {
+	position              : relative;
+	min-height            : calc(1.5em + 8px);
+	margin                : 0;
+	padding               : 2px 10px;
+	background            : #FFF;
+	border                : 1px inset #FFF;
+	outline               : none;
+	color                 : #222 !important;
+	box-sizing            : border-box;
+	height                : auto;
+	border-radius         : 2px;
+	-moz-border-radius    : 2px;
+	-webkit-border-radius : 2px;
+}
+.ydropDown.like-input.req {
+	border-left : 2px solid #E74C3C;
+}
+.ydropDown.like-input .ydropText {
+	font-size   : 1.2em;
+	color       : #222 !important;
+	margin-left : 10px;
+}
+.ydropDown.like-input .yselectBox {
+	top         : initial;
+	margin-left : -1px;
+	border      : 1px solid #CCC;
+}
+.ydropDown.like-input i {
+	font-size    : 0.9em;
+	font-weight  : 700;
+	margin-top   : 5px;
+	margin-right : -9px;
+}
+.ydropDown.like-input input {
+	display : none;
+}
+
+.ydropDown.selects {
+	line-height        : 1.7em !important;
+	height             : calc(1.7em + 10px);
+	padding            : 4px 10px;
+	color              : #333;
+	background         : #FFF !important;
+	border             : 1px solid RGB(181, 184, 200) !important;
+	box-sizing         : border-box;
+	box-shadow         : 0 1px 1px #DDD;
+	-webkit-box-shadow : 0 1px 1px #DDD;
+	-moz-box-shadow    : 0 1px 1px #DDD;
+	margin-bottom      : 0;
+}
+.ydropDown.selects .yselectBox {
+	top        : 100%;
+	left       : -1px;
+	border     : 1px solid #222;
+	background : #FFF;
+}
+.ydropDown.selects .ydropCount {
+	font-size : 1.1em;
+	color     : #333;
+}
+.ydropDown.selects .ydropString {
+
+}
