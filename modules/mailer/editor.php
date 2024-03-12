@@ -1364,7 +1364,7 @@ if ( $action == 'compose' ) {
 	$msg['priority']  = $msg['priority'] ?? 3;
 	$msg['exit']      = $exit;
 
-	$template = file_get_contents( "/modules/mailer/tpl/compose.mustache" );
+	$template = file_get_contents( $rootpath."/modules/mailer/tpl/compose.mustache" );
 
 	$m       = new Mustache_Engine();
 	$message = $m -> render( $template, $msg );
