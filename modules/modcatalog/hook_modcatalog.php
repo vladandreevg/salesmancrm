@@ -9,8 +9,8 @@
 /* ============================ */
 
 // добавляем собственное событие к системе уведомлений Notify
-$hooks -> add_filter( 'add_custom_notify', 'modcatalog_notify' );
-$hooks -> add_filter( 'add_custom_notify_icon', 'modcatalog_notify_icon' );
+$hooks -> add_filter( 'add_custom_notify', 'modcatalog_notify', 10 );
+$hooks -> add_filter( 'add_custom_notify_icon', 'modcatalog_notify_icon', 10 );
 
 function modcatalog_notify($events = []) {
 

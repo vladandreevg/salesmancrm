@@ -170,16 +170,18 @@ if ( $action == '' ) {
 					</td>
 					<td class="w120 text-center">
 						<div class="paddtop5">
-							&nbsp;&nbsp;<A href="javascript:void(0)" onClick="doLoad('content/helpers/search.editor.deal.php?action=add&seid=<?= $data[ 'seid' ] ?>&tip=<?= $tip ?>');" title="Клонировать"><i class="icon-paste green"></i></A>
+							&nbsp;&nbsp;<A href="javascript:void(0)" onClick="doLoad('/content/helpers/search.editor.deal.php?action=add&seid=<?= $data[ 'seid' ] ?>&tip=<?= $tip ?>');" title="Клонировать"><i class="icon-paste green"></i></A>
 							<?php
 							if ( $data[ 'iduser' ] == $iduser1 || $isadmin == 'on' ) {
 								?>
 								&nbsp;&nbsp;
-								<A href="javascript:void(0)" onClick="doLoad('content/helpers/search.editor.deal.php?action=edit&seid=<?= $data[ 'seid' ] ?>&tip=<?= $tip ?>');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;
+								<A href="javascript:void(0)" onClick="doLoad('/content/helpers/search.editor.deal.php?action=edit&seid=<?= $data[ 'seid' ] ?>&tip=<?= $tip ?>');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;
 								<A href="javascript:void(0)" onClick="sdelete('<?= $data[ 'seid' ] ?>');" title="Удалить"><i class="icon-cancel red"></i></A>
 								<?php
 							}
-							else print '&nbsp;&nbsp;<A href="javascript:void(0)" title="Изменить"><i class="icon-pencil gray"></i></A>&nbsp;&nbsp;<A href="javascript:void(0)" title="Удалить"><i class="icon-cancel gray"></i></A>';
+							else {
+								print '&nbsp;&nbsp;<A href="javascript:void(0)" title="Изменить"><i class="icon-pencil gray"></i></A>&nbsp;&nbsp;<A href="javascript:void(0)" title="Удалить"><i class="icon-cancel gray"></i></A>';
+							}
 							?>
 						</div>
 					</td>
@@ -193,7 +195,7 @@ if ( $action == '' ) {
 	<hr>
 
 	<div class="text-right">
-		<A href="javascript:void(0)" onClick="refresh('resultdiv','content/helpers/search.editor.deal.php?action=add&seid=<?= $data[ 'seid' ] ?>');" class="button">Добавить</A>&nbsp;
+		<A href="javascript:void(0)" onClick="refresh('resultdiv','/content/helpers/search.editor.deal.php?action=add&seid=<?= $data[ 'seid' ] ?>');" class="button">Добавить</A>&nbsp;
 		<A href="javascript:void(0)" onClick="DClose()" class="button">Закрыть</A>
 	</div>
 	<?php
@@ -539,11 +541,11 @@ if ( $action == 'add' ) {
 
 			<div style="float:left">
 
-				&nbsp;&nbsp;<a href="javascript:void(0)" onClick="refresh('resultdiv','content/helpers/search.editor.deal.php')" class="button pull-left"><i class="icon-left-thin"></i></a>
+				&nbsp;&nbsp;<a href="javascript:void(0)" onClick="refresh('resultdiv','/content/helpers/search.editor.deal.php')" class="button pull-left"><i class="icon-left-thin"></i></a>
 
 			</div>
 			<label><input name="share" <?php if ( $search[ 'share' ] == 'yes' ) print 'checked'; ?> type="checkbox" value="yes"/>&nbsp;Общее&nbsp;<i class="icon-info-circled blue" title="Такое представление будет доступно для использования всеми сотрудниками организации"></i></label>
-			<A href="javascript:void(0)" onClick="$('#Form').submit()" class="button">Сохранить</A>&nbsp;
+			<A href="javascript:void(0)" onClick="$('#Form').trigger('submit')" class="button">Сохранить</A>&nbsp;
 		</DIV>
 	</FORM>
 	<?php
@@ -877,10 +879,10 @@ if ( $action == 'edit' ) {
 
 		<DIV class="button--pane text-right">
 			<div style="float:left">
-				&nbsp;&nbsp;<a href="javascript:void(0)" onClick="refresh('resultdiv','content/helpers/search.editor.deal.php')" class="button pull-left"><i class="icon-left-thin"></i></a>
+				&nbsp;&nbsp;<a href="javascript:void(0)" onClick="refresh('resultdiv','/content/helpers/search.editor.deal.php')" class="button pull-left"><i class="icon-left-thin"></i></a>
 			</div>
 			<label><input name="share" <?php if ( $search[ 'share' ] == 'yes' ) print 'checked'; ?> type="checkbox" value="yes"/>&nbsp;Общее&nbsp;<i class="icon-info-circled blue" title="Такое представление будет доступно для использования всеми сотрудниками организации"></i></label>
-			<A href="javascript:void(0)" onClick="$('#Form').submit()" class="button">Сохранить</A>&nbsp;
+			<A href="javascript:void(0)" onClick="$('#Form').trigger('submit')" class="button">Сохранить</A>&nbsp;
 		</DIV>
 	</FORM>
 	<script>
@@ -1358,7 +1360,7 @@ if ( $action == 'update_select' ) {
 			</select>
 		</div>
 		<span class="smalltxt gray">Представления</span>
-		<a href="javascript:void(0)" onclick="doLoad('content/helpers/search.editor.deal.php?tip=dog');" title="Редактор представлений" data-step="6" data-intro="<h1>Редактор представлений.</h1>Поможет создать и использовать готовый набор фильтров" data-position="right"><i class="icon-pencil blue"></i></a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/helpers/search.editor.deal.php?tip=dog');" title="Редактор представлений" data-step="6" data-intro="<h1>Редактор представлений.</h1>Поможет создать и использовать готовый набор фильтров" data-position="right"><i class="icon-pencil blue"></i></a>
 	</div>
 	<?php
 }
@@ -1426,7 +1428,7 @@ if($fieldsNames['dogovor']['mcid'] !== ''){
 
 				if (data.id != '') {
 
-					$('#resultdiv').load('content/helpers/search.editor.deal.php');
+					$('#resultdiv').load('/content/helpers/search.editor.deal.php');
 
 					if ($('#action').val() == 'add_on')
 						$('#list #searchgroup').append('<option value="search:' + data.id + '">' + data.title + '</option>');
@@ -1455,12 +1457,12 @@ if($fieldsNames['dogovor']['mcid'] !== ''){
 		onDragClass: "tableDrag",
 		onDrop: function (table, row) {
 			var str = '' + $('#tbborder').tableDnDSerialize();
-			var url = 'content/helpers/search.editor.deal.php?action=edit_order';
+			var url = '/content/helpers/search.editor.deal.php?action=edit_order';
 
 			$.post(url, str, function (data) {
 
 				$('#message').empty().css('display', 'block').html(data).fadeOut(10000);
-				$('#resultdiv').load('content/helpers/search.editor.deal.php');
+				$('#resultdiv').load('/content/helpers/search.editor.deal.php');
 
 			});
 		}
@@ -1490,7 +1492,7 @@ if($fieldsNames['dogovor']['mcid'] !== ''){
 		$.get('/content/helpers/search.editor.deal.php?action=get_pole&pole=' + $('#' + pole).val() + '&i=' + i, function (data) {
 			$('#' + string).html(data);
 		})
-			.complete(function () {
+			.done(function () {
 				$('.datum').datepicker({
 					dateFormat: 'yy-mm-dd',
 					firstDay: 1,
@@ -1504,11 +1506,11 @@ if($fieldsNames['dogovor']['mcid'] !== ''){
 	}
 
 	function sdelete(str) {
-		var url = 'content/helpers/search.editor.deal.php?action=delete&seid=' + str;
+		var url = '/content/helpers/search.editor.deal.php?action=delete&seid=' + str;
 		$.post(url, function (data) {
 
 			$('#message').empty().css('display', 'block').html(data).fadeOut(10000);
-			$('#resultdiv').load('content/helpers/search.editor.deal.php');
+			$('#resultdiv').load('/content/helpers/search.editor.deal.php');
 
 			$('#list [value="search:' + str + '"]').remove();
 

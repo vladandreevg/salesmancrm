@@ -16,7 +16,7 @@ use Salesman\Upload;
 error_reporting( E_ERROR );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -422,7 +422,7 @@ if ( $action == 'startCource' ) {
 
 		$('.alist').css({"min-height": "calc(100vh - " + hh + "px)"});
 
-		$.Mustache.load('modules/corpuniver/tpl.corpuniver.html');
+		$.Mustache.load('/modules/corpuniver/tpl.corpuniver.html');
 
 		$(document).ready(function () {
 
@@ -476,7 +476,7 @@ if ( $action == 'startCource' ) {
 
 			//console.log(currentSlide);
 
-			fetch("modules/corpuniver/view.corpuniver.php?action=courseList&id=" + currentCource)
+			fetch("/modules/corpuniver/view.corpuniver.php?action=courseList&id=" + currentCource)
 				.then(response => response.json())
 				.then(data => {
 
@@ -561,7 +561,7 @@ if ( $action == 'startCource' ) {
 			if (num === 'next' && currentSlide < slideMax) {
 
 				//меняем статус прохождения
-				fetch("modules/corpuniver/core.corpuniver.php?action=changeMaterialStatus&idmaterial=" + currentMaterial + "&idlecture=" + currentLecture + "&idtask=" + currentTask)
+				fetch("/modules/corpuniver/core.corpuniver.php?action=changeMaterialStatus&idmaterial=" + currentMaterial + "&idlecture=" + currentLecture + "&idtask=" + currentTask)
 					.then(response => response.json())
 					.then(data => {
 
@@ -633,7 +633,7 @@ if ( $action == 'startCource' ) {
 
 				$('#slideN').html(currentSlide);
 
-				$.get('modules/corpuniver/view.corpuniver.php?action=slide&id=' + id + '&type=' + type, function (data) {
+				$.get('/modules/corpuniver/view.corpuniver.php?action=slide&id=' + id + '&type=' + type, function (data) {
 
 					$('.content-slide').html(data);
 
@@ -642,7 +642,7 @@ if ( $action == 'startCource' ) {
 			}
 			else {
 
-				fetch("modules/corpuniver/core.corpuniver.php?action=changeMaterialStatus&idcourse=" + currentCource)
+				fetch("/modules/corpuniver/core.corpuniver.php?action=changeMaterialStatus&idcourse=" + currentCource)
 					.then(response => response.json())
 					.then(data => {
 
@@ -783,7 +783,7 @@ if ( $action == 'startCource' ) {
 					}
 
 					//меняем статус прохождения
-					fetch("modules/corpuniver/core.corpuniver.php?action=changeMaterialStatus&idtask=" + currentTask + "&idlecture=" + currentLecture)
+					fetch("/modules/corpuniver/core.corpuniver.php?action=changeMaterialStatus&idtask=" + currentTask + "&idlecture=" + currentLecture)
 						.then(response => response.json())
 						.then(data => {
 
@@ -937,11 +937,13 @@ if ( $action == 'slide' ) {
 
 			$file = Upload::info($fid);
 
-			if(in_array($file['ext'],['pdf','png','jpeg','jpg','gif']))
+			if(in_array($file['ext'],['pdf','png','jpeg','jpg','gif'])) {
 				print '<embed width="100%" height="99.5%" class="pl5 pt5" style="background:black" src="/files/'.$fpath.$file['file'].'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>';
+			}
 
-			if(in_array($file['ext'],['avi','mp4','mpeg','ogv','webm']))
+			if(in_array($file['ext'],['avi','mp4','mpeg','ogv','webm'])) {
 				print '<video src="/files/'.$fpath.$file['file'].'" type="'.$file['mime'].'" controls width="100%" height="99.5%"></video>';
+			}
 
 		}
 

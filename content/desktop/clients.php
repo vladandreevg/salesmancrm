@@ -112,10 +112,10 @@ while ($da = $db -> fetch( $result )) {
 	$cd = $countClose > 0 ? 'Закрытые. Всего: '.$countClose.', С прибылью: '.$countCloseGood.', Без прибыли: '.$countCloseBad : 'Закрытых: нет';
 
 	if ( $countActive > 0 ) {
-		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray red"><i class="icon-briefcase list" title="Активные: '.$countActive.'. '.$cd.'"></i></a>';
+		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'/content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray red"><i class="icon-briefcase list" title="Активные: '.$countActive.'. '.$cd.'"></i></a>';
 	}
 	if ( $countActive == 0 && $countClose > 0 ) {
-		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray gray2"><i class="icon-briefcase list" title="Есть закрытые. Всего: '.$countClose.', С прибылью: '.$countCloseGood.', Без прибыли: '.$countCloseBad.'"></i></a>';
+		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'/content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray gray2"><i class="icon-briefcase list" title="Есть закрытые. Всего: '.$countClose.', С прибылью: '.$countCloseGood.', Без прибыли: '.$countCloseBad.'"></i></a>';
 	}
 
 	if ( $da['cmr'] != '' ) {

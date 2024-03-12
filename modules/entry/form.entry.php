@@ -207,7 +207,7 @@ if ( $action == 'view' ) {
 
 	</div>
 
-	<script type="text/javascript">
+	<script>
 
 		if (!isMobile) {
 
@@ -374,9 +374,12 @@ if ( $action == 'edit' ) {
 						$phonep = yexplode( ",", (string)$client['phone'] );
 						for ( $i = 0, $iMax = count( $phonep ); $i < $iMax; $i++ ) {
 
-							if ( $i == (count( $phonep ) - 1) )
+							if ( $i == (count( $phonep ) - 1) ) {
 								$adder = '<span class="adder hand" title="" data-block="phoneBlock" data-main="vphone" data-mask="'.$format_phone.'"><i class="icon-plus-circled green"></i></span>';
-							else $adder = '';
+							}
+							else {
+								$adder = '';
+							}
 
 							$su .= '<div class="phoneBlock paddbott5 relativv">
 							<INPUT name="client[phone][]" type="text" class="phone w250 '.$param['requered'].'" id="client[phone][]" value="'.trim( $phonep[ $i ] ).'" placeholder="Формат: '.$format_tel.'" data-id="vphone" data-action="valphone" data-type="client.helpers" autocomplete="off">
@@ -424,9 +427,12 @@ if ( $action == 'edit' ) {
 						$phonep = yexplode( ",", (string)$client['fax'] );
 						for ( $i = 0, $iMax = count( $phonep ); $i < $iMax; $i++ ) {
 
-							if ( $i == (count( $phonep ) - 1) )
+							if ( $i == (count( $phonep ) - 1) ) {
 								$adder = '<span class="adder hand" title="" data-block="phoneBlock" data-main="vfax" data-mask="'.$format_phone.'"><i class="icon-plus-circled green"></i></span>';
-							else $adder = '';
+							}
+							else {
+								$adder = '';
+							}
 
 							$su .= '<div class="phoneBlock paddbott5 relativv">
 							<INPUT name="client[fax][]" type="text" class="phone w250 '.$param['requered'].'" id="client[fax][]" value="'.trim( $phonep[ $i ] ).'" placeholder="Формат: '.$format_tel.'" data-id="vfax" data-action="valphone" data-type="client.helpers" autocomplete="off">
@@ -880,10 +886,10 @@ if ( $action == 'edit' ) {
 
 						$su = '';
 
-						for ( $j = 0; $j < count( $vars ); $j++ ) {
+						foreach ($vars as $var) {
 
-							$s  = ($vars[ $j ] == ${$tip}[ $da['fld_name'] ]) ? 'selected' : '';
-							$su .= '<option value="'.$vars[ $j ].'" '.$s.'>'.$vars[ $j ].'</option>';
+							$s  = ($var == ${$tip}[ $da['fld_name'] ]) ? 'selected' : '';
+							$su .= '<option value="'.$var.'" '.$s.'>'.$var.'</option>';
 
 						}
 
@@ -906,10 +912,10 @@ if ( $action == 'edit' ) {
 						$sel  = explode( ", ", ${$tip}[ $da['fld_name'] ] );
 						$su   = '';
 
-						for ( $j = 0; $j < count( $vars ); $j++ ) {
+						foreach ($vars as $var) {
 
-							$s  = (in_array( $vars[ $j ], $sel )) ? 'selected' : '';
-							$su .= '<option value="'.$vars[ $j ].'" '.$s.'>'.$vars[ $j ].'</option>';
+							$s  = (in_array( $var, $sel )) ? 'selected' : '';
+							$su .= '<option value="'.$var.'" '.$s.'>'.$var.'</option>';
 
 						}
 
@@ -957,17 +963,17 @@ if ( $action == 'edit' ) {
 						$vars = explode( ",", $da['fld_var'] );
 						$su   = '';
 
-						for ( $j = 0; $j < count( $vars ); $j++ ) {
+						foreach ($vars as $var) {
 
-							$s1 = ($vars[ $j ] == ${$tip}[ $da['fld_name'] ]) ? 'checked' : '';
+							$s1 = ($var == ${$tip}[ $da['fld_name'] ]) ? 'checked' : '';
 
 							$su .= '
 							<div class="flex-string p10 mr5 mb5 flx-basis-20 viewdiv bgwhite inset">
 								<div class="radio">
 									<label>
-										<input name="'.$tip.'['.$da['fld_name'].']" type="radio" id="'.$tip.'['.$da['fld_name'].']" '.$s1.' value="'.$vars[ $j ].'" />
+										<input name="'.$tip.'['.$da['fld_name'].']" type="radio" id="'.$tip.'['.$da['fld_name'].']" '.$s1.' value="'.$var.'" />
 										<span class="custom-radio success1"><i class="icon-radio-check"></i></span>
-										<span class="title">'.$vars[ $j ].'</span>
+										<span class="title">'.$var.'</span>
 									</label>
 								</div>
 							</div>';
@@ -1116,7 +1122,7 @@ if ( $action == 'edit' ) {
 
 				</div>
 
-				<?= $string['client']; ?>
+				<?= $string['client'] ?>
 
 				<?php if ( $stringMore['client'] != '' ) { ?>
 					<div align="center" class="togglerbox smalltxt gray2 hand mb20" data-id="fullFilter" title="Показать/скрыть доп.фильтры">
@@ -1164,8 +1170,8 @@ if ( $action == 'edit' ) {
 									<input name="mperson" type="checkbox" checked value="yes">
 									<span class="custom-checkbox"><i class="icon-ok"></i></span>
 									<span class="hidden-iphone">
-							&nbsp;Установить основным контактом&nbsp;<i class="icon-info-circled blue" title="Если Контакт закреплен за Клиентом, то он станет основным контактом и будет показываться в карточке Клиента."></i>
-						</span>
+										&nbsp;Установить основным контактом&nbsp;<i class="icon-info-circled blue" title="Если Контакт закреплен за Клиентом, то он станет основным контактом и будет показываться в карточке Клиента."></i>
+									</span>
 									<span class="visible-iphone">Основной контакт</span>
 								</label>
 							</div>
@@ -1192,8 +1198,7 @@ if ( $action == 'edit' ) {
 
 			<?php //Контакт?>
 
-			<?php //Активность
-			?>
+			<?php //Активность?>
 
 			<?php if ( $ide < 1 ) { ?>
 				<div id="divider"><b>Активность</b></div>
@@ -1231,11 +1236,9 @@ if ( $action == 'edit' ) {
 				</div>
 
 			<?php } ?>
-			<?php //Активность
-			?>
+			<?php //Активность?>
 
-			<?php //Спецификация
-			?>
+			<?php //Спецификация?>
 			<?php if ( $did < 1 ) { ?>
 
 				<div id="spekaBoxEntry" class="mt20" data-block="speca">
@@ -2152,7 +2155,7 @@ if ( $action == "status" ) {
 
 		}
 
-		$("#dogovor\\[title\\]").autocomplete("content/card/deal.helpers.php?action=get.list", {
+		$("#dogovor\\[title\\]").autocomplete("/content/card/deal.helpers.php?action=get.list", {
 			autofill: true,
 			minChars: 3,
 			cacheLength: 1,
@@ -2163,7 +2166,7 @@ if ( $action == "status" ) {
 			matchSubset: 1
 		});
 		$('#dogovor\\[kol\\]').setMask({mask: '<?=$format_dogs?>', type: 'reverse'});
-		$("#person\\[rol\\]").autocomplete("content/helpers/person.helpers.php?action=get.role", {
+		$("#person\\[rol\\]").autocomplete("/content/helpers/person.helpers.php?action=get.role", {
 			autofill: false,
 			minChars: 3,
 			cacheLength: 1,
@@ -2175,7 +2178,7 @@ if ( $action == "status" ) {
 		});
 
 		if( $("#person\\[ptitle\\]").hasClass('suggestion') ) {
-			$("#person\\[ptitle\\]").autocomplete("content/helpers/person.helpers.php?action=get.status", {
+			$("#person\\[ptitle\\]").autocomplete("/content/helpers/person.helpers.php?action=get.status", {
 				autofill: true,
 				minChars: 3,
 				cacheLength: 1,
@@ -2187,7 +2190,7 @@ if ( $action == "status" ) {
 			});
 		}
 
-		$("#todo\\[theme\\]").autocomplete("content/core/core.tasks.php?action=theme", {
+		$("#todo\\[theme\\]").autocomplete("/content/core/core.tasks.php?action=theme", {
 			autoFill: false,
 			minChars: 3,
 			cacheLength: 1,
@@ -2199,7 +2202,7 @@ if ( $action == "status" ) {
 			matchContains: true
 		});
 
-		$("#pr_0 #speca_title\\[\\]").autocomplete("content/helpers/price.helpers.php?clid=" + $('#clid').val(), {
+		$("#pr_0 #speca_title\\[\\]").autocomplete("/content/helpers/price.helpers.php?clid=" + $('#clid').val(), {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 1,
@@ -2230,7 +2233,7 @@ if ( $action == "status" ) {
 		$result = $db -> query( "SELECT * FROM {$sqlname}entry_poz WHERE ide = '$ide' and identity = '$identity'" );
 		while($data = $db -> fetch( $result )) {
 		?>
-		$("#pr_<?=$i?> #speca_title\\[\\]").autocomplete("content/helpers/price.helpers.php?clid=" + $('#clid').val(), {
+		$("#pr_<?=$i?> #speca_title\\[\\]").autocomplete("/content/helpers/price.helpers.php?clid=" + $('#clid').val(), {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 1,
@@ -2256,7 +2259,7 @@ if ( $action == "status" ) {
 		?>
 		$('.ac_results').css('width', '200px');
 
-		$("#client\\[title\\]").autocomplete("content/helpers/client.helpers.php?action=clientlist", {
+		$("#client\\[title\\]").autocomplete("/content/helpers/client.helpers.php?action=clientlist", {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 2,
@@ -2276,7 +2279,7 @@ if ( $action == "status" ) {
 			selItem('client', data[1])
 		});
 
-		$("#person\\[person\\]").autocomplete("content/helpers/client.helpers.php?action=contactlist&clid=" + $("#client\\[clid\\]").val(), {
+		$("#person\\[person\\]").autocomplete("/content/helpers/client.helpers.php?action=contactlist&clid=" + $("#client\\[clid\\]").val(), {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 2,
@@ -2340,8 +2343,8 @@ if ( $action == "status" ) {
 				//а не редактирование
 				if (ide === 0) {
 
-					if (data.clid !== '' && iscard !== 'yes' && !$('.expressbuttons').is('div')) window.open('card.client.php?clid=' + data.clid);
-					if (data.clid !== '' && $('.expressbuttons').is('div')) window.location = 'card.client.php?clid=' + data.clid;
+					if (data.clid !== '' && iscard !== 'yes' && !$('.expressbuttons').is('div')) window.open('card.client?clid=' + data.clid);
+					if (data.clid !== '' && $('.expressbuttons').is('div')) window.location = 'card.client?clid=' + data.clid;
 
 				}
 
@@ -2383,20 +2386,20 @@ if ( $action == "status" ) {
 	$('select[data-change="activities"]').each(function () {
 
 		var $el = $(this).data('id');
-		$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+		$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 
 	});
 	$('.ydropDown[data-change="activities"]').each(function () {
 
 		var $el = $(this).data('selected');
 		var $tip = $(this).data('id');
-		$('#tagbox[data-tip="' + $tip + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($el));
+		$('#tagbox[data-tip="' + $tip + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($el));
 
 	});
 
 	$(document).on('change', 'select[data-change="activities"]', function () {
 		var $el = $(this).data('id');
-		$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+		$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 	});
 
 	$(document).off('change', 'input[data-change="activities"]');
@@ -2405,7 +2408,7 @@ if ( $action == "status" ) {
 		var $el = $(this).data('id');
 		var $tip = $(this).val();
 
-		$('#tagbox[data-tip="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($tip));
+		$('#tagbox[data-tip="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($tip));
 
 	});
 
@@ -2498,7 +2501,7 @@ if ( $action == "status" ) {
 
 		if (tip === 'client') {
 
-			var url = 'content/helpers/client.helpers.php?action=clientinfo&clid=' + id;
+			var url = '/content/helpers/client.helpers.php?action=clientinfo&clid=' + id;
 			var reqphone = '';
 			var reqfax = '';
 
@@ -2630,7 +2633,7 @@ if ( $action == "status" ) {
 		}
 		if (tip === 'person') {
 
-			url = 'content/helpers/client.helpers.php?action=clientinfo&pid=' + id;
+			url = '/content/helpers/client.helpers.php?action=clientinfo&pid=' + id;
 			$("#person\\[pid\\]").val(id);
 
 			var reqphone2 = '';
@@ -2647,7 +2650,7 @@ if ( $action == "status" ) {
 
 				if (data.clid != '' && $clid == '') {
 
-					var url2 = 'content/helpers/client.helpers.php?action=clientinfo&clid=' + data.clid;
+					var url2 = '/content/helpers/client.helpers.php?action=clientinfo&clid=' + data.clid;
 
 					$.getJSON(url2, function (data2) {
 
@@ -2958,7 +2961,7 @@ if ( $action == "status" ) {
 		$('#tbspeca').append(trhtml);
 		$('#spcount').val(i);
 
-		$("#pr_" + i + " #speca_title\\[\\]").autocomplete("content/helpers/price.helpers.php",
+		$("#pr_" + i + " #speca_title\\[\\]").autocomplete("/content/helpers/price.helpers.php",
 			{
 				autofill: true,
 				minChars: 2,
@@ -3012,7 +3015,7 @@ if ( $action == "status" ) {
 
 	function gettags() {
 		var tip = urlEncodeData($('#tiphist option:selected').val());
-		$('#tagbox').load('content/core/core.tasks.php?action=tags&tip=' + tip);
+		$('#tagbox').load('/content/core/core.tasks.php?action=tags&tip=' + tip);
 	}
 
 	function tagit(id) {

@@ -107,7 +107,7 @@ flush();
 								</div>
 							<?php } ?>
 							<?php if ( $isadmin == 'on' || $tipuser == 'Администратор' || $userRights['import'] ) { ?>
-								<div onclick="doLoad('content/helpers/deal.import.php?action=import');" title="Импорт" class="item ha hand">
+								<div onclick="doLoad('/content/helpers/deal.import.php?action=import');" title="Импорт" class="item ha hand">
 									<span><i class="icon-database green"></i></span>&nbsp;&nbsp;Импорт <?= $lang[ 'face' ][ 'DealsName' ][ 1 ] ?>
 								</div>
 							<?php } ?>

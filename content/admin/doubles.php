@@ -102,7 +102,7 @@ if ( $action == '' ) {
 		<b class="red">Важно:</b> Функция производит параллельную проверку, т.е. проверяет дубли Клиента в записях Клиентов, дубли контактов в записях Контактов
 	</div>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="form" id="form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="form" id="form">
 		<INPUT type="hidden" name="action" id="action" value="save">
 		<INPUT type="hidden" name="id" id="id" value="<?= $dblID ?>">
 

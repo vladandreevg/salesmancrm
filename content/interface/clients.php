@@ -154,10 +154,10 @@ if($userSettings['dostup']['concurent'] == 'on') {
 								</div>
 							<?php } ?>
 							<?php if ( $isadmin == 'on' || $tipuser == 'Администратор' || $userRights['import'] ) { ?>
-								<div onclick="doLoad('content/helpers/client.import.php?action=import');" title="Импорт" class="item ha hand">
+								<div onclick="doLoad('/content/helpers/client.import.php?action=import');" title="Импорт" class="item ha hand">
 									<span><i class="icon-database broun"><i class="sup icon-exchange red"></i></i></span>&nbsp;&nbsp;Импорт в базу
 								</div>
-								<div onclick="doLoad('content/helpers/client.update.php?action=import');" title="Обновление" class="item ha hand">
+								<div onclick="doLoad('/content/helpers/client.update.php?action=import');" title="Обновление" class="item ha hand">
 									<span><i class="icon-database green"><i class="sup icon-exchange green"></i></i></span>&nbsp;&nbsp;Обновление записей
 								</div>
 							<?php } ?>

@@ -480,8 +480,8 @@ if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_
 				<div class="fs-12"><?= $length ?></div>
 			</td>
 			<td>
-				<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>');" title="Редактировать" class="button dotted bluebtn"><i class="icon-pencil"></i></a>
-				<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>&clone=yes');" title="Клонировать" class="button dotted greenbtn"><i class="icon-buffer"></i></a>
+				<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>');" title="Редактировать" class="button dotted bluebtn"><i class="icon-pencil"></i></a>
+				<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>&clone=yes');" title="Клонировать" class="button dotted greenbtn"><i class="icon-buffer"></i></a>
 				<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteStep('<?= $data['id'] ?>')" title="Удалить" class="button dotted redbtn"><i class="icon-cancel-circled-1"></i></a>
 			</td>
 		</tr>
@@ -494,7 +494,7 @@ if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_
 
 </div>
 
-<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 <div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/119')" title="Документация"><i class="icon-help"></i></div>
 
 <div class="space-100"></div>
@@ -508,7 +508,7 @@ if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_
 
 		$.ajax({
 			type: "GET",
-			url: 'content/admin/<?php echo $thisfile; ?>?action=delete.do&id=' + id,
+			url: '/content/admin/<?php echo $thisfile; ?>?action=delete.do&id=' + id,
 			success: function (viewData) {
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html(viewData);
@@ -530,7 +530,7 @@ if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_
 
 		$.ajax({
 			type: "GET",
-			url: 'content/admin/<?php echo $thisfile; ?>?action=set.do',
+			url: '/content/admin/<?php echo $thisfile; ?>?action=set.do',
 			success: function (viewData) {
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html(viewData);

@@ -7,8 +7,7 @@
 /*        www.isaler.ru         */
 /*        ver. 2017.x           */
 /* ============================ */
-?>
-<?php
+
 error_reporting(E_ERROR);
 header("Pragma: no-cache");
 
@@ -224,7 +223,7 @@ if ($action == 'export') {
 
 		function exportDo() {
 
-			var url = 'content/lists/list.calls.php?action=export.on&dstart=' + $('#dstart').val() + '&dend=' + $('#dend').val();
+			var url = '/content/lists/list.calls.php?action=export.on&dstart=' + $('#dstart').val() + '&dend=' + $('#dend').val();
 			window.open(url);
 
 			return false;

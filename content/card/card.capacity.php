@@ -12,7 +12,7 @@
 error_reporting(E_ERROR);
 header("Pragma: no-cache");
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -89,7 +89,7 @@ if ($_REQUEST['act'] == 'del') {
 
 if ($action == 'add') {
 	?>
-	<FORM method="post" action="content/card/card.capacity.php" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM method="post" action="/content/card/card.capacity.php" enctype="multipart/form-data" name="Form" id="Form">
 		<input name="action" id="action" type="hidden" value="add_do"/>
 		<input name="clid" id="clid" type="hidden" value="<?= $clid ?>"/>
 		<DIV class="zagolovok">Добавить план:</DIV>
@@ -172,7 +172,7 @@ if ($action == 'add') {
 			},
 			success: function (data) {
 
-				$('#tab11').load('content/card/card.capacity.php?clid=<?=$clid?>');
+				$('#tab11').load('/content/card/card.capacity.php?clid=<?=$clid?>');
 				$('#message').css('display', 'block').html(data).fadeOut(5000);
 
 			}
@@ -198,7 +198,7 @@ if ($action == 'edit') {
 
 	}
 	?>
-	<FORM method="post" action="content/card/card.capacity.php" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM method="post" action="/content/card/card.capacity.php" enctype="multipart/form-data" name="Form" id="Form">
 		<input name="action" id="action" type="hidden" value="edit_do"/>
 		<input name="clid" id="clid" type="hidden" value="<?= $clid ?>"/>
 		<input name="id" id="id" type="hidden" value="<?= $id ?>"/>
@@ -344,11 +344,11 @@ if ($_REQUEST['action'] == '') {
 						//Запретим изменение для прошлых периодов
 						$dd    = date("t", mktime(1, 0, 0, $dataa['mon'], 1, $dataa['year'])); //число дней в указанном месяце
 						$delta = datestoday($dataa['year'].'-'.$dataa['mon'].'-'.$dd);// число дней, прошедших с последнего дня месяца
-						if (($delta >= 0 or $isadmin == 'on') && get_accesse((int)$clid) == 'yes') {
+						if (($delta >= 0 || $isadmin == 'on') && get_accesse((int)$clid) == 'yes') {
 							?>
-							<a href="#" onclick="doLoad('content/card/card.capacity.php?clid=<?= $clid ?>&action=edit&id=<?= $dataa['id'] ?>')" title="Изменить"><i class="icon-pencil blue"></i></a>&nbsp;
+							<a href="#" onclick="doLoad('/content/card/card.capacity.php?clid=<?= $clid ?>&action=edit&id=<?= $dataa['id'] ?>')" title="Изменить"><i class="icon-pencil blue"></i></a>&nbsp;
 							<span style="color:#ccc"><?php if ($isadmin == 'on') { ?>|</span>&nbsp;
-							<a href="#" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)refresh('tab11','content/card/card.capacity.php?clid=<?= $clid ?>&act=del&id=<?= $dataa['id'] ?>');" title="Удалить"><i class="icon-cancel-circled red"></i></a><?php } ?>
+							<a href="#" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)refresh('tab11','/content/card/card.capacity.php?clid=<?= $clid ?>&act=del&id=<?= $dataa['id'] ?>');" title="Удалить"><i class="icon-cancel-circled red"></i></a><?php } ?>
 							<?php
 						}
 						?>

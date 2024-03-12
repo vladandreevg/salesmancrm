@@ -139,7 +139,7 @@ if ( $action == "edit" ) {
 	?>
 	<div class="zagolovok">Изменить / Добавить Webhook</div>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input name="action" id="action" type="hidden" value="edit_do"/>
 		<input name="id" type="hidden" value="<?= $id ?>" id="<?= $id ?>"/>
 
@@ -211,7 +211,7 @@ if ( $action == "edit" ) {
 			},
 			success: function (data) {
 
-				$('#contentdiv').load('content/admin/webhook.php');
+				$('#contentdiv').load('/content/admin/webhook.php');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data.result);
 
 				setTimeout(function () {
@@ -350,7 +350,7 @@ if ( $action == '' ) {
 							</label>
 						</TD>
 						<TD>
-							<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?id='.$item[ 'id' ].'&action=edit\')" class="gray" title="Редактировать">
+							<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?id='.$item[ 'id' ].'&action=edit\')" class="gray" title="Редактировать">
 							<span class="block flh-30">
 								<span class="pull-aright">
 									<i class="icon-pencil"></i>
@@ -390,7 +390,7 @@ if ( $action == '' ) {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 		<a href="javascript:void(0)" onclick="preDel()" class="button redbtn box-shadow hidden amultidel" title="Удалить"><i class="icon-minus-circled"></i>Удалить выбранное</a>
 		<a href="javascript:void(0)" onclick="clearCheck()" class="button greenbtn box-shadow hidden amultidel" title="Снять выделение"><i class="icon-th"></i>Снять выделение</a>
 
@@ -456,9 +456,9 @@ if ( $action == '' ) {
 
 			$('#message').fadeTo(1, 1).css('display', 'block').append('<div id="loader"><img src="/assets/images/loader.gif"> Выполняю...</div>');
 
-			$.get("content/admin/<?php echo $thisfile; ?>?action=delete&id=" + id, function (data) {
+			$.get("/content/admin/<?php echo $thisfile; ?>?action=delete&id=" + id, function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html('Результат: ' + data);
 				setTimeout(function () {
@@ -526,9 +526,9 @@ if ( $action == '' ) {
 
 			var str = $('#list').serialize();
 
-			$.get('content/admin/<?php echo $thisfile; ?>?action=delete&' + str, function (data) {
+			$.get('/content/admin/<?php echo $thisfile; ?>?action=delete&' + str, function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html('Результат: ' + data);
 				setTimeout(function () {

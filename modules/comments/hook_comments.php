@@ -9,7 +9,7 @@
 /* ============================ */
 
 // добавляем собственное событие к системе уведомлений по email
-$hooks -> add_filter( 'add_custom_subscription', 'comments_subscription' );
+$hooks -> add_filter( 'add_custom_subscription', 'comments_subscription', 10 );
 
 function comments_subscription($events = []) {
 

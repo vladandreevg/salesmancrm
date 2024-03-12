@@ -107,7 +107,7 @@ $roles = [
 
 			<div class="contaner p5" data-id="stat">
 
-				<a href="javascript:void(0)" onclick="getSwindow('reports/ent-planDoByPayment.php', 'Выполнение плана')" class="greenbtn button wp100" title="Показать аналитику"><i class="icon-chart-line"></i> Выполнение плана</a>
+				<a href="javascript:void(0)" onclick="getSwindow('/reports/ent-planDoByPayment.php', 'Выполнение плана')" class="greenbtn button wp100" title="Показать аналитику"><i class="icon-chart-line"></i> Выполнение плана</a>
 
 			</div>
 

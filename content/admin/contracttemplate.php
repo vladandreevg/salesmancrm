@@ -156,7 +156,7 @@ if ( $action == "edit" ) {
 		exit;
 	}
 	?>
-	<form method="post" action="content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
+	<form method="post" action="/content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
 		<input name="id" type="hidden" id="id" value="<?= $id ?>">
 		<input type="hidden" id="action" name="action" value="edit.on">
 		<div class="zagolovok">Редактирование</div>
@@ -285,17 +285,17 @@ if ( !$action ) {
 				<div class="flex-string wp65 nopad middle">
 				
 					<span class="fs-12 Bold gray-dark">ID '.$credit['id'].':</span>&nbsp;<span class="fs-10 Bold pt10">'.$credit['title'].'</span>&nbsp;
-					<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&id='.$credit['id'].'\');" class="gray"><i class="icon-pencil"></i></A>
+					<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&id='.$credit['id'].'\');" class="gray"><i class="icon-pencil"></i></A>
 					
 				</div>
 				<div class="flex-string wp30">
-					<div>'.$credit['file'].' <a href="cash/'.$fpath.'templates/'.$credit['file'].'" title="Загрузить"><i class="icon-attach-1 blue"></i></a></div>
+					<div>'.$credit['file'].' <a href="/cash/'.$fpath.'templates/'.$credit['file'].'" title="Загрузить"><i class="icon-attach-1 blue"></i></a></div>
 					<div class="smalltxt blue">
 						'.num_format( round( filesize( $uploaddir.$credit['file'] ) / 1024, 2 ) ).'&nbsp;Kb / '.date( "d-m-Y", filemtime( $uploaddir.$credit['file'] ) ).'
 					</div>
 				</div>
 				<div class="flex-string wp5 hidden-iphone">
-					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'content/admin/'.$thisfile.'?id='.$credit['id'].'&action=delete\');"><i class="icon-cancel-circled red"></i></A>
+					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'/content/admin/'.$thisfile.'?id='.$credit['id'].'&action=delete\');"><i class="icon-cancel-circled red"></i></A>
 				</div>
 		
 			</div>
@@ -308,11 +308,11 @@ if ( !$action ) {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/52')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>

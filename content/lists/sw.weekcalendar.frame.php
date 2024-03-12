@@ -10,7 +10,7 @@
 
 header('Content-Type: text/html; charset=utf-8');
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";

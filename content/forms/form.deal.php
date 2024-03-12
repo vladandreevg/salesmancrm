@@ -4457,7 +4457,7 @@ if ( $action == "invoice.print" ) {
 
 			var str = $('#invoiceForm').serialize();
 
-			window.open('content/helpers/get.doc.php?' + str);
+			window.open('/content/helpers/get.doc.php?' + str);
 
 			DClose();
 
@@ -4626,11 +4626,11 @@ Email.: '.$mMail.'
 
 			var count = $('.email').length;
 
-			$.get('content/core/core.deals.php?action=invoice.link&crid=<?=$crid?>', function (data) {
+			$.get('/content/core/core.deals.php?action=invoice.link&crid=<?=$crid?>', function (data) {
 
 				if (data.file) {
 
-					$('#attach').html('<div><a href="content/helpers/get.file.php?file=' + data.file + '" target="blank" title="Скачать"><i class="icon-attach-1"></i>' + data.name + '</a></div>');
+					$('#attach').html('<div><a href="/content/helpers/get.file.php?file=' + data.file + '" target="blank" title="Скачать"><i class="icon-attach-1"></i>' + data.name + '</a></div>');
 
 					if (data.file !== '' && data.file !== 'undefined' && count > 0) $('.sender').removeClass('hidden');
 
@@ -4638,7 +4638,7 @@ Email.: '.$mMail.'
 
 				if (data.payorder) {
 
-					$('#attach').append('<div><a href="content/helpers/get.file.php?file=' + data.payorder + '" target="blank" title="Скачать"><i class="icon-attach-1"></i>' + data.payorderName + '</a></div>');
+					$('#attach').append('<div><a href="/content/helpers/get.file.php?file=' + data.payorder + '" target="blank" title="Скачать"><i class="icon-attach-1"></i>' + data.payorderName + '</a></div>');
 
 				}
 
@@ -4983,7 +4983,7 @@ if ( $action == 'provider.add' ) {
 
 								<INPUT type="hidden" id="conid" name="conid" value="<?= $deal['conid'] ?>">
 								<div class="relativ">
-									<INPUT id="lst_conid" type="text" class="wp97 required" value="<?= current_client( $deal['conid'] ) ?>" readonly onclick="get_orgspisok('org','place','content/helpers/client.helpers.php?action=get_orgselector&type=<?= $tip ?>','conid','lst_conid')" placeholder="Нажмите для выбора">
+									<INPUT id="lst_conid" type="text" class="wp97 required" value="<?= current_client( $deal['conid'] ) ?>" readonly onclick="get_orgspisok('org','place','/content/helpers/client.helpers.php?action=get_orgselector&type=<?= $tip ?>','conid','lst_conid')" placeholder="Нажмите для выбора">
 									<div class="idel pr20 mr10">
 										<i title="Очистить" onclick="$('input#conid').val(''); $('#lst_conid').val('');" class="icon-block red hand"></i>
 									</div>
@@ -5040,7 +5040,7 @@ if ( $action == 'provider.add' ) {
 
 								<INPUT type="hidden" id="partid" name="partid" value="<?= $deal['partid'] ?>">
 								<div class="relativ">
-									<INPUT id="lst_partid" type="text" class="wp97 required" value="<?= current_client( $deal['partid'] ) ?>" readonly onclick="get_orgspisok('org','place','content/helpers/client.helpers.php?action=get_orgselector&type=<?= $tip ?>','partid','lst_partid')" placeholder="Нажмите для выбора">
+									<INPUT id="lst_partid" type="text" class="wp97 required" value="<?= current_client( $deal['partid'] ) ?>" readonly onclick="get_orgspisok('org','place','/content/helpers/client.helpers.php?action=get_orgselector&type=<?= $tip ?>','partid','lst_partid')" placeholder="Нажмите для выбора">
 									<div class="idel pr20 mr10">
 										<i title="Очистить" onclick="$('input#partid').val(''); $('#lst_partid').val('');" class="icon-block red hand"></i>
 									</div>
@@ -5374,7 +5374,7 @@ if ( $action == 'provider.edit' ) {
 
 		if ($("#title_dog").is('input')) {
 
-			$("#title_dog").autocomplete('content/helpers/deal.helpers.php?action=get.list', {
+			$("#title_dog").autocomplete('/content/helpers/deal.helpers.php?action=get.list', {
 				autofill: true,
 				minChars: 3,
 				cacheLength: 10,
@@ -5440,7 +5440,7 @@ if ( $action == 'provider.edit' ) {
 
 		});
 
-		$("#client").autocomplete('content/helpers/client.helpers.php?action=clientlist', {
+		$("#client").autocomplete('/content/helpers/client.helpers.php?action=clientlist', {
 			autofill: false,
 			minChars: 2,
 			cacheLength: 2,
@@ -5461,7 +5461,7 @@ if ( $action == 'provider.edit' ) {
 				$('#clid').val(data[1]);
 			});
 
-		$("#person").autocomplete("content/helpers/client.helpers.php?action=contactlist", {
+		$("#person").autocomplete("/content/helpers/client.helpers.php?action=contactlist", {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 2,
@@ -5481,7 +5481,7 @@ if ( $action == 'provider.edit' ) {
 				selItem('person', data[1]);
 			});
 
-		$("#speca_title\\[\\]").autocomplete("content/helpers/price.helpers.php?clid=" + $('#clid').val(), {
+		$("#speca_title\\[\\]").autocomplete("/content/helpers/price.helpers.php?clid=" + $('#clid').val(), {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 1,
@@ -5649,7 +5649,7 @@ if ( $action == 'provider.edit' ) {
 					if (action === 'deal.change.step') {
 
 						if ($('#complect').is('div'))
-							$('#complect').load('content/card/card.controlpoint.php?did=' + did);
+							$('#complect').load('/content/card/card.controlpoint.php?did=' + did);
 
 						if (typeof settab === 'function' && !in_array(0, isset)) {
 
@@ -5748,9 +5748,9 @@ if ( $action == 'provider.edit' ) {
 
 					if (card === 'dogovor' && !in_array(7, isset)) {
 
-						$('#credit_' + did).load('content/card/card.credit.php?did=' + did);
+						$('#credit_' + did).load('/content/card/card.credit.php?did=' + did);
 
-						$.get('content/card/card.deal.php?did=' + did, function (data) {
+						$.get('/content/card/card.deal.php?did=' + did, function (data) {
 
 							$('#tab0').html(data);
 
@@ -5778,9 +5778,6 @@ if ( $action == 'provider.edit' ) {
 					configpage();
 
 				if ($display === 'desktop') {
-
-					//$('#deals').load('content/lists/dt.deals.php').append('<img src=/assets/images/loading.gif>');
-					//$('#pipeline').load('content/lists/dt.pipeline.php').append('<img src=/assets/images/loading.gif>');
 
 					$desktop.deals();
 					$desktop.pipeline();
@@ -5863,7 +5860,7 @@ if ( $action == 'provider.edit' ) {
 
 		if ($('#stepfields').is('div') && action !== 'change.close') {
 
-			$.get('content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + $('option:selected', this).val(), function (data) {
+			$.get('/content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + $('option:selected', this).val(), function (data) {
 
 				if (!data || data == '') $('#stepfields').addClass('hidden');
 				else {
@@ -6007,7 +6004,7 @@ if ( $action == 'provider.edit' ) {
 
 		$('#stepfields').removeClass('hidden').append('<img src="/assets/images/loading.svg"> проверка полей сделки..');
 
-		$.get('content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + stepid + '&full=1', function (data) {
+		$.get('/content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + stepid + '&full=1', function (data) {
 
 			if (!data || data == '') {
 				$('#stepfields').removeClass('hidden').html('<div class="success">Заполнение полей не требуется на данном этапе</div>');
@@ -6121,7 +6118,7 @@ if ( $action == 'provider.edit' ) {
 		$('#specaloader tbody tr:last').find('input').val('');
 		$('#specaloader tbody tr:last').find('input#speca_kol\\[\\]').val('1,00');
 
-		$("#speca_title\\[\\]").autocomplete("content/helpers/price.helpers.php?clid=" + clid, {
+		$("#speca_title\\[\\]").autocomplete("/content/helpers/price.helpers.php?clid=" + clid, {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 1,
@@ -6302,7 +6299,7 @@ if ( $action == 'provider.edit' ) {
 			var payer = $('#payer').val();
 			var plist = '<?=$plist?>';
 
-			$.get('content/helpers/deal.helpers.php?action=get.personsplus&clid=' + id + '&payer=' + payer + '&plist=' + plist, function (data) {
+			$.get('/content/helpers/deal.helpers.php?action=get.personsplus&clid=' + id + '&payer=' + payer + '&plist=' + plist, function (data) {
 
 				$('#pid_list').empty().html(data);
 
@@ -6495,7 +6492,7 @@ if ( $action == 'provider.edit' ) {
 
 	function addSuffix() {
 
-		$.get('content/forms/form.deal.php?action=credit.suffix', function (data) {
+		$.get('/content/forms/form.deal.php?action=credit.suffix', function (data) {
 
 			var oEditor = CKEDITOR.instances.suffix;
 			oEditor.insertHtml(data);
@@ -6515,7 +6512,7 @@ if ( $action == 'provider.edit' ) {
 			$('#dialog_container').css('display', 'none');
 
 			var str = $('#dealForm').serialize() + '&' + $('#pageform').serialize();
-			var url = "content/core/core.deals.php";
+			var url = "/content/core/core.deals.php";
 
 			$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id=loader><img src="/assets/images/loader.gif"> Загрузка данных...</div>');
 

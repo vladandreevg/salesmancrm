@@ -159,7 +159,7 @@ if ($all > 0) {
 			//$dur = $min.':'.$sec;
 
 			if ($data['file'] != '' && $data['file'] != "0") {
-				$play = '<a href="javascript:void(0)" onClick="doLoad(\'content/pbx/play.php?id='.$data['id'].'\')" title="Прослушать запись"><i class="icon-volume-up blue"></i></a>';
+				$play = '<a href="javascript:void(0)" onClick="doLoad(\'/content/pbx/play.php?id='.$data['id'].'\')" title="Прослушать запись"><i class="icon-volume-up blue"></i></a>';
 			}
 
 		}

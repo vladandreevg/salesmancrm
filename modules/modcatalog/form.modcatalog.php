@@ -514,7 +514,7 @@ if ( $action == "edit" ) {
 
 						<div class="viewdiv wp100">
 							<?php
-							include "../../content/ajax/check_disk.php";
+							include $rootpath."/content/ajax/check_disk.php";
 							if ( $diskLimit == 0 || $diskUsage['percent'] < 100 ) {
 								?>
 								<DIV id="uploads" style="overflow:auto !important" class="wp100 flex-container box--child">
@@ -581,7 +581,7 @@ if ( $action == "edit" ) {
 		$(function () {
 			createEditor2();
 
-			$('#filelist').load('modules/modcatalog/core.modcatalog.php?id=<?=$id?>&action=filelist');
+			$('#filelist').load('/modules/modcatalog/core.modcatalog.php?id=<?=$id?>&action=filelist');
 
 			$('#dialog').center();
 
@@ -690,9 +690,9 @@ if ( $action == "edit" ) {
 
 		function deleteFile(id, file) {
 
-			$.get('modules/modcatalog/core.modcatalog.php?id=' + id + '&file=' + file + '&action=filedelete', function () {
+			$.get('/modules/modcatalog/core.modcatalog.php?id=' + id + '&file=' + file + '&action=filedelete', function () {
 
-				$('#filelist').load('modules/modcatalog/core.modcatalog.php?id=<?=$id?>&action=filelist');
+				$('#filelist').load('/modules/modcatalog/core.modcatalog.php?id=<?=$id?>&action=filelist');
 
 			});
 
@@ -835,7 +835,7 @@ if ( $action == "import" ) {
 				},
 				success: function (data) {
 
-					if (data == 'Файл загружен') $('#resultdiv').empty().load('modules/modcatalog/form.modcatalog.php?action=import_select').append('<div class="infodiv"><img src="/assets/images/loading.gif"> Обработка данных. Пожалуйста подождите...</div>');
+					if (data == 'Файл загружен') $('#resultdiv').empty().load('/modules/modcatalog/form.modcatalog.php?action=import_select').append('<div class="infodiv"><img src="/assets/images/loading.gif"> Обработка данных. Пожалуйста подождите...</div>');
 
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 					setTimeout(function () {
@@ -1073,7 +1073,7 @@ if ( $action == "import_select" ) {
 		});
 
 		function Discard() {
-			var url = 'modules/modcatalog/core.modcatalog.php?action=discard';
+			var url = '/modules/modcatalog/core.modcatalog.php?action=discard';
 			var str = '';
 			$.post(url, str, function (data) {
 				$('#dialog').css('display', 'none');
@@ -1255,8 +1255,8 @@ if ( $action == "view" ) {
 									<?php
 									foreach ($files as $file) {
 										?>
-										<div class="tumbs" style="background: url(<?= 'content/helpers/get.file.php?file=modcatalog/'.$file['file'] ?>) top no-repeat; background-size:cover;">
-											<a href="<?= 'content/helpers/get.file.php?file=modcatalog/'.$file['file'] ?>" target="blank" title="В новом окне"><i class="icon-search gray icon-3x"></i></a>
+										<div class="tumbs" style="background: url(<?= '/content/helpers/get.file.php?file=modcatalog/'.$file['file'] ?>) top no-repeat; background-size:cover;">
+											<a href="<?= '/content/helpers/get.file.php?file=modcatalog/'.$file['file'] ?>" target="blank" title="В новом окне"><i class="icon-search gray icon-3x"></i></a>
 										</div>
 									<?php } ?>
 								</div>
@@ -1378,7 +1378,7 @@ if ( $action == "view" ) {
 
 		<div class="pull-aright button--pane">
 
-			<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?n_id=<?= $n_id ?>&action=edit');" class="button" title="Редактировать"><i class="icon-pencil"></i>&nbsp;Редактировать</a>&nbsp;
+			<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id=<?= $n_id ?>&action=edit');" class="button" title="Редактировать"><i class="icon-pencil"></i>&nbsp;Редактировать</a>&nbsp;
 			<a href="card.modcatalog.php?n_id=<?= $n_id ?>" class="button" title="Карточка" target="blank">Карточка&nbsp;<i class="icon-angle-right"></i></a>
 
 		</div>
@@ -2149,7 +2149,7 @@ if ( $action == "editakt" ) {
 
 			});
 
-			$("#dogovor").autocomplete("content/helpers/deal.helpers.php?action=doglist&closed=no&mcid=", {
+			$("#dogovor").autocomplete("/content/helpers/deal.helpers.php?action=doglist&closed=no&mcid=", {
 				autofill: true,
 				minChars: 2,
 				cacheLength: 2,
@@ -2209,7 +2209,7 @@ if ( $action == "editakt" ) {
 				$('#dialog').css('display', 'none');
 
 				//для поштучного учета вызываем форму ввода серийников для каждой позиции
-				if (data.doit == 'yes') doLoad('modules/modcatalog/form.modcatalog.php?id=' + data.id + '&action=editaktperpoz&tip=income');
+				if (data.doit == 'yes') doLoad('/modules/modcatalog/form.modcatalog.php?id=' + data.id + '&action=editaktperpoz&tip=income');
 
 				if (typeof configpage === 'function') {
 					configpage();
@@ -2246,7 +2246,7 @@ if ( $action == "editakt" ) {
 
 			//$("#pr_"+i+" #speca_title\\[\\]").autocomplete("price/autoprice.php", {autofill: true, minChars: 2, cacheLength: 1, maxItemsToShow:20, selectFirst: false, multiple: false,  delay: 10, matchSubset: 1});
 
-			$("#speca_title\\[\\]").autocomplete("modules/modcatalog/autoprice.php", {
+			$("#speca_title\\[\\]").autocomplete("/modules/modcatalog/autoprice.php", {
 				autofill: true,
 				minChars: 2,
 				cacheLength: 2,
@@ -2290,7 +2290,7 @@ if ( $action == "editakt" ) {
 		function didLoad() {
 
 			var clid = $('#clid option:selected').val();
-			var url = 'modules/modcatalog/core.modcatalog.php?action=didlist&t=order&clid=' + clid;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=didlist&t=order&clid=' + clid;
 
 			$.post(url, function (data) {
 
@@ -2305,7 +2305,7 @@ if ( $action == "editakt" ) {
 
 			var did = $('#did option:selected').val();
 			var count = $('#spcount').val();
-			var url = 'modules/modcatalog/core.modcatalog.php?action=specalist&did=' + did + '&count=' + count;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=specalist&did=' + did + '&count=' + count;
 
 			$.post(url, function (data) {
 
@@ -2332,7 +2332,7 @@ if ( $action == "editakt" ) {
 			var sklad = $('#sklad option:selected').val();
 			var count = $('#spcount').val();
 			var idz = '';
-			var url = 'modules/modcatalog/core.modcatalog.php?action=specalist2&t=outcome&sklad=' + sklad + '&did=' + did + '&idz=' + idz + '&count=' + count;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=specalist2&t=outcome&sklad=' + sklad + '&did=' + did + '&idz=' + idz + '&count=' + count;
 			var cc = 0;
 
 			if (did > 0) {
@@ -2471,7 +2471,7 @@ if ( $action == "editakt" ) {
 			var did = $('#did').val();
 			var count = $('#spcount').val();
 			var sklad = $('#sklad option:selected').val();
-			var url = 'modules/modcatalog/core.modcatalog.php?action=specalist3&sklad=' + sklad + '&did=' + did + '&count=' + count;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=specalist3&sklad=' + sklad + '&did=' + did + '&count=' + count;
 			var cc = 0;
 			var ff = 0;
 
@@ -2522,7 +2522,7 @@ if ( $action == "editakt" ) {
 			var count = $('#spcount').val();
 			var sklad = $('#sklad').val();
 			var did = $('#did').val();
-			var url = 'modules/modcatalog/core.modcatalog.php?action=specalist3&sklad=' + sklad + '&idz=' + idz + '&count=' + count + '&did=' + did;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=specalist3&sklad=' + sklad + '&idz=' + idz + '&count=' + count + '&did=' + did;
 			var cc = 0;
 			var ff = 0;
 
@@ -2609,7 +2609,7 @@ if ( $action == "editakt" ) {
 			fd.append('file', $input.prop('files')[0]);
 
 			$.ajax({
-				url: 'modules/modcatalog/core.modcatalog.php?action=upload',
+				url: '/modules/modcatalog/core.modcatalog.php?action=upload',
 				data: fd,
 				processData: false,
 				contentType: false,
@@ -3320,7 +3320,7 @@ if ( $action == "editzayavka" ) {
 					$('#dialog').css('display', 'none');
 					$('#resultdiv').empty();
 
-					if ($('.catalog--zboard').is('div')) $('.catalog--zboard').load('modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
+					if ($('.catalog--zboard').is('div')) $('.catalog--zboard').load('/modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
 
 					if (typeof configpage === 'function') configpage();
 
@@ -3336,7 +3336,7 @@ if ( $action == "editzayavka" ) {
 				}
 			});
 
-			$("#client").autocomplete('content/helpers/client.helpers.php?action=clientlist', {
+			$("#client").autocomplete('/content/helpers/client.helpers.php?action=clientlist', {
 				autofill: false,
 				minChars: 2,
 				cacheLength: 2,
@@ -3358,7 +3358,7 @@ if ( $action == "editzayavka" ) {
 				dealLoad(data[1]);
 			});
 
-			$("#dogovor").autocomplete("content/helpers/deal.helpers.php?action=doglist&closed=no", {
+			$("#dogovor").autocomplete("/content/helpers/deal.helpers.php?action=doglist&closed=no", {
 				autofill: true,
 				minChars: 2,
 				cacheLength: 2,
@@ -3378,7 +3378,7 @@ if ( $action == "editzayavka" ) {
 				$('#did').val(data[1]);
 			});
 
-			$("#contractor").autocomplete('content/helpers/client.helpers.php?action=clientlist&tip=contragent', {
+			$("#contractor").autocomplete('/content/helpers/client.helpers.php?action=clientlist&tip=contragent', {
 				autofill: false,
 				minChars: 2,
 				cacheLength: 2,
@@ -3428,7 +3428,7 @@ if ( $action == "editzayavka" ) {
 			$('#tbspeca').append(trhtml);
 			$('#spcount').val(i);
 
-			$("#pr_" + i).find("#speca_title\\[\\]").autocomplete("modules/modcatalog/autoprice.php",
+			$("#pr_" + i).find("#speca_title\\[\\]").autocomplete("/modules/modcatalog/autoprice.php",
 				{
 					autofill: true,
 					minChars: 2,
@@ -3463,7 +3463,7 @@ if ( $action == "editzayavka" ) {
 
 		function didLoad() {
 			var clid = $('#clid option:selected').val();
-			var url = 'modules/modcatalog/core.modcatalog.php?action=didlist&t=zayavka&clid=' + clid;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=didlist&t=zayavka&clid=' + clid;
 
 			$.post(url, function (data) {
 
@@ -3474,7 +3474,7 @@ if ( $action == "editzayavka" ) {
 		}
 
 		function dealLoad(clid) {
-			var url = 'modules/modcatalog/core.modcatalog.php?action=deallist&t=zayavka&clid=' + clid;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=deallist&t=zayavka&clid=' + clid;
 
 			$.post(url, function (data) {
 
@@ -3495,7 +3495,7 @@ if ( $action == "editzayavka" ) {
 		function specaLoad() {
 			var did = $('#did option:selected').val();
 			var count = $('#spcount').val();
-			var url = 'modules/modcatalog/core.modcatalog.php?action=specalist&did=' + did + '&count=' + count;
+			var url = '/modules/modcatalog/core.modcatalog.php?action=specalist&did=' + did + '&count=' + count;
 
 			$.post(url, function (data) {
 
@@ -3816,7 +3816,7 @@ if ( $action == "editzayavkastatus" ) {
 				closeText: 'Готово'
 			});
 
-			$("#contractor").autocomplete('content/helpers/client.helpers.php?action=clientlist&tip=contragent',
+			$("#contractor").autocomplete('/content/helpers/client.helpers.php?action=clientlist&tip=contragent',
 				{
 					autofill: false,
 					minChars: 2,
@@ -3867,14 +3867,14 @@ if ( $action == "editzayavkastatus" ) {
 					if (isCard === true) settab('7');
 
 					if ($('.catalog--board').is('div')) {
-						$('.catalog--board').load('modules/modcatalog/dt.board.php').append('<img src=/assets/images/loading.gif>');
+						$('.catalog--board').load('/modules/modcatalog/dt.board.php').append('<img src=/assets/images/loading.gif>');
 					}
 					if ($('.catalog--zboard').is('div')) {
-						$('.catalog--zboard').load('modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
+						$('.catalog--zboard').load('/modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
 					}
 
 					if (status == '2' && isCold == 'true') {
-						doLoad('modules/modcatalog/form.modcatalog.php?action=edit&idz=<?=$id?>');
+						doLoad('/modules/modcatalog/form.modcatalog.php?action=edit&idz=<?=$id?>');
 					}
 
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
@@ -4231,7 +4231,7 @@ if ( $action == "movetoskald" ) {
 					$('#resultdiv').empty();
 
 					if ($display === 'desktop') {
-						$('.catalog--zboard').load('modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
+						$('.catalog--zboard').load('/modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
 					}
 
 					if (typeof configpage === 'function') {
@@ -4507,7 +4507,7 @@ if ( $action == "editskladpozone" ) {
 				closeText: 'Готово'
 			});
 
-			$("#dogovor").autocomplete("content/helpers/deal.helpers.php?action=doglist&closed=no",
+			$("#dogovor").autocomplete("/content/helpers/deal.helpers.php?action=doglist&closed=no",
 				{
 					autofill: true,
 					minChars: 2,
@@ -4562,7 +4562,7 @@ if ( $action == "editskladpozone" ) {
 				$('#resultdiv').empty();
 
 				if ($('.catalog--zboard').is('div')) {
-					$('.catalog--zboard').load('modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
+					$('.catalog--zboard').load('/modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
 				}
 
 				try {
@@ -4662,7 +4662,7 @@ if ( $action == "editskladpoz" ) {
 				closeText: 'Готово'
 			});
 
-			$("#dogovor").autocomplete("content/helpers/deal.helpers.php?action=doglist&closed=no",
+			$("#dogovor").autocomplete("/content/helpers/deal.helpers.php?action=doglist&closed=no",
 				{
 					autofill: true,
 					minChars: 2,
@@ -4716,7 +4716,7 @@ if ( $action == "editskladpoz" ) {
 				$('#resultdiv').empty();
 
 				if ($('.catalog--zboard').is('div')) {
-					$('.catalog--zboard').load('modules/modcatalog/dt.zboard.php').append('<img src=images/loading.gif>');
+					$('.catalog--zboard').load('/modules/modcatalog/dt.zboard.php').append('<img src=images/loading.gif>');
 				}
 
 				try {
@@ -4936,7 +4936,7 @@ if ( $action == "viewzayavka" ) {
 			<div class="pull-aright">
 
 			<?php if ( in_array( $status, [0, 1] ) ) { ?>
-				<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $id ?>&action=editzayavkastatus')" class="button">Обработать</a>&nbsp
+				<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id=<?= $id ?>&action=editzayavkastatus')" class="button">Обработать</a>&nbsp
 			<?php } ?>
 
 				<A href="javascript:void(0)" onclick="DClose()" class="button">Закрыть</A>
@@ -5424,12 +5424,12 @@ if ( $action == "editoffer" ) {
 					}
 
 					if ($('.catalog--oboard').is('div')) {
-						$('.catalog--oboard').load('modules/modcatalog/dt.oboard.php').append('<img src=/assets/images/loading.gif>');
+						$('.catalog--oboard').load('/modules/modcatalog/dt.oboard.php').append('<img src=/assets/images/loading.gif>');
 					}
 
 					if ($('.catalog--board').is('div')) {
-						$('.catalog--oboard').load('modules/modcatalog/dt.board.php').append('<img src=/assets/images/loading.gif>');
-						$('.catalog--zboard').load('modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
+						$('.catalog--oboard').load('/modules/modcatalog/dt.board.php').append('<img src=/assets/images/loading.gif>');
+						$('.catalog--zboard').load('/modules/modcatalog/dt.zboard.php').append('<img src=/assets/images/loading.gif>');
 					}
 
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
@@ -5469,10 +5469,10 @@ if ( $action == "viewoffer" ) {
 	$zayavka = json_decode( $des, true );
 
 	if ( $zayavka['zFile']['file'] != '' ) {
-		$fl = 'style="background: url(\'content/helpers/get.file.php?file=modcatalog/'.$zayavka['zFile']['file'].'\') top no-repeat; background-size:cover; width:200px; height:140px; float:right; margin-left:10px; border:2px solid #ddd; padding:2px; cursor:zoom-in;" onclick="window.open(\'content/helpers/get.file.php?file=modcatalog/'.$zayavka['zFile']['file'].'\')" title="Просмотр" class="list"';
+		$fl = 'style="background: url(\'/content/helpers/get.file.php?file=modcatalog/'.$zayavka['zFile']['file'].'\') top no-repeat; background-size:cover; width:200px; height:140px; float:right; margin-left:10px; border:2px solid #ddd; padding:2px; cursor:zoom-in;" onclick="window.open(\'/content/helpers/get.file.php?file=modcatalog/'.$zayavka['zFile']['file'].'\')" title="Просмотр" class="list"';
 	}
 	else {
-		$fl = 'style="background: url(\'./modules/modcatalog/images/noimage.png\') top no-repeat; background-size:cover;"';
+		$fl = 'style="background: url(\'/modules/modcatalog/images/noimage.png\') top no-repeat; background-size:cover;"';
 	}
 	?>
 	<DIV class="zagolovok">Просмотр Предложения</DIV>
@@ -5564,7 +5564,7 @@ if ( $action == "viewoffer" ) {
 	</div>
 	<?php if ( $prid == 0 ) { ?>
 		<div style="display:block; width: 100%;" align="right">
-			<span id="orangebutton" style="font-size:0.95em;"><A href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?ido=<?= $id ?>&action=edit');" class="button" title="В каталог">В каталог</A></span>
+			<span id="orangebutton" style="font-size:0.95em;"><A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?ido=<?= $id ?>&action=edit');" class="button" title="В каталог">В каталог</A></span>
 		</div>
 	<?php } ?>
 	<script>

@@ -111,7 +111,7 @@
 						<div class="action--block">
 
 							{{#service}}
-								<A href="javascript:void(0)" onclick="doLoad('modules/group/form.group.php?action=removefromGroup&id={{id}}&gid={{gid}}');" title="Удалить" class="gray red"><i class="icon-mail red"></i></A>
+								<A href="javascript:void(0)" onclick="doLoad('/modules/group/form.group.php?action=removefromGroup&id={{id}}&gid={{gid}}');" title="Удалить" class="gray red"><i class="icon-mail red"></i></A>
 							{{/service}}
 							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись? Действие удалит запись только из CRM');if (cf)removeFromList('{{id}}','{{gid}}');" title="Удалить запись из группы" class="gray orange"><i class="icon-cancel-circled-1 red"></i></A>
 

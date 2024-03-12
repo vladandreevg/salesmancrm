@@ -77,10 +77,10 @@ function drowChart($list = []): string {
 			
 					<div class="pull-right">
 					
-						'.($item['active'] == 'yes' && stripos(texttosmall($item['tip']), 'руководитель') !== false ? '<A href="javascript:void(0)" onclick="doLoad(\'content/admin/usereditor.php?action=edit&otdel='.$item['otdel'].'&ruk='.$item['id'].'\');" title="Добавить подчиненного"><i class="icon-plus-circled green"></i></A>' : '').'
-						'.($item['active'] == 'yes' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'content/admin/usereditor.php?action=edit&iduser='.$item['id'].'\');" title="Редактировать"><i class="icon-pencil blue"></i></A>' : '').'
-						'.($item['tip'] != 'Руководитель организации' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'content/admin/usereditor.php?action=edit&iduser='.$item['id'].'&clone=yes\');" title="Клонировать с правами"><i class="icon-paste green"></i></A>' : '').'
-						'.( User ::canDeleted( $item[ 'id']) == true ? '&nbsp;<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'content/admin/users.php?iduser='.$item[ 'id'].'&action=delete\');" title="Удалить"><i class="icon-cancel-circled red" title="Удалить"></i></A>' : '<i class="icon-cancel-circled gray" title="Удаление не возможно. У сотрудника есть записи"></i>').'
+						'.($item['active'] == 'yes' && stripos(texttosmall($item['tip']), 'руководитель') !== false ? '<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/usereditor.php?action=edit&otdel='.$item['otdel'].'&ruk='.$item['id'].'\');" title="Добавить подчиненного"><i class="icon-plus-circled green"></i></A>' : '').'
+						'.($item['active'] == 'yes' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/usereditor.php?action=edit&iduser='.$item['id'].'\');" title="Редактировать"><i class="icon-pencil blue"></i></A>' : '').'
+						'.($item['tip'] != 'Руководитель организации' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/usereditor.php?action=edit&iduser='.$item['id'].'&clone=yes\');" title="Клонировать с правами"><i class="icon-paste green"></i></A>' : '').'
+						'.( User ::canDeleted($item['id']) ? '&nbsp;<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'/content/admin/users.php?iduser='.$item[ 'id'].'&action=delete\');" title="Удалить"><i class="icon-cancel-circled red" title="Удалить"></i></A>' : '<i class="icon-cancel-circled gray" title="Удаление не возможно. У сотрудника есть записи"></i>').'
 						
 					</div>
 					
@@ -252,7 +252,7 @@ function drowChart($list = []): string {
 		<div class="relativ" id="tagsmenu">
 
 			<?php if ($_REQUEST['t'] == '') { ?>
-				<a href="javascript:void(0)" onclick="doLoad('content/admin/usereditor.php?action=edit');" class="button"><i class="icon-plus-circled"></i> Добавить</a>
+				<a href="javascript:void(0)" onclick="doLoad('/content/admin/usereditor.php?action=edit');" class="button"><i class="icon-plus-circled"></i> Добавить</a>
 				<!--<a href="javascript:void(0)" onclick="doLoad('admin/usereditor.php?action=edit');" class="button"><i class="icon-plus-circled"></i> Добавить +</a>-->
 				<!--<a href="admin/users.php?t=print" target="_blank" class="button">Распечатать</a>-->
 				<a href="javascript:void(0)" class="button tagsmenuToggler"><i class="icon-help"></i> Типы Ролей&nbsp;<i class="icon-angle-down" id="mapic"></i></a>
@@ -309,7 +309,7 @@ function drowChart($list = []): string {
 
 </DIV>
 
-<div class="pagerefresh refresh--icon admn green" onclick="doLoad('content/admin/usereditor.php?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+<div class="pagerefresh refresh--icon admn green" onclick="doLoad('/content/admin/usereditor.php?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 <div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/16')" title="Документация"><i class="icon-help"></i></div>
 
 <div class="space-100"></div>
@@ -323,11 +323,11 @@ function drowChart($list = []): string {
 		var cf = confirm('Вы хотите изменить статус сотрудника!\n\nЭто действие изменит возможность доступа сотрудника в систему.\nВажно! Повторная активация возможна только через 3 дня. Продолжить?');
 
 		if (cf) {
-			$.post('content/admin/usereditor.php?action=activate&iduser=' + id, function (data) {
+			$.post('/content/admin/usereditor.php?action=activate&iduser=' + id, function (data) {
 
 				DClose();
 
-				$('#contentdiv').load('content/admin/users.php');
+				$('#contentdiv').load('/content/admin/users.php');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 				setTimeout(function () {
@@ -340,7 +340,7 @@ function drowChart($list = []): string {
 
 	function getUsersList() {
 
-		$('#contentdiv').empty().load("content/admin/users.php").append('<div id="loader" class="loader"><img src="/assets/images/loading.gif"> Вычисление...</div>');
+		$('#contentdiv').empty().load("/content/admin/users.php").append('<div id="loader" class="loader"><img src="/assets/images/loading.gif"> Вычисление...</div>');
 
 	}
 

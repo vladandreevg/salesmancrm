@@ -203,7 +203,7 @@ if ($action == "") {
 	<?php }
 	?>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
 		<INPUT type="hidden" name="action" id="action" value="save">
 
 		<?php
@@ -328,7 +328,7 @@ if ($action == "") {
 				},
 				success: function (data) {
 
-					$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>').append('<img src="/assets/images/loading.gif">');
+					$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>').append('<img src="/assets/images/loading.gif">');
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 					setTimeout(function () {
@@ -344,7 +344,7 @@ if ($action == "") {
 		function onoff(id) {
 
 			$('#message').css('display', 'block').append('<div id="loader" class="loader"><img src=/assets/images/loader.gif> Выполняю...</div>');
-			$.post('content/admin/<?php echo $thisfile; ?>?id=' + id + '&action=onoff', function (data) {
+			$.post('/content/admin/<?php echo $thisfile; ?>?id=' + id + '&action=onoff', function (data) {
 
 				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
@@ -361,9 +361,9 @@ if ($action == "") {
 		function install(module) {
 
 			$('#message').css('display', 'block').append('<div id="loader" class="loader"><img src=/assets/images/loader.gif> Выполняю...</div>');
-			$.post('modules/' + module + '/install.php', function (data) {
+			$.post('/modules/' + module + '/install.php', function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 				setTimeout(function () {

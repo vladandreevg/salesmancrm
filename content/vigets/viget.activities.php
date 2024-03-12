@@ -207,7 +207,7 @@ $json = json_encode_cyr($datalist);
 
 		setCookie('historyInterval', id, {"expires":1000000});
 
-		$('#activehitmap').load('content/vigets/viget.activities.php');
+		$('#activehitmap').load('/content/vigets/viget.activities.php');
 
 	});
 

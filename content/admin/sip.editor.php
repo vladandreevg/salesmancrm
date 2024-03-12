@@ -345,7 +345,7 @@ if ($action == '') {
 		
 		function getKey() {
 			
-			var url = 'content/admin/<?php echo $thisfile; ?>?action=getApiKey';
+			var url = '/content/admin/<?php echo $thisfile; ?>?action=getApiKey';
 			
 			$.post(url, function (data) {
 				$('#telefum_key').val(data);

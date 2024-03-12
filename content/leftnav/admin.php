@@ -62,7 +62,7 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 
 			<A href="#fields" class="menu" title="Настройки форм"><i class="icon-table"></i>&nbsp;Формы</A>
 
-			<?php if (file_exists("content/admin/efields.php")) { ?>
+			<?php if (file_exists("/content/admin/efields.php")) { ?>
 				<A href="#efields" class="menu" title="Настройка Экспресс-формы"><i class="icon-table"></i>&nbsp;Экспресс-форма</A>
 			<?php } ?>
 
@@ -132,10 +132,10 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 				?>
 			</A>
 
-			<?php if (file_exists("content/admin/currency.php")) { ?>
+			<?php if (file_exists("/content/admin/currency.php")) { ?>
 				<A href="#currency" class="menu" title="Валюты"><i class="icon-euro"></i>&nbsp;Валюты</A>
 			<?php } ?>
-			<?php if (file_exists("content/admin/dealfieldsforstep.php")) { ?>
+			<?php if (file_exists("/content/admin/dealfieldsforstep.php")) { ?>
 				<A href="#dealfieldsforstep" class="menu" title="Форма Сделки"><i class="icon-table"></i>&nbsp;Поля по этапам Сделки</A>
 			<?php } ?>
 
@@ -157,7 +157,7 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 
 			<?php } ?>
 
-			<?php if (file_exists("content/admin/deal.anketa.php")) { ?>
+			<?php if (file_exists("/content/admin/deal.anketa.php")) { ?>
 
 				<A href="#deal.anketa" class="menu" title="Анкеты по сделкам"><i class="icon-doc-inv-alt"></i>&nbsp;Анкеты по сделкам</A>
 

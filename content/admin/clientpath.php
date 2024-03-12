@@ -259,7 +259,7 @@ if ($action == "delete") {
 
 	<div class="zagolovok">Удалить <?= $tip ?></div>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input type="hidden" id="id" name="id" value="<?= $id ?>">
 		<input id="multi" name="multi" type="hidden" value="<?= $multi ?>">
 		<input name="action" type="hidden" value="delete.do" id="action"/>
@@ -377,8 +377,8 @@ if ($action == '') {
 					</TD>
 					<TD class="text-center">
 
-						<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=edit')" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
-						<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=delete')" class="button dotted redbtn"><i class="icon-cancel-circled"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=edit')" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=delete')" class="button dotted redbtn"><i class="icon-cancel-circled"></i></A>
 
 					</TD>
 					<TD><?= $data['utm_source'] ?></TD>
@@ -395,13 +395,13 @@ if ($action == '') {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 		<a href="javascript:void(0)" onclick="multidel()" class="button redbtn box-shadow hidden amultidel" title="Удалить"><i class="icon-minus-circled"></i>Удалить выбранное</a>
 		<a href="javascript:void(0)" onclick="clearCheck()" class="button greenbtn box-shadow hidden amultidel" title="Снять выделение"><i class="icon-th"></i>Снять выделение</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/18')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
@@ -427,7 +427,7 @@ if ($action == '') {
 		function multidel() {
 
 			var str = $('#list').serialize();
-			doLoad('content/admin/<?php echo $thisfile; ?>?action=delete&' + str);
+			doLoad('/content/admin/<?php echo $thisfile; ?>?action=delete&' + str);
 
 		}
 

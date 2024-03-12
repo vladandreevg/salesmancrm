@@ -410,7 +410,7 @@ if ( $action == "edit" ) {
 
 						<div class="pid">
 							<input type="hidden" id="pidd" name="pidd" value="">
-							<INPUT id="lst_spisokp" placeholder="Нажмите сюда для выбора" type="text" class="wp97" value="<?= $task['person'] ?>" readonly onclick="get_orgspisok('lst_spisokp','prsn','content/helpers/person.helpers.php?action=get_personselector&clid='+$('#clid').val()+'&put=yes','pidd','yes')">
+							<INPUT id="lst_spisokp" placeholder="Нажмите сюда для выбора" type="text" class="wp97" value="<?= $task['person'] ?>" readonly onclick="get_orgspisok('lst_spisokp','prsn','/content/helpers/person.helpers.php?action=get_personselector&clid='+$('#clid').val()+'&put=yes','pidd','yes')">
 
 						</div>
 
@@ -891,7 +891,7 @@ if ( $action == "doit" ) {
 
 						<div class="pid">
 							<input type="hidden" id="pidd" name="pidd" value="">
-							<INPUT id="lst_spisokp" placeholder="Нажмите сюда для выбора" type="text" class="wp97" value="<?= $person ?>" readonly onclick="get_orgspisok('lst_spisokp','prsn','content/helpers/person.helpers.php?action=get_personselector&clid='+$('#clid').val()+'&put=yes','pidd','yes')">
+							<INPUT id="lst_spisokp" placeholder="Нажмите сюда для выбора" type="text" class="wp97" value="<?= $person ?>" readonly onclick="get_orgspisok('lst_spisokp','prsn','/content/helpers/person.helpers.php?action=get_personselector&clid='+$('#clid').val()+'&put=yes','pidd','yes')">
 
 						</div>
 					</div>
@@ -1133,12 +1133,12 @@ if ( $action == "mass" ) {
 
 			var tid = $('#tid').val();
 			var oldtip = $('#oldtip').val();
-			var url = 'content/core/core.tasks.php?action=tags&tip=' + urlEncodeData(oldtip);
+			var url = '/content/core/core.tasks.php?action=tags&tip=' + urlEncodeData(oldtip);
 
 			$('#rezultat').trigger('focus');
 
 			$('#tagbox').load(url);
-			$('#oldtask').load('content/view/task.view.php?tid=' + tid + '&action=view&button=yes');
+			$('#oldtask').load('/content/view/task.view.php?tid=' + tid + '&action=view&button=yes');
 
 		}
 
@@ -1160,7 +1160,7 @@ if ( $action == "mass" ) {
 
 		}
 
-		$("#title").autocomplete("content/core/core.tasks.php?action=theme", {
+		$("#title").autocomplete("/content/core/core.tasks.php?action=theme", {
 			autoFill: false,
 			minChars: 0,
 			cacheLength: 1,
@@ -1175,7 +1175,7 @@ if ( $action == "mass" ) {
 		$(document).off('click', '#dtitle');
 		$(document).on('click', '#dtitle', function () {
 
-			$("#dtitle").autocomplete("content/helpers/deal.helpers.php?action=doglist", {
+			$("#dtitle").autocomplete("/content/helpers/deal.helpers.php?action=doglist", {
 				autofill: true,
 				minChars: 2,
 				cacheLength: 10,
@@ -1205,7 +1205,7 @@ if ( $action == "mass" ) {
 
 		});
 
-		$("#client").autocomplete('content/helpers/client.helpers.php?action=clientlist&strong=yes', {
+		$("#client").autocomplete('/content/helpers/client.helpers.php?action=clientlist&strong=yes', {
 			autofill: false,
 			minChars: 2,
 			cacheLength: 10,
@@ -1225,7 +1225,7 @@ if ( $action == "mass" ) {
 				selItem('client', data[1]);
 			});
 
-		$("#person").autocomplete("content/helpers/client.helpers.php?action=personlist", {
+		$("#person").autocomplete("/content/helpers/client.helpers.php?action=personlist", {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 10,
@@ -1307,7 +1307,7 @@ if ( $action == "mass" ) {
 				var $el = $(this).data('selected');
 				var $tip = $(this).data('id');
 
-				$('#tagbox[data-tip="' + $tip + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($el));
+				$('#tagbox[data-tip="' + $tip + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($el));
 
 				//console.log($tip);
 				//console.log($el);
@@ -1318,7 +1318,7 @@ if ( $action == "mass" ) {
 		$('select[data-change="activities"]').each(function () {
 
 			var $el = $(this).data('id');
-			$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+			$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 
 		});
 
@@ -1328,7 +1328,7 @@ if ( $action == "mass" ) {
 			var $el = $(this).data('id');
 			var $tip = $(this).val();
 
-			$('#tagbox[data-tip="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($tip));
+			$('#tagbox[data-tip="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($tip));
 
 		});
 
@@ -1478,7 +1478,7 @@ if ( $action == "mass" ) {
 	$(document).on('change', 'select[data-change="activities"]', function () {
 
 		var $el = $(this).data('id');
-		$('#tagbox[data-tip="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+		$('#tagbox[data-tip="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 
 	});
 
@@ -1528,7 +1528,7 @@ if ( $action == "mass" ) {
 
 			if (action === 'add' && pid === 0) {
 
-				$.get('content/helpers/client.helpers.php?action=get.maincontact&clid=' + id, function (data) {
+				$.get('/content/helpers/client.helpers.php?action=get.maincontact&clid=' + id, function (data) {
 
 					if (data.pid > 0) {
 						$("#pid_list").html('<div class="infodiv h0 fs-10 flh-12" id="person_' + data.pid + '" title="' + data.contact + '"><INPUT type="hidden" name="pid[]" id="pid[]" value="' + data.pid + '"><div class="el"><div class="del" onclick="delItem(\'' + id + '\')"><i class="icon-cancel-circled"></i></div>' + data.contact + ' [' + data.ptitle + ']</div></div>');
@@ -1550,7 +1550,7 @@ if ( $action == "mass" ) {
 	function get_pClient() {
 
 		var clid = $('#clid').val();
-		if (clid > 0) $('#pidd\\[\\]').load('content/helpers/person.helpers.php?action=get_plist&clid=' + clid);
+		if (clid > 0) $('#pidd\\[\\]').load('/content/helpers/person.helpers.php?action=get_plist&clid=' + clid);
 
 	}
 

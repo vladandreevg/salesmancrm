@@ -294,7 +294,7 @@ if ( $action == "edit" ) {
 			},
 			success: function (data) {
 
-				$('#tab-form-2').load('modules/modcatalog/settings.modcatalog.php?action=pole').append('<img src="/assets/images/loading.gif">');
+				$('#tab-form-2').load('/modules/modcatalog/settings.modcatalog.php?action=pole').append('<img src="/assets/images/loading.gif">');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 				setTimeout(function () {
@@ -1248,7 +1248,7 @@ if ( $action == "settings" ) {
 
 		function checkConnection() {
 
-			var url = "modules/modcatalog/settings.modcatalog.php";
+			var url = "/modules/modcatalog/settings.modcatalog.php";
 			var str = $('#set').serialize() + '&action=ftpcheck';
 
 			$('#res').css('display', 'block').append('<img src="/assets/images/loading.gif">');

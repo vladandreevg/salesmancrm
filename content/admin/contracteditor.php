@@ -105,7 +105,7 @@ if ($action == "edit") {
 
 	?>
 	<div class="zagolovok">Редактирование</div>
-	<form method="post" action="content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
+	<form method="post" action="/content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
 		<input name="id" type="hidden" id="id" value="<?= $id ?>">
 		<input type="hidden" id="action" name="action" value="edit.on">
 
@@ -303,8 +303,8 @@ if (!$action) {
 				</div>
 				<div class="flex-string w120 hidden-iphone">
 				
-					<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&id='.$data['id'].'\');" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
-					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'content/admin/'.$thisfile.'?id='.$data['id'].'&action=delete\');" class="button dotted redbtn"><i class="icon-cancel-circled"></i></A>
+					<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&id='.$data['id'].'\');" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
+					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'/content/admin/'.$thisfile.'?id='.$data['id'].'&action=delete\');" class="button dotted redbtn"><i class="icon-cancel-circled"></i></A>
 					
 				</div>
 				<div class="flex-string float">
@@ -330,7 +330,7 @@ if (!$action) {
 					</span> ]
 				</span>
 
-				<A href="javascript:void(0)" onclick="doLoad(\'content/admin/contracttemplate.php?action=edit&id='.$template['id'].'\');" class="gray pl10" title="Редактировать"><i class="icon-pencil"></i></A>
+				<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/contracttemplate.php?action=edit&id='.$template['id'].'\');" class="gray pl10" title="Редактировать"><i class="icon-pencil"></i></A>
 				<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)deleteTemplate(\''.$template['id'].'\');" class="pull-right pr10" title="Удалить"><i class="icon-cancel-circled red"></i></A>
 				
 		
@@ -346,7 +346,7 @@ if (!$action) {
 					<div class="Bold pt5 pb5">Шаблоны. '.$data['title'].'</div>
 					<div class="bgwhite">'.$str.'</div>
 					<div class="mt5 fs-07">
-						<a href="javascript:void(0)" onclick="doLoad(\'content/admin/contracttemplate.php?action=edit&idtype='.$data['id'].'\');" class="button dotted bluebtn p5 box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+						<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/contracttemplate.php?action=edit&idtype='.$data['id'].'\');" class="button dotted bluebtn p5 box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 					</div>
 				</div>
 			';
@@ -360,11 +360,11 @@ if (!$action) {
 
 		<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-			<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+			<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 		</div>
 
-		<div class="pagerefresh refresh--icon admn green" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+		<div class="pagerefresh refresh--icon admn green" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 		<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/9')" title="Документация"><i class="icon-help"></i></div>
 
 		<div class="space-100"></div>
@@ -471,7 +471,7 @@ if (!$action) {
 
 	function deleteTemplate(id){
 
-		$.get("content/admin/contracttemplate.php?action=delete&face=other&id=" + id, function (data){
+		$.get("/content/admin/contracttemplate.php?action=delete&face=other&id=" + id, function (data){
 
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 			razdel(hash);

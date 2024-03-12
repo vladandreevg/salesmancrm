@@ -24,16 +24,16 @@ $( function() {
 
 	var str = 'y=<?=$y?>&m=<?=$m?>&old=<?=$old?>';
 
-	$.Mustache.load( 'content/tpl/lp.taskweek.mustache' );
+	$.Mustache.load( '/content/tpl/lp.taskweek.mustache' );
 
 	$('#taskweek').append('<img src="/assets/images/loading.svg">');
 
-	$.getJSON('content/desktop/taskweek.php', str, function(viewData) {
+	$.getJSON('/content/desktop/taskweek.php', str, function(viewData) {
 
 			$('#taskweek').empty().mustache('taskweekTpl', viewData).animate({scrollTop: 0}, 200);
 
 		})
-		.complete(function() {
+		.done(function() {
 
 			$('#taskweek .tooltips').append("<span></span>");
 			$('#taskweek .tooltips:not([tooltip-position])').attr('tooltip-position','bottom');

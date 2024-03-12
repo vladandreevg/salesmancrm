@@ -115,7 +115,7 @@ if ( $action == "edit" ) {
 
 	?>
 	<div class="zagolovok"><b>Изменить / Добавить</b></div>
-	<FORM method="post" action="content/admin/<?php echo $thisfile; ?>" name="form" id="form">
+	<FORM method="post" action="/content/admin/<?php echo $thisfile; ?>" name="form" id="form">
 		<INPUT name="action" id="action" type="hidden" value="edit.on">
 		<INPUT name="id" id="id" type="hidden" value="<?= $id ?>">
 
@@ -222,7 +222,7 @@ if ( $action == "delete" ) {
 	$multi = yimplode( ",", $multi );
 	?>
 	<div class="zagolovok">Удалить <?= $oldstatus ?></div>
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input type="hidden" id="id" name="id" value="<?= $id ?>">
 		<input type="hidden" id="oldstatus" name="oldstatus" value="<?= $oldstatus ?>">
 		<input type="hidden" id="action" name="action" value="delete.do">
@@ -359,8 +359,8 @@ if ( $action == '' ) {
 						</div>
 					</td>
 					<td class="text-center">
-						<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $da['id'] ?>');" class="button dotted bluebtn"><i class="icon-pencil"></i></a>&nbsp;
-						<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?id=<?= $da['id'] ?>&action=delete')" class="button dotted redbtn"><i class="icon-cancel-circled"></i></a>
+						<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $da['id'] ?>');" class="button dotted bluebtn"><i class="icon-pencil"></i></a>&nbsp;
+						<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?id=<?= $da['id'] ?>&action=delete')" class="button dotted redbtn"><i class="icon-cancel-circled"></i></a>
 					</td>
 				</tr>
 				<?php
@@ -373,13 +373,13 @@ if ( $action == '' ) {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 		<a href="javascript:void(0)" onclick="preDel()" class="button redbtn box-shadow hidden amultidel" title="Удалить"><i class="icon-minus-circled"></i>Удалить выбранное</a>
 		<a href="javascript:void(0)" onclick="clearCheck()" class="button greenbtn box-shadow hidden amultidel" title="Снять выделение"><i class="icon-th"></i>Снять выделение</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/32')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
@@ -390,7 +390,7 @@ if ( $action == '' ) {
 
 		function multidel() {
 			var str = $('#list').serialize();
-			doLoad('content/admin/<?php echo $thisfile; ?>?action=delete&' + str);
+			doLoad('/content/admin/<?php echo $thisfile; ?>?action=delete&' + str);
 		}
 
 		function chbCheck() {
@@ -443,7 +443,7 @@ if ( $action == '' ) {
 			onDrop: function (table, row) {
 
 				var str = '' + $('#table-1').tableDnDSerialize();
-				var url = 'content/admin/<?php echo $thisfile; ?>?action=edit.order&';
+				var url = '/content/admin/<?php echo $thisfile; ?>?action=edit.order&';
 
 				$.post(url, str, function (data) {
 

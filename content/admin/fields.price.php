@@ -54,7 +54,7 @@ if ($action == '') {
 						<td align="center"><?php
 							if ($data_array['fld_on'] == 'yes') print 'да' ?></td>
 						<td align="center">
-							<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php
+							<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php
 							echo $thisfile; ?>?action=edit&fld_id=<?= $data_array['fld_id'] ?>&tip=price');" title="Изменить"><i class="icon-pencil blue"></i></A>
 						</td>
 						<td></td>
@@ -102,7 +102,7 @@ if ($action == 'edit') {
 		$d = "readonly";
 	}
 	?>
-	<FORM action="content/admin/<?php
+	<FORM action="/content/admin/<?php
 	echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="edit_on">
 		<INPUT name="fld_id" type="hidden" id="fld_id" value="<?= $_REQUEST['fld_id'] ?>">

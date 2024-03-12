@@ -147,7 +147,7 @@ function getUserCatalogg($id = NULL, $level = 0, $res = []) {
 		$atip = 'off';
 		$act2 = '<i class="icon-lock-open blue" title="Активен. Блокировать"></i>';
 
-		$edit = '<A href="javascript:void(0)" onclick="doLoad(\'content/admin/usereditor.php?action=edit&iduser='.$da['iduser'].'\');" title="Редактировать" class="gray"><i class="icon-pencil"></i></A>';
+		$edit = '<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/usereditor.php?action=edit&iduser='.$da['iduser'].'\');" title="Редактировать" class="gray"><i class="icon-pencil"></i></A>';
 
 		if ( $da['secrty'] != 'yes' ) {
 
@@ -373,7 +373,7 @@ $uC = getUserCatalogg( 0 );
 					print '<i class="icon-lock-open gray" title="Себя нельзя блокировать"></i>';
 				}
 				?>
-				<div class="inline pr5"><?= ($xuC['tip'] != 'Руководитель организации' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'content/admin/usereditor.php?action=edit&iduser='.$xuC['id'].'&clone=yes\');" title="Клонировать с правами"><i class="icon-paste green"></i></A>' : '') ?></div>
+				<div class="inline pr5"><?= ($xuC['tip'] != 'Руководитель организации' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/usereditor.php?action=edit&iduser='.$xuC['id'].'&clone=yes\');" title="Клонировать с правами"><i class="icon-paste green"></i></A>' : '') ?></div>
 			</TD>
 			<TD class="hidden-iphone">
 				<DIV class="ellipsis Bold" title="<?= $xuC['tip'] ?>"><?= $xuC['tip'] ?></DIV><br>
@@ -382,7 +382,7 @@ $uC = getUserCatalogg( 0 );
 			<TD class="text-center hidden-iphone">
 				<?php
 				if ( $xuC['candelete']['all'] < 1 && $iduser1 != $xuC['id'] ) {
-					print '<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'content/admin/users.php?iduser='.$xuC['id'].'&action=delete\');" title="Удалить"><i class="icon-cancel-circled red"></i></A>';
+					print '<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'/content/admin/users.php?iduser='.$xuC['id'].'&action=delete\');" title="Удалить"><i class="icon-cancel-circled red"></i></A>';
 				}
 				else {
 					print '<i class="icon-cancel-circled gray" title="Удаление не возможно. У сотрудника есть записи: Клиент - '.$xuC['candelete']['client'].', Контакты - '.$xuC['candelete']['person'].', Сделки - '.$xuC['candelete']['deal'].', Подчиненные - '.$xuC['candelete']['subusers'].'"></i>';
@@ -404,7 +404,7 @@ $uC = getUserCatalogg( 0 );
 			$atip = 'off';
 			$act2 = '<i class="icon-lock-open blue" title="Активен. Блокировать"></i>';
 
-			$edit = '<A href="javascript:void(0)" onclick="doLoad(\'content/admin/usereditor.php?action=izm&iduser='.$da['iduser'].'\');" title="Редактировать" class="gray"><i class="icon-pencil"></i></A>';
+			$edit = '<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/usereditor.php?action=izm&iduser='.$da['iduser'].'\');" title="Редактировать" class="gray"><i class="icon-pencil"></i></A>';
 
 			if ( $da['secrty'] != 'yes' ) {
 
@@ -484,7 +484,7 @@ $uC = getUserCatalogg( 0 );
 						print '<i class="icon-lock-open gray" title="Себя нельзя блокировать"></i>';
 					}
 					?>
-					<div class="inline pr5"><?= ($da['tip'] != 'Руководитель организации' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'content/admin/usereditor.php?action=edit&iduser='.$da['iduser'].'&clone=yes\');" title="Клонировать с правами"><i class="icon-paste green"></i></A>' : '') ?></div>
+					<div class="inline pr5"><?= ($da['tip'] != 'Руководитель организации' ? '&nbsp;<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/usereditor.php?action=edit&iduser='.$da['iduser'].'&clone=yes\');" title="Клонировать с правами"><i class="icon-paste green"></i></A>' : '') ?></div>
 				</TD>
 				<TD>
 					<DIV class="ellipsis" title="<?= $da['tip'] ?>"><?= $da['tip'] ?></DIV><br>
@@ -493,7 +493,7 @@ $uC = getUserCatalogg( 0 );
 				<TD class="text-center">
 					<?php
 					if ( $candelete['all'] < 1 && $iduser1 != $da['iduser'] ) {
-						print '<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'content/admin/users.php?iduser='.$da['iduser'].'&action=delete\');" title="Удалить"><i class="icon-cancel-circled red"></i></A>';
+						print '<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)refresh(\'contentdiv\',\'/content/admin/users.php?iduser='.$da['iduser'].'&action=delete\');" title="Удалить"><i class="icon-cancel-circled red"></i></A>';
 					}
 					else {
 						print '<i class="icon-cancel-circled gray" title="Удаление не возможно. У сотрудника есть записи: Клиент - '.$candelete['client'].', Контакты - '.$candelete['person'].', Сделки - '.$candelete['deal'].', Подчиненные - '.$candelete['subusers'].'"></i>';
@@ -524,7 +524,7 @@ $uC = getUserCatalogg( 0 );
 
 		if (cf) {
 
-			$.post('content/admin/usereditor.php?action=activate&iduser=' + id, function (data) {
+			$.post('/content/admin/usereditor.php?action=activate&iduser=' + id, function (data) {
 
 				DClose();
 				getUsersList();
@@ -544,7 +544,7 @@ $uC = getUserCatalogg( 0 );
 	function getUsersList() {
 
 		var str = $('#uform').serialize();
-		$('#contentdiv').empty().load("content/admin/users.table.php?" + str).append('<div id="loader" class="loader"><img src="/assets/images/loading.gif"> Вычисление...</div>');
+		$('#contentdiv').empty().load("/content/admin/users.table.php?" + str).append('<div id="loader" class="loader"><img src="/assets/images/loading.gif"> Вычисление...</div>');
 
 	}
 

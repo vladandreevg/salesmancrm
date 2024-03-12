@@ -168,7 +168,7 @@ if ($action == "edit") {
 
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $dak['fld_title'] ?>:</div>
 						<div class="flex-string wp80 pl10 norelativ">
-							<INPUT name="<?= $dak['fld_name'] ?>" type="text" id="<?= $dak['fld_name'] ?>" class="<?= $dak['fld_required'] ?> wp95 validate" value="<?= $person['person'] ?>" autocomplete="off" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="content/helpers/person.helpers.php" data-action="validate">
+							<INPUT name="<?= $dak['fld_name'] ?>" type="text" id="<?= $dak['fld_name'] ?>" class="<?= $dak['fld_required'] ?> wp95 validate" value="<?= $person['person'] ?>" autocomplete="off" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="/content/helpers/person.helpers.php" data-action="validate">
 							<div class="smalltxt">Начните с Фамилии. Например: Иванов Семен Петрович</div>
 						</div>
 
@@ -439,7 +439,7 @@ if ($action == "edit") {
 
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $dak['fld_title'] ?>:</div>
 						<div class="flex-string wp80 pl10 norelativ">
-							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" autocomplete="off" value="<?= $person['mail'] ?>" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="content/helpers/person.helpers.php" data-action="valmail">
+							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" autocomplete="off" value="<?= $person['mail'] ?>" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="/content/helpers/person.helpers.php" data-action="valmail">
 						</div>
 
 					</div>
@@ -450,7 +450,7 @@ if ($action == "edit") {
 
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $dak['fld_title'] ?>:</div>
 						<div class="flex-string wp80 pl10 relativ" id="org">
-							<INPUT type="hidden" id="<?= $dak['fld_name'] ?>" name="<?= $dak['fld_name'] ?>" value="<?= $person['clid'] ?>"><INPUT id="lst_spisok" type="text" class="<?= $dak['fld_required'] ?> wp95" value="<?= current_client($person['clid']) ?>" readonly onclick="get_orgspisok('lst_spisok','org','content/helpers/client.helpers.php?action=get_orgselector','<?= $dak['fld_name'] ?>')" placeholder="Нажмите для выбора">
+							<INPUT type="hidden" id="<?= $dak['fld_name'] ?>" name="<?= $dak['fld_name'] ?>" value="<?= $person['clid'] ?>"><INPUT id="lst_spisok" type="text" class="<?= $dak['fld_required'] ?> wp95" value="<?= current_client($person['clid']) ?>" readonly onclick="get_orgspisok('lst_spisok','org','/content/helpers/client.helpers.php?action=get_orgselector','<?= $dak['fld_name'] ?>')" placeholder="Нажмите для выбора">
 							<span class="idel">&nbsp;&nbsp;<i title="Очистить" onclick="$('input#<?= $dak['fld_name'] ?>').val(0); $('#lst_spisok').val('');" class="icon-block red" style="cursor:pointer"></i></span>
 							<div class="smalltxt">К какому Клиенту прикрепить Контакт</div>
 						</div>
@@ -1196,7 +1196,7 @@ if ($action == "mass") {
 
 		$('#dialog').center();
 
-		$("#rol").autocomplete("content/helpers/person.helpers.php?action=get.role", {
+		$("#rol").autocomplete("/content/helpers/person.helpers.php?action=get.role", {
 			autofill: false,
 			minChars: 3,
 			cacheLength: 1,
@@ -1208,7 +1208,7 @@ if ($action == "mass") {
 		});
 
 		if( $("#ptitle").hasClass('suggestion') ) {
-			$("#ptitle").autocomplete("content/helpers/person.helpers.php?action=get.status", {
+			$("#ptitle").autocomplete("/content/helpers/person.helpers.php?action=get.status", {
 				autofill: true,
 				minChars: 3,
 				cacheLength: 1,
@@ -1220,7 +1220,7 @@ if ($action == "mass") {
 			});
 		}
 
-		$("#theme").autocomplete("content/core/core.tasks.php", {
+		$("#theme").autocomplete("/content/core/core.tasks.php", {
 			autofill: true,
 			minChars: 0,
 			cacheLength: 20,
@@ -1283,7 +1283,7 @@ if ($action == "mass") {
 
 	function gettags() {
 		var tip = urlEncodeData($('#tip option:selected').val());
-		$('#tagbox').load('content/ajax/tags.php?tip=' + tip);
+		$('#tagbox').load('/content/ajax/tags.php?tip=' + tip);
 	}
 
 	function tagit(id) {
@@ -1362,7 +1362,7 @@ if ($action == "mass") {
 			$('#dialog_container').css('display', 'none');
 
 			var str = $('#personForm').serialize() + '&' + $('#pageform').serialize();
-			var url = "content/core/core.person.php";
+			var url = "/content/core/core.person.php";
 
 			$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id=loader><img src=/assets/images/loader.gif> Загрузка данных...</div>');
 

@@ -315,7 +315,7 @@ if ( $action == "install" ) {
 	?>
 	<div class="zagolovok">Добавить Плагин</div>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input name="action" id="action" type="hidden" value="install.do"/>
 
 		<div class="row">
@@ -668,7 +668,7 @@ if ( $action == '' ) {
 
 	<div style="height: 90px">&nbsp;</div>
 
-	<DIV class="fixAddBotButton" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=install');">
+	<DIV class="fixAddBotButton" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=install');">
 		<i class="icon-plus"></i>Добавить
 	</div>
 
@@ -680,7 +680,7 @@ if ( $action == '' ) {
 
 			$.get("/content/admin/<?php echo $thisfile; ?>?action=" + action + "&id=" + id + "&name=" + name, function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 
 				$('#message').empty().fadeTo(1, 0);//.css('display', 'block').html('Результат: ' + data);
 
@@ -727,9 +727,9 @@ if ( $action == '' ) {
 
 					$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id="loader"><img src="/assets/images/loader.gif"> Выполняю...</div>');
 
-					$.get("content/admin/<?php echo $thisfile; ?>?action=uninstall&id=" + id + "&name=" + name, function (data) {
+					$.get("/content/admin/<?php echo $thisfile; ?>?action=uninstall&id=" + id + "&name=" + name, function (data) {
 
-						$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+						$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 
 						$('#message').empty().fadeTo(1, 0);
 

@@ -175,7 +175,7 @@ if ( $action == 'get.pole' ) {
 	if ( $clid ) {
 
 		$client = current_client( $clid );
-		print '<INPUT type="hidden" id="clid" name="clid" value="'.$clid.'"><INPUT id="lst_spisok" type="text" class="required" placeholder="Нажмите, чтобы выбрать" style="width: 97%;" readonly onclick="get_orgspisok(\'lst_spisok\',\'clientselector\',\'content/helpers/client.helpers.php?action=get_orgselector\',\'clid\')" value="'.$client.'">';
+		print '<INPUT type="hidden" id="clid" name="clid" value="'.$clid.'"><INPUT id="lst_spisok" type="text" class="required" placeholder="Нажмите, чтобы выбрать" style="width: 97%;" readonly onclick="get_orgspisok(\'lst_spisok\',\'clientselector\',\'/content/helpers/client.helpers.php?action=get_orgselector\',\'clid\')" value="'.$client.'">';
 
 	}
 	exit();

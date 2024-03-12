@@ -79,7 +79,7 @@ if ($action == "edit") {
 	?>
 	<div class="zagolovok">Параметры <?= $title ?></div>
 
-	<form method="post" action="content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
+	<form method="post" action="/content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
 		<input name="action" type="hidden" value="edit.on">
 		<input name="id" type="hidden" value="<?= $id ?>">
 
@@ -139,7 +139,7 @@ if ($action == "edit") {
 				},
 				success: function (data) {
 
-					$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+					$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 					setTimeout(function () { $('#message').fadeTo(1000, 0); }, 20000);
@@ -180,9 +180,7 @@ if ($action == "") {
 		<div class="flex-string wp20 pl10">
 			
 			<?php
-			if (!$isCloud)
-				print '<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?tip=dadata&action=edit\');" class="button"><i class="icon-edit"></i>Настроить</a>';
-			else print '<a href="javascript:void(0)" class="button graybtn"><i class="icon-edit"></i>Не требуется</a>';
+			print '<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?tip=dadata&action=edit\');" class="button"><i class="icon-edit"></i>Настроить</a>';
 			?>
 
 		</div>

@@ -537,7 +537,7 @@ if ( $action == "" ) {
 						</div>
 						<div class="fs-09 mb5 pull-aright">
 							<A href="javascript:void(0)" onclick="onoff(\''.$report['id'].'\');" class="gray1" title="Вкл./Откл."><i class="icon-ok-circled '.$btnclass.'"></i> '.$btnstate.'</A>&nbsp;&nbsp;
-							<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?rid='.$report['id'].'&action=edit\');" class="gray1" title="Изменить"><i class="icon-pencil blue"></i> Ред.</A>&nbsp;&nbsp;
+							<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?rid='.$report['id'].'&action=edit\');" class="gray1" title="Изменить"><i class="icon-pencil blue"></i> Ред.</A>&nbsp;&nbsp;
 							<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)delete_rep(\''.$report['id'].'\');" class="gray1" title="Удалить"><i class="icon-cancel-circled-1 red"></i> Удалить</A>
 						</div>
 					</div>
@@ -610,7 +610,7 @@ if ( $action == "" ) {
 						<TD class="w70 text-center" nowrap>
 							<A href="javascript:void(0)" onclick="onoff('<?= $report['id'] ?>');" class="gray1" title="Вкл./Откл."><i class="icon-ok-circled <?= $btnclass ?>"></i> <?= $btnstate ?>
 							</A>&nbsp;&nbsp;
-							<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?rid=<?= $report['id'] ?>&action=edit');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;
+							<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?rid=<?= $report['id'] ?>&action=edit');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;
 							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)delete_rep('<?= $report['id'] ?>');" title="Удалить"><i class="icon-cancel-circled-1 red"></i></A>
 						</TD>
 						<TD>
@@ -664,14 +664,14 @@ if ( $action == "" ) {
 
 	</DIV>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить">
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить">
 		<i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/17')" title="Документация">
 		<i class="icon-help"></i></div>
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
@@ -722,7 +722,7 @@ if ( $action == "" ) {
 		function delete_rep(id) {
 
 			$('#message').css('display', 'block').append('<div id="loader" class="loader"><img src=/assets/images/loader.gif> Вычисление...</div>');
-			$.post('content/admin/<?php echo $thisfile; ?>?rid=' + id + '&action=delete', function (data) {
+			$.post('/content/admin/<?php echo $thisfile; ?>?rid=' + id + '&action=delete', function (data) {
 
 				//$('#contentdiv').load('admin/report.editor.php');
 				razdel(hash);
@@ -739,7 +739,7 @@ if ( $action == "" ) {
 		function onoff(id) {
 
 			$('#message').css('display', 'block').append('<div id="loader" class="loader"><img src=/assets/images/loader.gif> Вычисление...</div>');
-			$.post('content/admin/<?php echo $thisfile; ?>?rid=' + id + '&action=onoff', function (data) {
+			$.post('/content/admin/<?php echo $thisfile; ?>?rid=' + id + '&action=onoff', function (data) {
 
 				//$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
 				razdel(hash);

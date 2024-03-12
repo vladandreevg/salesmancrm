@@ -5,12 +5,11 @@
 /*        www.isaler.ru         */
 /*        ver. 2017.x           */
 /* ============================ */
-?>
-<?php
+
 error_reporting(E_ERROR);
 header("Pragma: no-cache");
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -26,7 +25,7 @@ $action = $_REQUEST['action'];
 
 if ($action == "edit") {
 
-	if ($_REQUEST['opt'] != 'undefined' and $_REQUEST['opt'] != '') {
+	if ($_REQUEST['opt'] != 'undefined' && $_REQUEST['opt'] != '') {
 
 		$mail = $db -> getRow("select * from ".$sqlname."mail where mid='".$mid."' and identity = '$identity'");
 		$mid  = '0';
@@ -543,7 +542,7 @@ if ($action == "edit") {
 
 	<script>
 
-		$('#filelist').load('modules/maillist/fileview.php?mid=<?=$mid?>');
+		$('#filelist').load('/modules/maillist/fileview.php?mid=<?=$mid?>');
 
 	</script>
 	<?php
@@ -903,7 +902,7 @@ if ($action == "tpl.get") {
 
 		createEditor2();
 
-		$("#rol_p").autocomplete("content/helpers/person.helpers.php?action=get.role", {
+		$("#rol_p").autocomplete("/content/helpers/person.helpers.php?action=get.role", {
 			autofill: false,
 			minChars: 3,
 			cacheLength: 100,
@@ -989,7 +988,7 @@ if ($action == "tpl.get") {
 				if (data.doit == 'yes') {
 					var left = screen.availWidth - 360;
 					var top = screen.availHeight - 230;
-					mailer = window.open('modules/maillist/mailing.php?mid=' + data.mid, 'Yoolla', 'width=350, height=200, menubar=no, location=no, resizable=no, scrollbars=yes, status=no, left=' + left + ', top=' + top);
+					mailer = window.open('/modules/maillist/mailing.php?mid=' + data.mid, 'Yoolla', 'width=350, height=200, menubar=no, location=no, resizable=no, scrollbars=yes, status=no, left=' + left + ', top=' + top);
 					mailer.focus();
 				}
 			}
@@ -1108,7 +1107,7 @@ if ($action == "tpl.get") {
 
 		$('#client_list\\[\\] option').attr('selected', true);
 
-		var url = 'content/helpers/client.helpers.php?action=get_clients&filter=' + $('#clist option:selected').val() + '&' + $('#clientpath\\[\\]').serialize() + '&' + $('#tip_cmr\\[\\]').serialize() + '&' + $('#territory\\[\\]').serialize() + '&' + $('#category\\[\\]').serialize() + '&' + $('#client_list\\[\\]').serialize();
+		var url = '/content/helpers/client.helpers.php?action=get_clients&filter=' + $('#clist option:selected').val() + '&' + $('#clientpath\\[\\]').serialize() + '&' + $('#tip_cmr\\[\\]').serialize() + '&' + $('#territory\\[\\]').serialize() + '&' + $('#category\\[\\]').serialize() + '&' + $('#client_list\\[\\]').serialize();
 
 		$.get(url, function (data) {
 
@@ -1130,7 +1129,7 @@ if ($action == "tpl.get") {
 
 		$('#person_list\\[\\] option').attr('selected', true);
 
-		var url = 'content/helpers/person.helpers.php?action=get_clients&plist=' + $('#plist option:selected').val() + '&loyalty=' + $('#loyalty_p').val() + '&iduser=' + $('#iduser_p option:selected').val() + '&' + $('#person_list\\[\\]').serialize();
+		var url = '/content/helpers/person.helpers.php?action=get_clients&plist=' + $('#plist option:selected').val() + '&loyalty=' + $('#loyalty_p').val() + '&iduser=' + $('#iduser_p option:selected').val() + '&' + $('#person_list\\[\\]').serialize();
 
 		$.get(url, function (data) {
 
@@ -1249,7 +1248,7 @@ if ($action == "tpl.get") {
 
 	function select_tpl() {
 
-		var url = 'modules/maillist/form.maillist.php?action=tpl.get&tpl_id=' + $('#tpl_id option:selected').val();
+		var url = '/modules/maillist/form.maillist.php?action=tpl.get&tpl_id=' + $('#tpl_id option:selected').val();
 
 		$.post(url, function (data) {
 

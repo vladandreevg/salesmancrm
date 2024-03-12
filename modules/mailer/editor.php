@@ -849,7 +849,7 @@ if ( $action == 'todeal' ) {
 				}
 			});
 
-			$("#dtitle").autocomplete("content/helpers/deal.helpers.php?action=doglist", {
+			$("#dtitle").autocomplete("/content/helpers/deal.helpers.php?action=doglist", {
 				autofill: true,
 				minChars: 2,
 				cacheLength: 2,
@@ -971,7 +971,7 @@ if ( $action == 'tocontact' ) {
 				}
 			});
 
-			$("#person").autocomplete("content/helpers/client.helpers.php?action=contactlist", {
+			$("#person").autocomplete("/content/helpers/client.helpers.php?action=contactlist", {
 				autofill: true,
 				minChars: 2,
 				cacheLength: 2,
@@ -1094,7 +1094,7 @@ if ( $action == 'toclient' ) {
 				}
 			});
 
-			$("#title").autocomplete("content/helpers/client.helpers.php?action=clientlist", {
+			$("#title").autocomplete("/content/helpers/client.helpers.php?action=clientlist", {
 				autofill: true,
 				minChars: 2,
 				cacheLength: 2,
@@ -1133,7 +1133,7 @@ if ( $action == 'compose' ) {
 		<div class="warning">Внимание! Сначала настройте Почтовик</div>
 		<hr>
 		<div class="div-center">
-			<A href="javascript:void(0)" onclick="doLoad(\'modules/mailer/editor.php?action=account\')" class="button"><i class="icon-cog-alt"></i>&nbsp;Настройка</A>
+			<A href="javascript:void(0)" onclick="doLoad(\'/modules/mailer/editor.php?action=account\')" class="button"><i class="icon-cog-alt"></i>&nbsp;Настройка</A>
 		</div>
 		';
 
@@ -1364,7 +1364,7 @@ if ( $action == 'compose' ) {
 	$msg['priority']  = $msg['priority'] ?? 3;
 	$msg['exit']      = $exit;
 
-	$template = file_get_contents( "tpl/compose.mustache" );
+	$template = file_get_contents( "/modules/mailer/tpl/compose.mustache" );
 
 	$m       = new Mustache_Engine();
 	$message = $m -> render( $template, $msg );
@@ -1455,7 +1455,7 @@ if ( $action == 'compose' ) {
 					return false;
 				});
 
-			$("#copyTo").autocomplete("modules/mailer/core.mailer.php?action=search", {
+			$("#copyTo").autocomplete("/modules/mailer/core.mailer.php?action=search", {
 				autofill: true,
 				minChars: 3,
 				cacheLength: 1,
@@ -1895,7 +1895,7 @@ if ( $action == 'compose' ) {
 
 		function selectTpl() {
 
-			var url = 'modules/mailer/core.mailer.php?action=tpl.get&id=' + $('#tplId option:selected').val();
+			var url = '/modules/mailer/core.mailer.php?action=tpl.get&id=' + $('#tplId option:selected').val();
 
 			$.post(url, function (data) {
 
@@ -1980,7 +1980,7 @@ if ( $action == 'compose' ) {
 			}
 			else {
 
-				fbox = '<div class="fileboxx ellipsis wp100 ha relativ xtemp" style="display: block;"><input name="xfile[]" id="xfile[]" type="hidden" value="' + file + '"><input name="xname[]" id="xname[]" type="hidden" value="' + name + '"><a href="content/helpers/get.file.php?file=' + file + '" target="blank" title="Открыть">' + icon + '</a><div class="dfileboxx hand mini deleteDocbox" title="Удалить"><i class="icon-cancel-circled red"></i></div></div>';
+				fbox = '<div class="fileboxx ellipsis wp100 ha relativ xtemp" style="display: block;"><input name="xfile[]" id="xfile[]" type="hidden" value="' + file + '"><input name="xname[]" id="xname[]" type="hidden" value="' + name + '"><a href="/content/helpers/get.file.php?file=' + file + '" target="blank" title="Открыть">' + icon + '</a><div class="dfileboxx hand mini deleteDocbox" title="Удалить"><i class="icon-cancel-circled red"></i></div></div>';
 
 				$('#duploads .nofile').remove();
 				$('#duploads .filebox').append(fbox);
@@ -2038,7 +2038,7 @@ if ( $action == 'compose' ) {
 			if ($('#ctitle').is('input')) did = $('#ctitle').find('#did').val();
 			else did = $('#resultdiv').find('#did').val();
 
-			$.get('modules/mailer/core.mailer.php?action=getFiles&link=' + link + '&clids=' + clids + '&pids=' + pids + '&did=' + did, function (data) {
+			$.get('/modules/mailer/core.mailer.php?action=getFiles&link=' + link + '&clids=' + clids + '&pids=' + pids + '&did=' + did, function (data) {
 
 				var fbox = '';
 
@@ -2093,7 +2093,7 @@ if ( $action == 'compose' ) {
 
 			$('#docfile #b' + i + ' .sellcre').html('<span class="pad3"><img src="/assets/images/loading.gif" width="14"></span>');
 
-			$.get('content/core/core.deals.php?action=invoice.link&crid=' + id, function (data) {
+			$.get('/content/core/core.deals.php?action=invoice.link&crid=' + id, function (data) {
 
 				if (data.file) {
 
@@ -2111,7 +2111,7 @@ if ( $action == 'compose' ) {
 
 			$('#docfile #b' + i + ' .sellcre').html('<span class="pad3"><img src="/assets/images/loading.gif" width="14"></span>');
 
-			$.get('modules/contract/core.contract.php?action=akt.link&did=' + did + '&deid=' + id, function (data) {
+			$.get('/modules/contract/core.contract.php?action=akt.link&did=' + did + '&deid=' + id, function (data) {
 
 				var da = data.files;
 
@@ -2161,13 +2161,13 @@ if ( $action == 'preview' ) {
 	?>
 	<script>
 
-		$.Mustache.load('modules/mailer/tpl/interface.mustache');
+		$.Mustache.load('/modules/mailer/tpl/interface.mustache');
 
 		$(function () {
 
 			$('#dialog').css('width', '80%').center();
 
-			var url = 'modules/mailer/editor.php?id=<?=$id?>&action=view';
+			var url = '/modules/mailer/editor.php?id=<?=$id?>&action=view';
 
 			$.getJSON(url, function (data) {
 
@@ -2381,7 +2381,7 @@ if ( $action == "tpl.edit" ) {
 
 			$('.ytpl').not('.orangebg').removeClass('bluebg').addClass('graybg-sub');
 
-			$.get("modules/mailer/core.mailer.php?action=tpl.get&id=" + id, function (data) {
+			$.get("/modules/mailer/core.mailer.php?action=tpl.get&id=" + id, function (data) {
 
 				$('#id').val(data.id);
 				$('#name').val(data.name);
@@ -2407,7 +2407,7 @@ if ( $action == "tpl.edit" ) {
 
 			$('.ytpl').not('.orangebg').removeClass('bluebg').addClass('graybg-sub');
 
-			$.get("modules/mailer/core.mailer.php?action=tpl.delete&id=" + id, function () {
+			$.get("/modules/mailer/core.mailer.php?action=tpl.delete&id=" + id, function () {
 
 				if (current === id) {
 

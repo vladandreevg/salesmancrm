@@ -156,7 +156,7 @@ if ($action == "delete") {
 
 	?>
 	<div class="zagolovok">Удалить "<?= $tip ?>"</div>
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input type="hidden" id="tid" name="tid" value="<?= $tid ?>">
 		<input name="action" type="hidden" value="delete.do" id="action"/>
 
@@ -261,8 +261,8 @@ if ($action == '') {
 						<span class="gray2">ID <?= $datar['tid'] ?>:</span> <B class="fs-12"><?= $datar['title'] ?></B><?= $df ?><?= $srv ?>
 					</TD>
 					<TD class="text-center">
-						<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&tid=<?= $datar['tid'] ?>');" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
-						<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?tid=<?= $datar['tid'] ?>&action=delete')" class="button dotted redbtn"><i class="icon-cancel"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&tid=<?= $datar['tid'] ?>');" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?tid=<?= $datar['tid'] ?>&action=delete')" class="button dotted redbtn"><i class="icon-cancel"></i></A>
 					</TD>
 				</TR>
 			<?php } ?>
@@ -272,11 +272,11 @@ if ($action == '') {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/34')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>

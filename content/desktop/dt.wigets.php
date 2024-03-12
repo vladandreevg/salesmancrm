@@ -103,7 +103,7 @@ if ( $userRights['budjet'] && $settingsMore['budjetEnableVijets'] == 'yes' && $u
 
 			<DIV class="viget-mini">
 
-				<div id="vmini1" onclick="$(\'.info1\').load(\'content/vigets/viget.cash.php\')" class="hand" title="Показать счета">
+				<div id="vmini1" onclick="$(\'.info1\').load(\'/content/vigets/viget.cash.php\')" class="hand" title="Показать счета">
 
 					<i class="icon-town-hall gray3 icon-5x pull-left"></i>
 					<div class="pop popright">
@@ -130,7 +130,7 @@ if ( $userRights['budjet'] && $settingsMore['budjetEnableVijets'] == 'yes' && $u
 			</DIV>
 			<DIV class="viget-mini">
 			
-				<div id="vmini2" onclick="$(\'.info2\').load(\'content/vigets/viget.budjet.php\')" class="hand" title="Показать расходы">
+				<div id="vmini2" onclick="$(\'.info2\').load(\'/content/vigets/viget.budjet.php\')" class="hand" title="Показать расходы">
 				
 					<i class="icon-book gray3 icon-5x pull-left"></i>
 					
@@ -165,7 +165,7 @@ if ( $userRights['budjet'] && $settingsMore['budjetEnableVijets'] == 'yes' && $u
 			</DIV>
 			<DIV class="viget-mini">
 			
-				<div id="vmini3" onclick="$(\'.info3\').load(\'content/vigets/viget.invoices.php\')" class="hand" title="Показать счета">
+				<div id="vmini3" onclick="$(\'.info3\').load(\'/content/vigets/viget.invoices.php\')" class="hand" title="Показать счета">
 				
 					<i class="icon-chart-line gray3 icon-5x pull-left"></i>
 					
@@ -205,7 +205,7 @@ if ( $userRights['budjet'] && $settingsMore['budjetEnableVijets'] == 'yes' && $u
 			
 				<div class="swiper-slide viget-mini">
 				
-					<div id="vmini1" onclick="$(\'.info1\').load(\'content/vigets/viget.cash.php\')" class="hand" title="Показать счета">
+					<div id="vmini1" onclick="$(\'.info1\').load(\'/content/vigets/viget.cash.php\')" class="hand" title="Показать счета">
 	
 						<i class="icon-town-hall gray3 icon-5x pull-left"></i>
 						
@@ -233,7 +233,7 @@ if ( $userRights['budjet'] && $settingsMore['budjetEnableVijets'] == 'yes' && $u
 				</div>
 				<div class="swiper-slide viget-mini">
 				
-					<div id="vmini2" onclick="$(\'.info2\').load(\'content/vigets/viget.budjet.php\')" class="hand" title="Показать расходы">
+					<div id="vmini2" onclick="$(\'.info2\').load(\'/content/vigets/viget.budjet.php\')" class="hand" title="Показать расходы">
 						
 						<i class="icon-book gray3 icon-5x pull-left"></i>
 						
@@ -260,7 +260,7 @@ if ( $userRights['budjet'] && $settingsMore['budjetEnableVijets'] == 'yes' && $u
 				</div>
 				<div class="swiper-slide viget-mini">
 				
-					<div id="vmini3" onclick="$(\'.info3\').load(\'content/vigets/viget.invoices.php\')" class="hand" title="Показать счета">
+					<div id="vmini3" onclick="$(\'.info3\').load(\'/content/vigets/viget.invoices.php\')" class="hand" title="Показать счета">
 						<i class="icon-chart-line gray3 icon-5x pull-left"></i>
 						<div class="pop popright">
 							<div align="right" class="cifra">
@@ -371,7 +371,7 @@ include $rootpath."/content/vigets/mini.vigets.php";
 				}
 
 				if ( !file_exists( $rootpath.'/'.$vigetsBase[ $viget ]['url'] ) ) {
-					$vigetsBase[ $viget ]['url'] = 'content/'.$vigetsBase[ $viget ]['url'];
+					$vigetsBase[ $viget ]['url'] = '/content/'.$vigetsBase[ $viget ]['url'];
 				}
 
 				$expressReport = ($vigetsBase[ $viget ]['expressReport'] != '') ? '<a href="javascript:void(0)" onclick="getSwindow(\''.$vigetsBase[ $viget ]['expressReport'].'\', \''.$vigetsBase[ $viget ]['expressReportTitle'].'\')" class="pull-aright refresh gray blue mr5" title="Показать аналитику"><i class="icon-chart-line blue"></i></a>' : '';

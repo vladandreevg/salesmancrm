@@ -468,7 +468,7 @@ if ( $action == 'list' ) {
 
 				setCookie('parameterInterval', id, {"expires": 1000000});
 
-				$stat.load('content/vigets/viget.statcallcenter.php');
+				$stat.load('/content/vigets/viget.statcallcenter.php');
 
 			});
 

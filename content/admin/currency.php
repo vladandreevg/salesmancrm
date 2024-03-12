@@ -93,7 +93,7 @@ if ( $action == 'edit' ) {
 
 	?>
 	<div class="zagolovok">Редактирование валюты</div>
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="edit.on">
 		<INPUT type="hidden" name="id" id="id" value="<?= $id ?>">
 
@@ -213,7 +213,7 @@ if ( $action == 'exchange' ) {
 	//print_r($list);
 	?>
 	<div class="zagolovok">Обновление курсов</div>
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="exchange.on">
 
 		<div id="formtabse" class="box--child wp100" style="max-height:80vh; overflow-y:auto !important; overflow-x:hidden">
@@ -416,7 +416,7 @@ if ( $action == "" ) {
 				</div>
 				<div class="flex-string w140">
 					
-					<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&id='.$item['id'].'\');" class="button dotted bluebtn m0"><i class="icon-pencil"></i></A>
+					<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&id='.$item['id'].'\');" class="button dotted bluebtn m0"><i class="icon-pencil"></i></A>
 				
 					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)deleteCurrency(\''.$item['id'].'\');" class="button dotted redbtn m0"><i class="icon-cancel-circled"></i></A>
 					
@@ -431,13 +431,13 @@ if ( $action == "" ) {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=exchange');" class="button greenbtn box-shadow" title="Обновить курсы"><i class="icon-publish"></i>Обновить курсы</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=exchange');" class="button greenbtn box-shadow" title="Обновить курсы"><i class="icon-publish"></i>Обновить курсы</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/153')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
@@ -447,7 +447,7 @@ if ( $action == "" ) {
 		$('.viewlog').trigger('click', function () {
 
 			let id = $(this).closest('.flex-container').data('id');
-			doLoad('content/admin/<?php echo $thisfile; ?>?action=log&id=' + id);
+			doLoad('/content/admin/<?php echo $thisfile; ?>?action=log&id=' + id);
 
 		});
 
@@ -472,7 +472,7 @@ if ( $action == "" ) {
 
 		function deleteCurrency(id) {
 
-			$.get('content/admin/<?php echo $thisfile; ?>?action=delete.on&id='+id, function(data){
+			$.get('/content/admin/<?php echo $thisfile; ?>?action=delete.on&id='+id, function(data){
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 

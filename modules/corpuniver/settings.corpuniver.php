@@ -16,7 +16,7 @@ use Salesman\User;
 error_reporting(E_ERROR);
 header("Pragma: no-cache");
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -128,7 +128,7 @@ if ($action == "settings") {
 					return true;
 				},
 				success: function (data) {
-					$('#tab-form-1').load('modules/corpuniver/settings.corpuniver.php?action=settings').append('<img src="/assets/images/loading.gif">');
+					$('#tab-form-1').load('/modules/corpuniver/settings.corpuniver.php?action=settings').append('<img src="/assets/images/loading.gif">');
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 					setTimeout(function () {
 						$('#message').fadeTo(1000, 0);
@@ -171,7 +171,7 @@ if ($action == "") {
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/149')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
-	<?
+	<?php
 }
 ?>
 
@@ -180,7 +180,7 @@ if ($action == "") {
 
 	//для закладок
 	$('#formtabs').tabs();
-	$('#tab-form-1').load('modules/corpuniver/settings.corpuniver.php?action=settings').append('<img src="/assets/images/loading.gif">');
+	$('#tab-form-1').load('/modules/corpuniver/settings.corpuniver.php?action=settings').append('<img src="/assets/images/loading.gif">');
 
 	$(document).on('click', '.tagsmenu li', function () {
 

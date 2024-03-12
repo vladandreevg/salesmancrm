@@ -132,7 +132,7 @@ if ( $action == 'client.express' ) {
 		$adeal['iduser'] = $iduser;
 
 		// спецификация. не используется
-		if ( count( (array)$dspeka ) > 0 ) {
+		if ( !empty( (array)$dspeka ) ) {
 
 			$adeal['speka']     = $dspeka;
 			$adeal['calculate'] = "yes";

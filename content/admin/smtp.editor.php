@@ -144,7 +144,7 @@ $dat  = json_encode_cyr($fc, true);
 	<p>Для отправки почтовых уведомлений из CRM требуется наличие почтового сервера или утилиты Sendmail, которая позволяет отправлять email через свой или внешний почтовый сервер.</p>
 	<p>В этом разделе вы можете настроить подключение к своему почтовому ящику (например, на Яндекс.Почта) и отправка сообщений будет производится через него. Такой способ также повысит вероятность доставки сообщения и не попадания его в спам.</p>
 </div>
-<FORM action="content/admin/<?php
+<FORM action="/content/admin/<?php
 echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
 	<INPUT type="hidden" name="action" id="action" value="save">
 
@@ -382,7 +382,7 @@ echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="s
 
 	function checkConnection() {
 
-		var url = "content/admin/<?php echo $thisfile; ?>";
+		var url = "/content/admin/<?php echo $thisfile; ?>";
 		var str = $('#set').serialize() + '&action=check';
 
 		$('#res').removeClass('hidden').append('<img src="/assets/images/loading.gif">');

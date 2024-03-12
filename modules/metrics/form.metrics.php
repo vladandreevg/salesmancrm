@@ -660,7 +660,7 @@ if ( $action === 'edit.season' ) {
 		$cat = $el1.val().toString();
 
 		$el2.unautocomplete().flushCache();
-		$el2.autocomplete("content/helpers/price.helpers.php?cat=" + $cat, {
+		$el2.autocomplete("/content/helpers/price.helpers.php?cat=" + $cat, {
 			autofill: false,
 			minChars: 3,
 			cacheLength: 0,
@@ -715,7 +715,7 @@ if ( $action === 'edit.season' ) {
 
 		var tip = $(this).val();
 
-		$.getJSON("modules/metrics/core.metrics.php?action=get.KPIvariants&tip=" + tip, function (data) {
+		$.getJSON("/modules/metrics/core.metrics.php?action=get.KPIvariants&tip=" + tip, function (data) {
 
 			var $items = data.items;
 			var $subitems = data.sub;

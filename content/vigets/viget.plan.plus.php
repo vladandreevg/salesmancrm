@@ -684,7 +684,7 @@ $marga_plan = num_format($marga_plan);
 	startplus();
 
 	function showPlanPlus() {
-		doLoad('content/vigets/viget.plan.plus.php?action=planView');
+		doLoad('/content/vigets/viget.plan.plus.php?action=planView');
 	}
 
 	function deselect() {
@@ -736,7 +736,7 @@ $marga_plan = num_format($marga_plan);
 
 		setCookie('planTipRukov', newparam, {expires: 31536000});
 
-		$("#planplus").load("content/vigets/viget.plan.plus.php").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+		$("#planplus").load("/content/vigets/viget.plan.plus.php").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 	}
 

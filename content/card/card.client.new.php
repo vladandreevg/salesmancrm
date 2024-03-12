@@ -12,7 +12,7 @@ error_reporting( E_ERROR );
 
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";

@@ -339,7 +339,7 @@ $shkala = implode( ",", $shkala );
 	</ul>
 </div>
 
-<script src="/assets/js/gauge.min.js"></script>
+<script src="/assets/js/canvas-gauges/gauge.min.js"></script>
 <script>
 
 	$('#gauge').find('ul.group').find('li[data-id="<?=$setperiod?>"]').addClass('active');
@@ -350,7 +350,7 @@ $shkala = implode( ",", $shkala );
 
 		setCookie('gaugeInterval', id, {"expires": 1000000});
 
-		$('#gauge').load('content/vigets/viget.gauge.php');
+		$('#gauge').load('/content/vigets/viget.gauge.php');
 
 	});
 

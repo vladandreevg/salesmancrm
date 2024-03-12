@@ -14,7 +14,7 @@ header("Pragma: no-cache");
 
 $action = $_REQUEST['action'];
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";

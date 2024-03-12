@@ -2829,7 +2829,7 @@ if ($action == "utms.edit") {
 		});
 		if (!isMobile) $('#totime_task').ptTimeSelect();
 
-		$("#todo\\[theme\\]").autocomplete("content/core/core.tasks.php?action=theme", {
+		$("#todo\\[theme\\]").autocomplete("/content/core/core.tasks.php?action=theme", {
 			autoFill: false,
 			minChars: 0,
 			cacheLength: 1,
@@ -2841,7 +2841,7 @@ if ($action == "utms.edit") {
 			matchContains: true
 		});
 
-		$("#client").autocomplete("content/helpers/client.helpers.php?action=clientlist", {
+		$("#client").autocomplete("/content/helpers/client.helpers.php?action=clientlist", {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 2,
@@ -2866,7 +2866,7 @@ if ($action == "utms.edit") {
 
 			});
 
-		$("#person").autocomplete("content/helpers/client.helpers.php?action=contactlist", {
+		$("#person").autocomplete("/content/helpers/client.helpers.php?action=contactlist", {
 			autofill: true,
 			minChars: 2,
 			cacheLength: 2,
@@ -2891,10 +2891,10 @@ if ($action == "utms.edit") {
 
 			});
 
-		$('#dialog #tagbox').load('content/core/core.tasks.php?action=tags&tip=' + urlEncodeData('<?=$GLOBALS['actTitleDefault']?>'));
+		$('#dialog #tagbox').load('/content/core/core.tasks.php?action=tags&tip=' + urlEncodeData('<?=$GLOBALS['actTitleDefault']?>'));
 
 		if( $("#ptitle").hasClass('suggestion') ) {
-			$("#ptitle").autocomplete("content/helpers/person.helpers.php?action=get.status", {
+			$("#ptitle").autocomplete("/content/helpers/person.helpers.php?action=get.status", {
 				autofill: true,
 				minChars: 3,
 				cacheLength: 1,
@@ -2906,7 +2906,7 @@ if ($action == "utms.edit") {
 			});
 		}
 
-		$("#dogovor").autocomplete("content/helpers/deal.helpers.php?action=get.list", {
+		$("#dogovor").autocomplete("/content/helpers/deal.helpers.php?action=get.list", {
 			autofill: true,
 			minChars: 3,
 			cacheLength: 1,
@@ -3018,14 +3018,14 @@ if ($action == "utms.edit") {
 	$('select[data-change="activities"]').each(function () {
 
 		var $el = $(this).data('id');
-		$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+		$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 
 	});
 
 	$(document).off('change', 'select[data-change="activities"]');
 	$(document).on('change', 'select[data-change="activities"]', function () {
 		var $el = $(this).data('id');
-		$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+		$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 	});
 
 	$(document).off('click', '.tags');
@@ -3079,7 +3079,7 @@ if ($action == "utms.edit") {
 
 		if (tip === 'client') {
 
-			url = 'content/helpers/client.helpers.php?action=clientinfomore&clid=' + id;
+			url = '/content/helpers/client.helpers.php?action=clientinfomore&clid=' + id;
 			$("#clid").val(id);
 
 			$.getJSON(url, function (data) {
@@ -3101,7 +3101,7 @@ if ($action == "utms.edit") {
 		}
 		if (tip === 'person') {
 
-			url = 'content/helpers/client.helpers.php?action=clientinfomore&pid=' + id;
+			url = '/content/helpers/client.helpers.php?action=clientinfomore&pid=' + id;
 
 			$.getJSON(url, function (data) {
 
@@ -3198,7 +3198,7 @@ if ($action == "utms.edit") {
 	function gettags() {
 
 		var tip = urlEncodeData($('#tiphist option:selected').val());
-		$('#tagbox').load('content/core/core.tasks.php?action=tags&tip=' + tip);
+		$('#tagbox').load('/content/core/core.tasks.php?action=tags&tip=' + tip);
 
 	}
 

@@ -7,12 +7,11 @@
 /*        www.isaler.ru         */
 /*        ver. 2017.x           */
 /* ============================ */
-?>
-<?php
+
 error_reporting( 0 );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -81,11 +80,10 @@ if ( !empty( $fids ) ) {
 		$ftitle  = $result2["ftitle"];
 		$fname   = $result2["fname"];
 
-		print '<div class="infodiv flex-string">'.get_icon2( $ftitle ).'&nbsp;'.$ftitle.'&nbsp;<A href="javascript:void(0)" onClick="cf=confirm(\'Вы действительно хотите Удалить файл?\nФайл будет Удален из системы.\');if (cf)refresh(\'filelist\', \'content/card/fileview.php?cid='.$cid.'&fid='.$fid.'&action=delete\');" title="Удалить"><i class="icon-cancel red"></i></A>&nbsp;</div>';
+		print '<div class="infodiv flex-string">'.get_icon2( $ftitle ).'&nbsp;'.$ftitle.'&nbsp;<A href="javascript:void(0)" onClick="cf=confirm(\'Вы действительно хотите Удалить файл?\nФайл будет Удален из системы.\');if (cf)refresh(\'filelist\', \'/content/card/fileview.php?cid='.$cid.'&fid='.$fid.'&action=delete\');" title="Удалить"><i class="icon-cancel red"></i></A>&nbsp;</div>';
 
 	}
 
 	print '<input name="fid_old" id="fid_old" type="hidden" value="'.yimplode( ";", $fids ).'">';
 
 }
-?>

@@ -513,7 +513,7 @@ if ( $action == 'clone' ) {
 	?>
 	<div class="zagolovok">Файл шаблона</div>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="temp" id="temp">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="temp" id="temp">
 		<INPUT type="hidden" name="action" id="action" value="clone.on">
 		<INPUT type="hidden" name="id" id="id" value="<?= $id ?>">
 
@@ -607,7 +607,7 @@ if ( $action == 'edit' ) {
 	</style>
 	<div class="zagolovok">Редактирование шаблона</div>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="temp" id="temp">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="temp" id="temp">
 		<INPUT type="hidden" name="action" id="action" value="edit.on">
 		<INPUT type="hidden" name="file" id="file" value="<?= $file ?>">
 		<INPUT type="hidden" name="tmp" id="tmp" value="">
@@ -1077,7 +1077,7 @@ if ( $action == 'edit' ) {
 
 		function restoreTemp(temp) {
 
-			$.get("content/admin/akt_editor.php?action=restore&temp=" + temp, function (data) {
+			$.get("/content/admin/akt_editor.php?action=restore&temp=" + temp, function (data) {
 
 				$('#content').val(data);
 				editorCodeMirror.setValue(data);
@@ -1100,19 +1100,19 @@ if ( $action == 'edit' ) {
 
 			var str = $('#temp').serialize();
 
-			$.post('content/admin/<?php echo $thisfile; ?>?act=tmp', str, function (data) {
+			$.post('/content/admin/<?php echo $thisfile; ?>?act=tmp', str, function (data) {
 
 				var url = '';
 
 				if (data !== '') {
 
 					$('#tmp').val(data);
-					url = 'content/admin/<?php echo $thisfile; ?>?action=preview&tmp=' + data;
+					url = '/content/admin/<?php echo $thisfile; ?>?action=preview&tmp=' + data;
 
 				}
 				else {
 
-					url = 'content/admin/<?php echo $thisfile; ?>?action=preview&file=' + $('#file').val();
+					url = '/content/admin/<?php echo $thisfile; ?>?action=preview&file=' + $('#file').val();
 
 				}
 
@@ -1148,7 +1148,7 @@ if ( $action == '' ) {
 	}
 	?>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
 	<INPUT type="hidden" name="action" id="action" value="save">
 
 	<h2 class="blue mt20 mb20 pl5">Генератор номеров</h2>
@@ -1229,9 +1229,9 @@ if ( $action == '' ) {
 				</div>
 				<div class="flex-string float">
 
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&file=<?= $data['file'] ?>&id=<?= $data['id'] ?>')" title="Редактировать шаблон"><i class="icon-doc-text-inv blue"></i></a>&nbsp;
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&file=<?= $data['file'] ?>&id=<?= $data['id'] ?>')" title="Редактировать шаблон"><i class="icon-doc-text-inv blue"></i></a>&nbsp;
 
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=clone&id=<?= $data['id'] ?>')" title="Редактировать название"><i class="icon-pencil green"></i></a>&nbsp;
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=clone&id=<?= $data['id'] ?>')" title="Редактировать название"><i class="icon-pencil green"></i></a>&nbsp;
 
 					<a href="javascript:void(0)" onclick="deleteTemp('<?= $data['id'] ?>')" class="<?= ($data['file'] == 'invoice.tpl' ? 'hidden' : '') ?>" title="Редактировать название"><i class="icon-cancel-circled red"></i></a>
 
@@ -1245,7 +1245,7 @@ if ( $action == '' ) {
 
 		<div class="pl5 mt20">
 
-			<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=clone')" class="button greenbtn fs-09 p5 pl10 pr10"><i class="icon-plus-circled"></i>Добавить</a>
+			<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=clone')" class="button greenbtn fs-09 p5 pl10 pr10"><i class="icon-plus-circled"></i>Добавить</a>
 
 		</div>
 
@@ -1699,9 +1699,9 @@ if ( $action == '' ) {
 
 				if (result.value) {
 
-					$.get("content/admin/<?php echo $thisfile; ?>?action=delete.temp&id=" + id, function () {
+					$.get("/content/admin/<?php echo $thisfile; ?>?action=delete.temp&id=" + id, function () {
 
-						$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>');
+						$("#contentdiv").load('/content/admin/<?php echo $thisfile; ?>');
 
 					});
 

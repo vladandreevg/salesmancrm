@@ -1252,9 +1252,9 @@ if ( $action == "" ) {
 				</div>
 				<div class="flex-string float">
 
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&file=<?= $data['file'] ?>&id=<?= $data['id'] ?>')" title="Редактировать шаблон"><i class="icon-doc-text-inv blue"></i></a>&nbsp;
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&file=<?= $data['file'] ?>&id=<?= $data['id'] ?>')" title="Редактировать шаблон"><i class="icon-doc-text-inv blue"></i></a>&nbsp;
 
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=clone&id=<?= $data['id'] ?>')" title="Редактировать название"><i class="icon-pencil green"></i></a>&nbsp;
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=clone&id=<?= $data['id'] ?>')" title="Редактировать название"><i class="icon-pencil green"></i></a>&nbsp;
 
 					<a href="javascript:void(0)" onclick="deleteTemp('<?= $data['id'] ?>')" class="<?= (in_array( $data['file'], [
 						'akt_full.tpl',
@@ -1272,7 +1272,7 @@ if ( $action == "" ) {
 
 		<div class="pl5 mt20">
 
-			<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=clone')" class="button greenbtn fs-09 p5 pl10 pr10"><i class="icon-plus-circled"></i>Добавить</a>
+			<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=clone')" class="button greenbtn fs-09 p5 pl10 pr10"><i class="icon-plus-circled"></i>Добавить</a>
 
 		</div>
 
@@ -1459,7 +1459,7 @@ if ( $action == "" ) {
 				},
 				success: function (data) {
 
-					$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>');
+					$("#contentdiv").load('/content/admin/<?php echo $thisfile; ?>');
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 					setTimeout(function () {
@@ -1491,7 +1491,7 @@ if ( $action == "" ) {
 
 				if (result.value) {
 
-					$.get("content/admin/akt_editor.php?action=delete.temp&id=" + id, function () {
+					$.get("/content/admin/akt_editor.php?action=delete.temp&id=" + id, function () {
 
 						$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>');
 

@@ -457,7 +457,7 @@ if ( $action == 'editValuta' ) {
 	}
 	?>
 	<div class="zagolovok">Изменение написаний сумм</div>
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="iform" target="_blank" id="iform" autocomplete="off">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="iform" target="_blank" id="iform" autocomplete="off">
 		<INPUT type="hidden" name="action" id="action" value="saveValuta">
 		<div style="overflow: auto; max-height: 350px;">
 			<textarea id="valuta" name="valuta" spellcheck="false" style="width:99.5%; height:200px; font-size:1.0em; background:#E6E9ED; border:1px solid #656D78; color:#222; padding:10px"><?= $file ?></textarea>
@@ -517,7 +517,7 @@ if ( $action == 'editValuta' ) {
 		});
 
 		function getValuta(lang) {
-			var url = 'content/admin/<?php echo $thisfile; ?>?action=getValuta&lang=' + lang;
+			var url = '/content/admin/<?php echo $thisfile; ?>?action=getValuta&lang=' + lang;
 			$.get(url, function (data) {
 				$('#valuta').val(data);
 			});
@@ -745,9 +745,9 @@ if ( $action == 'getValuta' ) {
 			</td>
 			<td>
 				<div class="pb5 pt5">
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/settings.php?action=viewRecvName')" class="button"><i class="icon-eye"></i>Просмотр</a>&nbsp;
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/settings.php?action=editRecvName')" class="button greenbtn"><i class="icon-pencil"></i>Изменить</a>
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/settings.php?action=editValuta')" class="button orangebtn"><i class="icon-pencil"></i>Изменить прописи сумм</a>
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/settings.php?action=viewRecvName')" class="button"><i class="icon-eye"></i>Просмотр</a>&nbsp;
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/settings.php?action=editRecvName')" class="button greenbtn"><i class="icon-pencil"></i>Изменить</a>
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/settings.php?action=editValuta')" class="button orangebtn"><i class="icon-pencil"></i>Изменить прописи сумм</a>
 				</div>
 				<div class="infodiv">
 					<b class="blue">Информация:</b>

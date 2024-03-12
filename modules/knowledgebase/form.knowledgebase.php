@@ -458,7 +458,7 @@ if ( $action == "tags" ) {
 
 				if (action === 'cat.edit') {
 
-					$('.ifolder').load('modules/knowledgebase/core.knowledgebase.php?action=catlist&id=' + id, function () {
+					$('.ifolder').load('/modules/knowledgebase/core.knowledgebase.php?action=catlist&id=' + id, function () {
 						$('.ifolder a [data-id=' + id + ']').addClass('fol_it');
 					});
 

@@ -58,7 +58,7 @@ if ( $cid == 0 ) {
 				</TD>
 				<TD>
 					<div class="ellipsis" title="<?= untag( str_replace( "<br>", "\n", $des ) ) ?>">
-						<a href="javascript:void(0)" onclick="doLoad('content/vigets/history.php?cid=<?= $data_array['cid'] ?>&action=view')"><?= link_it( trim( $des ) ) ?></a>
+						<a href="javascript:void(0)" onclick="doLoad('/content/vigets/history.php?cid=<?= $data_array['cid'] ?>&action=view')"><?= link_it( trim( $des ) ) ?></a>
 					</div>
 					<?php if ( (int)$data_array['clid'] > 0 ) { ?>
 						<br>

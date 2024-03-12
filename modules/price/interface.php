@@ -321,7 +321,7 @@ function configpage(){
 	$('#contentdiv').parent('.nano').nanoScroller({ scroll: 'top' });
 
 	var str = $('#pageform').serialize();
-	var url = 'modules/price/list.price.php';
+	var url = '/modules/price/list.price.php';
 
 	$('#contentdiv').append('<div class="contentloader"><img src="/assets/images/Services.svg" width="50px" height="50px"></div>');
 

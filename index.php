@@ -24,6 +24,87 @@ global $script;
 $url_path  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri_parts = explode('/', trim($url_path, ' /'));
 
+//print_r($uri_parts);
+
+//получение файла
+if ($uri_parts[0] == "file") {
+
+	require_once $rootpath."/inc/config.php";
+	require_once $rootpath."/inc/dbconnector.php";
+	require_once $rootpath."/inc/auth.php";
+	require_once $rootpath."/inc/func.php";
+	require_once $rootpath."/inc/settings.php";
+
+	$filename = $uri_parts[1];
+
+	if (!is_numeric($filename)) {
+
+		$file      = $rootpath."/files/".$fpath.$filename;
+		$mime      = get_mimetype( $filename );
+
+		header( 'Content-Type: '.$mime );
+		header( 'Content-Disposition: attachment; filename="'.trim( str_replace( ",", "", $filename ) ).'"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Accept-Ranges: bytes' );
+
+		readfile( $file );
+
+		exit();
+
+	}
+
+	if((int)$filename > 0) {
+
+		$res = $db -> getRow("SELECT fid, fname, ftitle FROM {$sqlname}file WHERE fid = '$filename' and identity = '$identity'");
+
+		if( (int)$res['fid'] > 0 ) {
+
+			$fname  = $res["fname"];
+			$ftitle = str_replace(" ", "_", trim($res["ftitle"]));
+
+			$file = $rootpath."/files/".$fpath.$fname;
+			$mime = get_mimetype($fname);
+
+			if (file_exists($file)) {
+
+				header('Content-Type: '.$mime);
+				header('Content-Disposition: attachment; filename="'.str_replace(",", "", $ftitle).'"');
+				header('Content-Transfer-Encoding: binary');
+				header('Accept-Ranges: bytes');
+
+				readfile($file);
+
+				exit();
+
+			}
+
+		}
+
+	}
+
+	print '
+		<LINK rel="stylesheet" type="text/css" href="/assets/css/app.css">
+		<LINK rel="stylesheet" href="/assets/css/fontello.css">
+		<SCRIPT type="text/javascript" src="/assets/js/jquery/jquery-3.4.1.min.js"></SCRIPT>
+		<SCRIPT type="text/javascript" src="/assets/js/jquery/jquery-migrate-3.0.0.min.js"></SCRIPT>
+		<SCRIPT type="text/javascript" src="/assets/js/app.js"></SCRIPT>
+		<div style="width: 100vw; height: 100vh; position: relative; padding-top: 30vh;">
+		
+			<div class="warning text-left p20" style="width:300px; margin: 0 auto; padding-bottom: 40px !important;">
+			
+				<span><i class="icon-doc-alt red icon-5x pull-left"></i></span>
+				<b class="red uppercase miditxt">Упс :(</b><br><br>
+				Файл не найден.
+				
+			</div>
+			
+		</div>
+	';
+
+	exit();
+
+}
+
 if($uri_parts[0] != "files" && $uri_parts[1] == '') {
 
 	if ( $uri_parts[0] == 'install.php' || stripos( $uri_parts[0], 'install' ) !== false ) {

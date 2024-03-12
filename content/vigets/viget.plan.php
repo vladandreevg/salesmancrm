@@ -410,7 +410,7 @@ $ww = $show_marga == 'yes' && $otherSettings['marga'] ? 49 : 100;
 	start();
 
 	function showPlan() {
-		doLoad('content/vigets/viget.dataview.php?action=planView');
+		doLoad('/content/vigets/viget.dataview.php?action=planView');
 	}
 
 	function deselect() {

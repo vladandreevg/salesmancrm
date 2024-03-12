@@ -155,7 +155,7 @@ $middleCheck = ($InvoiceDo['count'] > 0) ? $InvoiceDo['summa'] / $InvoiceDo['cou
 
 		setCookie('parameterInterval', id, {"expires":1000000});
 
-		$('#parameters').load('content/vigets/viget.parameters.php');
+		$('#parameters').load('/content/vigets/viget.parameters.php');
 
 	});
 

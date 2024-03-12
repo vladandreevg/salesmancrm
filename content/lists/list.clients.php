@@ -413,10 +413,10 @@ while ($da = $db -> fetch( $rest )) {
 	$countDealTotal = $countActive + $countClose;
 
 	if ( $countActive > 0 ) {
-		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray red" title="Активных сделок: '.$countActive.'. '.$cd.'"><i class="icon-briefcase red list"></i></a>';
+		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'/content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray red" title="Активных сделок: '.$countActive.'. '.$cd.'"><i class="icon-briefcase red list"></i></a>';
 	}
 	if ( $countActive == 0 && $countClose > 0 ) {
-		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray gray2" title="Есть закрытые сделки. Всего: '.$countClose.', С прибылью: '.$countCloseGood.', Без прибыли: '.$countCloseBad.'"><i class="icon-briefcase list"></i></a>';
+		$deal = '<a href="javascript:void(0)" onclick="doLoad(\'/content/vigets/viget.dataview.php?action=dogsView&clid='.$da['clid'].'\')" class="gray gray2" title="Есть закрытые сделки. Всего: '.$countClose.', С прибылью: '.$countCloseGood.', Без прибыли: '.$countCloseBad.'"><i class="icon-briefcase list"></i></a>';
 	}
 
 

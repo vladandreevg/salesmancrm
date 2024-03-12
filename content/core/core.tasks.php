@@ -35,7 +35,7 @@ if ($action == "viewtasks") {
 
 	$all = $db -> getOne("SELECT COUNT(*) FROM ".$sqlname."tasks WHERE iduser = '$iduser1' and datum = '$datum' and active = 'yes' and identity = '$identity'") + 0;
 
-	$apx = $all > 0 ? '&nbsp;<a href="javascript:void(0)" onClick="$(\'.datumTasksView\').load(\'content/view/task.view.php?action=list&zag=none&datum='.$datum.'\').append(\'<img src=images/loading.gif>\').show();" title="Список дел"><i class="icon-list-alt blue"></i></a>' : '&nbsp;<i class="icon-list-alt gray2"></i>';
+	$apx = $all > 0 ? '&nbsp;<a href="javascript:void(0)" onclick="$(\'.datumTasksView\').load(\'/content/view/task.view.php?action=list&zag=none&datum='.$datum.'\').append(\'<img src=images/loading.gif>\').show();" title="Список дел"><i class="icon-list-alt blue"></i></a>' : '&nbsp;<i class="icon-list-alt gray2"></i>';
 
 	print 'Число дел: <b>'.$all.'</b>'.$apx;
 

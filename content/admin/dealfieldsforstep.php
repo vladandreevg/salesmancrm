@@ -339,7 +339,7 @@ if ( $action == '' ) {
 
 	<DIV class="mt15">
 
-		<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="setForm" id="setForm">
+		<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="setForm" id="setForm">
 			<INPUT type="hidden" name="action" id="action" value="edit.on">
 
 			<table>
@@ -372,7 +372,7 @@ if ( $action == '' ) {
 						</td>
 						<td>
 
-							<a href="javascript:void(0)" class="button dotted bluebtn" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $id ?>');"><i class="icon-pencil"></i> Редактировать</a>&nbsp;
+							<a href="javascript:void(0)" class="button dotted bluebtn" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $id ?>');"><i class="icon-pencil"></i> Редактировать</a>&nbsp;
 
 							<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить набор?');if (cf) fdelete('<?= $id ?>');" class="button dotted redbtn"><i class="icon-cancel-circled-1"></i> Удалить</a>
 
@@ -390,11 +390,11 @@ if ( $action == '' ) {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/123')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
@@ -403,7 +403,7 @@ if ( $action == '' ) {
 
 		function fdelete(step) {
 
-			$.get('content/admin/<?php echo $thisfile; ?>?action=delete&step=' + step, function (data) {
+			$.get('/content/admin/<?php echo $thisfile; ?>?action=delete&step=' + step, function (data) {
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 

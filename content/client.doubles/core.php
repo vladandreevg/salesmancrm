@@ -1547,7 +1547,7 @@ if ( $action == 'checkDouble' ) {
 					$('#message').fadeTo(1000, 0);
 				}, 20000);
 
-				if (parseInt(data) > 0) doLoad('content/client.doubles/core.php?action=view&id=' + data);
+				if (parseInt(data) > 0) doLoad('/content/client.doubles/core.php?action=view&id=' + data);
 				else Swal.fire('Отлично', 'Дубли не найдены', 'success');
 
 			}
@@ -1860,7 +1860,7 @@ if ( $_REQUEST['modal'] == 'true' ) {
 		var $delement = $('#dblview');
 		var $page = 1;
 
-		$.Mustache.load('content/client.doubles/tpl.mustache');
+		$.Mustache.load('/content/client.doubles/tpl.mustache');
 
 		$('.footer').addClass('hidden');
 
@@ -1875,7 +1875,7 @@ if ( $_REQUEST['modal'] == 'true' ) {
 
 		function DoublesPageRender() {
 
-			var url = 'content/client.doubles/core.php?action=list&page=' + $page;
+			var url = '/content/client.doubles/core.php?action=list&page=' + $page;
 			var height = $('#swindow').find('.body').innerHeight() - $('#dbltop').outerHeight() - $('#dblbottom').outerHeight() - 20;
 			var str = $('#doublesForm').serialize();
 

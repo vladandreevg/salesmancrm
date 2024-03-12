@@ -165,7 +165,7 @@ if ( empty( $list ) ) {
 
 		setCookie('channelsInterval', id, {"expires": 1000000});
 
-		$('#channels').load('content/vigets/viget.channels.php');
+		$('#channels').load('/content/vigets/viget.channels.php');
 
 	});
 

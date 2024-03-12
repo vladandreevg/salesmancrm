@@ -213,7 +213,7 @@ $max2 = max( $dogs );
 <SCRIPT>
 
 	function showData(step) {
-		doLoad('content/vigets/viget.dataview.php?action=stepView&all=yes&step=' + step);
+		doLoad('/content/vigets/viget.dataview.php?action=stepView&all=yes&step=' + step);
 	}
 
 </SCRIPT>

@@ -29,8 +29,10 @@ $iduser = (int)$_REQUEST['iduser'];
 
 function getUserCatalogg($id = 0, $level = 0, $res = []) {
 
-	require_once "../../inc/config.php";
-	require_once "../../inc/dbconnector.php";
+	global $rootpath;
+
+	require_once $rootpath."/inc/config.php";
+	require_once $rootpath."/inc/dbconnector.php";
 
 	$identity = $GLOBALS['identity'];
 	$sort     = $GLOBALS['sort'];
@@ -222,7 +224,7 @@ if ($action == 'account') {
 
 	?>
 	<div class="zagolovok">Настройка почтового ящика</div>
-	<FORM action="content/admin/<?php
+	<FORM action="/content/admin/<?php
 	echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
 		<INPUT type="hidden" name="action" id="action" value="account_on">
 		<INPUT type="hidden" name="id" id="id" value="<?= $id ?>">
@@ -760,7 +762,7 @@ if ($action == '') {
 					</TD>
 					<TD class="text-center">
 					
-						<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=account&iduser='.$user['id'].'\');"><i class="icon-cog gray2"></i></a>
+						<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=account&iduser='.$user['id'].'\');"><i class="icon-cog gray2"></i></a>
 						
 					</TD>
 					<TD class="gray2">'.$user['otdel'].'</TD>
@@ -783,7 +785,7 @@ if ($action == '') {
 					</TD>
 					<TD class="text-center">
 					
-						<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=account&iduser='.$user['id'].'\');"><i class="icon-cog gray2"></i></a>
+						<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=account&iduser='.$user['id'].'\');"><i class="icon-cog gray2"></i></a>
 						
 					</TD>
 					<TD class="gray2">'.$user['otdel'].'</TD>
@@ -830,7 +832,7 @@ if ($action == '') {
 			},
 			success: function (data) {
 
-				$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>');
+				$("#contentdiv").load('/content/admin/<?php echo $thisfile; ?>');
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 				setTimeout(function () {
@@ -850,7 +852,7 @@ if ($action == '') {
 
 		var str = $('#uform').serialize();
 
-		$('#contentdiv').empty().load("content/admin/<?php echo $thisfile; ?>?" + str).append('<div id="loader" class="loader"><img src=/assets/images/loader.gif> Вычисление...</div>');
+		$('#contentdiv').empty().load("/content/admin/<?php echo $thisfile; ?>?" + str).append('<div id="loader" class="loader"><img src=/assets/images/loader.gif> Вычисление...</div>');
 
 	}
 </script>

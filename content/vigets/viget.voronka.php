@@ -164,7 +164,7 @@ $order  = implode( ",", $order );
 
 		setCookie('voronkaInterval', newparam, {expires: 31536000});
 
-		$("#voronka").load("content/vigets/viget.voronka.php").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+		$("#voronka").load("/content/vigets/viget.voronka.php").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 		$('#vperiod').append('<?=$vorPer?>');
 
 	}
@@ -177,7 +177,7 @@ $order  = implode( ",", $order );
 
 	function showDataa(step) {
 
-		doLoad('content/vigets/viget.dataview.php?action=stepView&stepName=' + step);
+		doLoad('/content/vigets/viget.dataview.php?action=stepView&stepName=' + step);
 
 	}
 </script>

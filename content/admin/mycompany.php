@@ -630,7 +630,7 @@ if ($action == 'edit') {
 
 		$(function () {
 
-			$("#dir_osnovanie").autocomplete("content/helpers/client.helpers.php?action=recvisites&tip=osnovanie&char=0", {
+			$("#dir_osnovanie").autocomplete("/content/helpers/client.helpers.php?action=recvisites&tip=osnovanie&char=0", {
 				autofill: true,
 				minChars: 0,
 				cacheLength: 0,
@@ -640,7 +640,7 @@ if ($action == 'edit') {
 				delay: 10,
 				matchSubset: 1
 			});
-			$("dir_status").autocomplete("content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=1", {
+			$("dir_status").autocomplete("/content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=1", {
 				autofill: true,
 				minChars: 0,
 				cacheLength: 0,
@@ -816,7 +816,7 @@ if ($action == 'edit.rs') {
 	}
 	?>
 	<DIV class="zagolovok">Изменить Расчетный счет:</DIV>
-	<FORM method="post" action="content/admin/<?php
+	<FORM method="post" action="/content/admin/<?php
 	echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form">
 		<INPUT name="action" id="action" type="hidden" value="edit.rs.on">
 		<INPUT name="id" id="id" type="hidden" value="<?= $id ?>">
@@ -965,7 +965,7 @@ if ($action == 'edit.rs') {
 		$('#bankr\\[0\\]').on('change keyup', function () {
 
 			var bik = $('#bankr\\[0\\]').val();
-			var url = 'content/helpers/client.helpers.php?action=getBIK&bik=' + bik;
+			var url = '/content/helpers/client.helpers.php?action=getBIK&bik=' + bik;
 
 			$('#limit').append('<img src="/assets/images/loading.svg" height="10">');
 
@@ -1098,7 +1098,7 @@ if ($action == 'edit.signer') {
 
 		$(function () {
 
-			$("#osnovanie").autocomplete("content/helpers/client.helpers.php?action=recvisites&tip=osnovanie&char=0", {
+			$("#osnovanie").autocomplete("/content/helpers/client.helpers.php?action=recvisites&tip=osnovanie&char=0", {
 				autofill: true,
 				minChars: 0,
 				cacheLength: 0,
@@ -1108,7 +1108,7 @@ if ($action == 'edit.signer') {
 				delay: 10,
 				matchSubset: 1
 			});
-			$("#status").autocomplete("content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=0", {
+			$("#status").autocomplete("/content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=0", {
 				autofill: true,
 				minChars: 0,
 				cacheLength: 0,
@@ -1177,7 +1177,7 @@ if ($action == "delete.rs") {
 	$title = $res["title"];
 	?>
 	<div class="zagolovok">Удалить счет "<?= $title ?>"</div>
-	<FORM action="content/admin/<?php
+	<FORM action="/content/admin/<?php
 	echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input type="hidden" id="id" name="id" value="<?= $id ?>">
 		<input name="action" type="hidden" value="delete.rs.do" id="action">
@@ -1266,7 +1266,7 @@ if ($action == "delete.rs") {
 			},
 			success: function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 				setTimeout(function () {
@@ -1288,7 +1288,7 @@ if ($action == "delete.signer") {
 	$title = $res["signature"];
 	?>
 	<div class="zagolovok">Удалить подписанта "<?= $title ?>"</div>
-	<FORM action="content/admin/<?php
+	<FORM action="/content/admin/<?php
 	echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input type="hidden" id="id" name="id" value="<?= $id ?>">
 		<input type="hidden" id="mcid" name="mcid" value="<?= $res["mcid"] ?>">
@@ -1355,7 +1355,7 @@ if ($action == "delete.signer") {
 			},
 			success: function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 				setTimeout(function () {
@@ -1390,7 +1390,7 @@ if ($action == '') {
 			<div class="flex-string wp70">
 				<span class="gray2">ID '.$comp['id'].':</span>
 				'.$comp['name_shot'].'&nbsp;
-				<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&id='.$comp['id'].'\');" class="blue" title="Изменить"><i class="icon-pencil blue"></i></a>
+				<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&id='.$comp['id'].'\');" class="blue" title="Изменить"><i class="icon-pencil blue"></i></a>
 				&nbsp;'.( $mcDefault == $comp['id'] ? "<span class='red'>По умолчанию</span>" : "" ).'
 			</div>
 			<div class="flex-string wp30 hidden-iphone hidden">
@@ -1436,7 +1436,7 @@ if ($action == '') {
 			<div class="flex-container box--child p10 border-bottom relativ ha '.( $rs['bloc'] == 'yes' ? 'gray graybg-sub' : '' ).' '.( $rs['isDefault'] == 'yes' ? 'greenbg-sub' : '' ).'">
 				
 				<div class="pull-right visible-iphone mr10">
-					<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit.rs&id='.$rs['id'].'\');" class="gray blue"><i class="icon-pencil"></i></a>
+					<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit.rs&id='.$rs['id'].'\');" class="gray blue"><i class="icon-pencil"></i></a>
 				</div>
 		
 				<div class="flex-string wp10">'.$tip.$bloc.'</div>
@@ -1451,9 +1451,9 @@ if ($action == '') {
 				</div>
 				<div class="flex-string wp30 hidden-iphone">
 				
-					<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit.rs&id='.$rs['id'].'\');" class="button bluebtn dotted" title="Редактировать"><i class="icon-pencil"></i> Редактировать</a>
+					<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit.rs&id='.$rs['id'].'\');" class="button bluebtn dotted" title="Редактировать"><i class="icon-pencil"></i> Редактировать</a>
 				
-					<a href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись? Действие нельзя отменить.\');if (cf)doLoad(\'content/admin/'.$thisfile.'?action=delete.rs&id='.$rs['id'].'\');" class="button redbtn dotted"><i class="icon-cancel-circled"></i>Удалить</a>
+					<a href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись? Действие нельзя отменить.\');if (cf)doLoad(\'/content/admin/'.$thisfile.'?action=delete.rs&id='.$rs['id'].'\');" class="button redbtn dotted"><i class="icon-cancel-circled"></i>Удалить</a>
 					
 				</div>
 		
@@ -1469,10 +1469,10 @@ if ($action == '') {
 		print '
 		<div class="mt10 mb20 infodiv graybg-sub p10">
 		
-			<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit.rs&cid='.$comp['id'].'\');" class="button greenbtn dotted"><i class="icon-plus-circled"></i>Расчетный счет</a>
+			<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit.rs&cid='.$comp['id'].'\');" class="button greenbtn dotted"><i class="icon-plus-circled"></i>Расчетный счет</a>
 			
 			'.( count($result) > 1 ? '<a href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)deleteCompany(\''.$comp['id'].'\')" class="button redbtn dotted pull-aright" title="Удалить"><i class="icon-cancel-circled"></i>Удалить<span class="hidden-iphone"> компанию</span></a>' : '' ).'
-			<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&id='.$comp['id'].'\');" class="button bluebtn dotted pull-aright" title="Изменить"><i class="icon-pencil"></i>Изменить<span class="hidden-iphone"> компанию</span></a>
+			<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&id='.$comp['id'].'\');" class="button bluebtn dotted pull-aright" title="Изменить"><i class="icon-pencil"></i>Изменить<span class="hidden-iphone"> компанию</span></a>
 			
 		</div>
 		';
@@ -1490,8 +1490,8 @@ if ($action == '') {
 				print '
 				<div class="infodiv dotted bgwhite ha relativ">
 					<div class="pull-aright">
-						<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit.signer&id='.$signer['id'].'\');" class="blue" title="Изменить"><i class="icon-pencil"></i></a>
-						<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=delete.signer&id='.$signer['id'].'\');" class="red" title="Удалить"><i class="icon-cancel-circled"></i></a>
+						<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit.signer&id='.$signer['id'].'\');" class="blue" title="Изменить"><i class="icon-pencil"></i></a>
+						<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=delete.signer&id='.$signer['id'].'\');" class="red" title="Удалить"><i class="icon-cancel-circled"></i></a>
 					</div>
 					<div class="fs-11 Bold">'.$signer['signature'].'</div>
 					<div class="fs-09">'.$signer['status'].'</div>
@@ -1512,7 +1512,7 @@ if ($action == '') {
 
 		<div class="wp100 box--child mt10">
 
-			<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php
+			<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php
 			echo $thisfile; ?>?action=edit.signer&mcid=<?= $comp['id'] ?>');" class="button bluebtn dotted" title="Добавить"><i class="icon-plus-circled"></i>Добавить Подписанта</a>
 
 		</div>
@@ -1525,12 +1525,12 @@ if ($action == '') {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php
 		echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить Компанию</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('content/admin/<?php
+	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('/content/admin/<?php
 	echo $thisfile; ?>?action=edit');" title="Добавить Компанию"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/8')" title="Документация"><i class="icon-help"></i></div>
 
@@ -1577,11 +1577,11 @@ if ($action == '') {
 
 	function deleteCompany(id) {
 
-		var url = 'content/admin/<?php echo $thisfile; ?>?action=delete.company&id=' + id;
+		var url = '/content/admin/<?php echo $thisfile; ?>?action=delete.company&id=' + id;
 
 		$.post(url, function (data) {
 
-			$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>').append('<div id=loader><img src=/assets/images/loader.gif> Загрузка данных. Пожалуйста подождите...</div>');
+			$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>').append('<div id=loader><img src=/assets/images/loader.gif> Загрузка данных. Пожалуйста подождите...</div>');
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 			setTimeout(function () {

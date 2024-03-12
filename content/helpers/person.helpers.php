@@ -11,7 +11,7 @@
 error_reporting(E_ERROR);
 header("Pragma: no-cache");
 
-$rootpath = realpath(__DIR__.'/../../');
+$rootpath = dirname(__DIR__, 2);
 
 require_once $rootpath."/inc/config.php";
 require_once $rootpath."/inc/dbconnector.php";
@@ -110,7 +110,7 @@ if ($action == 'gper') {
 	}
 	?>
 	<INPUT type="hidden" id="pid" name="pid" value="<?= $pid ?>">
-	<INPUT id="lst_spisok" type="text" class="required" placeholder="Нажмите, чтобы выбрать" style="width: 97%;" readonly onclick="get_orgspisok('lst_spisok','clientselector','content/ajax/personlist.php?action=get_personselectordog','pid','yes')" value="<?= $cl ?>">
+	<INPUT id="lst_spisok" type="text" class="required" placeholder="Нажмите, чтобы выбрать" style="width: 97%;" readonly onclick="get_orgspisok('lst_spisok','clientselector','/content/ajax/personlist.php?action=get_personselectordog','pid','yes')" value="<?= $cl ?>">
 	<?php
 
 	exit();

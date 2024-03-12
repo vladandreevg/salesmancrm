@@ -48,7 +48,7 @@ if ($action == "edit") {
 	?>
 	<DIV class="zagolovok">Изменение Шаблона "<?= $name ?>"</DIV>
 	<hr>
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<input name="action" id="action" type="hidden" value="edit_tpl">
 		<input name="tid" id="tid" type="hidden" value="<?= $tid ?>">
 		<TABLE width="800" border=0 cellpadding=2 cellspacing=3>
@@ -96,7 +96,7 @@ if ($action == "edit") {
 				},
 				success: function (data) {
 
-					$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+					$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 					setTimeout(function () {
@@ -191,7 +191,7 @@ if ($action == "") {
 					<SPAN class="ellipsis" title="<?= $data_array['name'] ?>"><B><?= $data_array['name'] ?></B></SPAN>
 				</TD>
 				<TD width="70" align="center" nowrap>
-					<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?tid=<?= $data_array['tid'] ?>&action=edit');" title="Изменить"><i class="icon-pencil blue"></i></A>
+					<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?tid=<?= $data_array['tid'] ?>&action=edit');" title="Изменить"><i class="icon-pencil blue"></i></A>
 				</TD>
 				<TD>
 					<SPAN class="ellipsis" title="<?= clean($data_array['content']) ?>"><?= clean($data_array['content']) ?></SPAN>

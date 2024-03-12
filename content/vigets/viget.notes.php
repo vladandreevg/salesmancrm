@@ -188,7 +188,7 @@ if ( $action == 'add' ) {
 
 		<div id="resultdiv" class="addNote">
 			<div class="zagolovok">Добавление заметки</div>
-			<FORM action="content/vigets/viget.notes.php" method="post" enctype="multipart/form-data" name="addForm" id="addForm" autocomplete="off">
+			<FORM action="/content/vigets/viget.notes.php" method="post" enctype="multipart/form-data" name="addForm" id="addForm" autocomplete="off">
 				<textarea name="text" id="text" style="width:98%; height:150px; white-space: pre-line" maxlength="180" autofocus class="required"></textarea>
 				<hr>
 
@@ -240,11 +240,11 @@ if ( $action == 'add' ) {
 
 					$('#dialog_container').css('display', 'none');
 
-					$.post("content/vigets/viget.notes.php?action=edit", str, function (data) {
+					$.post("/content/vigets/viget.notes.php?action=edit", str, function (data) {
 
 						yNotifyMe("CRM. Результат, Заметка добавлена" + ",signal.png");
 
-						$('#notes').load("content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+						$('#notes').load("/content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 						DClose();
 
@@ -410,7 +410,7 @@ if ( $action == 'update' ) {
 	<div id="resultdiv" class="updateNote">
 
 		<div class="zagolovok" <?= $color ?> ><B>Редактирование заметки</B></div>
-		<FORM action="content/vigets/viget.notes.php" method="post" enctype="multipart/form-data" name="editForm" id="editForm" autocomplete="off">
+		<FORM action="/content/vigets/viget.notes.php" method="post" enctype="multipart/form-data" name="editForm" id="editForm" autocomplete="off">
 			<div class="box--child" style="max-height: 70vh; overflow-y:auto !important; overflow-x:hidden"><?= $html ?></div>
 
 			<div class="button--pane text-right">
@@ -448,11 +448,11 @@ if ( $action == 'update' ) {
 
 				$('#dialog_container').css('display', 'none');
 
-				$.post("content/vigets/viget.notes.php?action=edit", str, function (data) {
+				$.post("/content/vigets/viget.notes.php?action=edit", str, function (data) {
 
 					yNotifyMe("CRM. Результат, Заметка изменена" + ",signal.png");
 
-					$('#notes').load("content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+					$('#notes').load("/content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 					DClose();
 
@@ -483,7 +483,7 @@ if ( $action == 'editPin' ) {
 
 			yNotifyMe("CRM. Результат, Заметка закреплена" + ",signal.png");
 
-			$('#notes').load("content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+			$('#notes').load("/content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 		</script>
 		<?php
@@ -496,7 +496,7 @@ if ( $action == 'editPin' ) {
 
 			yNotifyMe("CRM. Результат, Заметка откреплена" + ",signal.png");
 
-			$('#notes').load("content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+			$('#notes').load("/content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 		</script>
 
@@ -538,7 +538,7 @@ if ( $action == 'delete' ) {
 
 		yNotifyMe("CRM. Результат, Заметка удалена" + ",signal.png");
 
-		$('#notes').load("content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+		$('#notes').load("/content/vigets/viget.notes.php?action=list").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 	</script>
 	<?php
@@ -558,20 +558,20 @@ if ( $action == 'delete' ) {
 	// Вывод окна для просмотра информации о заметке
 	function viewNote(id) {
 
-		doLoad("content/vigets/viget.notes.php?action=view&note=" + id);
+		doLoad("/content/vigets/viget.notes.php?action=view&note=" + id);
 
 	}
 
 	// Вывод окна для добавления заметки
 	function addNote() {
 
-		doLoad("content/vigets/viget.notes.php?action=add");
+		doLoad("/content/vigets/viget.notes.php?action=add");
 
 	}
 
 	function updateNote(id) {
 
-		doLoad("content/vigets/viget.notes.php?action=update&note=" + id);
+		doLoad("/content/vigets/viget.notes.php?action=update&note=" + id);
 
 	}
 
@@ -591,7 +591,7 @@ if ( $action == 'delete' ) {
 			confirmButtonText: 'Да, удалить',
 			cancelButtonText: 'Отмена'
 		}).then((result) => {
-				$("#notes").load("content/vigets/viget.notes.php?action=delete&note=" + id).append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+				$("#notes").load("/content/vigets/viget.notes.php?action=delete&note=" + id).append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 			}
 		);
 
@@ -600,7 +600,7 @@ if ( $action == 'delete' ) {
 	// Изменение статуса закрепления
 	function editPin(id) {
 
-		$("#notes").load("content/vigets/viget.notes.php?action=editPin&note=" + id).append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+		$("#notes").load("/content/vigets/viget.notes.php?action=editPin&note=" + id).append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 	}
 

@@ -187,7 +187,7 @@ flush();
 	var $display = 'mailer';
 	var $messageid = 0;
 
-	$.Mustache.load('modules/mailer/tpl/interface.mustache');
+	$.Mustache.load('/modules/mailer/tpl/interface.mustache');
 
 	$(function () {
 

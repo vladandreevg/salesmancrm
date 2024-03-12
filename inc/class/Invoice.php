@@ -159,7 +159,7 @@ class Invoice {
 	 * Информация по счету
 	 *
 	 * @param $crid
-	 *
+	 * @param bool $dealinclude
 	 * @return array
 	 */
 	public static function info($crid, $dealinclude = false): array {
@@ -209,8 +209,8 @@ class Invoice {
 		$invoice['course']     = $course;
 		$invoice['signer']     = (int)$re["signer"] > 0 ? getSigner((int)$re["signer"]) : NULL;
 
-		if($dealinclude){
-			$invoice['deal'] = Deal::info((int)$re["did"]);
+		if ($dealinclude) {
+			$invoice['deal'] = Deal ::info((int)$re["did"]);
 		}
 
 		return $invoice;
@@ -1045,10 +1045,10 @@ class Invoice {
 
 					$arg['invoice'] = $params['invoice'];
 
-					$arg['datum']        = ( isset($params['date']) ) ? untag($params['date']) : untag($params["datum"]).' '.date('G').':'.date('i').':00';
-					$arg['datum_credit'] = ( isset($params['date_plan']) ) ? untag($params['date_plan']) : untag($params["datum_credit"]);
-					$arg['summa_credit'] = ( isset($params['summa']) ) ? pre_format($params['summa']) : pre_format($params["summa_credit"]);
-					$arg['invoice_chek'] = ( isset($params['contract']) ) ? untag($params['contract']) : untag($params['invoice_chek']);
+					$arg['datum']        = isset($params['date']) ? untag($params['date']) : untag($params["datum"]).' '.date('G').':'.date('i').':00';
+					$arg['datum_credit'] = isset($params['date_plan']) ? untag($params['date_plan']) : untag($params["datum_credit"]);
+					$arg['summa_credit'] = isset($params['summa']) ? pre_format($params['summa']) : pre_format($params["summa_credit"]);
+					$arg['invoice_chek'] = isset($params['contract']) ? untag($params['contract']) : untag($params['invoice_chek']);
 
 					$arg['rs']         = $params["rs"];
 					$arg['signer']     = (int)$params["signer"];
@@ -1296,6 +1296,10 @@ class Invoice {
 				$arg['suffix']     = htmlspecialchars($params["suffix"]);
 				$arg['nds_credit'] = ( isset($params['nds']) ) ? pre_format($params['nds']) : pre_format($params["nds_credit"]);
 
+				if (!is_numeric($params['template'])) {
+					$params['template'] = $db -> getOne("SELECT id FROM {$sqlname}contract_temp WHERE file = '$params[template]' AND identity = '$identity' LIMIT 1");
+				}
+
 				$arg['idowner']  = getDogData($did, 'iduser');
 				$arg['template'] = $params['template'];
 
@@ -1487,10 +1491,10 @@ class Invoice {
 					 */
 
 					//текущий этап
-					$oldstep = getDogData($did, 'idcategory');
+					$oldstep = (int)getDogData($did, 'idcategory');
 
 					//новый этап
-					$newstep = $params['newstep'];
+					$newstep = (int)$params['newstep'];
 					if ($newstep > 0 && $oldstep != $newstep) {
 
 						$params = [
@@ -1503,7 +1507,7 @@ class Invoice {
 						$info = $deal -> changestep($did, $params);
 
 						if ($info['error'] == '') {
-							$mes[] = $info['response'];
+							$mes[] = $info['result'];
 						}
 						else {
 							$mes[] = $info['error'];
@@ -1511,7 +1515,8 @@ class Invoice {
 
 					}
 
-					$mes = implode("<br>", $mes);
+					$message = $mes;
+					$mes     = implode("<br>", $mes);
 
 					//Внесем запись в историю активностей
 					addHistorty([
@@ -1534,10 +1539,11 @@ class Invoice {
 						"invoice" => $arg['invoice']
 					]);
 
-					$response['result']  = 'Успешно';
-					$response['data']    = $crid;
-					$response['invoice'] = $arg['invoice'];
-					$response['text']    = $mes;
+					$response['result']   = 'Успешно';
+					$response['data']     = $crid;
+					$response['invoice']  = $arg['invoice'];
+					$response['text']     = $mes;
+					$response['messages'] = $message;
 
 				}
 				else {
@@ -2158,11 +2164,11 @@ class Invoice {
 			
 			Спасибо за внимание.
 			С уважением,
-			{{mName}}
-			Тел.: {{mPhone}}
-			Email.: {{mMail}}
-			==============================
-			{{mCompany}}';
+			{{mName}}{{#mPhone}}
+			Тел.: {{mPhone}}{{/mPhone}}{{#mMail}}
+			Email.: {{mMail}}{{/mMail}}
+			{{#mCompany}}==============================
+			{{mCompany}}{{/mCompany}}';
 
 		}
 
@@ -2253,9 +2259,7 @@ class Invoice {
 			/**
 			 * Формируем тело сообщения
 			 */
-			//$tags = array("mName" => $mName, "mMail" => $mMail, "mPhone" => $mPhone, "mCompany" => $mCompany);
-
-			$content = str_replace([
+			/*$content = str_replace([
 				"{{mName}}",
 				"{{mMail}}",
 				"{{mPhone}}",
@@ -2266,6 +2270,18 @@ class Invoice {
 				$mPhone,
 				$mCompany
 			], $content);
+			$theme   = str_replace([
+				"{{mName}}",
+				"{{mMail}}",
+				"{{mPhone}}",
+				"{{mCompany}}"
+			], [
+				$mName,
+				$mMail,
+				$mPhone,
+				$mCompany
+			], $theme);
+			*/
 
 			/**
 			 * Формируем список получателей
@@ -2332,7 +2348,19 @@ class Invoice {
 
 				}
 
-				$html = nl2br(str_replace("{{person}}", $toName, $content));
+				//$html = nl2br(str_replace("{{person}}", $toName, $content));
+
+				$xtags = [
+					"person"   => $toName,
+					"mName"    => $mName,
+					"mMail"    => $mMail,
+					"mPhone"   => $mPhone,
+					"mCompany" => $mCompany
+				];
+
+				$m     = new Mustache_Engine();
+				$html  = nl2br($m -> render($content, $xtags));
+				$theme = $m -> render($theme, $xtags);
 
 				$rez = mailto([
 					"to"       => $toMail,
@@ -2363,7 +2391,7 @@ class Invoice {
 					$msg = yimplode("; ", $mes);
 
 					$response['result']        = "Error";
-					$response['error']['code'] = '407';
+					$response['error']['code'] = 407;
 					$response['error']['text'] = "Не найден ниодин получатель";
 
 					$response['data']    = $crid;
@@ -2399,7 +2427,7 @@ class Invoice {
 			else {
 
 				$response['result']        = 'Error';
-				$response['error']['code'] = '407';
+				$response['error']['code'] = 407;
 				$response['error']['text'] = "Не указан ни один получатель";
 
 			}
@@ -2408,7 +2436,7 @@ class Invoice {
 		else {
 
 			$response['result']        = 'Error';
-			$response['error']['code'] = '406';
+			$response['error']['code'] = 406;
 			$response['error']['text'] = "Счет не найден";
 
 		}

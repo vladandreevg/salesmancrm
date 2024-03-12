@@ -1735,7 +1735,7 @@ function talarm() {
 	var top = screen.availHeight - 500;
 	$.post(url, function (data) {
 		if (data) {
-			salesman_alert = window.open('content/ajax/task.alarm.php', 'CRMCRM', 'width=430, height=420, menubar=no, location=no, resizable=no, scrollbars=yes, status=no, left=' + left + ', top=' + top);
+			salesman_alert = window.open('/content/ajax/task.alarm.php', 'CRMCRM', 'width=430, height=420, menubar=no, location=no, resizable=no, scrollbars=yes, status=no, left=' + left + ', top=' + top);
 			salesman_alert.focus();
 		}
 		return true;
@@ -3283,7 +3283,7 @@ function getTopOffset(e) {
 function viewClient(id, hash) {
 
 	if (!isMobile && !viewAsOpen)
-		doLoad('content/view/client.view.php?clid=' + id + '#' + hash);
+		doLoad('/content/view/client.view.php?clid=' + id + '#' + hash);
 	else
 		openClient(id, hash);
 
@@ -5144,7 +5144,7 @@ function changeMounth(direct) {
 
 	$.ajax({
 		type: "GET",
-		url: "content/lists/lp.calendar.php?" + str,
+		url: "/content/lists/lp.calendar.php?" + str,
 		data: str,
 		success: function (viewData) {
 
@@ -5999,7 +5999,7 @@ var $mailer = {
 					ft = 'pic';
 
 				if (file)
-					$('div[data-file="' + file + '"]').html('<a href="content/helpers/get.file.php?file=' + data[0].folder + data[0].file + '" target="blank" title="Просмотр" data-tip="' + ft + '" data-file="' + data[0].folder + data[0].file + '" data-fname="' + data[0].name + '">' + data[0].icon + data[0].name + '</a>&nbsp;<A href="javascript:void(0)" onClick="fileDownload(\'\',\'' + data[0].folder + data[0].file + '\',\'yes\',\'' + data[0].name + '\')"><i class="icon-download blue" title="Скачать"></i></A>[ ' + data[0].size + ' kb ]');
+					$('div[data-file="' + file + '"]').html('<a href="/content/helpers/get.file.php?file=' + data[0].folder + data[0].file + '" target="blank" title="Просмотр" data-tip="' + ft + '" data-file="' + data[0].folder + data[0].file + '" data-fname="' + data[0].name + '">' + data[0].icon + data[0].name + '</a>&nbsp;<A href="javascript:void(0)" onClick="fileDownload(\'\',\'' + data[0].folder + data[0].file + '\',\'yes\',\'' + data[0].name + '\')"><i class="icon-download blue" title="Скачать"></i></A>[ ' + data[0].size + ' kb ]');
 
 				this.previewImage();
 

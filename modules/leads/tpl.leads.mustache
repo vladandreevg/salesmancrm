@@ -48,7 +48,7 @@
 						{{/rezult}}
 					</div>
 				</TD>
-				<TD onClick="editLead('{{id}}','view');" title="Просмотр" class="hand">
+				<TD onclick="editLead('{{id}}','view');" title="Просмотр" class="hand">
 					<span class="ellipsis" title="{{title}}"><b>{{title}}</b></span>
 					{{#company}}
 						<br><span class="ellipsis smalltext blue">{{company}}</span>
@@ -74,13 +74,13 @@
 				<TD class="hidden-netbook"><span class="ellipsis" title="{{clientpath}}">{{clientpath}}</span></TD>
 				<TD>
 					{{#client}}
-						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onClick="openClient('{{clid}}')"><i class="icon-building blue"></i>{{client}}</a></span>
+						<span class="ellipsis" title="{{client}}"><a href="javascript:void(0)" onclick="openClient('{{clid}}')"><i class="icon-building blue"></i>{{client}}</a></span>
 					{{/client}}
 					{{#person}}
-						<br><span class="ellipsis" title="{{person}}"><a href="javascript:void(0)" onClick="openPerson('{{pid}}')"><i class="icon-user-1 green"></i>{{person}}</a></span>
+						<br><span class="ellipsis" title="{{person}}"><a href="javascript:void(0)" onclick="openPerson('{{pid}}')"><i class="icon-user-1 green"></i>{{person}}</a></span>
 					{{/person}}
 					{{#deal}}
-						<br><span class="ellipsis" title="{{deal}}"><a href="javascript:void(0)" onClick="openDogovor('{{did}}')"><i class="icon-briefcase broun"></i>{{deal}}</a></span>
+						<br><span class="ellipsis" title="{{deal}}"><a href="javascript:void(0)" onclick="openDogovor('{{did}}')"><i class="icon-briefcase broun"></i>{{deal}}</a></span>
 					{{/deal}}
 				</TD>
 				<TD>
@@ -97,19 +97,19 @@
 
 							{{#action}}
 
-								{{#setuser}}<A href="javascript:void(0)" onClick="editLead('{{id}}','setuser');" title="Назначить Ответственного" class="gray orange"><i class="icon-help-circled"></i></A>&nbsp;{{/setuser}}
-								{{#workit}}<a href="javascript:void(0)" onClick="editLead('{{id}}', 'workit');" title="Обработать" class="gray orange"><i class="icon-ok-circled"></i></a>{{/workit}}
-								{{#view}}<A href="javascript:void(0)" onClick="editLead('{{id}}', 'view');" title="Просмотр" class="gray green"><i class="icon-eye" title="{{status}}"></i></a>&nbsp;{{/view}}
+								{{#setuser}}<A href="javascript:void(0)" onclick="editLead('{{id}}','setuser');" title="Назначить Ответственного" class="gray orange"><i class="icon-help-circled"></i></A>&nbsp;{{/setuser}}
+								{{#workit}}<a href="javascript:void(0)" onclick="editLead('{{id}}', 'workit');" title="Обработать" class="gray orange"><i class="icon-ok-circled"></i></a>{{/workit}}
+								{{#view}}<A href="javascript:void(0)" onclick="editLead('{{id}}', 'view');" title="Просмотр" class="gray green"><i class="icon-eye" title="{{status}}"></i></a>&nbsp;{{/view}}
 
 							{{/action}}
 							{{#edit}}
 
-								<a href="javascript:void(0)" onClick="editLead('{{id}}', 'add');" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
+								<a href="javascript:void(0)" onclick="editLead('{{id}}', 'add');" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
 
 							{{/edit}}
 							{{#del}}
 
-								<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editLead('{{id}}', 'delete');" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editLead('{{id}}', 'delete');" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
 
 							{{/del}}
 
@@ -172,8 +172,8 @@
 						<div class="action--block">
 
 							{{#edit}}
-								<a href="javascript:void(0)" onClick="doLoad('modules/leads/form.leads.php?id={{id}}&action=source.edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
-								<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)doLoad('modules/leads/form.leads.php?id={{id}}&action=source.delete')" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+								<a href="javascript:void(0)" onclick="doLoad('/modules/leads/form.leads.php?id={{id}}&action=source.edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)doLoad('/modules/leads/form.leads.php?id={{id}}&action=source.delete')" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
 							{{/edit}}
 
 						</div>
@@ -270,9 +270,9 @@
 						<div class="action--block">
 
 							{{#edit}}
-								<!--<a href="javascript:void(0)" onClick="doLoad('modules/leads/form.leads.php?id={{id}}&action=utms.view')" title="Просмотр" class="gray green"><i class="icon-eye green"></i></a>-->
-								<a href="javascript:void(0)" onClick="doLoad('modules/leads/form.leads.php?id={{id}}&action=utms.edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
-								<a href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)removeUTM('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
+								<!--<a href="javascript:void(0)" onclick="doLoad('modules/leads/form.leads.php?id={{id}}&action=utms.view')" title="Просмотр" class="gray green"><i class="icon-eye green"></i></a>-->
+								<a href="javascript:void(0)" onclick="doLoad('/modules/leads/form.leads.php?id={{id}}&action=utms.edit')" title="Изменить" class="gray blue"><i class="icon-pencil green"></i></a>
+								<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)removeUTM('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel-circled"></i></a>
 							{{/edit}}
 
 						</div>

@@ -100,6 +100,6 @@ $sort = get_people($iduser1);
 
 <script>
 	function showPrognoz(datum) {
-		doLoad('content/vigets/viget.dataview.php?action=prognozView&datum=' + datum);
+		doLoad('/content/vigets/viget.dataview.php?action=prognozView&datum=' + datum);
 	}
 </script>

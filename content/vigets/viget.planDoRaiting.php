@@ -453,7 +453,7 @@ usort( $dataa, 'cmp' );
 
 		setCookie('pdrInterval', newparam, {expires: 31536000});
 
-		$("#plando").load("content/vigets/viget.planDoRaiting.php").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+		$("#plando").load("/content/vigets/viget.planDoRaiting.php").append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 	}
 

@@ -174,7 +174,7 @@ if (!$action) {
 		<?php
 		while ($data = $db -> fetch($result)) {
 			?>
-			<TR class="th40 ha hand" onclick="doLoad('content/admin/<?php
+			<TR class="th40 ha hand" onclick="doLoad('/content/admin/<?php
 			echo $thisfile; ?>?action=view&id=<?= $data['id'] ?>')">
 				<TD title="<?= get_sfdate($data['datum']) ?>"><?= get_sfdate($data['datum']) ?></TD>
 				<TD title="<?= $data['event'] ?>" title="Просмотр"><?= $data['event'] ?></TD>
@@ -240,7 +240,7 @@ if (!$action) {
 	<SCRIPT>
 
 		function changepagepay(num) {
-			$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>?page=' + num + '&filter=' + $('#filter').val());
+			$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>?page=' + num + '&filter=' + $('#filter').val());
 		}
 
 		function clearHookLog() {
@@ -264,7 +264,7 @@ if (!$action) {
 
 				if (result.value) {
 
-					$.get("content/admin/<?php echo $thisfile; ?>?action=clear", function () {
+					$.get("/content/admin/<?php echo $thisfile; ?>?action=clear", function () {
 
 						razdel('webhooklog');
 
@@ -278,7 +278,7 @@ if (!$action) {
 
 		function deleteHookLog(id) {
 
-			$.get("content/admin/<?php echo $thisfile; ?>?action=delete&id=" + id, function () {
+			$.get("/content/admin/<?php echo $thisfile; ?>?action=delete&id=" + id, function () {
 
 				DClose();
 				razdel('webhooklog');

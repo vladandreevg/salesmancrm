@@ -288,16 +288,18 @@ if ( $action == '' ) {
 					</td>
 					<td class="w120 text-center">
 						<div class="pt5">
-							&nbsp;&nbsp;<A href="javascript:void(0)" onclick="doLoad('content/helpers/search.editor.client.php?action=add&seid=<?= $data['seid'] ?>&tip=<?= $tip ?>');" title="Клонировать"><i class="icon-paste green"></i></A>
+							&nbsp;&nbsp;<A href="javascript:void(0)" onclick="doLoad('/content/helpers/search.editor.client.php?action=add&seid=<?= $data['seid'] ?>&tip=<?= $tip ?>');" title="Клонировать"><i class="icon-paste green"></i></A>
 							<?php
 							if ( $data['iduser'] == $iduser1 || $isadmin == 'on' ) {
 								?>
 								&nbsp;&nbsp;
-								<A href="javascript:void(0)" onclick="doLoad('content/helpers/search.editor.client.php?action=edit&seid=<?= $data['seid'] ?>&tip=<?= $tip ?>');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;
+								<A href="javascript:void(0)" onclick="doLoad('/content/helpers/search.editor.client.php?action=edit&seid=<?= $data['seid'] ?>&tip=<?= $tip ?>');" title="Изменить"><i class="icon-pencil blue"></i></A>&nbsp;&nbsp;
 								<A href="javascript:void(0)" onclick="sdelete('<?= $data['seid'] ?>');" title="Удалить"><i class="icon-cancel red"></i></A>
 								<?php
 							}
-							else print '&nbsp;&nbsp;<A href="javascript:void(0)" title="Изменить"><i class="icon-pencil gray"></i></A>&nbsp;&nbsp;<A href="javascript:void(0)" title="Удалить"><i class="icon-cancel gray"></i></A>';
+							else {
+								print '&nbsp;&nbsp;<A href="javascript:void(0)" title="Изменить"><i class="icon-pencil gray"></i></A>&nbsp;&nbsp;<A href="javascript:void(0)" title="Удалить"><i class="icon-cancel gray"></i></A>';
+							}
 							?>
 						</div>
 					</td>
@@ -313,7 +315,7 @@ if ( $action == '' ) {
 	<hr>
 
 	<div align="right">
-		<A href="javascript:void(0)" onclick="refresh('resultdiv','content/helpers/search.editor.client.php?action=add&seid=<?= $data['seid'] ?>&tip=<?= $tip ?>');" class="button">Добавить</A>&nbsp;
+		<A href="javascript:void(0)" onclick="refresh('resultdiv','/content/helpers/search.editor.client.php?action=add&seid=<?= $data['seid'] ?>&tip=<?= $tip ?>');" class="button">Добавить</A>&nbsp;
 		<A href="javascript:void(0)" onclick="DClose()" class="button">Закрыть</A>
 	</div>
 
@@ -714,7 +716,7 @@ if ( $action == 'add' ) {
 		<hr>
 
 		<DIV class="button--pane text-right">
-			<a href="javascript:void(0)" onclick="refresh('resultdiv','content/helpers/search.editor.client.php?tip=<?= $tip ?>')" class="button pull-left" title="Назад к списку"><i class="icon-left-thin"></i></a>
+			<a href="javascript:void(0)" onclick="refresh('resultdiv','/content/helpers/search.editor.client.php?tip=<?= $tip ?>')" class="button pull-left" title="Назад к списку"><i class="icon-left-thin"></i></a>
 			&nbsp;&nbsp;<label><input name="share" type="checkbox" value="yes"/>&nbsp;Общее&nbsp;<i class="icon-info-circled blue" title="Такое представление будет доступно для использования всеми сотрудниками организации"></i></label>
 			&nbsp;<A href="javascript:void(0)" onclick="$('#Form').submit()" class="button">Сохранить</A>&nbsp;
 		</DIV>
@@ -1136,7 +1138,7 @@ if ( $action == 'edit' ) {
 
 		<DIV class="button--pane text-right">
 			<div style="float:left">
-				&nbsp;&nbsp;<a href="javascript:void(0)" onclick="refresh('resultdiv','content/helpers/search.editor.client.php?tip=<?= $tip ?>')" class="button pull-left"><i class="icon-left-thin"></i></a>
+				&nbsp;&nbsp;<a href="javascript:void(0)" onclick="refresh('resultdiv','/content/helpers/search.editor.client.php?tip=<?= $tip ?>')" class="button pull-left"><i class="icon-left-thin"></i></a>
 			</div>
 			<label><input name="share" <?php if ( $search['share'] == 'yes' )
 					print 'checked'; ?> type="checkbox" value="yes"/>&nbsp;Общее&nbsp;<i class="icon-info-circled blue" title="Такое представление будет доступно для использования всеми сотрудниками организации"></i></label>
@@ -1642,7 +1644,7 @@ if ( in_array( $action, [
 
 				if (data.id != '') {
 
-					$('#resultdiv').load('content/helpers/search.editor.client.php?tip=' + tip);
+					$('#resultdiv').load('/content/helpers/search.editor.client.php?tip=' + tip);
 
 					if ($('#action').val() == 'add_on')
 						$('#list #searchgroup').append('<option value="search:' + data.id + '">' + data.title + '</option>');
@@ -1663,7 +1665,7 @@ if ( in_array( $action, [
 		onDragClass: "tableDrag",
 		onDrop: function (table, row) {
 			var str = '' + $('#tbborder').tableDnDSerialize();
-			var url = 'content/helpers/search.editor.client.php?action=edit_order';
+			var url = '/content/helpers/search.editor.client.php?action=edit_order';
 
 			$.post(url, str, function (data) {
 
@@ -1671,7 +1673,7 @@ if ( in_array( $action, [
 				setTimeout(function () {
 					$('#message').fadeTo(1000, 0);
 				}, 20000);
-				$('#resultdiv').load('content/helpers/search.editor.client.php?tip=<?=$tip?>');
+				$('#resultdiv').load('/content/helpers/search.editor.client.php?tip=<?=$tip?>');
 
 			});
 		}
@@ -1700,12 +1702,12 @@ if ( in_array( $action, [
 	function loadpole(string, pole) {
 
 		var i = $("#fields tr").size() - 1;
-		$('#' + string).load('content/helpers/search.editor.client.php?tip=<?=$tip?>&action=get_pole&pole=' + $('#' + pole).val() + '&i=' + i);
+		$('#' + string).load('/content/helpers/search.editor.client.php?tip=<?=$tip?>&action=get_pole&pole=' + $('#' + pole).val() + '&i=' + i);
 
 	}
 
 	function sdelete(str) {
-		var url = 'content/helpers/search.editor.client.php?action=delete&tip=<?=$tip?>&seid=' + str;
+		var url = '/content/helpers/search.editor.client.php?action=delete&tip=<?=$tip?>&seid=' + str;
 		$.post(url, function (data) {
 
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data);
@@ -1713,7 +1715,7 @@ if ( in_array( $action, [
 				$('#message').fadeTo(1000, 0);
 			}, 20000);
 
-			$('#resultdiv').load('content/helpers/search.editor.client.php?tip=<?=$tip?>');
+			$('#resultdiv').load('/content/helpers/search.editor.client.php?tip=<?=$tip?>');
 			$('#list [value="search:' + str + '"]').remove();
 		});
 	}

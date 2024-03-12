@@ -107,7 +107,7 @@
 		<TD class="text-center"><span>{{datum}}</span></TD>
 		<TD>
 			{{#view}}
-			<SPAN title="{{invoice}}" onclick="window.open('get.doc.php?crid={{id}}&action=invoice.print&tip=print')" class="hand ellipsis"><i class="icon-eye broun"></i><B>&nbsp;{{invoice}}</B></SPAN>
+			<SPAN title="{{invoice}}" onclick="window.open('/get.doc.php?crid={{id}}&action=invoice.print&tip=print')" class="hand ellipsis"><i class="icon-eye broun"></i><B>&nbsp;{{invoice}}</B></SPAN>
 			{{/view}}
 			{{^view}}
 			<SPAN title="{{invoice}}" class="ellipsis"><i class="icon-eye broun"></i><B>&nbsp;{{invoice}}</B></SPAN>
@@ -292,7 +292,7 @@
 				<td class="text-right">
 					<span class="Bold">{{summaf}}</span>
 					{{#crid}}
-						<div class="fs-09 mt5 blue hand" onclick="window.open('get.doc.php?crid={{crid}}&action=invoice.print&tip=print')" title="Просмотр: {{invoice}}">Счет №{{invoice}}</div>
+						<div class="fs-09 mt5 blue hand" onclick="window.open('/get.doc.php?crid={{crid}}&action=invoice.print&tip=print')" title="Просмотр: {{invoice}}">Счет №{{invoice}}</div>
 					{{/crid}}
 				</td>
 				<td>

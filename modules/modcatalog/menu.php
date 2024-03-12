@@ -52,7 +52,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inMain' ) {
 				"title"   => 'Добавить позицию',
 				"icon"    => '<i class="icon-archive"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=edit')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=edit')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],
@@ -82,7 +82,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inMain' ) {
 				"title"   => 'Добавить заявку',
 				"icon"    => '<i class="icon-doc-text-inv"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavka')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=editzayavka')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],
@@ -92,7 +92,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inMain' ) {
 				"title"   => 'Добавить заявку на поиск',
 				"icon"    => '<i class="icon-doc-text-inv"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavka&tip=cold')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=editzayavka&tip=cold')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],
@@ -118,7 +118,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inMain' ) {
 				"title"   => 'Добавить предложение',
 				"icon"    => '<i class="icon-doc-text-inv"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=editoffer')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=editoffer')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],
@@ -155,7 +155,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inSub' ) {
 				"title"   => 'Добавить позицию',
 				"icon"    => '<i class="icon-archive"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=edit')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=edit')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],
@@ -185,7 +185,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inSub' ) {
 				"title"   => 'Добавить заявку',
 				"icon"    => '<i class="icon-doc-text-inv"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavka')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=editzayavka')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],
@@ -195,7 +195,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inSub' ) {
 				"title"   => 'Добавить заявку на поиск',
 				"icon"    => '<i class="icon-doc-text-inv"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavka&tip=cold')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=editzayavka&tip=cold')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],
@@ -221,7 +221,7 @@ if ( $mcOn == 'on' && $msettings['mcMenuTip'] == 'inSub' ) {
 				"title"   => 'Добавить предложение',
 				"icon"    => '<i class="icon-doc-text-inv"><i class="sup icon-plus-circled"></i></i>',
 				"url"     => '',
-				"onclick" => "doLoad('modules/modcatalog/form.modcatalog.php?action=editoffer')",
+				"onclick" => "doLoad('/modules/modcatalog/form.modcatalog.php?action=editoffer')",
 				"class"   => '',
 				"type"    => 'sklad'
 			],

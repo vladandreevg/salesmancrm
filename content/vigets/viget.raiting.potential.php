@@ -174,7 +174,7 @@ if ( $max == 0 )
 			$bb = ' class = "gray"';
 		}
 		?>
-		<tr class="th30 ha hand" <?php if ( stripos( $tipuser, 'Руководитель' ) !== false ) { ?> onclick="doLoad('content/vigets/viget.dataview.php?action=prognozView&datum=<?= date( 'y' )."-".date( 'm' ) ?>&iduser=<?= $r['usr'] ?>&onlyuser=yes')" <?php } ?>>
+		<tr class="th30 ha hand" <?php if ( stripos( $tipuser, 'Руководитель' ) !== false ) { ?> onclick="doLoad('/content/vigets/viget.dataview.php?action=prognozView&datum=<?= date( 'y' )."-".date( 'm' ) ?>&iduser=<?= $r['usr'] ?>&onlyuser=yes')" <?php } ?>>
 			<td class="wp40">
 				<div class="ellipsis"><b<?= $bb ?>><?= current_user( $r['usr'] ) ?></b></div>
 			</td>

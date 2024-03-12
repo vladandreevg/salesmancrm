@@ -373,7 +373,7 @@
 
 			<div class="contaner p5 contaner-invoices hidden">
 
-				<a href="javascript:void(0)" onclick="getSwindow('reports/ent-PaymentsByUser.php', 'Оплаты по сотрудникам')" class="greenbtn button wp100" title="Показать аналитику"><i class="icon-chart-line"></i> Статистика</a>
+				<a href="javascript:void(0)" onclick="getSwindow('/reports/ent-PaymentsByUser.php', 'Оплаты по сотрудникам')" class="greenbtn button wp100" title="Показать аналитику"><i class="icon-chart-line"></i> Статистика</a>
 
 			</div>
 

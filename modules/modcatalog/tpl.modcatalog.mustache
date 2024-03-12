@@ -39,11 +39,11 @@
 			{{/mcArtikul}}
 			<TD {{{image}}}></TD>
 			<TD class="text-center">
-				<A href="javascript:void(0)" onclick="window.open('card.modcatalog.php?n_id={{id}}')"><i class="icon-archive broun"></i></A>
+				<A href="javascript:void(0)" onclick="window.open('/card.modcatalog?n_id={{id}}')"><i class="icon-archive broun"></i></A>
 			</TD>
 			<TD>
 				<SPAN class="ellipsis" title="{{title}}">
-					<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{id}}');"><B>{{title}}</B></a>
+					<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=view&n_id={{id}}');"><B>{{title}}</B></a>
 				</SPAN><br>
 				{{#cat}}<span class="smalltxt blue">{{cat}}</span>{{/cat}}
 			</TD>
@@ -51,7 +51,7 @@
 			<TD class="text-right" title="{{price1}} {{valuta}}/{{edizm}}">
 						<span>
 							<b class="blue">{{price1}}</b>
-							{{#mcKolEdit}}&nbsp;<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=editone&tip=price');" title="Изменить" class="dleft1 gray"><i class="icon-pencil smalltxt"></i></a>{{/mcKolEdit}}
+							{{#mcKolEdit}}&nbsp;<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=editone&tip=price');" title="Изменить" class="dleft1 gray"><i class="icon-pencil smalltxt"></i></a>{{/mcKolEdit}}
 						</span>
 			</TD>
 			{{/price_1}}
@@ -66,10 +66,10 @@
 			<TD>
 				<div class="action--container">
 					<div class="action--block">
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=view');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=view');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
 						{{#mcCoordinator}}
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></A>
-						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить?');if (cf)delCat('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel red"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></A>
+						<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить?');if (cf)delCat('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel red"></i></A>
 						{{/mcCoordinator}}
 					</div>
 				</div>
@@ -121,23 +121,23 @@
 			</TD>
 			<TD>
 				{{#zTitle}}
-				<span class="ellipsis"><a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр"><b>{{zTitle}}</b></a></span><br>
+				<span class="ellipsis"><a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр"><b>{{zTitle}}</b></a></span><br>
 				{{/zTitle}}
 				{{#deal}}
 				<span class="ellipsis"><a href="javascript:void(0)" onclick="openDogovor('{{did}}','7');"><i class="icon-briefcase-1 blue"></i> {{deal}}</a></span><br>
 				{{#Complete}}
-				<span class="ellipsis fs-09 gray2"><a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavkacomplete&did={{did}}')" class="gray" title="Подробнее">Комплектность сделки: <b>{{Complete}}%</b></a></span>{{/Complete}}
+				<span class="ellipsis fs-09 gray2"><a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editzayavkacomplete&did={{did}}')" class="gray" title="Подробнее">Комплектность сделки: <b>{{Complete}}%</b></a></span>{{/Complete}}
 				{{/deal}}
 			</TD>
 			<TD>
 				<span class="ellipsis">
 					{{{hi}}}
-					<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр"><B class="{{{color}}}">{{status}}</B></a>
+					<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр"><B class="{{{color}}}">{{status}}</B></a>
 				</span>
 				{{#mcCoordinator}}
 				{{#editor}}
 				{{#change}}
-				<span class="pull-aright"><a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavkastatus');" title="Изменить" class="gray"><i class="icon-ok smalltxt"></i></a></span>
+				<span class="pull-aright"><a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavkastatus');" title="Изменить" class="gray"><i class="icon-ok smalltxt"></i></a></span>
 				{{/change}}
 				{{/editor}}
 				{{^editor}}
@@ -152,9 +152,9 @@
 				<div title="{{persent}}% [ {{kols}} ] позиций находятся в приходных ордерах" class="{{{colr}}}">{{{persent}}}%</div>
 			</TD>
 			<TD>
-				<span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('{{iduser}}');"><i class="icon-user-1 blue"></i>{{user}}</a></span>
+				<span class="ellipsis"><a href="javascript:void(0)" onclick="viewUser('{{iduser}}');"><i class="icon-user-1 blue"></i>{{user}}</a></span>
 				{{#sotrudnik}}
-				<br><span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('{{sotid}}');"><i class="icon-user-1 broun"></i><span class="broun">{{sotrudnik}}</span></a></span>
+				<br><span class="ellipsis"><a href="javascript:void(0)" onclick="viewUser('{{sotid}}');"><i class="icon-user-1 broun"></i><span class="broun">{{sotrudnik}}</span></a></span>
 				{{/sotrudnik}}
 				{{^sotrudnik}}
 				<br><span class="ellipsis gray"><i class="icon-user-1"></i>Не назначено</span>
@@ -166,28 +166,28 @@
 			<TD>
 				<div class="action--container">
 					<div class="action--block">
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр" class="gray green"><i class="icon-eye blue"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewzayavka');" title="Просмотр" class="gray green"><i class="icon-eye blue"></i></A>
 						{{#toorder}}
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=editakt&tip=income&idz={{id}}');" title="Создать приходный ордер" class="gray blue"><i class="icon-forward-1"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editakt&tip=income&idz={{id}}');" title="Создать приходный ордер" class="gray blue"><i class="icon-forward-1"></i></A>
 						{{/toorder}}
 						{{#isorder}}
 						<A href="javascript:void(0)" title="Есть приходный ордер" class="gray red"><i class="icon-doc-text"></i></A>
 						{{/isorder}}
 						{{#change}}
 						{{#editor}}
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
-						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
+						<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
 						{{/editor}}
 						{{/change}}
 						{{^change}}
 						{{#editor}}
 						{{^isDo}}
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
-						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?\nБудет удалена заявка и связанные позиции заявки');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
+						<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?\nБудет удалена заявка и связанные позиции заявки');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
 						{{/isDo}}
 						{{#isDo}}
-						<!--<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите изменить ВЫПОЛНЕННУЮ заявку ');if (cf)doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
-		<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить запись?\nБудет удалена ВЫПОЛНЕННАЯ заявка и связанные позиции заявки');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>-->
+						<!--<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите изменить ВЫПОЛНЕННУЮ заявку ');if (cf)doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editzayavka');" class="gray blue" title="Изменить"><i class="icon-pencil blue"></i></A>
+		<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?\nБудет удалена ВЫПОЛНЕННАЯ заявка и связанные позиции заявки');if (cf)removeZayavka('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>-->
 						{{/isDo}}
 						{{/editor}}
 						{{/change}}
@@ -225,7 +225,7 @@
 				<div class="Bold">{{id}}</div>
 			</TD>
 			<TD>
-				<span class="ellipsis Bold fs-11"><A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');"><i class="icon-archive broun"></i>{{title}}</a></span>
+				<span class="ellipsis Bold fs-11"><A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');"><i class="icon-archive broun"></i>{{title}}</a></span>
 				{{#deal}}
 				<br><span class="ellipsis fs-09"><a href="javascript:void(0)" onclick="openDogovor('{{did}}');" class="gray"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a></span>
 				{{/deal}}
@@ -266,7 +266,7 @@
 				<div>{{{datum}}}</div>
 			</TD>
 			<TD>
-				<span class="ellipsis fs-10"><A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');"><i class="icon-archive broun"></i>&nbsp;{{title}}</a></span>
+				<span class="ellipsis fs-10"><A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');"><i class="icon-archive broun"></i>&nbsp;{{title}}</a></span>
 				<br><span class="ellipsis fs-09"><a href="javascript:void(0)" onclick="openDogovor('{{did}}');" class="gray"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a></span>
 			</TD>
 			<TD class="text-left">
@@ -276,14 +276,14 @@
 				<div class="ellipsis">{{sklad}}</div>
 			</TD>
 			<TD class="text-right">
-				<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id={{idz}}&action=viewzayavka');" title="Просмотр">{{zayavka}}</a>
+				<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{idz}}&action=viewzayavka');" title="Просмотр">{{zayavka}}</a>
 			</TD>
 			<TD class="text-right">
-				<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id={{ida}}&action=viewakt');" title="Просмотр">{{order}}</a>
+				<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{ida}}&action=viewakt');" title="Просмотр">{{order}}</a>
 			</TD>
 			<TD class="w40 text-center">
 				{{#mcCoordinator}}
-				<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить из Резерва?');if (cf)removeReserve('{{id}}');" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+				<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить из Резерва?');if (cf)removeReserve('{{id}}');" title="Удалить"><i class="icon-cancel-circled red"></i></A>
 				{{/mcCoordinator}}
 				{{^mcCoordinator}}<i class="icon-cancel-circled gray" title="Нет доступа"></i>{{/mcCoordinator}}
 			</TD>
@@ -316,25 +316,25 @@
 			<TD align="right">{{id}}</TD>
 			<TD align="right" class="smalltxt">{{{datum}}}</TD>
 			<TD>
-				<span class="ellipsis"><a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewoffer');" title="Просмотр"><b>{{zTitle}}</b></a></span>
+				<span class="ellipsis"><a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewoffer');" title="Просмотр"><b>{{zTitle}}</b></a></span>
 				{{{purl}}}
 			</TD>
 			<TD><span class="ellipsis"><B class="{{color}}">{{status}}</B></span></TD>
 			<TD>
 				{{#vote}}
-				<span style="font-size:0.95em;"><A href="javascript:void(0)" onClick="likeoffer('{{id}}');" title="Голосовать" class="blue"><i class="icon-thumbs-up"></i>&nbsp;<b>{{like}}</b></A></span>
+				<span style="font-size:0.95em;"><A href="javascript:void(0)" onclick="likeoffer('{{id}}');" title="Голосовать" class="blue"><i class="icon-thumbs-up"></i>&nbsp;<b>{{like}}</b></A></span>
 				{{/vote}}
 				{{^vote}}
 				<span style="font-size:0.95em;" class="green" title="Вы проголосовали"><i class="icon-thumbs-up"></i>&nbsp;{{likes}}</span>
 				{{/vote}}
 			</TD>
 			<TD>
-				<span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('{{iduser}}');"><i class="icon-user-1 blue"></i>{{user}}</a></span>
+				<span class="ellipsis"><a href="javascript:void(0)" onclick="viewUser('{{iduser}}');"><i class="icon-user-1 blue"></i>{{user}}</a></span>
 			</TD>
 			<TD align="left">
-				<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewoffer');" title="Просмотр"><i class="icon-eye blue"></i></A>&nbsp;&nbsp;
+				<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewoffer');" title="Просмотр"><i class="icon-eye blue"></i></A>&nbsp;&nbsp;
 				{{#mcCoordinator}}
-				<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editoffer');" class="gray" title="Изменить"><i class="icon-pencil"></i></A>&nbsp;&nbsp;
+				<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editoffer');" class="gray" title="Изменить"><i class="icon-pencil"></i></A>&nbsp;&nbsp;
 				{{/mcCoordinator}}
 			</TD>
 			<TD>
@@ -379,7 +379,7 @@
 			</TD>
 			<TD class="text-right">
 				{{#numberZ}}
-				<div class="hand" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{idz}}&action=viewzayavka');">
+				<div class="hand" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{idz}}&action=viewzayavka');">
 					<b>{{numberZ}}</b></div>
 				{{/numberZ}}
 				{{^numberZ}}
@@ -415,19 +415,19 @@
 			<TD>
 				<div class="action--container">
 					<div class="action--block">
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewakt');" title="Просмотр" class="gray green"><i class="icon-eye"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewakt');" title="Просмотр" class="gray green"><i class="icon-eye"></i></A>
 						<A href="modules/modcatalog/printorder.php?id={{id}}&tip=order" title="Печать" target="blank" class="gray red"><i class="icon-print"></i></A>
 						{{#isdo}}
 						{{#skladpoz}}
 						{{#mcCoordinator}}
-						<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editaktperpoz');" title="Установить серийники" class="gray brounbg2"><i class="icon-list"></i></a>
+						<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editaktperpoz');" title="Установить серийники" class="gray brounbg2"><i class="icon-list"></i></a>
 						{{/mcCoordinator}}
 						{{/skladpoz}}
 						<a href="javascript:void(0)" class="gray gray2"><i class="icon-ok blue"></i></a>
 						{{/isdo}}
 						{{^isdo}}
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editakt');" class="gray blue" title="Изменить"><i class="icon-pencil"></i></A>
-						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить?');if (cf)removeOrder('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editakt');" class="gray blue" title="Изменить"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить?');if (cf)removeOrder('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled red"></i></A>
 						{{/isdo}}
 					</div>
 				</div>
@@ -503,7 +503,7 @@
 			</TD>
 			{{/mcSkladPoz}}
 			<TD>
-				<SPAN class="ellipsis Bold" title="{{title}}"><A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');">{{title}}</A></SPAN>
+				<SPAN class="ellipsis Bold" title="{{title}}"><A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=view&n_id={{prid}}');">{{title}}</A></SPAN>
 				{{#deal}}
 				<br><span class="ellipsis fs-09"><a href="javascript:void(0)" onclick="openDogovor('{{did}}','7');" class="gray"><i class="icon-briefcase broun"></i>&nbsp;{{deal}}</a></span>
 				{{/deal}}
@@ -537,16 +537,16 @@
 			<TD>
 				<div class="action--container">
 					<div class="action--block">
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewskladpozone');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=viewskladpozone');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
 						{{#mcCoordinator}}
 						{{#mcSkladPoz}}
 						<!--Поштучный учет-->
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editskladpozone');" class="gray blue" title="Изменить"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editskladpozone');" class="gray blue" title="Изменить"><i class="icon-pencil"></i></A>
 						{{/mcSkladPoz}}
 						{{^mcSkladPoz}}
 						<!--Валовый учет-->
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=editskladpoz');" class="gray blue" title="Изменить количество"><i class="icon-pencil"></i></A>
-						<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить?');if (cf)deleteSkladpoz('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=editskladpoz');" class="gray blue" title="Изменить количество"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить?');if (cf)deleteSkladpoz('{{id}}');" class="gray red" title="Удалить"><i class="icon-cancel-circled"></i></A>
 						{{/mcSkladPoz}}
 						{{/mcCoordinator}}
 					</div>
@@ -607,7 +607,7 @@
 			<TD>
 				<div class="action--container">
 					<div class="action--block">
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id={{id}}&action=movetoskaldview');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id={{id}}&action=movetoskaldview');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
 					</div>
 				</div>
 			</TD>

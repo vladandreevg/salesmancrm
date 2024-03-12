@@ -7,13 +7,12 @@
 /*        www.isaler.ru         */
 /*        ver. 2017.x           */
 /* ============================ */
-?>
-<?php
+
 error_reporting( E_ERROR );
 ini_set( 'display_errors', 1 );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -272,7 +271,7 @@ if ( $action == 'edit' ) {
 	?>
 	<DIV class="zagolovok"><B>Профилирование клиента</B></DIV>
 
-	<FORM action="content/card/card.profile.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM action="/content/card/card.profile.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="add">
 		<INPUT type="hidden" name="clid" id="clid" value="<?= $clid ?>">
 
@@ -420,12 +419,12 @@ if ( $action == 'edit' ) {
 
 	function clear_profile(id) {
 
-		var url = 'content/card/card.profile.php?id=' + id + '&action=del&clid=<?=$clid?>';
+		var url = '/content/card/card.profile.php?id=' + id + '&action=del&clid=<?=$clid?>';
 		var cf = confirm('Вы действительно хотите очистить указанный признак профиля?');
 		if (cf) {
 
 			$.post(url, function (data) {
-				$('#tab9').load('content/card/card.profile.php?clid=<?=$clid?>');
+				$('#tab9').load('/content/card/card.profile.php?clid=<?=$clid?>');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 				setTimeout(function () {
 					$('#message').fadeTo(1000, 0);

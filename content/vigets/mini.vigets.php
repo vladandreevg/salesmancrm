@@ -87,7 +87,7 @@ if ( $isEntry == 'on' ) {
 
 	$stat['entry'] = [
 		'count'   => $db -> getOne( "SELECT COUNT(ide) as count FROM {$sqlname}entry WHERE ide > 0 and status = '0' $sort and identity = '$identity'" ),
-		'summa'   => '<span onclick="$(\'.info33\').empty().load(\'content/vigets/viget.entry.pop.php?status=1\')" title="Обработано"><i class="icon-ok green"></i>'.$c1.'</span> / <span onclick="$(\'.info33\').empty().load(\'vigets/viget.entry.pop.php?status=2\')" title="Закрыто"><i class="icon-block red"></i>'.$c2.'</span><div class="popmenu-top left cursor-default" style="top:110px !important; left: 0; right: initial"><div class="popcontent info33 yw350" style="left:0; max-height:35vh"></div></div>',
+		'summa'   => '<span onclick="$(\'.info33\').empty().load(\'/content/vigets/viget.entry.pop.php?status=1\')" title="Обработано"><i class="icon-ok green"></i>'.$c1.'</span> / <span onclick="$(\'.info33\').empty().load(\'/vigets/viget.entry.pop.php?status=2\')" title="Закрыто"><i class="icon-block red"></i>'.$c2.'</span><div class="popmenu-top left cursor-default" style="top:110px !important; left: 0; right: initial"><div class="popcontent info33 yw350" style="left:0; max-height:35vh"></div></div>',
 		'title'   => 'Обращения',
 		'tooltip' => 'Не обработанные обращения',
 		'color'   => 'fiolet'
@@ -161,28 +161,28 @@ foreach ( $stat as $tip => $val ) {
 			$url = ' onclick="window.location.hash=\'todo\'"';
 		break;
 		case 'leadscold':
-			$url = ' onclick="goodlink(\'leads.php\')"';
+			$url = ' onclick="goodlink(\'/leads\')"';
 		break;
 		case 'leads':
-			$url = ' onclick="$(\'.info34\').empty().load(\'content/vigets/viget.leads.pop.php?action=get_leads\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Погодь..Вроде чё-та прислали\')"';
+			$url = ' onclick="$(\'.info34\').empty().load(\'/content/vigets/viget.leads.pop.php?action=get_leads\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Погодь..Вроде чё-та прислали\')"';
 		break;
 		case 'credit':
-			$url    = ' onclick="$(\'.info32\').empty().load(\'content/vigets/viget.invoices.pop.php?tip=creditonly\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Кто тут у нас чего должен..\')"';
+			$url    = ' onclick="$(\'.info32\').empty().load(\'/content/vigets/viget.invoices.pop.php?tip=creditonly\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Кто тут у нас чего должен..\')"';
 			$dataid = ' data-id="deals"';
 		break;
 		case 'invoices':
-			$url    = ' onclick="$(\'.info31\').empty().load(\'content/vigets/viget.invoices.pop.php?tip=invoiceonly\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Щас посчитаю и покажу..\')"';
+			$url    = ' onclick="$(\'.info31\').empty().load(\'/content/vigets/viget.invoices.pop.php?tip=invoiceonly\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Щас посчитаю и покажу..\')"';
 			$dataid = ' data-id="deals"';
 		break;
 		case 'entry':
-			$url = ' onclick="$(\'.info33\').empty().load(\'content/vigets/viget.entry.pop.php?status=0\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Уже гружу..Вот ведь неугомонный :)\')"';
+			$url = ' onclick="$(\'.info33\').empty().load(\'/content/vigets/viget.entry.pop.php?status=0\').append(\'<div id=loader><img src=/assets/images/loading.svg></div> Уже гружу..Вот ведь неугомонный :)\')"';
 		break;
 		case 'pay':
-			$url    = ' onclick="getSwindow(\'reports/ent-PaymentsByUser.php\', \'Оплаты по сотрудникам\')"';
+			$url    = ' onclick="getSwindow(\'/reports/ent-PaymentsByUser.php\', \'Оплаты по сотрудникам\')"';
 			$dataid = ' data-id="deals"';
 		break;
 		case 'deals':
-			$url    = ' onclick="getSwindow(\'reports/ent-newDeals.php\', \'Новые сделки\')"';
+			$url    = ' onclick="getSwindow(\'/reports/ent-newDeals.php\', \'Новые сделки\')"';
 			$dataid = ' data-id="deals"';
 		break;
 		default:

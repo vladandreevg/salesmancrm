@@ -272,7 +272,7 @@ if ( $action == 'edit' ) {
 	?>
 	<DIV class="zagolovok">Изменение поля</DIV>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="edit_on">
 		<INPUT name="fld_id" type="hidden" id="fld_id" value="<?= $_REQUEST['fld_id'] ?>">
 		<INPUT name="fld_tip" type="hidden" id="fld_tip" value="<?= $fld_tip ?>">
@@ -473,7 +473,7 @@ if ( $action == '' ) {
 					</td>
 					<td class="w250 relativ">
 						<div class="pull-aright">
-							<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&fld_id=<?= $da['fld_id'] ?>&tip=dogovor');" title="Изменить" class="gray"><i class="icon-pencil"></i></A>
+							<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&fld_id=<?= $da['fld_id'] ?>&tip=dogovor');" title="Изменить" class="gray"><i class="icon-pencil"></i></A>
 						</div>
 						<div class="fs-12 Bold clearevents">
 							<?= $da['fld_title'] ?>
@@ -607,7 +607,7 @@ if ( $action == '' ) {
 		onDrop: function (table, row) {
 
 			var str = '' + $('#table-1').tableDnDSerialize();
-			var url = 'content/admin/<?php echo $thisfile; ?>?action=edit_order&';
+			var url = '/content/admin/<?php echo $thisfile; ?>?action=edit_order&';
 
 			$.post(url, str, function (data) {
 
@@ -628,14 +628,14 @@ if ( $action == '' ) {
 
 		$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id="loader"><img src="/assets/images/loader.gif">Пожалуйста подождите...</div>');
 
-		$.get('content/admin/<?php echo $thisfile; ?>?action=addfield&tip=' + tip, function (data) {
+		$.get('/content/admin/<?php echo $thisfile; ?>?action=addfield&tip=' + tip, function (data) {
 
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data.text);
 			setTimeout(function () {
 				$('#message').fadeTo(1000, 0);
 			}, 20000);
 
-			doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&fld_id=' + data.id + '&tip=' + tip);
+			doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&fld_id=' + data.id + '&tip=' + tip);
 
 			//$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
 			razdel(hash);
@@ -646,7 +646,7 @@ if ( $action == '' ) {
 
 	function SwitchShow(id) {
 
-		var url = 'content/admin/<?php echo $thisfile; ?>?action=switchShow&id=' + id;
+		var url = '/content/admin/<?php echo $thisfile; ?>?action=switchShow&id=' + id;
 		$.post(url, function (data) {
 
 			//$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>');
@@ -663,7 +663,7 @@ if ( $action == '' ) {
 
 	function SwitchReq(id) {
 
-		var url = 'content/admin/<?php echo $thisfile; ?>?action=switchReq&id=' + id;
+		var url = '/content/admin/<?php echo $thisfile; ?>?action=switchReq&id=' + id;
 
 		$.post(url, function (data) {
 

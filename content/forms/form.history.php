@@ -126,7 +126,7 @@ if ( $action == "edit" ) {
 
 	?>
 	<DIV class="zagolovok">Изменение Активности</DIV>
-	<FORM method="post" action="content/core/core.history.php" enctype="multipart/form-data" name="sForm" id="sForm">
+	<FORM method="post" action="/content/core/core.history.php" enctype="multipart/form-data" name="sForm" id="sForm">
 		<INPUT name="cid" type="hidden" id="cid" value="<?= $cid ?>">
 		<INPUT type="hidden" name="action" value="edit">
 
@@ -270,7 +270,7 @@ if ( $action == "edit" ) {
 								<div class="pid relativ">
 
 									<input type="hidden" id="pids" name="pids" value="">
-									<INPUT id="lst_spisokp" placeholder="Нажмите сюда для выбора" type="text" value="" readonly onclick="get_orgspisok('prsn','place','content/helpers/person.helpers.php?action=get_personselector&put=yes','pids','lst_spisokp')" class="wp97">
+									<INPUT id="lst_spisokp" placeholder="Нажмите сюда для выбора" type="text" value="" readonly onclick="get_orgspisok('prsn','place','/content/helpers/person.helpers.php?action=get_personselector&put=yes','pids','lst_spisokp')" class="wp97">
 
 								</div>
 
@@ -660,13 +660,13 @@ if ( $action == "edit" ) {
 		}
 		if (cid > 0) {
 
-			$('#filelist').load('content/card/fileview.php?cid=' + cid);
+			$('#filelist').load('/content/card/fileview.php?cid=' + cid);
 
 		}
 
 		$('#des').autoHeight(250).focus();
 
-		$("#client").autocomplete('content/helpers/client.helpers.php?action=clientlist', {
+		$("#client").autocomplete('/content/helpers/client.helpers.php?action=clientlist', {
 			autofill: false,
 			minChars: 2,
 			cacheLength: 20,
@@ -689,7 +689,7 @@ if ( $action == "edit" ) {
 
 				$("#dtitle")
 					.unautocomplete()
-					.autocomplete("content/helpers/deal.helpers.php?action=doglist&clid=" + clid, {
+					.autocomplete("/content/helpers/deal.helpers.php?action=doglist&clid=" + clid, {
 						autoFill: true,
 						minChars: 2,
 						cacheLength: 40,
@@ -708,7 +708,7 @@ if ( $action == "edit" ) {
 
 			});
 
-		$("#rol").autocomplete("content/helpers/person.helpers.php?action=get.role", {
+		$("#rol").autocomplete("/content/helpers/person.helpers.php?action=get.role", {
 			autoFill: true,
 			minChars: 3,
 			cacheLength: 30,
@@ -718,7 +718,7 @@ if ( $action == "edit" ) {
 			multipleSeparator: "; ",
 			delay: 500
 		});
-		$("#ptitle").autocomplete("content/helpers/person.helpers.php?action=get.status", {
+		$("#ptitle").autocomplete("/content/helpers/person.helpers.php?action=get.status", {
 			autofill: true,
 			minChars: 3,
 			cacheLength: 1,
@@ -729,7 +729,7 @@ if ( $action == "edit" ) {
 			matchSubset: 1
 		});
 
-		$("#todo\\[theme\\]").autocomplete("content/core/core.tasks.php?action=theme", {
+		$("#todo\\[theme\\]").autocomplete("/content/core/core.tasks.php?action=theme", {
 			autoFill: false,
 			minChars: 0,
 			cacheLength: 1,
@@ -741,7 +741,7 @@ if ( $action == "edit" ) {
 			matchContains: true
 		});
 
-		$("#dtitle").autocomplete("content/helpers/deal.helpers.php?action=doglist&clid=" + clid, {
+		$("#dtitle").autocomplete("/content/helpers/deal.helpers.php?action=doglist&clid=" + clid, {
 			autoFill: true,
 			minChars: 2,
 			cacheLength: 40,
@@ -834,21 +834,21 @@ if ( $action == "edit" ) {
 	$('select[data-change="activities"]').each(function () {
 
 		var $el = $(this).data('id');
-		$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+		$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 
 	});
 	$('.ydropDown[data-change="activities"]').each(function () {
 
 		var $el = $(this).data('selected');
 		var $tip = $(this).data('id');
-		$('#tagbox[data-tip="' + $tip + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData( $el ));
+		$('#tagbox[data-tip="' + $tip + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData( $el ));
 
 	});
 
 	$(document).on('change', 'select[data-change="activities"]', function () {
 
 		var $el = $(this).data('id');
-		$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+		$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 
 	});
 
@@ -858,7 +858,7 @@ if ( $action == "edit" ) {
 		var $el = $(this).data('id');
 		var $tip = $(this).val();
 
-		$('#tagbox[data-tip="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData( $tip ));
+		$('#tagbox[data-tip="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData( $tip ));
 
 	});
 
@@ -947,7 +947,7 @@ if ( $action == "edit" ) {
 
 			$("#clid").val(id);
 
-			var url = 'content/helpers/client.helpers.php?action=personlist&clid=' + id;
+			var url = '/content/helpers/client.helpers.php?action=personlist&clid=' + id;
 			$.getJSON(url, function (data) {
 
 				var plist = '';
@@ -997,7 +997,7 @@ if ( $action == "edit" ) {
 		if (!selector) selector = 'tiphist';
 		var tip = urlEncodeData($('#' + selector + ' option:selected').val());
 
-		$('#tagbox').load('content/core/core.tasks.php?action=tags&tip=' + tip);
+		$('#tagbox').load('/content/core/core.tasks.php?action=tags&tip=' + tip);
 
 	}
 

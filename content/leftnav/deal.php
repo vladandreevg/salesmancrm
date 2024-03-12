@@ -71,7 +71,7 @@ use Salesman\Elements;
 									</select>
 									<span class="smalltxt gray">Представления</span>
 									<div class="inline">
-										<a href="javascript:void(0)" onclick="doLoad('content/helpers/search.editor.deal.php');" title="Редактор представлений" data-step="6" data-intro="<h1>Редактор представлений.</h1>Поможет создать и использовать готовый набор фильтров" data-position="right" class="gray"><i class="icon-pencil blue"></i></a>
+										<a href="javascript:void(0)" onclick="doLoad('/content/helpers/search.editor.deal.php');" title="Редактор представлений" data-step="6" data-intro="<h1>Редактор представлений.</h1>Поможет создать и использовать готовый набор фильтров" data-position="right" class="gray"><i class="icon-pencil blue"></i></a>
 									</div>
 									<div class="inline" id="pptt">
 										<div class="tooltips" tooltip="Здесь будет расшифровка пользовательского представления" tooltip-position="bottom" tooltip-type="primary">

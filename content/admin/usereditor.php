@@ -852,7 +852,7 @@ if ($action == "edit") {
 	?>
 	<DIV class="zagolovok">Редактирование пользователя</DIV>
 
-	<FORM method="post" action="content/admin/<?php
+	<FORM method="post" action="/content/admin/<?php
 	echo $thisfile; ?>" enctype="multipart/form-data" name="userForm" id="userForm">
 		<INPUT name="iduser" type="hidden" id="iduser" value="<?= $xuser ?>">
 		<INPUT type="hidden" name="action" id="action" value="edit.do">

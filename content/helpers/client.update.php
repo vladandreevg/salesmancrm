@@ -269,7 +269,7 @@ if ( $action == "import" ) {
 		<TABLE width="100%" border="0" cellpadding="2" cellspacing="3">
 			<TR>
 				<TD class="text-right w150"><B>Из файла:</B></TD>
-				<TD><input name="file" type="file" class="file" id="file" class="required" style="width:98%"/></TD>
+				<TD><input name="file" type="file" class="file required" id="file" style="width:98%"/></TD>
 			</TR>
 			<TR>
 				<TD class="text-right"><B>Что обновляем:</B></TD>

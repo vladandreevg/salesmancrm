@@ -370,7 +370,7 @@ if ( $action == 'list' ) {
 
 		$(function () {
 
-			var urll = "content/vigets/<?= $thisfile ?>";
+			var urll = "/content/vigets/<?= $thisfile ?>";
 			var $count = $('#notifications_count');
 			var $tr = $('tr[data-tip="tip_deal"]');
 
@@ -382,7 +382,7 @@ if ( $action == 'list' ) {
 
 				setCookie('tparameterInterval', id, {"expires": 1000000});
 
-				$count.load('content/vigets/viget.notifications.count.php');
+				$count.load('/content/vigets/viget.notifications.count.php');
 
 			});
 

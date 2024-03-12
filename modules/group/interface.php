@@ -288,7 +288,7 @@ function configpage(){
 	$('#contentdiv').parent(".nano").nanoScroller({ scroll: 'top' });
 
 	var str = $('#pageform').serialize();
-	var url = 'modules/group/list.group.php';
+	var url = '/modules/group/list.group.php';
 	var tar = $('#tar').val();
 
 	$('#contentdiv').append('<div class="contentloader"><img src="/assets/images/Services.svg" width="50px" height="50px"></div>');

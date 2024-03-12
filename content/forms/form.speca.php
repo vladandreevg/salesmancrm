@@ -969,7 +969,7 @@ if ( $action == 'priceSelect' ) {
 	$nds = ($mcid == (int)$mcDefault) ? $ndsDefault : 0;
 	?>
 	<DIV class="zagolovok">Добавление позиции</DIV>
-	<FORM method="post" action="content/core/core.speca.php" enctype="multipart/form-data" name="specaForm" id="specaForm">
+	<FORM method="post" action="/content/core/core.speca.php" enctype="multipart/form-data" name="specaForm" id="specaForm">
 		<input name="action" id="action" type="hidden" value="add">
 		<input name="did" id="did" type="hidden" value="<?= $did ?>">
 		<input name="clid" id="clid" type="hidden" value="<?= $clid ?>">
@@ -1132,7 +1132,7 @@ if ( $action == 'priceSelect' ) {
 
 	$(function () {
 
-		$('#price_list').load('content/forms/form.speca.php?action=get.price&idcategory=<?=$price['pr_cat']?>&clid=<?=$clid?>');
+		$('#price_list').load('/content/forms/form.speca.php?action=get.price&idcategory=<?=$price['pr_cat']?>&clid=<?=$clid?>');
 
 		$('#specaForm').ajaxForm({
 			dataType: 'json',
@@ -1187,7 +1187,7 @@ if ( $action == 'priceSelect' ) {
 
 	function addSpeka() {
 
-		var url = 'content/core/core.speca.php';
+		var url = '/content/core/core.speca.php';
 		var str = $('#specaForm').serialize() + '&event=true';
 		var id = $('#price_list option:selected').val();
 		var clid = $('#clid').val();
@@ -1216,7 +1216,7 @@ if ( $action == 'priceSelect' ) {
 		}, "json")
 			.done(function () {
 
-				$('#pozition').load('content/forms/form.speca.php?action=get.poz&prid=0&clid=' + clid);
+				$('#pozition').load('/content/forms/form.speca.php?action=get.poz&prid=0&clid=' + clid);
 
 			});
 
@@ -1225,7 +1225,7 @@ if ( $action == 'priceSelect' ) {
 
 	function spekaCancel() {
 
-		$.post('content/core/core.speca.php?action=change.recalculate&did=' + $('#did').val());
+		$.post('/content/core/core.speca.php?action=change.recalculate&did=' + $('#did').val());
 		DClose();
 
 	}
@@ -1233,7 +1233,7 @@ if ( $action == 'priceSelect' ) {
 	function SeachPrice() {
 
 		var word = $('#word').val().replace(/ /g, '--');
-		var url = 'content/forms/form.speca.php?action=get.price&idcategory=' + $('#idcategory').val() + '&word=' + word;
+		var url = '/content/forms/form.speca.php?action=get.price&idcategory=' + $('#idcategory').val() + '&word=' + word;
 
 		$('#price_list').load(url);
 
@@ -1243,7 +1243,7 @@ if ( $action == 'priceSelect' ) {
 
 		var id = $('#price_list option:selected').val();
 		var clid = $('#clid').val();
-		var url = 'content/forms/form.speca.php?action=get.poz&prid=' + id + '&clid=' + clid;
+		var url = '/content/forms/form.speca.php?action=get.poz&prid=' + id + '&clid=' + clid;
 
 		$.get(url, function (data) {
 

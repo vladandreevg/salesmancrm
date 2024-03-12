@@ -108,8 +108,10 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 
 	</div>
 
-	<?php include( "content/leftnav/counters.php" );
-	flush(); ?>
+	<?php
+	include( "/content/leftnav/counters.php" );
+	flush();
+	?>
 
 </DIV>
 

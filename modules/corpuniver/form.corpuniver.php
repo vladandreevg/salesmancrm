@@ -200,7 +200,7 @@ if ($action == "edit") {
 
 					configpage();
 
-					$('.ifolder').load('modules/corpuniver/core.corpuniver.php?action=catlist');
+					$('.ifolder').load('/modules/corpuniver/core.corpuniver.php?action=catlist');
 
 				}
 			});
@@ -434,7 +434,7 @@ if ($action == 'edit.item') {
 
 			let url = $('#fromurl').val();
 
-			fetch("modules/corpuniver/core.corpuniver.php?action=parceURL&url=" + url)
+			fetch("/modules/corpuniver/core.corpuniver.php?action=parceURL&url=" + url)
 				.then(response => response.json())
 					.then(data => {
 
@@ -692,7 +692,7 @@ if ($action == 'edit.item.dialog') {
 			$('#dialog').css('width', '800px').center();
 
 		if(id > 0 && tip !== 'file')
-			$('#filelist').removeClass('hidden').load('modules/corpuniver/core.corpuniver.php?action=files&type=' + tip + '&id=' + id);
+			$('#filelist').removeClass('hidden').load('/modules/corpuniver/core.corpuniver.php?action=files&type=' + tip + '&id=' + id);
 
 		$('#editItem').ajaxForm({
 			dataType:"json",
@@ -759,7 +759,7 @@ if ($action == 'edit.item.dialog') {
 
 			let url = $('#fromurl').val();
 
-			fetch("modules/corpuniver/core.corpuniver.php?action=parceURL&url=" + url)
+			fetch("/modules/corpuniver/core.corpuniver.php?action=parceURL&url=" + url)
 				.then(response => response.json())
 					.then(data => {
 
@@ -925,7 +925,7 @@ if ($action == "edit.task") {
 		$(function(){
 
 			if (cat === 'test')
-				$('.Questions').empty().load('modules/corpuniver/form.corpuniver.php?action=list.questions&idtask=' + idtask);
+				$('.Questions').empty().load('/modules/corpuniver/form.corpuniver.php?action=list.questions&idtask=' + idtask);
 
 		});
 
@@ -961,7 +961,7 @@ if ($action == "edit.task") {
 
 					let lec = parseInt($('#lec').val());
 
-					$.getJSON('modules/corpuniver/core.corpuniver.php?action=edit.item&type=Task&cat=test&idtask=' + idtask + '&lec=' + lec + '&name=' + name, function(data) {
+					$.getJSON('/modules/corpuniver/core.corpuniver.php?action=edit.item&type=Task&cat=test&idtask=' + idtask + '&lec=' + lec + '&name=' + name, function(data) {
 
 						idtask = data.data;
 
@@ -970,7 +970,7 @@ if ($action == "edit.task") {
 					})
 					.done(function(){
 
-						$.get('modules/corpuniver/form.corpuniver.php?action=question&idtask=' + idtask, function(html) {
+						$.get('/modules/corpuniver/form.corpuniver.php?action=question&idtask=' + idtask, function(html) {
 
 							$('#test').empty().append(html).removeClass('hidden');
 							$('.type-question').remove();
@@ -983,7 +983,7 @@ if ($action == "edit.task") {
 				}
 				else{
 
-					$.post('modules/corpuniver/form.corpuniver.php?action=question&id=' + id + '&idtask=' + idtask, function (data) {
+					$.post('/modules/corpuniver/form.corpuniver.php?action=question&id=' + id + '&idtask=' + idtask, function (data) {
 
 						$('#test').empty().append(data).removeClass('hidden');
 						$('.type-question').remove();
@@ -1063,13 +1063,13 @@ if ($action == "edit.task") {
 				}
 
 				if (cat === 'test')
-					$('.Questions').empty().load('modules/corpuniver/form.corpuniver.php?action=list.questions&id=' + task);
+					$('.Questions').empty().load('/modules/corpuniver/form.corpuniver.php?action=list.questions&id=' + task);
 
 				closeInfo();
 
 				configpage();
 
-				$('.ifolder').load('modules/corpuniver/core.corpuniver.php?action=catlist');
+				$('.ifolder').load('/modules/corpuniver/core.corpuniver.php?action=catlist');
 
 			}
 		});
@@ -1217,7 +1217,7 @@ if ($action == 'list.questions') {
 			$('.Questions').addClass('hidden');
 			$('.qButton').addClass('hidden');
 
-			$.post('modules/corpuniver/form.corpuniver.php?action=question&id=' + id + '&idtask=' + idtask, function (data) {
+			$.post('/modules/corpuniver/form.corpuniver.php?action=question&id=' + id + '&idtask=' + idtask, function (data) {
 
 				$('#test').empty().append(data).removeClass('hidden');
 				$('.type-question').remove();
@@ -1234,7 +1234,7 @@ if ($action == 'list.questions') {
 				var id = parseInt($(this).data('id'));
 				var task = parseInt($(this).data('task'));
 
-				$.getJSON('modules/corpuniver/core.corpuniver.php?action=delete&id=' + id + '&type=question', function (data) {
+				$.getJSON('/modules/corpuniver/core.corpuniver.php?action=delete&id=' + id + '&type=question', function (data) {
 
 					const msg = Swal.mixin({
 						toast: true,
@@ -1264,7 +1264,7 @@ if ($action == 'list.questions') {
 
 				});
 
-				$('.Questions').empty().load('modules/corpuniver/form.corpuniver.php?action=list.questions&idtask=' + idtask);
+				$('.Questions').empty().load('/modules/corpuniver/form.corpuniver.php?action=list.questions&idtask=' + idtask);
 
 			});
 
@@ -1428,7 +1428,7 @@ if ($action == 'question'){
 				$('.qButton').removeClass('hidden');
 				$('#subwindow').find('.footer').removeClass('hidden');
 
-				$('.Questions').empty().load('modules/corpuniver/form.corpuniver.php?action=list.questions&idtask='+idtask).removeClass('hidden');
+				$('.Questions').empty().load('/modules/corpuniver/form.corpuniver.php?action=list.questions&idtask='+idtask).removeClass('hidden');
 
 				configpage();
 
@@ -1472,7 +1472,7 @@ if ($action == 'question'){
 			$('.qButton').removeClass('hidden');
 			$('#subwindow').find('.footer').removeClass('hidden');
 
-			$('.Questions').empty().load('modules/corpuniver/form.corpuniver.php?action=list.questions&idtask='+idtask).removeClass('hidden');
+			$('.Questions').empty().load('/modules/corpuniver/form.corpuniver.php?action=list.questions&idtask='+idtask).removeClass('hidden');
 
 			$('#test').empty().addClass('hidden');
 
@@ -1652,9 +1652,9 @@ if ($action == "cat.edit") {
 						'success'
 					);
 
-				doLoad('modules/corpuniver/form.corpuniver.php?action=cat.list');
+				doLoad('/modules/corpuniver/form.corpuniver.php?action=cat.list');
 
-				$('.ifolder').load('modules/corpuniver/core.corpuniver.php?action=catlist');
+				$('.ifolder').load('/modules/corpuniver/core.corpuniver.php?action=catlist');
 
 			}
 		});

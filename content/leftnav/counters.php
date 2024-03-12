@@ -333,7 +333,7 @@
 
 			if ( $iduser1 == $mleadsettings[ 'leadСoordinator' ] || in_array( $iduser1, $mleadsettings[ 'leadOperator' ], true ) ) {
 				?>
-				<li class="pop donthidee" onclick="$('#leadlist').load('content/vigets/notify.leads.php?action=get_leads');" data-id="leads">
+				<li class="pop donthidee" onclick="$('#leadlist').load('/content/vigets/notify.leads.php?action=get_leads');" data-id="leads">
 
 					<div class="pops" data-id="leads">
 						<i class="icon-sort-alt-down"></i><span id="leadnum" class="bullet">??</span></div>
@@ -366,7 +366,7 @@
 			}
 		}
 		?>
-		<li class="pop donthidee visible-min-h590" onclick="$('#contcredit').load('content/vigets/notify.php?action=get_credit');" data-id="credit">
+		<li class="pop donthidee visible-min-h590" onclick="$('#contcredit').load('/content/vigets/notify.php?action=get_credit');" data-id="credit">
 
 			<div class="pops" data-id="credit"><i class="icon-dollar"></i><span id="kolcredit" class="bullet">??</span>
 			</div>
@@ -395,7 +395,7 @@
 			</div>
 
 		</li>
-		<li class="pop donthidee visible-min-h590" onclick="$('#cont').load('content/vigets/notify.php?action=get_notifi');" data-id="deals">
+		<li class="pop donthidee visible-min-h590" onclick="$('#cont').load('/content/vigets/notify.php?action=get_notifi');" data-id="deals">
 
 			<div class="pops" data-id="deals"><i class="icon-briefcase"></i><span id="kolnot" class="bullet">??</span>
 			</div>

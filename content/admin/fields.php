@@ -317,7 +317,7 @@ if ($action == 'edit') {
 	?>
 	<DIV class="zagolovok">Изменение поля</DIV>
 
-	<FORM action="content/admin/<?php
+	<FORM action="/content/admin/<?php
 	echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="edit.on">
 		<INPUT name="fld_id" type="hidden" id="fld_id" value="<?= $_REQUEST['fld_id'] ?>">
@@ -561,7 +561,7 @@ if ($action == '') {
 								<div class="fs-12 flh-09 gray-dark Bold clearevents"><?= $da['fld_title'] ?></div>
 								<div class="fs-10 <?= $xcolor[$da['fld_sub']] ?> Bold clearevents"><?= $sub ?></div>
 								<div class="pull-right">
-									<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php
+									<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php
 									echo $thisfile; ?>?action=edit&fld_id=<?= $da['fld_id'] ?>&tip=client');" title="Изменить" class="gray"><i class="icon-pencil"></i></A>
 								</div>
 							</td>
@@ -632,7 +632,7 @@ if ($action == '') {
 							<td class="w350 relativ">
 								<div class="fs-12 Bold clearevents"><?= $da['fld_title'] ?></div>
 								<div class="pull-right">
-									<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php
+									<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php
 									echo $thisfile; ?>?action=edit&fld_id=<?= $da['fld_id'] ?>&tip=person');" title="Изменить" class="gray"><i class="icon-pencil"></i></A>
 								</div>
 							</td>
@@ -684,11 +684,11 @@ if ($action == '') {
 				onDrop: function (table, row) {
 
 					var str = '' + $('#table-1').tableDnDSerialize();
-					var url = 'content/admin/<?php echo $thisfile; ?>?action=edit.order&';
+					var url = '/content/admin/<?php echo $thisfile; ?>?action=edit.order&';
 
 					$.post(url, str, function (data) {
 
-						$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>?tip=client');
+						$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>?tip=client');
 						$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 						setTimeout(function () {
@@ -705,11 +705,11 @@ if ($action == '') {
 				onDrop: function (table, row) {
 
 					var str = '' + $('#table-2').tableDnDSerialize();
-					var url = 'content/admin/<?php echo $thisfile; ?>?action=edit.order&';
+					var url = '/content/admin/<?php echo $thisfile; ?>?action=edit.order&';
 
 					$.post(url, str, function (data) {
 
-						$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>?tip=person');
+						$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>?tip=person');
 						$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 						setTimeout(function () {
@@ -768,7 +768,7 @@ if ($action == '') {
 			$('#dialog').css('display', 'none');
 			$('#dialog_container').css('display', 'none');
 
-			$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>?tip=<?=$_REQUEST['tip']?>');
+			$("#contentdiv").load('/content/admin/<?php echo $thisfile; ?>?tip=<?=$_REQUEST['tip']?>');
 			//razdel(hash);
 
 			setTimeout(function () {
@@ -818,14 +818,14 @@ if ($action == '') {
 
 		$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id="loader"><img src="/assets/images/loader.gif">Пожалуйста подождите...</div>');
 
-		$.get('content/admin/<?php echo $thisfile; ?>?action=addfield&tip=' + tip, function (data) {
+		$.get('/content/admin/<?php echo $thisfile; ?>?action=addfield&tip=' + tip, function (data) {
 
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data.text);
 			setTimeout(function () {
 				$('#message').fadeTo(1000, 0);
 			}, 20000);
 
-			doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&fld_id=' + data.id + '&tip=' + tip);
+			doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&fld_id=' + data.id + '&tip=' + tip);
 
 			//$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
 			razdel(hash);
@@ -836,12 +836,12 @@ if ($action == '') {
 
 	function SwitchShow(tip, id) {
 
-		var url = 'content/admin/<?php echo $thisfile; ?>?action=switchShow&tip=' + tip + '&id=' + id;
+		var url = '/content/admin/<?php echo $thisfile; ?>?action=switchShow&tip=' + tip + '&id=' + id;
 		$('.refresh--panel').find('.admn').remove();
 
 		$.post(url, function (data) {
 
-			$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>?tip=' + tip);
+			$("#contentdiv").load('/content/admin/<?php echo $thisfile; ?>?tip=' + tip);
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 			setTimeout(function () {
@@ -860,12 +860,12 @@ if ($action == '') {
 
 	function SwitchReq(tip, id) {
 
-		var url = 'content/admin/<?php echo $thisfile; ?>?action=switchReq&tip=' + tip + '&id=' + id;
+		var url = '/content/admin/<?php echo $thisfile; ?>?action=switchReq&tip=' + tip + '&id=' + id;
 		$('.refresh--panel').find('.admn').remove();
 
 		$.post(url, function (data) {
 
-			$("#contentdiv").load('content/admin/<?php echo $thisfile; ?>?tip=' + tip);
+			$("#contentdiv").load('/content/admin/<?php echo $thisfile; ?>?tip=' + tip);
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 			setTimeout(function () {

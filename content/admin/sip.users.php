@@ -42,7 +42,7 @@ if ($action == "edit") {
 	$phone    = $result["phone"];
 	$phone_in = $result["phone_in"];
 	?>
-	<form method="post" action="content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
+	<form method="post" action="/content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
 		<input type="hidden" id="action" name="action" value="edit_on">
 		<input type="hidden" id="iduser" name="iduser" value="<?= $iduser ?>">
 		<div class="zagolovok">Редактирование</div>
@@ -101,7 +101,7 @@ if ($_REQUEST['action'] == '') {
 						</td>
 						<td>'.$data['phone_in'].'</td>
 						<td>'.$data['phone'].'</td>
-						<td class="text-center"><a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&iduser='.$data['iduser'].'\');"><i class="icon-pencil blue"></i></a></td>
+						<td class="text-center"><a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&iduser='.$data['iduser'].'\');"><i class="icon-pencil blue"></i></a></td>
 						<td></td>
 					</tr>
 				';
@@ -114,7 +114,7 @@ if ($_REQUEST['action'] == '') {
 						</td>
 						<td>'.$data['phone_in'].'</td>
 						<td>'.$data['phone'].'</td>
-						<td class="text-center"><a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&iduser='.$data['iduser'].'\');"><i class="icon-pencil blue"></i></a></td>
+						<td class="text-center"><a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&iduser='.$data['iduser'].'\');"><i class="icon-pencil blue"></i></a></td>
 						<td></td>
 					</tr>
 				';

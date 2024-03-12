@@ -565,7 +565,7 @@ $i = 1;
 
 	function SelPoint(point) {
 
-		doLoad('content/vigets/viget.voronka.classic.php?point=' + point);
+		doLoad('/content/vigets/viget.voronka.classic.php?point=' + point);
 
 	}
 

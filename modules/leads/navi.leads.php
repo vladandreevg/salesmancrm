@@ -258,19 +258,19 @@
 
 			<div class="contaner p5 contaner-utms">
 
-				<a class="button orangebtnt" onclick="doLoad('modules/leads/form.leads.php?action=utms.edit')" title="Добавить ссылку" style="display: block"><i class="icon-plus-circled"></i>&nbsp;&nbsp;Добавить ссылку&nbsp;&nbsp;</a>
+				<a class="button orangebtnt" onclick="doLoad('/modules/leads/form.leads.php?action=utms.edit')" title="Добавить ссылку" style="display: block"><i class="icon-plus-circled"></i>&nbsp;&nbsp;Добавить ссылку&nbsp;&nbsp;</a>
 
 			</div>
 
 			<div class="contaner p5 contaner-source">
 
-				<a class="button orangebtnt" onclick="doLoad('modules/leads/form.leads.php?action=source.edit')" title="Добавить ссылку" style="display: block"><i class="icon-plus-circled"></i>&nbsp;&nbsp;Добавить источник&nbsp;&nbsp;</a>
+				<a class="button orangebtnt" onclick="doLoad('/modules/leads/form.leads.php?action=source.edit')" title="Добавить ссылку" style="display: block"><i class="icon-plus-circled"></i>&nbsp;&nbsp;Добавить источник&nbsp;&nbsp;</a>
 
 			</div>
 
 			<div class="contaner p5">
 
-				<a href="javascript:void(0)" onclick="getSwindow('reports/leads2014.php', 'Статистика по заявкам')" class="greenbtn button wp100" title="Показать аналитику"><i class="icon-chart-line"></i> Статистика</a>
+				<a href="javascript:void(0)" onclick="getSwindow('/reports/leads2014.php', 'Статистика по заявкам')" class="greenbtn button wp100" title="Показать аналитику"><i class="icon-chart-line"></i> Статистика</a>
 
 			</div>
 

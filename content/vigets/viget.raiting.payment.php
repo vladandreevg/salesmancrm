@@ -192,7 +192,7 @@ if ( $max == 0 ) {
 		}
 
 		?>
-		<tr class="th30 ha hand" <?php if ( stripos( $tipuser, 'Руководитель' ) !== false ) { ?> onClick="doLoad('content/vigets/viget.dataview.php?action=paymentViewNew&iduser=<?= $xrating['usr'] ?>&onlyuser=yes')" <?php } ?>>
+		<tr class="th30 ha hand" <?php if ( stripos( $tipuser, 'Руководитель' ) !== false ) { ?> onClick="doLoad('/content/vigets/viget.dataview.php?action=paymentViewNew&iduser=<?= $xrating['usr'] ?>&onlyuser=yes')" <?php } ?>>
 			<td class="wp40">
 				<div class="ellipsis"><b<?= $bb ?>><?= current_user( $xrating['usr'] ) ?></b></div>
 			</td>

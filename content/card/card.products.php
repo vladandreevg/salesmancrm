@@ -7,13 +7,12 @@
 /*        www.isaler.ru         */
 /*        ver. 2017.x           */
 /* ============================ */
-?>
-<?php
+
 error_reporting(E_ERROR);
 
 header("Pragma: no-cache");
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -118,7 +117,7 @@ if($db -> affectedRows($res) == 0) print '<div class="row pad5 gray bgwhite bord
 			var str = "clid=<?=$clid?>&product=" + urlEncodeData(product);
 			var deals = '';
 
-			$.get("content/card/card.products.php", str, function(data) {
+			$.get("/content/card/card.products.php", str, function(data) {
 
 				for(var i in data) {
 

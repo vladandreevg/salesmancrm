@@ -99,7 +99,7 @@ if ($action == "edit") {
 	}
 	?>
 	<div class="zagolovok">Редактирование</div>
-	<form method="post" action="content/admin/<?php
+	<form method="post" action="/content/admin/<?php
 	echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
 		<input type="hidden" id="action" name="action" value="edit.on">
 		<input type="hidden" id="ccid" name="ccid" value="<?= $ccid ?>">
@@ -244,7 +244,7 @@ if ($action == '') {
 				</TD>
 				<td class="text-center">
 
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php
 					echo $thisfile; ?>?action=edit&ccid=<?= $data_array['ccid'] ?>');" class="button dotted bluebtn"><i class="icon-pencil"></i></a>
 					<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить категорию?');if (cf)deletePoint(<?= $data_array['ccid'] ?>)" class="button dotted redbtn"><i class="icon-cancel-circled"></i></a>
 
@@ -257,12 +257,12 @@ if ($action == '') {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php
 		echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php
 	echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/35')" title="Документация"><i class="icon-help"></i></div>
 
@@ -272,7 +272,7 @@ if ($action == '') {
 }
 ?>
 
-<script type="text/javascript">
+<script>
 
 	$('#dialog').css('width', '802px');
 
@@ -318,7 +318,7 @@ if ($action == '') {
 		onDragClass: "tableDrag",
 		onDrop: function (table, row) {
 			var str = '' + $('#table-1').tableDnDSerialize();
-			var url = 'content/admin/<?php echo $thisfile; ?>?action=edit_order&';
+			var url = '/content/admin/<?php echo $thisfile; ?>?action=edit_order&';
 
 			$.post(url, str, function (data) {
 				$('#message').empty().css('display', 'block').html(data).fadeOut(10000);
@@ -330,7 +330,7 @@ if ($action == '') {
 
 	function deletePoint(id) {
 
-		$.get('content/admin/<?php echo $thisfile; ?>?action=delete&ccid=' + id, function (data) {
+		$.get('/content/admin/<?php echo $thisfile; ?>?action=delete&ccid=' + id, function (data) {
 
 			$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 

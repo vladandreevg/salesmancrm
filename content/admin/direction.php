@@ -81,7 +81,7 @@ if ($action == "edit") {
 	}
 	?>
 	<div class="zagolovok"><b>Изменить / Добавить</b></div>
-	<FORM method="post" action="content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form">
+	<FORM method="post" action="/content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form">
 		<INPUT name="action" id="action" type="hidden" value="edit.on">
 		<INPUT name="id" id="id" type="hidden" value="<?= $id ?>">
 
@@ -158,7 +158,7 @@ if ($action == "delete") {
 
 	?>
 	<div class="zagolovok">Удалить направление "<?= $tip ?>"</div>
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="POST" name="form" id="form">
 		<input type="hidden" id="id" name="id" value="<?= $id ?>">
 		<input name="action" type="hidden" value="delete.do" id="action"/>
 
@@ -266,8 +266,8 @@ if ($action == "") {
 			</div>
 			<div class="flex-string wp30 hidden-iphone">
 			
-				<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit&id='.$datar['id'].'\');" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
-				<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?id='.$datar['id'].'&action=delete\')" class="button dotted redbtn"><i class="icon-cancel-circled"></i></A>
+				<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit&id='.$datar['id'].'\');" class="button dotted bluebtn"><i class="icon-pencil"></i></A>
+				<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?id='.$datar['id'].'&action=delete\')" class="button dotted redbtn"><i class="icon-cancel-circled"></i></A>
 				
 			</div>
 	
@@ -279,11 +279,11 @@ if ($action == "") {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn green" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/29')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>

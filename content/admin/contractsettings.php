@@ -67,7 +67,7 @@ if ( $action == "" ) {
 	}
 	?>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="set" id="set">
 	<INPUT type="hidden" name="action" id="action" value="save">
 
 	<h2 class="blue mt20 mb20 pl5">Генератор номеров</h2>

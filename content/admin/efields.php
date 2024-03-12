@@ -321,7 +321,7 @@ if ( $action == '' ) {
 
 	<DIV class="mt15">
 
-		<FORM action="content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="setForm" id="setForm">
+		<FORM action="/content/admin/<?php echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="setForm" id="setForm">
 			<INPUT type="hidden" name="action" id="action" value="save">
 
 			<div class="infodiv">

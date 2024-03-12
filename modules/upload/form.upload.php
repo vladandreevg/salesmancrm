@@ -720,7 +720,7 @@ if ($action == "info") {
 
 		});
 
-		$("#dtitle").autocomplete("content/card/deal.helpers.php?action=doglist&clid=" + $('#clid').val(), {
+		$("#dtitle").autocomplete("/content/card/deal.helpers.php?action=doglist&clid=" + $('#clid').val(), {
 			autofill: true,
 			minChars: 0,
 			cacheLength: 5,
@@ -804,7 +804,7 @@ if ($action == "info") {
 			$('#dialog_container').css('display', 'none');
 
 			var str = $('#uploadForm').serialize() + '&' + $('#pageform').serialize();
-			var url = "modules/upload/core.upload.php";
+			var url = "/modules/upload/core.upload.php";
 
 			$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id=loader><img src=/assets/images/loader.gif> Загрузка данных...</div>');
 

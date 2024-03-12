@@ -221,7 +221,7 @@ $api_key = $db -> getOne( "select api_key from ".$sqlname."settings WHERE id = '
 
 	<?php
 	if ( $_REQUEST['id'] > 0 ) {
-		print "doLoad('modules/leads/form.leads.php?action=view&id=".$_REQUEST['id']."')";
+		print "doLoad('/modules/leads/form.leads.php?action=view&id=".$_REQUEST['id']."')";
 	}
 	?>
 

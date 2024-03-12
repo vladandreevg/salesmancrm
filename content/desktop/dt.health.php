@@ -379,7 +379,7 @@ if ($action == '') {
 					<br>
 					<div class="ellipsis gray2 fs-10" title="<?= $dog['client'] ?>"><?= $dog['client'] ?></div>
 				</TD>
-				<TD onClick="doLoad('content/lists/dt.health.php?did=<?= $dog['did'] ?>&action=view')" class="hand">
+				<TD onClick="doLoad('/content/lists/dt.health.php?did=<?= $dog['did'] ?>&action=view')" class="hand">
 					<div>
 					<?= $dog['cp']['plan']."&nbsp;&nbsp;".$dog['cp']['complect']."&nbsp;&nbsp;".$dog['cp']['invoice']."&nbsp;&nbsp;".$dog['cp']['task'] ?>
 					<?php

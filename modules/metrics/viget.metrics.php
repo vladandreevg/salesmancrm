@@ -14,7 +14,7 @@ use Salesman\Metrics;
 error_reporting( E_ERROR );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -205,13 +205,13 @@ if ( $string == '' )
 
 	$(document).ready(function () {
 
-		$.Mustache.load('modules/metrics/tpl.metrics.html');
+		$.Mustache.load('/modules/metrics/tpl.metrics.html');
 
 	});
 
 	function viewKPI(id) {
 
-		var url = 'modules/metrics/list.metrics.php';
+		var url = '/modules/metrics/list.metrics.php';
 		var str = 'action=kpi&id=' + id;
 
 		var $dialog = $('#dialog');
@@ -240,7 +240,7 @@ if ( $string == '' )
 
 	function viewKPIfact(iduser, id) {
 
-		var url = 'modules/metrics/list.metrics.php';
+		var url = '/modules/metrics/list.metrics.php';
 		var str = 'action=user.kpido&id=' + id + '&iduser=' + iduser;
 
 		var $dialog = $('#dialog');

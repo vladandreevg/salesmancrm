@@ -1007,7 +1007,7 @@ if ( $action == "cat.edit" ) {
 
 				if($display === 'sklad') {
 
-					$('.ifolder').load('modules/modcatalog/form.modcatalog.php?action=cat.list&id=' + id, function () {
+					$('.ifolder').load('/modules/modcatalog/form.modcatalog.php?action=cat.list&id=' + id, function () {
 						$('.ifolder a [data-id=' + id + ']').addClass('fol_it');
 					});
 
@@ -1032,7 +1032,7 @@ if ( $action == "cat.edit" ) {
 				}
 				else{
 
-					$('.ifolder').load('modules/price/core.price.php?action=catlist&id=' + id, function () {
+					$('.ifolder').load('/modules/price/core.price.php?action=catlist&id=' + id, function () {
 						$('.ifolder a [data-id=' + id + ']').addClass('fol_it');
 					});
 
@@ -1063,7 +1063,7 @@ if ( $action == "cat.edit" ) {
 
 	function Discard() {
 
-		var url = 'modules/price/core.price.php?action=import.discard';
+		var url = '/modules/price/core.price.php?action=import.discard';
 
 		$.post(url, function () {
 
@@ -1146,14 +1146,14 @@ if ( $action == "cat.edit" ) {
 
 			if($display === 'sklad') {
 
-				$('.ifolder').load('modules/modcatalog/form.modcatalog.php?action=cat.list' + id, function () {
+				$('.ifolder').load('/modules/modcatalog/form.modcatalog.php?action=cat.list' + id, function () {
 					$('.ifolder a [data-id=' + id + ']').addClass('fol_it');
 				});
 
 			}
 			else{
 
-				$('.ifolder').load('modules/price/core.price.php?action=catlist&id=' + id, function () {
+				$('.ifolder').load('/modules/price/core.price.php?action=catlist&id=' + id, function () {
 					$('.ifolder a [data-id=' + id + ']').addClass('fol_it');
 				});
 

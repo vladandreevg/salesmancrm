@@ -409,7 +409,7 @@ if ( $action == "delete" ) {
 			},
 			success: function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
@@ -548,7 +548,7 @@ if ( $action == "" ) {
 	<div class="success wp100">
 
 		Рекомендуем установить
-		<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=editThemes')" class="button greenbtn">Темы напоминаний</A>, чтобы удобнее составлять темы для напоминаний. Если темы не установлены, система будет предлагать подходящие темы из существующих напоминаний.
+		<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=editThemes')" class="button greenbtn">Темы напоминаний</A>, чтобы удобнее составлять темы для напоминаний. Если темы не установлены, система будет предлагать подходящие темы из существующих напоминаний.
 
 	</div>
 
@@ -593,8 +593,8 @@ if ( $action == "" ) {
 				</TD>
 				<TD class="w120">
 
-					<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>')" class="button bluebtn dotted"><i class="icon-pencil"></i></A>
-					<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=delete&id=<?= $data['id'] ?>')" class="button redbtn dotted"><i class="icon-cancel"></i></A>
+					<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>')" class="button bluebtn dotted"><i class="icon-pencil"></i></A>
+					<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=delete&id=<?= $data['id'] ?>')" class="button redbtn dotted"><i class="icon-cancel"></i></A>
 
 				</TD>
 			</TR>
@@ -607,11 +607,11 @@ if ( $action == "" ) {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить">
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить">
 		<i class="icon-plus-circled"></i>
 	</div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/37')" title="Документация">
@@ -634,7 +634,7 @@ if ( $action == "" ) {
 			onDrop: function (table, row) {
 
 				var str = '' + $('#table-1').tableDnDSerialize();
-				var url = 'content/admin/<?php echo $thisfile; ?>?action=edit_order&';
+				var url = '/content/admin/<?php echo $thisfile; ?>?action=edit_order&';
 
 				$.post(url, str, function (data) {
 

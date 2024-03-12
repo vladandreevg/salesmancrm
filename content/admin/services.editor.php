@@ -71,7 +71,7 @@ if (!$action) {
 				<td align="left"><?= rij_decrypt($data['user_id'], $skey, $ivc); ?></td>
 				<td align="left">***********</td>
 				<td width="50" align="center">
-					<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>');" title="Редактировать"><i class="icon-pencil blue"></i></a>
+					<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&id=<?= $data['id'] ?>');" title="Редактировать"><i class="icon-pencil blue"></i></a>
 				</td>
 				<td></td>
 			</tr>
@@ -86,7 +86,7 @@ if ($action == "edit") {
 	$user_key = rij_decrypt($result["user_key"], $skey, $ivc);
 	?>
 	<div class="zagolovok">Изменить параметры</div>
-	<form method="post" action="content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
+	<form method="post" action="/content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
 		<input name="action" type="hidden" value="edit_on"/>
 		<input name="id" type="hidden" value="<?= $_REQUEST['id'] ?>"/>
 		<div style="max-height:300px; overflow:auto !important">
@@ -135,7 +135,7 @@ if ($action == "edit") {
 				},
 				success: function (data) {
 
-					$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');
+					$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>');
 
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 					setTimeout(function () {

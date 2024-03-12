@@ -12,7 +12,7 @@ ini_set( 'memory_limit', '-1' );
 
 error_reporting( E_ERROR );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 require_once $rootpath."/inc/config.php";
 require_once $rootpath."/inc/dbconnector.php";
@@ -952,7 +952,7 @@ if ( $action == "import_on" ) {
 
 			if (data === 'Файл загружен') {
 
-				$.get('content/helpers/deal.import.php?action=select', function (resp) {
+				$.get('/content/helpers/deal.import.php?action=select', function (resp) {
 
 					if (resp !== '')
 						$('#resultdiv').html(resp);
@@ -1042,7 +1042,7 @@ if ( $action == "import_on" ) {
 
 	function Discard() {
 
-		var url = 'content/helpers/deal.import.php?action=discard';
+		var url = '/content/helpers/deal.import.php?action=discard';
 		var str = '';
 
 		$.post(url, str, function () {

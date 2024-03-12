@@ -278,7 +278,7 @@ foreach ($result as $da) {
 
 			$dur = $min.':'.$sec2;
 
-			$play = ($file != '') ? '<a href="javascript:void(0)" onClick="doLoad(\'content/pbx/play.php?id='.$rest['id'].'\')" title="Прослушать запись"><i class="icon-volume-up blue"></i></a>' : '<i class="icon-volume-up gray list" title="Разговор не записан"></i>';
+			$play = ($file != '') ? '<a href="javascript:void(0)" onClick="doLoad(\'/content/pbx/play.php?id='.$rest['id'].'\')" title="Прослушать запись"><i class="icon-volume-up blue"></i></a>' : '<i class="icon-volume-up gray list" title="Разговор не записан"></i>';
 
 			$calltime = "&nbsp;Время: <b>".$dur."</b>;&nbsp;Прослушать: ".$play;
 

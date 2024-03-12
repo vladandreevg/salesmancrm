@@ -1647,7 +1647,7 @@ if ($action == "akt.edit") {
 
 			$('#newstep').trigger('change');
 
-			$.get("modules/contract/core.contract.php?action=akt.pozitions&did="+$('#did').val()+"&deid="+$('#deid').val(), function(data){
+			$.get("/modules/contract/core.contract.php?action=akt.pozitions&did="+$('#did').val()+"&deid="+$('#deid').val(), function(data){
 
 				var template = $('#spekatemplate').html();
 				Mustache.parse(template);   // optional, speeds up future uses
@@ -2218,7 +2218,7 @@ Email.: '.$mMail.'
 
 			var count = $('.email').length;
 
-			$.get('modules/contract/core.contract.php?action=akt.link&did=<?=$did?>&deid=<?=$deid?>', function (data) {
+			$.get('/modules/contract/core.contract.php?action=akt.link&did=<?=$did?>&deid=<?=$deid?>', function (data) {
 
 				var f = data.files;
 				var html = '';
@@ -2489,7 +2489,7 @@ if ($action == 'payment.export') {
 
 		$('#idcategory').trigger('change');
 
-		$('#filelist').load('modules/contract/fileview.php?deid=<?=$deid?>', function () {
+		$('#filelist').load('/modules/contract/fileview.php?deid=<?=$deid?>', function () {
 
 			$('#dialog').center();
 
@@ -2504,7 +2504,7 @@ if ($action == 'payment.export') {
 
 		if ($('#stepfields').is('div') && action !== 'change.close') {
 
-			$.get('content/card/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + $('option:selected', this).val(), function (data) {
+			$.get('/content/card/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + $('option:selected', this).val(), function (data) {
 
 				if (!data)
 					$('#stepfields').addClass('hidden');
@@ -2610,11 +2610,11 @@ if ($action == 'payment.export') {
 
 	function filedelete(id, fname) {
 
-		var url = 'modules/contract/fileview.php?action=delete&deid=' + id + '&fname=' + fname;
+		var url = '/modules/contract/fileview.php?action=delete&deid=' + id + '&fname=' + fname;
 
 		$.get(url, function (data) {
 
-			$('#filelist').load('modules/contract/fileview.php?deid=' + id);
+			$('#filelist').load('/modules/contract/fileview.php?deid=' + id);
 
 			return false;
 		});
@@ -2622,7 +2622,7 @@ if ($action == 'payment.export') {
 
 	function exportDo() {
 		var str = $('#pageform').serialize();
-		var url = 'modules/contract/core.contract.php?action=akt.export&dstart=' + $('#dstart').val() + '&dend=' + $('#dend').val() + '&' + str;
+		var url = '/modules/contract/core.contract.php?action=akt.export&dstart=' + $('#dstart').val() + '&dend=' + $('#dend').val() + '&' + str;
 		window.open(url);
 
 		return false;

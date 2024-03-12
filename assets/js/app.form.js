@@ -127,7 +127,7 @@ $('.phone')
 
 			}
 
-			$.get('content/helpers/' + type + '.php?type=json&action=' + action + '&title=' + $(this).val(), function (data) {
+			$.get('/content/helpers/' + type + '.php?type=json&action=' + action + '&title=' + $(this).val(), function (data) {
 
 				var string = '';
 

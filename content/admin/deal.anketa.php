@@ -495,7 +495,7 @@ if ($action == "edit.item") {
 			},
 			success: function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>?action=list.item&ida=<?=$ida?>');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>?action=list.item&ida=<?=$ida?>');
 				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 				setTimeout(function () {
@@ -602,7 +602,7 @@ if ($action == 'list.item') {
 						</TD>
 						<TD class="p10 w350">
 							<div class="pull-aright fs-12">
-								<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&ida=<?= $ida ?>&action=edit.item')" class="gray"><i class="icon-pencil"></i></A>
+								<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&ida=<?= $ida ?>&action=edit.item')" class="gray"><i class="icon-pencil"></i></A>
 							</div>
 							<div class="fs-12 Bold clearevents"><?= $data['name'] ?></div>
 							<div class="gray clearevents mt10"><?= strtr($data['tip'], $names) ?></div>
@@ -633,7 +633,7 @@ if ($action == 'list.item') {
 							<TD class="handle2 w60 text-center"><span class="clearevents">'.$item['order'].'</span></TD>
 							<TD class="w350">
 								<div class="pull-aright fs-12">
-									<A href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?id='.$item['id'].'&ida='.$ida.'&action=edit.item\')" class="gray"><i class="icon-pencil"></i></A>
+									<A href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?id='.$item['id'].'&ida='.$ida.'&action=edit.item\')" class="gray"><i class="icon-pencil"></i></A>
 								</div>
 								<div class="fs-11 Bold clearevents">'.$item['name'].'</div>
 								<div class="gray clearevents mt10">'.strtr($item['tip'], $names).'</div>
@@ -661,7 +661,7 @@ if ($action == 'list.item') {
 								
 								<span class="pull-aright">
 								
-									<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?id='.$data['id'].'&ida='.$ida.'&action=edit.item\')" title=""><i class="icon-pencil blue"></i>Редактировать блок</a>&nbsp;
+									<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?id='.$data['id'].'&ida='.$ida.'&action=edit.item\')" title=""><i class="icon-pencil blue"></i>Редактировать блок</a>&nbsp;
 									
 									'.($string == '' ? '<a href="javascript:void(0)" onclick="deleteItem(\''.$data['id'].'\');"><i class="icon-cancel-circled red"></i>Удалить блок</a>' : '').'
 									
@@ -683,12 +683,12 @@ if ($action == 'list.item') {
 									onDrop: function (table, row) {
 	
 										var str = $(\'#table-2'.$data['id'].'\').tableDnDSerialize();
-										var url = \'content/admin/'.$thisfile.'?action=edit.order.item&ida='.$ida.'&blockid='.$data['id'].'&table=2'.$data['id'].'\';
+										var url = \'/content/admin/'.$thisfile.'?action=edit.order.item&ida='.$ida.'&blockid='.$data['id'].'&table=2'.$data['id'].'\';
 										$(\'.refresh--panel\').find(\'.admn\').remove();
 	
 										$.post(url, str, function (data) {
 	
-											$(\'#contentdiv\').load(\'content/admin/'.$thisfile.'?action=list.item&ida='.$ida.'\');
+											$(\'#contentdiv\').load(\'/content/admin/'.$thisfile.'?action=list.item&ida='.$ida.'\');
 											$(\'#message\').fadeTo(1, 1).css(\'display\', \'block\').html(data);
 
 											setTimeout(function () {
@@ -712,11 +712,11 @@ if ($action == 'list.item') {
 	
 							<div class="space-20 p5">
 							
-								<a href="javascript:void(0)" onclick="doLoad(\'content/admin/'.$thisfile.'?action=edit.item&ida='.$ida.'&block='.$data['id'].'\');" title=""><i class="icon-plus-circled green"></i>Добавить поле</a>&nbsp;
+								<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?action=edit.item&ida='.$ida.'&block='.$data['id'].'\');" title=""><i class="icon-plus-circled green"></i>Добавить поле</a>&nbsp;
 							
 								<span class="hidden">
 								
-									<a href="javascript:void(0)" onclick="doLoad(\'admin/content/admin/'.$thisfile.'?id='.$data['id'].'&ida='.$ida.'&action=edit.item\')" title=""><i class="icon-pencil blue"></i>Редактировать блок</a>&nbsp;
+									<a href="javascript:void(0)" onclick="doLoad(\'/content/admin/'.$thisfile.'?id='.$data['id'].'&ida='.$ida.'&action=edit.item\')" title=""><i class="icon-pencil blue"></i>Редактировать блок</a>&nbsp;
 								
 									<a href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)delBlock(\''.$data['id'].'\');" title=""><i class="icon-cancel-circled red"></i>Удалить блок</a>&nbsp;
 								
@@ -743,12 +743,12 @@ if ($action == 'list.item') {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit.item&ida=<?= $ida ?>');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить поле</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit.item&ida=<?= $ida ?>');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить поле</a>
 
 	</div>
 
 	<div class="pagerefresh refresh--icon admn green" onclick="toAnket('<?= $ida ?>');" title="Перезагрузить анкету"><i class="icon-arrows-cw"></i></div>
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit.item&ida=<?= $ida ?>');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit.item&ida=<?= $ida ?>');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/22')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
@@ -766,12 +766,12 @@ if ($action == 'list.item') {
 			onDrop: function (table, row) {
 
 				var str = '' + $('#table-1').tableDnDSerialize();
-				var url = 'content/admin/<?php echo $thisfile; ?>?action=edit.order.item&ida=<?=$ida?>';
+				var url = '/content/admin/<?php echo $thisfile; ?>?action=edit.order.item&ida=<?=$ida?>';
 				$('.refresh--panel').find('.admn').remove();
 
 				$.post(url, str, function (data) {
 
-					$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>?action=list.item&ida=<?=$ida?>');
+					$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>?action=list.item&ida=<?=$ida?>');
 					$('#message').fadeTo(1, 1).css('display', 'block').html(data);
 
 					setTimeout(function () {
@@ -852,7 +852,7 @@ if ($action == 'list.item') {
 
 			//$('.refresh--panel').find('.admn').remove();
 
-			$.get('content/admin/<?php echo $thisfile; ?>?id=' + id + '&ida=<?=$ida?>&action=delete.item&block=' + block, function(data){
+			$.get('/content/admin/<?php echo $thisfile; ?>?id=' + id + '&ida=<?=$ida?>&action=delete.item&block=' + block, function(data){
 
 				toAnket(ida);
 
@@ -996,7 +996,7 @@ if ($action == "edit") {
 	?>
 	<div class="zagolovok"><b>Изменить / Добавить анкету</b></div>
 
-	<FORM action="content/admin/<?php echo $thisfile; ?>" method="POST" name="editForm" id="editForm" enctype="multipart/form-data">
+	<FORM action="/content/admin/<?php echo $thisfile; ?>" method="POST" name="editForm" id="editForm" enctype="multipart/form-data">
 		<input name="action" id="action" type="hidden" value="edit.do">
 		<input name="id" id="id" type="hidden" value="<?= $id ?>">
 
@@ -1079,7 +1079,7 @@ if ($action == "edit") {
 			},
 			success: function (data) {
 
-				$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>?action=list');
+				$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>?action=list');
 
 				setTimeout(function () {
 
@@ -1141,7 +1141,7 @@ if ($action == 'list') {
 					<div class="fs-10 mb5 mt10">
 
 						<A href="javascript:void(0)" onclick="toAnket(<?= $data['id'] ?>);" class="green"><i class="icon-doc-inv-alt green"></i> К анкете</A>
-						<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=edit')" class="blue"><i class="icon-pencil blue"></i> Изменить описание</A>
+						<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=edit')" class="blue"><i class="icon-pencil blue"></i> Изменить описание</A>
 
 					</div>
 
@@ -1173,11 +1173,11 @@ if ($action == 'list') {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/22')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
@@ -1220,7 +1220,7 @@ if ($action == 'list') {
 		function toAnket(id){
 
 			$('.refresh--panel').find('.admn').remove();
-			$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>?ida='+id+'&action=list.item');
+			$('#contentdiv').load('/content/admin/<?php echo $thisfile; ?>?ida='+id+'&action=list.item');
 
 			setTimeout(function () {
 
@@ -1233,7 +1233,7 @@ if ($action == 'list') {
 
 			$('.refresh--panel').find('.admn').remove();
 
-			$.get('content/admin/<?php echo $thisfile; ?>?action=delete&id='+id, function(data){
+			$.get('/content/admin/<?php echo $thisfile; ?>?action=delete&id='+id, function(data){
 
 				razdel(hash);
 

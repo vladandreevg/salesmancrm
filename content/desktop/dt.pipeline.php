@@ -454,7 +454,7 @@ $tipAll    = json_encode_cyr( array_unique( $tipAll ) );
 						var did = $(ui.draggable).data('did');
 
 						if (oldstep !== newstep)
-							doLoad('content/forms/form.deal.php?did=' + did + '&newstep=' + newstep + '&action=change.step&next=no');
+							doLoad('/content/forms/form.deal.php?did=' + did + '&newstep=' + newstep + '&action=change.step&next=no');
 					}
 				});
 

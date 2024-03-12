@@ -246,7 +246,7 @@ if ($action == "express") {
 						
 							<div class="relativ wp93" id="head_clid">
 								<INPUT type="hidden" id="client[head_clid]" name="client[head_clid]" value="">
-								<INPUT id="lst_spisok" type="text" data-class="'.$param['requered'].'" class="wp100 '.$param['requered'].'" value="" readonly onclick="_.debounce(get_orgspisok(\'lst_spisok\',\'head_clid\',\'content/helpers/client.helpers.php?action=get_orgselector\',\'client\\[head_clid\\]\'), 500)" placeholder="Нажмите для выбора">
+								<INPUT id="lst_spisok" type="text" data-class="'.$param['requered'].'" class="wp100 '.$param['requered'].'" value="" readonly onclick="_.debounce(get_orgspisok(\'lst_spisok\',\'head_clid\',\'/content/helpers/client.helpers.php?action=get_orgselector\',\'client\\[head_clid\\]\'), 500)" placeholder="Нажмите для выбора">
 								<span class="idel"><i title="Очистить" onclick="$(\'input#client\\[head_clid\\]\').val(\'\'); $(\'#lst_spisok\').val(\'\');" class="icon-block red hand"></i></span>
 							</div>
 							<div class="fs-10 gray2 em">Укажите головную организацию</div>
@@ -368,7 +368,7 @@ if ($action == "express") {
 					<div class="flex-container mb10" data-block="client-'.$input.'">
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text">'.$fieldsNames['client']['mail_url'].':</div>
 						<div class="flex-string wp80 pl10" id="vmaile">
-							<INPUT name="client[mail_url]" type="text" data-class="'.$param['requered'].'" class="wp93 '.$param['requered'].' validate" id="client[mail_url]" value="" onMouseOut="$(\'#ospisok\').remove();" onblur="$(\'#ospisok\').remove();" autocomplete="off" data-url="content/helpers/client.helpers.php" data-action="valmail">
+							<INPUT name="client[mail_url]" type="text" data-class="'.$param['requered'].'" class="wp93 '.$param['requered'].' validate" id="client[mail_url]" value="" onMouseOut="$(\'#ospisok\').remove();" onblur="$(\'#ospisok\').remove();" autocomplete="off" data-url="/content/helpers/client.helpers.php" data-action="valmail">
 						</div>
 					</div>';
 
@@ -514,7 +514,7 @@ if ($action == "express") {
 	
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text">'.$fieldsNames['client']['site_url'].':</div>
 						<div class="flex-string wp80 pl10" id="surl">
-							<INPUT name="client[site_url]" type="text" id="client[site_url]" class="wp93 '.$param['requered'].' validate" value="'.$site_url.'" onMouseOut="$(\'#ospisok\').remove();" onblur="$(\'#ospisok\').remove();" autocomplete="off" data-class="'.$param['requered'].'" data-url="content/helpers/client.helpers.php" data-action="valsite">
+							<INPUT name="client[site_url]" type="text" id="client[site_url]" class="wp93 '.$param['requered'].' validate" value="'.$site_url.'" onMouseOut="$(\'#ospisok\').remove();" onblur="$(\'#ospisok\').remove();" autocomplete="off" data-class="'.$param['requered'].'" data-url="/content/helpers/client.helpers.php" data-action="valsite">
 						</div>
 	
 					</div>';
@@ -527,7 +527,7 @@ if ($action == "express") {
 	
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text">'.$fieldsNames['person']['person'].':</div>
 						<div class="flex-string wp80 pl10" id="pers">
-							<input name="person[person]" type="text" id="person[person]" class="wp93 '.$param['requered'].'" value="'.$name.'" autocomplete="off" onkeyup="validate(\'person[person]\', \'pers\', \'content/helpers/person.helpers.php\', \'validate\');" onblur="$(\'#ospisok\').remove();" placeholder="Начните с Фамилии. Например: Иванов Семен Петрович" data-class="'.$param['requered'].'">
+							<input name="person[person]" type="text" id="person[person]" class="wp93 '.$param['requered'].'" value="'.$name.'" autocomplete="off" onkeyup="validate(\'person[person]\', \'pers\', \'/content/helpers/person.helpers.php\', \'validate\');" onblur="$(\'#ospisok\').remove();" placeholder="Начните с Фамилии. Например: Иванов Семен Петрович" data-class="'.$param['requered'].'">
 						</div>
 	
 					</div>';
@@ -702,7 +702,7 @@ if ($action == "express") {
 	
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text">'.$fieldsNames['person']['mail'].':</div>
 						<div class="flex-string wp80 pl10" id="vmail1">
-							<INPUT name="person[mail]" type="text" class="wp93 '.$param['requered'].' validate" id="person[mail]" autocomplete="off" onmouseout="$(\'#ospisok\').remove();" value="'.$email.'" data-class="'.$param['requered'].'" data-url="content/helpers/person.helpers.php" data-action="valmail">
+							<INPUT name="person[mail]" type="text" class="wp93 '.$param['requered'].' validate" id="person[mail]" autocomplete="off" onmouseout="$(\'#ospisok\').remove();" value="'.$email.'" data-class="'.$param['requered'].'" data-url="/content/helpers/person.helpers.php" data-action="valmail">
 						</div>
 	
 					</div>';
@@ -1248,6 +1248,27 @@ if ($action == "express") {
 						</div>
 
 					<?php } ?>
+
+					<div class="flex-container mb10 mt20 box--child">
+
+						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $fieldsNames['dogovor']['kol'] ?>:</div>
+						<div class="flex-string wp80 pl10 relativ">
+							<input name="dogovor[kol]" type="text" class="required yw140" id="dogovor[kol]" onkeyup="CheckMarg();" value="0"/>&nbsp;<?= $valuta ?>
+						</div>
+
+					</div>
+
+					<?php
+					$hidd = ($show_marga == 'yes' && $otherSettings['marga']) ? "" : "hidden";
+					?>
+					<div class="flex-container mb10 mt20 box--child <?= $hidd ?>">
+
+						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $fieldsNames['dogovor']['marg'] ?>:</div>
+						<div class="flex-string wp80 pl10 relativ">
+							<input name="dogovor[marg]" type="text" class="required yw140" id="dogovor[marg]" value="0"/>&nbsp;<?= $valuta ?>
+						</div>
+
+					</div>
 
 					<div class="flex-container mb10 mt20 box--child">
 
@@ -1901,7 +1922,7 @@ if ($action == "express") {
 
 			});
 
-			$("#person\\[rol\\]").autocomplete("content/helpers/person.helpers.php?action=get.role", {
+			$("#person\\[rol\\]").autocomplete("/content/helpers/person.helpers.php?action=get.role", {
 				autoFill: false,
 				minChars: 3,
 				cacheLength: 30,
@@ -1913,7 +1934,7 @@ if ($action == "express") {
 			});
 
 			if( $("#person\\[ptitle\\]").hasClass('suggestion') ) {
-				$("#person\\[ptitle\\]").autocomplete("content/helpers/person.helpers.php?action=get.status", {
+				$("#person\\[ptitle\\]").autocomplete("/content/helpers/person.helpers.php?action=get.status", {
 					autofill: true,
 					minChars: 3,
 					cacheLength: 1,
@@ -1925,7 +1946,7 @@ if ($action == "express") {
 				});
 			}
 
-			$("#todo\\[theme\\]").autocomplete("content/core/core.tasks.php?action=theme", {
+			$("#todo\\[theme\\]").autocomplete("/content/core/core.tasks.php?action=theme", {
 				autoFill: false,
 				minChars: 0,
 				cacheLength: 1,
@@ -1950,7 +1971,7 @@ if ($action == "express") {
 			$("#person\\[person\\]").trigger('focus');
 
 			$("#client\\[title\\]")
-				.autocomplete('content/helpers/client.helpers.php?action=clientlist', {
+				.autocomplete('/content/helpers/client.helpers.php?action=clientlist', {
 					autofill: false,
 					minChars: 2,
 					cacheLength: 2,
@@ -2022,20 +2043,20 @@ if ($action == "express") {
 		$('select[data-change="activities"]').each(function () {
 
 			var $el = $(this).data('id');
-			$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+			$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 
 		});
 
 		$(document).on('change', 'select[data-change="activities"]', function () {
 			var $el = $(this).data('id');
-			$('#tagbox[data-id="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+			$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
 		});
 
 		$('.ydropDown[data-change="activities"]').each(function () {
 
 			var $el = $(this).data('selected');
 			var $tip = $(this).data('id');
-			$('#tagbox[data-tip="' + $tip + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($el));
+			$('#tagbox[data-tip="' + $tip + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($el));
 
 		});
 
@@ -2060,7 +2081,7 @@ if ($action == "express") {
 
 				//console.log($el);
 
-				$('#tagbox[data-tip="' + $el + '"]').empty().load('content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($tip));
+				$('#tagbox[data-tip="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($tip));
 
 			});
 
@@ -2204,7 +2225,7 @@ if ($action == "express") {
 
 			if (!selector) selector = 'tiphist';
 			var tip = urlEncodeData($('#' + selector + ' option:selected').val());
-			$('#tagbox').load('content/core/core.tasks.php?action=tags&tip=' + tip);
+			$('#tagbox').load('/content/core/core.tasks.php?action=tags&tip=' + tip);
 
 		}
 
@@ -2231,7 +2252,7 @@ if ($action == "express") {
 
 			if (tip === 'client') {
 
-				url = 'content/helpers/client.helpers.php?action=clientinfo&clid=' + id;
+				url = '/content/helpers/client.helpers.php?action=clientinfo&clid=' + id;
 
 				if ($('#vphone').find('.phone:first-child').hasClass('required')) reqphone = 'required';
 				if ($('#vfax').find('.phone:first-child').hasClass('required')) reqfax = 'required';
@@ -2350,7 +2371,7 @@ if ($action == "express") {
 			}
 			if (tip === 'person') {
 
-				url = 'content/helpers/client.helpers.php?action=clientinfo&pid=' + id;
+				url = '/content/helpers/client.helpers.php?action=clientinfo&pid=' + id;
 
 				$("#person\\[pid\\]").val(id);
 
@@ -2361,7 +2382,7 @@ if ($action == "express") {
 					if ($("#person\\[mob\\]").val() === '') $("#person\\[mob\\]").val(data.mob);
 					if ($("#person\\[mail\\]").val() === '') $("#person\\[mail\\]").val(data.mail);
 
-					var url2 = 'content/helpers/client.helpers.php?action=clientinfo&clid=' + data.clid;
+					var url2 = '/content/helpers/client.helpers.php?action=clientinfo&clid=' + data.clid;
 
 					$.getJSON(url2, function (data2) {
 
@@ -2722,7 +2743,7 @@ if ($action == "edit") {
 					<div class="flex-container mt10" id="org" data-block="<?php echo $dak['fld_name']; ?>">
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $fieldsNames['client']['title'] ?>:</div>
 						<div class="flex-string wp80 pl10 norelativ">
-							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" value="<?= untag($client['title']) ?>" autocomplete="off" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" placeholder="Название, Орг.форма" data-url="content/helpers/client.helpers.php" data-action="validate">
+							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" value="<?= untag($client['title']) ?>" autocomplete="off" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" placeholder="Название, Орг.форма" data-url="/content/helpers/client.helpers.php" data-action="validate">
 							<div class="fs-09 gray em placeholder"><b>Например:</b> Сэйлзмэн, ООО</div>
 						</div>
 					</div>
@@ -2839,7 +2860,7 @@ if ($action == "edit") {
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $fieldsNames['client'][ $dak['fld_name'] ] ?>:</div>
 						<div class="flex-string wp80 pl10 relativ" id="head_clid">
 							<INPUT type="hidden" id="head_clid" name="head_clid" value="<?= $client['head_clid'] ?>">
-							<INPUT id="lst_spisok" type="text" class="<?= $dak['fld_required'] ?> wp95" value="<?= current_client($client['head_clid']) ?>" readonly onclick="_.debounce(get_orgspisok('lst_spisok','head_clid','content/helpers/client.helpers.php?action=get_orgselector','<?= $dak['fld_name'] ?>'), 500)" placeholder="Нажмите для выбора">
+							<INPUT id="lst_spisok" type="text" class="<?= $dak['fld_required'] ?> wp95" value="<?= current_client($client['head_clid']) ?>" readonly onclick="_.debounce(get_orgspisok('lst_spisok','head_clid','/content/helpers/client.helpers.php?action=get_orgselector','<?= $dak['fld_name'] ?>'), 500)" placeholder="Нажмите для выбора">
 							<span class="idel"><i title="Очистить" onclick="$('input#head_clid').val(0); $('#lst_spisok').val('');" class="icon-block red" style="cursor:pointer"></i></span>
 							<div class="smalltxt">Укажите головную организацию</div>
 						</div>
@@ -3004,7 +3025,7 @@ if ($action == "edit") {
 
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $fieldsNames['client'][ $dak['fld_name'] ] ?>:</div>
 						<div class="flex-string wp80 pl10 norelativ">
-							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" value="<?= $client['site_url'] ?>" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="content/helpers/client.helpers.php" data-action="valsite">
+							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" value="<?= $client['site_url'] ?>" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="/content/helpers/client.helpers.php" data-action="valsite">
 						</div>
 
 					</div>
@@ -3016,7 +3037,7 @@ if ($action == "edit") {
 
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text"><?= $fieldsNames['client'][ $dak['fld_name'] ] ?>:</div>
 						<div class="flex-string wp80 pl10 norelativ">
-							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" value="<?= $client['mail_url'] ?>" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="content/helpers/client.helpers.php" data-action="valmail">
+							<INPUT name="<?= $dak['fld_name'] ?>" type="text" class="<?= $dak['fld_required'] ?> wp95 validate" id="<?= $dak['fld_name'] ?>" value="<?= $client['mail_url'] ?>" onMouseOut="$('#ospisok').remove();" onblur="$('#ospisok').remove();" data-url="/content/helpers/client.helpers.php" data-action="valmail">
 						</div>
 
 					</div>
@@ -4521,7 +4542,7 @@ if ($action == "change.relation") {
 
 			if (type !== 'person' && type !== 'udefined') {
 
-				$("#recv\\[castDirStatusSig\\]").autocomplete("content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=0", {
+				$("#recv\\[castDirStatusSig\\]").autocomplete("/content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=0", {
 					autofill: true,
 					minChars: 0,
 					cacheLength: 0,
@@ -4531,7 +4552,7 @@ if ($action == "change.relation") {
 					delay: 10,
 					matchSubset: 1
 				});
-				$("#recv\\[castDirStatus\\]").autocomplete("content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=1", {
+				$("#recv\\[castDirStatus\\]").autocomplete("/content/helpers/client.helpers.php?action=recvisites&tip=appointment&char=1", {
 					autofill: true,
 					minChars: 0,
 					cacheLength: 0,
@@ -4541,7 +4562,7 @@ if ($action == "change.relation") {
 					delay: 10,
 					matchSubset: 1
 				});
-				$("#recv\\[castDirOsnovanie\\]").autocomplete("content/helpers/client.helpers.php?action=recvisites&tip=osnovanie&char=0", {
+				$("#recv\\[castDirOsnovanie\\]").autocomplete("/content/helpers/client.helpers.php?action=recvisites&tip=osnovanie&char=0", {
 					autofill: true,
 					minChars: 0,
 					cacheLength: 0,
@@ -4667,7 +4688,7 @@ if ($action == "change.relation") {
 				}
 				if (card === 'dogovor') {
 
-					$('#credit_' + did).load('content/card/card.credit.php?did=' + did);
+					$('#credit_' + did).load('/content/card/card.credit.php?did=' + did);
 					cardload();
 
 				}
@@ -4800,7 +4821,7 @@ if ($action == "change.relation") {
 			var inn_pole = $('input.isinn').attr('id');
 			var kpp_pole = $('input.iskpp').attr('id');
 
-			$.get('content/helpers/client.helpers.php?action=valinn&clidd=' + clid + '&inn_pole=' + inn_pole + '&kpp_pole=' + kpp_pole + '&inn=' + inn + '&kpp=' + kpp, function (data) {
+			$.get('/content/helpers/client.helpers.php?action=valinn&clidd=' + clid + '&inn_pole=' + inn_pole + '&kpp_pole=' + kpp_pole + '&inn=' + inn + '&kpp=' + kpp, function (data) {
 
 				if (data && data.clid !== '') {
 
@@ -4828,7 +4849,7 @@ if ($action == "change.relation") {
 	function gettags() {
 
 		var tip = urlEncodeData($('#tip option:selected').val());
-		$('#tagbox').load('content/core/core.tasks.php?action=tags&tip=' + tip);
+		$('#tagbox').load('/content/core/core.tasks.php?action=tags&tip=' + tip);
 
 	}
 
@@ -5019,7 +5040,7 @@ if ($action == "change.relation") {
 			$('#dialog_container').css('display', 'none');
 
 			var str = $('#clientForm').serialize() + '&' + $('#pageform').serialize();
-			var url = "content/core/core.client.php";
+			var url = "/content/core/core.client.php";
 
 			$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id="loader"><img src="/assets/images/loader.gif"> Загрузка данных...</div>');
 

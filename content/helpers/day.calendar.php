@@ -1,7 +1,7 @@
 <?php
 error_reporting( 0 );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 require_once $rootpath."/inc/config.php";
 require_once $rootpath."/inc/dbconnector.php";

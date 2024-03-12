@@ -402,7 +402,7 @@ if ( $action == '' ) {
 				<TD>
 
 					<div class="pull-aright fs-12">
-						<A href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=edit')" class="gray"><i class="icon-pencil"></i></A>
+						<A href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=edit')" class="gray"><i class="icon-pencil"></i></A>
 					</div>
 					<div class="fname fs-14 Bold clearevents <?= $color ?>">
 						<?= $data['name'] ?>
@@ -417,7 +417,7 @@ if ( $action == '' ) {
 				</TD>
 				<TD class="w50 text-center">
 
-					<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)refresh('contentdiv','content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=delete');"><i class="icon-cancel-circled red"></i></A>
+					<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)refresh('contentdiv','/content/admin/<?php echo $thisfile; ?>?id=<?= $data['id'] ?>&action=delete');"><i class="icon-cancel-circled red"></i></A>
 
 				</TD>
 			</TR>
@@ -427,11 +427,11 @@ if ( $action == '' ) {
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
 
-		<a href="javascript:void(0)" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
+		<a href="javascript:void(0)" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" class="button bluebtn box-shadow" title="Добавить"><i class="icon-plus-circled"></i>Добавить</a>
 
 	</div>
 
-	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
+	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить"><i class="icon-plus-circled"></i></div>
 	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/22')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
@@ -443,7 +443,7 @@ if ( $action == '' ) {
 			onDrop: function (table, row) {
 
 				var str = '' + $('#table-1').tableDnDSerialize();
-				var url = 'content/admin/<?php echo $thisfile; ?>?action=edit_order&';
+				var url = '/content/admin/<?php echo $thisfile; ?>?action=edit_order&';
 				$.post(url, str, function (data) {
 
 					//$('#contentdiv').load('content/admin/<?php echo $thisfile; ?>');

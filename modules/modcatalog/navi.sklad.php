@@ -86,7 +86,7 @@
 				?>
 				<div class="contaner contaner-catalog hidden">
 
-					<A href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=edit')" class="button block"><i class="icon-archive"><i class="sup icon-plus-circled"></i></i>&nbsp;&nbsp;Добавить позицию</A>
+					<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=edit')" class="button block"><i class="icon-archive"><i class="sup icon-plus-circled"></i></i>&nbsp;&nbsp;Добавить позицию</A>
 
 				</div>
 			<?php } ?>
@@ -155,10 +155,10 @@
 				<div class="div-center flex-container button--group">
 
 					<div id="greenbutton" class="flex-string">
-						<a class="button" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=editakt&tip=income');" title="Добавить ордер"><i class="icon-plus-circled"></i>Приходный</a>
+						<a class="button" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editakt&tip=income');" title="Добавить ордер"><i class="icon-plus-circled"></i>Приходный</a>
 					</div>
 					<div id="redbutton" class="flex-string">
-						<a class="button" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=editakt&tip=outcome')" title="Добавить ордер"><i class="icon-minus-circled"></i>Расходный</a>
+						<a class="button" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editakt&tip=outcome')" title="Добавить ордер"><i class="icon-minus-circled"></i>Расходный</a>
 					</div>
 
 				</div>
@@ -168,7 +168,7 @@
 			<?php if ( in_array( $iduser1, (array)$msettings['mcCoordinator'] ) ) { ?>
 				<div class="contaner contaner-offer hidden">
 
-					<A href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=editoffer')" class="button block"><i class="icon-archive"><i class="sup icon-plus-circled"></i></i>&nbsp;&nbsp;Добавить предложение</A>
+					<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editoffer')" class="button block"><i class="icon-archive"><i class="sup icon-plus-circled"></i></i>&nbsp;&nbsp;Добавить предложение</A>
 
 				</div>
 			<?php } ?>
@@ -298,10 +298,10 @@
 
 				<div class="div-center flex-container button--group">
 					<div id="bluebutton" class="flex-string">
-						<a class="button" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavka')" title="Добавить заявку"><i class="icon-plus-circled"></i>По каталогу</a>
+						<a class="button" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editzayavka')" title="Добавить заявку"><i class="icon-plus-circled"></i>По каталогу</a>
 					</div>
 					<div id="greenbutton" class="flex-string">
-						<a class="button" onclick="doLoad('modules/modcatalog/form.modcatalog.php?action=editzayavka&tip=cold')" title="Добавить заявку"><i class="icon-plus-circled"></i>На поиск</a>
+						<a class="button" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editzayavka&tip=cold')" title="Добавить заявку"><i class="icon-plus-circled"></i>На поиск</a>
 					</div>
 				</div>
 			</div>

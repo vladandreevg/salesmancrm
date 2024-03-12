@@ -116,7 +116,7 @@ if ( $kol == '' ) $kol = '?';
 							<?php
 							if ( in_array( $iduser1, (array)$settings[ 'mcCoordinator' ] ) ) {
 								?>
-								<div onclick="doLoad('modules/modcatalog/form.modcatalog.php?n_id=<?= $n_id ?>&action=edit');" class="item ha hand" title="Изменить">
+								<div onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id=<?= $n_id ?>&action=edit');" class="item ha hand" title="Изменить">
 									<i class="icon-pencil broun"></i>&nbsp;Изменить позицию
 								</div>
 							<?php } ?>
