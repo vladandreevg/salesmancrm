@@ -80,7 +80,7 @@ $preset = $_COOKIE[ 'todo_list' ] != '' ? json_decode( str_replace( '\\', '', $_
 
 					<div class="pt5 div-center">
 
-						<select name="period" id="period" class="wp100" data-goal="speriod" data-action="period" <?=(empty($preset['period']) ? '' : 'data-selected="'.$preset['period'].'"')?> data-js2="preconfigpage" <?=(empty($preset['period']) ? '' : 'data-select="false"')?>>
+						<select name="period" id="period" class="wp100" data-goal="speriod" data-action="period" <?=(empty($preset['period']) ? 'data-selected="all"' : 'data-selected="'.$preset['period'].'"')?> data-js2="preconfigpage" <?=(empty($preset['period']) ? '' : 'data-select="false"')?>>
 							<option selected="selected" value="">-за всё время-</option>
 
 							<?php
