@@ -482,7 +482,7 @@ if ( $action == 'account' ) {
 			var obj;
 			var server = $('#serv option:selected').val();
 
-			$.post('modules/mailer/core.mailer.php?action=get.servers&tip=outcome&server=' + server, function (data) {
+			$.post('/modules/mailer/core.mailer.php?action=get.servers&tip=outcome&server=' + server, function (data) {
 
 				obj = JSON.parse(data);
 
@@ -493,7 +493,7 @@ if ( $action == 'account' ) {
 				$('#ymailOutProtocol [value=' + obj.protocol + ']').attr("selected", "selected");
 
 			});
-			$.post('modules/mailer/core.mailer.php?action=get.servers&tip=income&server=' + server, function (data) {
+			$.post('/modules/mailer/core.mailer.php?action=get.servers&tip=income&server=' + server, function (data) {
 
 				obj = JSON.parse(data);
 
@@ -508,7 +508,7 @@ if ( $action == 'account' ) {
 
 		function checkConnection() {
 
-			var url = "modules/mailer/core.mailer.php";
+			var url = "/modules/mailer/core.mailer.php";
 			var str = $('#set').serialize() + '&action=account.check';
 			var em = checkRequired();
 
