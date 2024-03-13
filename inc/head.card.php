@@ -283,7 +283,7 @@ if ($express) {
 
 }
 
-if ((empty($_GET) || $_GET[ $k[0] ] == '' || $_GET[ $k[0] ] == 0) && $_GET['phone'] == '') {
+if ((empty($_GET) || $_GET[ $k[0] ] == '' || $_GET[ $k[0] ] == 0)) {
 
 	print '
 		<TITLE>'.$lang['all']['Notification'].' - '.$productInfo['name'].'</TITLE>

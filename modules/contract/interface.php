@@ -105,6 +105,8 @@ if(isMobile || $(window).width() < 767){
 
 }
 
+$.Mustache.load('/modules/contract/tpl.contract.mustache');
+
 $( function() {
 
 	$('.ui-layout-center').append('<div class="tableHeader" style="position:absolute; width: 100%"></div>');
@@ -115,8 +117,6 @@ $( function() {
 	$('#rmenu').find('a[data-id="'+hash+'"]').addClass('active');
 
 	$(window).trigger('onhashchange');
-
-	$.Mustache.load('/modules/contract/tpl.contract.mustache');
 
 	razdel(hash);
 
@@ -154,16 +154,18 @@ function constructSpace(){
 
 function configpage(){
 
-	$('#contentdiv').parent(".nano").nanoScroller({ scroll: 'top' });
+	let elm = $('#contentdiv');
+
+	elm.parent(".nano").nanoScroller({ scroll: 'top' });
 
 	var str = $('#pageform').serialize();
 	var url = '/modules/contract/list.contract.php';
 	var tar = $('#tar').val();
 
-	$('#contentdiv').append('<div class="contentloader"><img src="/assets/images/Services.svg" width="50px" height="50px"></div>');
+	elm.append('<div class="contentloader"><img src="/assets/images/Services.svg" width="50px" height="50px"></div>');
 
-	var cdheight = $('#contentdiv').height();
-	var cdwidth = $('#contentdiv').width();
+	var cdheight = elm.height();
+	var cdwidth = elm.width();
 
 	$('.contentloader').height(cdheight).width(cdwidth);
 
@@ -174,7 +176,7 @@ function configpage(){
 
 	$.getJSON(url, str, function(viewData) {
 
-		$('#contentdiv').empty().mustache(tar+'Tpl', viewData);
+		elm.empty().mustache(tar + 'Tpl', viewData);
 
 		var page = viewData.page;
 		var pageall = viewData.pageall;

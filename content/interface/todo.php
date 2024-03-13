@@ -105,9 +105,9 @@ if(isMobile || $(window).width() < 767){
 
 }
 
-$( function() {
+$.Mustache.load('/content/tpl/tpl.tasks.mustache');
 
-	$.Mustache.load('/content/tpl/tpl.tasks.mustache');
+$( function() {
 
 	$hash = window.location.hash.substring(1);
 	if($hash === '') $hash = 'my';
@@ -128,7 +128,7 @@ $( function() {
 
 	$('.inputdate').each(function(){
 
-		if(isMobile !== true) {
+		if(!isMobile) {
 			$(this).datepicker({
 				dateFormat: 'yy-mm-dd',
 				numberOfMonths: 2,
@@ -259,15 +259,17 @@ $('.ui-layout-center').onPositionChanged(function(){
 
 function configpage(){
 
-	$('#contentdiv').parent(".nano").nanoScroller({ scroll: 'top' });
+	let elm = $('#contentdiv');
+
+	elm.parent(".nano").nanoScroller({ scroll: 'top' });
 
 	var str = $('#pageform').serialize();
 	var url = '/content/lists/list.todo.php';
 
-	$('#contentdiv').append('<div class="contentloader"><img src="/assets/images/Services.svg" width="50px" height="50px"></div>');
+	elm.append('<div class="contentloader"><img src="/assets/images/Services.svg" width="50px" height="50px"></div>');
 
-	var cdheight = $('#contentdiv').height();
-	var cdwidth = $('#contentdiv').width();
+	var cdheight = elm.height();
+	var cdwidth = elm.width();
 
 	$('.contentloader').height(cdheight).width(cdwidth);
 
@@ -279,7 +281,7 @@ function configpage(){
 
 		viewData.language = $language;
 
-		$('#contentdiv').empty().mustache('todoTpl', viewData);
+		elm.empty().mustache('todoTpl', viewData);
 
 		var page = viewData.page;
 		var pageall = viewData.total;
@@ -363,6 +365,7 @@ function configpage(){
 			});
 
 		});
+
 }
 /*
 Вызываем при применении фильтров, чтобы начинать с 1 страницы

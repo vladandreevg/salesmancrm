@@ -103,9 +103,9 @@ if(isMobile || $(window).width() < 767){
 
 }
 
-$( function() {
+$.Mustache.load('/content/tpl/tpl.tasks.mustache');
 
-	$.Mustache.load('/content/tpl/tpl.tasks.mustache');
+$( function() {
 
 	$hash = window.location.hash.substring(1);
 	if($hash === '') $hash = 'my';

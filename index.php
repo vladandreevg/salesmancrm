@@ -7,7 +7,7 @@
 /*        www.isaler.ru         */
 /*        ver. 2020.x           */
 /* ============================ */
-error_reporting(E_ERROR);
+error_reporting(E_ALL);
 
 $rootpath = realpath( __DIR__ );
 
@@ -25,8 +25,9 @@ $url_path  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri_parts = explode('/', trim($url_path, ' /'));
 
 //print_r($uri_parts);
+//print str_contains( $uri_parts[0], 'card' );
 
-//получение файла
+// получение файла
 if ($uri_parts[0] == "file") {
 
 	require_once $rootpath."/inc/config.php";
@@ -105,24 +106,36 @@ if ($uri_parts[0] == "file") {
 
 }
 
-if($uri_parts[0] != "files" && $uri_parts[1] == '') {
+// обычные пути, исключая ссылку на файлы (в них отсутствуют GET-параметры)
+if($uri_parts[0] != "files" && empty($uri_parts[1])) {
 
+	// обработка ссылки установщика
 	if ( $uri_parts[0] == 'install.php' || stripos( $uri_parts[0], 'install' ) !== false ) {
 		header( "Location: /_install/" );
 	}
 
+	// обработка ссылки установщика обновлений
 	if ( $uri_parts[0] == 'update.php' || stripos( $uri_parts[0], 'update' ) !== false ) {
 		header( "Location: /_install/update.php" );
 	}
 
+	// по умолчанию пусть будет стартовая страница
 	$script = 'desktop.php';
 
 	if ( !empty( $uri_parts[0] ) ) {
 		$script = $uri_parts[0];
 	}
 
+	// если не указано расширение *.php, то добавляем его
 	if ( stripos( $script, 'php' ) === false ) {
+
+		// для поддержки Nginx убираем первый элемент массива, т.к. у него в GET первый параметр приходит "/card.deal"
+		if( $_SERVER['SERVER_SOFTWARE'] == 'nginx' ) {
+			$x = array_shift($_GET);
+		}
+
 		$script = "{$script}.php";
+
 	}
 
 	if ( $script === 'index.php' ) {
@@ -183,8 +196,9 @@ if($uri_parts[0] != "files" && $uri_parts[1] == '') {
 	}
 
 }
+
 // поддержка пути /card.deal/ID
-elseif( (int)$uri_parts[1] > 0 && stripos( $uri_parts[0], 'card' ) !== false ){
+elseif( (int)$uri_parts[1] > 0 && stripos( $uri_parts[0], 'card' ) === false ){
 
 	$script = $uri_parts[0];
 	$id = (int)$uri_parts[1];
@@ -211,12 +225,12 @@ elseif( (int)$uri_parts[1] > 0 && stripos( $uri_parts[0], 'card' ) !== false ){
 	//print_r($_REQUEST);
 
 	if ( file_exists( $rootpath."/content/interface/$script" ) ) {
-
 		include_once $rootpath."/content/interface/$script";
-
 	}
 
 }
+
+// отсутствие пути, который не смогли обработать ранее
 elseif( !file_exists( realpath( __DIR__.'/' ).$_SERVER['REQUEST_URI']) ){
 
 	print '
@@ -231,7 +245,7 @@ elseif( !file_exists( realpath( __DIR__.'/' ).$_SERVER['REQUEST_URI']) ){
 			
 				<span><i class="icon-doc-alt red icon-5x pull-left"></i></span>
 				<b class="red uppercase miditxt">Упс :(</b><br><br>
-				Файл не найден.
+				Ресурс не найден.
 				
 			</div>
 			

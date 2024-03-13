@@ -101,9 +101,9 @@ if (isMobile || $(window).width() < 767) {
 
 }
 
-$( function() {
+$.Mustache.load('/modules/entry/tpl.entry.mustache');
 
-	$.Mustache.load('/modules/entry/tpl.entry.mustache');
+$( function() {
 
 	//$('.ui-layout-center').append('<div class="tableHeader" style="position:absolute; width:100%;"></div>');
 
