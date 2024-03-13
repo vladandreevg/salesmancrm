@@ -121,7 +121,7 @@ yum git install
 # Переходим в каталог установки
 cd /var/www/
 # Клонируем репозиторий
-git clone https://github.com/vladandreevg/salesmancrm.git
+git clone https://github.com/vladandreevg/salesmancrm.git ./
 ```
 
 ## Обновление / Update
