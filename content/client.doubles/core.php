@@ -68,6 +68,13 @@ $tipa = [
 	"title" => "icon-user"
 ];
 
+$keys = [
+	"inn" => "ИНН",
+	"kpp" => "КПП",
+	"phone" => "Тел.",
+	"email" => "Email"
+];
+
 //вывод списка дублей
 if ( $action == 'list' ) {
 
@@ -410,7 +417,21 @@ if ( $action == 'view' ) {
 
 				foreach ( $value as $ida => $val ) {
 
-					$v = (is_array( $val )) ? implode( ",", (array)$val ) : $val;
+					//$v = (is_array( $val )) ? implode( ", ", (array)$val ) : $val;
+
+					if(is_array( $val )){
+
+						$xv = [];
+						foreach ($val as $t => $x){
+							$xv[] = $keys[$t].": ".$x;
+						}
+
+						$v = yimplode("<br>", $xv);
+
+					}
+					else{
+						$v = $val;
+					}
 
 					if ( $da['tip'] == 'client' ) {
 						$s .= '
@@ -444,7 +465,7 @@ if ( $action == 'view' ) {
 				print '
 				<div class="row">
 	
-					<div class="column12 grid-1 right-text gray2"><i class="'.strtr( $item, $tipa ).'"></i></div>
+					<div class="column12 grid-1 right-text gray2" title="'.strtr( $item, $tips ).'"><i class="'.strtr( $item, $tipa ).'"></i></div>
 					<div class="column12 grid-11">
 						'.$s.'
 					</div>
@@ -1714,12 +1735,13 @@ if ( $action == 'isDouble' ) {
 
 	$main = 0;
 	$sec  = 'no';
+	$z = [];
 
 	if ( in_array( $iduser1, (array)$dblSettings['Coordinator'] ) || in_array( $iduser1, (array)$dblSettings['Operator'] ) ) {
 
 		$q    = "
 		SELECT
-			id, idmain
+			id, idmain, ids, tip
 		FROM {$sqlname}doubles
 		WHERE 
 			({$sqlname}doubles.idmain = '$id' or FIND_IN_SET('$id', {$sqlname}doubles.ids) > 0) and 
@@ -1729,11 +1751,44 @@ if ( $action == 'isDouble' ) {
 		";
 		$xmain = $db -> getRow( $q );
 
+		// проверим смежные записи на существование
+		if( !empty($xmain['ids']) ){
+
+			$x = yexplode(",", $xmain['ids']);
+			foreach ($x as $xid){
+
+				// исключаем из массива проверяемую запись
+				if($xid == $id){
+					continue;
+				}
+
+				if($xmain['tip'] == 'client'){
+					$zx = (int)$db -> getOne("SELECT clid FROM {$sqlname}clientcat WHERE clid = '$xid'");
+					if($zx > 0){
+						$z[] = $zx;
+					}
+				}
+				else{
+					$zx = (int)$db -> getOne("SELECT pid FROM {$sqlname}personcat WHERE pid = '$xid'");
+					if($zx > 0){
+						$z[] = $zx;
+					}
+				}
+
+			}
+
+		}
+
+		//print_r($xmain);
+		//print $db -> lastQuery();
+
 		// получим информацию о клиенте
-		$client = get_client_info((int)$xmain['idmain']);
+		$client = get_client_info((int)$xmain['idmain'], "yes");
+
+		//print_r($client);
 
 		// если название есть, то клиент существует
-		if(!empty($client['id'])){
+		if( (int)$client['clid'] > 0 && !empty($z)) {
 			$main = (int)$xmain['id'];
 			$sec  = 'yes';
 		}
@@ -1742,7 +1797,8 @@ if ( $action == 'isDouble' ) {
 
 	print json_encode( [
 		"id"  => $main,
-		"sec" => $sec
+		"sec" => $sec,
+		"z"   => $z
 	] );
 
 	exit();
