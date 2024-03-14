@@ -6557,7 +6557,26 @@ var doubleModule = {
 
 		}
 
-	}
+	},
+	
+	// удаление записи
+	delete: function(id) {
+		
+		var url = '/content/client.doubles/core.php?action=delete&id=' + id
+		
+		$.post(url, '', function (data) {
+			
+			if( data.error === 0 ) {
+				Swal.fire('Отлично!', 'Запись удалена', 'success')
+				DoublesPageRender()
+			}
+			else{
+				Swal.fire('Упс..', data.error, 'error')
+			}
+			
+		}, 'json')
+		
+	},
 
 };
 

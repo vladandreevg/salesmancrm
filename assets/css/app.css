@@ -1573,7 +1573,6 @@ i {
 НЕ работает для заголовков таблиц в Хроме (только для TH)
  */
 .sticked--top {
-	position   : -webkit-sticky;
 	position   : sticky;
 	top        : 0;
 	z-index    : 10;
@@ -1581,7 +1580,6 @@ i {
 }
 tr.sticked--top {
 	position           : sticky;
-	position           : -webkit-sticky;
 	top                : 38px;
 	z-index            : 9;
 	border             : 0 !important;
@@ -1606,7 +1604,6 @@ tr.sticked--top th.noshadow {
 }
 
 .sticked--top--second {
-	position   : -webkit-sticky;
 	position   : sticky;
 	top        : 38px;
 	z-index    : 10;
@@ -1614,7 +1611,6 @@ tr.sticked--top th.noshadow {
 }
 tr.sticked--top--second {
 	position           : sticky;
-	position           : -webkit-sticky;
 	top                : 38px;
 	z-index            : 9;
 	border             : 0 !important;
@@ -1622,7 +1618,6 @@ tr.sticked--top--second {
 }
 
 .sticked--bottom {
-	position         : -webkit-sticky;
 	position         : sticky;
 	bottom           : 0;
 	z-index          : 10;
@@ -1641,7 +1636,6 @@ div.sticked--top {
 
 	.sticked--top th {
 		position           : sticky;
-		position           : -webkit-sticky;
 		top                : 0;
 		z-index            : 10;
 		color              : inherit;
@@ -1657,7 +1651,6 @@ div.sticked--top {
 
 	.sticked--top tr:nth-child(2) th {
 		position           : sticky;
-		position           : -webkit-sticky;
 		top                : 40px;
 		z-index            : 10;
 		color              : inherit;
@@ -1668,7 +1661,6 @@ div.sticked--top {
 
 	.sticked--top td {
 		position           : sticky;
-		position           : -webkit-sticky;
 		top                : 38px;
 		z-index            : 9;
 		color              : inherit;
@@ -1679,7 +1671,6 @@ div.sticked--top {
 
 	.sticked--bottom tr:first-child td {
 		position           : sticky;
-		position           : -webkit-sticky;
 		bottom             : 0;
 		z-index            : 10;
 		background         : inherit;

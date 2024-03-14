@@ -28,6 +28,8 @@ include $rootpath."/inc/language/".$language.".php";
 
 $thisfile = basename( __FILE__ );
 
+global $isadmin;
+
 //настройки поиска дублей
 $doublesFile = $rootpath."/cash/".$fpath."settings.checkdoubles.json";
 if ( file_exists( $doublesFile ) ) {
@@ -213,7 +215,8 @@ if ( $action == 'list' ) {
 		"client"  => $clients,
 		"page"    => $page,
 		"pageall" => $count_pages,
-		"count"   => $all_lines
+		"count"   => $all_lines,
+		"admin"   => $isadmin == 'on' ? true : null
 	];
 
 	$list = json_encode_cyr( $data );
@@ -1407,6 +1410,33 @@ if ( $action == 'ignore.on' ) {
 	$result = $client -> ignoreDouble( $id, $params );
 
 	print json_encode_cyr( ["result" => $result] );
+
+	exit();
+
+}
+
+// удаление записи о проверке дубля
+if ( $action == 'delete' ){
+
+	$id = $_REQUEST['id'];
+
+	$exist = (int)$db -> getOne("SELECT id FROM {$sqlname}doubles WHERE id = '$id'");
+	if($exist > 0){
+
+		$db -> query("DELETE FROM {$sqlname}doubles WHERE id = '$id'");
+
+		print json_encode_cyr([
+			"error" => 0
+		]);
+
+	}
+	else{
+
+		print json_encode_cyr([
+			"error" => "Запись не найдена"
+		]);
+
+	}
 
 	exit();
 

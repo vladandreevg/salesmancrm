@@ -18,7 +18,7 @@
 			<th class="yw250 hidden-netbook text-left">
 				<div class="ellipsis"><b>Возможные дубли</b></div>
 			</th>
-			<th class="w80"></th>
+			<th class="w130"></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -29,11 +29,11 @@
 				</td>
 				<td>
 					{{#clid}}
-						<a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="{{icon}}"></i>{{clid}}: {{client}}
-						</a>{{/clid}}
+						<a href="javascript:void(0)" onclick="openClient('{{clid}}')" title="Открыть в новом окне"><i class="{{icon}}"></i>{{clid}}: {{client}}</a>
+					{{/clid}}
 					{{#pid}}
-						<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть в новом окне"><i class="{{icon}}"></i>{{pid}}: {{person}}
-						</a>{{/pid}}
+						<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Открыть в новом окне"><i class="{{icon}}"></i>{{pid}}: {{person}}</a>
+					{{/pid}}
 				</td>
 				<td>
 					<div class="ellipsis">{{user}}</div>
@@ -46,15 +46,16 @@
 				</td>
 				<td class="hidden-netbook">
 					{{#doubles}}
-						{{#client}}
-							<div>{{id}}: {{client}}</div>{{/client}}
-						{{#person}}
-							<div>{{id}}: {{person}}</div>{{/person}}
+						{{#client}}<div>{{id}}: {{client}}</div>{{/client}}
+						{{#person}}<div>{{id}}: {{person}}</div>{{/person}}
 					{{/doubles}}
 				</td>
 				<td>
-					<a href="javascript:void(0)" onClick="doubleModule.merge('{{id}}')" class="gray blue" title="Обработать"><i class="icon-docs"></i></a>
-					<A href="javascript:void(0)" onClick="doubleModule.ignore('{{id}}')" class="gray red" title="Игнорировать"><i class="icon-block"></i></A>&nbsp;
+					<a href="javascript:void(0)" onclick="doubleModule.merge('{{id}}')" class="button dotted bluebtn fs-07 m0" title="Обработать"><i class="icon-docs"></i></a>
+					<A href="javascript:void(0)" onclick="doubleModule.ignore('{{id}}')" class="button dotted greenbtn fs-07 m0" title="Игнорировать"><i class="icon-block"></i></A>&nbsp;
+					{{#admin}}
+					<A href="javascript:void(0)" onclick="doubleModule.delete('{{id}}')" class="button dotted redbtn fs-07 m0" title="Удалить"><i class="icon-cancel-circled"></i></A>
+					{{/admin}}
 				</td>
 			</tr>
 		{{/client}}
