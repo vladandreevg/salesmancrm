@@ -5716,7 +5716,7 @@ var $mailer = {
 
 			$.post(url + '&box=inbox', function (data) {
 
-				if (data.result !== '') {
+				if (data.result !== '' && data.error !== "undefined") {
 
 					if (data.count > 0) {
 						yNotifyMe("CRM. Новое письмо," + striptags(data.result) + ",newmail.png," + data.lastid);
@@ -5740,6 +5740,16 @@ var $mailer = {
 						});
 
 					}
+					else {
+						
+						Swal.fire({
+							title: "Загрузка почты невозможна!",
+							text: "Ошибка: проблемы авторизации",
+							type: 'error',
+						});
+						
+					}
+					
 
 				}
 

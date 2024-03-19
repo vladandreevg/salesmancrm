@@ -338,6 +338,19 @@ if ( $action == 'getmessage' ) {
 	$messages = $mail -> Messages;
 	$error    = $mail -> Error;
 
+	if( !empty($error) ){
+
+		$r = [
+			"result" => "",
+			"error"  => $error
+		];
+
+		print json_encode_cyr( $r );
+
+		exit();
+
+	}
+
 	if ( !empty( $messages ) ) {
 
 		//обрабатываем сообщения
