@@ -133,9 +133,11 @@ if ($action == 'save') {
 	$active      = $_REQUEST['active'];
 	$tip         = $_REQUEST['tip'];
 	$sip_context = $_REQUEST['sip_context'];
-	$sipUser     = rij_crypt($_REQUEST['api_salt'], $skey, $ivc);
+	$sip_user     = rij_crypt($_REQUEST['sip_user'], $skey, $ivc);
 	$sipKey      = rij_crypt($_REQUEST['api_key'], $skey, $ivc);
 	$sip_secret  = rij_crypt($_REQUEST['sip_secret'], $skey, $ivc);
+	$sip_host     = $_REQUEST['sip_host'];
+	$sip_port     = $_REQUEST['sip_port'];
 
 	$sid = $db -> getOne("select id from {$sqlname}services WHERE folder = 'asteriskapi' and identity = '$identity'");
 	if ($sid == 0) {

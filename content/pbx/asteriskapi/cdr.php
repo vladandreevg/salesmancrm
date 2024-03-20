@@ -51,9 +51,6 @@ if ( PHP_SAPI == 'cli' ) {
 		$$r = $v;
 	}
 
-	// форсированный режим запроса cdr
-	$isforce = (int)$force == 1;
-
 	if ( $identity == '' ) {
 		$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'" );
 	}
@@ -68,6 +65,8 @@ if ( PHP_SAPI == 'cli' ) {
 
 }
 
+// форсированный режим запроса cdr
+$isforce = (int)$force == 1;
 
 //Добавлять запись в историю
 $putInHistory = false;

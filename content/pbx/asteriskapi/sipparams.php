@@ -1,5 +1,5 @@
 <?php
-global $skey, $ivc;
+global $skey, $ivc, $identity;
 
 $result_sip = $db -> getRow("SELECT * FROM {$sqlname}sip WHERE identity = '$identity'");
 
