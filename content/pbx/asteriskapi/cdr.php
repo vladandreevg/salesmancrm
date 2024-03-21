@@ -8,12 +8,12 @@
 /*         ver. 2024.x          */
 /* ============================ */
 
-set_time_limit( 0 );
+set_time_limit(0);
 
-error_reporting( E_ERROR );
+error_reporting(E_ERROR);
 
-ini_set( 'display_errors', 1 );
-ini_set( 'memory_limit', '512M' );
+ini_set('display_errors', 1);
+ini_set('memory_limit', '512M');
 
 $rootpath = dirname(__DIR__, 3);
 $thisfile = basename(__FILE__);
@@ -25,18 +25,19 @@ include $rootpath."/inc/settings.php";
 
 $hours = (int)$_REQUEST['hours'];
 $apkey = $_REQUEST['apkey'];
+$printres = $_REQUEST['printres'];
 
 // форсированный режим запроса cdr
 $isforce = (int)$_REQUEST['force'] == 1;
 
-if ( $identity == '' ) {
-	$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'" );
+if ($identity == '') {
+	$identity = $db -> getOne("SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'");
 }
 
-if ( (int)$identity == 0 ) {
+if ((int)$identity == 0) {
 
 	$return = ["error" => "Не верный ключ CRM API"];
-	print json_encode_cyr( $return );
+	print json_encode_cyr($return);
 	exit();
 
 }
@@ -44,29 +45,30 @@ if ( (int)$identity == 0 ) {
 require_once $rootpath."/inc/func.php";
 
 // если скрипт запускается из консоли, то переменные считываем из аргументов
-if ( PHP_SAPI == 'cli' ) {
+if (PHP_SAPI == 'cli') {
 
-	$req = parse_argv( $argv );
-	foreach ( $req as $r => $v ) {
+	$req = parse_argv($argv);
+	foreach ($req as $r => $v) {
 		$$r = $v;
 	}
 
-	if ( $identity == '' ) {
-		$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'" );
+	//print_r($req);
+
+	$isforce = (int)$force == 1;
+
+	if ($identity == '') {
+		$identity = $db -> getOne("SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'");
 	}
 
-	if ( (int)$identity == 0 ) {
+	if ((int)$identity == 0) {
 
 		$return = ["error" => "Не верный ключ CRM API"];
-		print json_encode_cyr( $return );
+		print json_encode_cyr($return);
 		exit();
 
 	}
 
 }
-
-// форсированный режим запроса cdr
-$isforce = (int)$force == 1;
 
 //Добавлять запись в историю
 $putInHistory = false;
@@ -74,16 +76,22 @@ $putInHistory = false;
 // отсекаем запуск процессов-дублей
 $logfile  = $rootpath."/cash/pbx.log";
 $isActive = false;
-$lastTime = current_datumtime( 1 );
-if ( !$isforce && file_exists( $logfile ) ) {
+$lastTime = current_datumtime(1);
+if (!$isforce && file_exists($logfile)) {
 
-	$isActive = file_get_contents( $logfile ) == "1";
-	$lastTime = unix_to_datetime( fileatime( $logfile ) );
+	$isActive = file_get_contents($logfile) == "1";
+	$lastTime = unix_to_datetime(fileatime($logfile));
 
-	if ( $isActive || diffDateTimeSeq( $lastTime ) < 300 ) {
+	if ($isActive || diffDateTimeSeq($lastTime) < 300) {
 
-		$return = ["result" => "Запрос уже активен"];
-		print json_encode_cyr( $return );
+		$return = [
+			"result"  => "Запрос уже активен",
+			"request" => $_REQUEST,
+			"get"     => $_GET,
+			"isforce" => $isforce,
+			"argv"    => $argv
+		];
+		print json_encode_cyr($return);
 		exit();
 
 	}
@@ -103,43 +111,43 @@ $list = $return = [];
 //массив внутренних номеров сотрудников
 $users = [];
 
-$r = $db -> getAll( "SELECT iduser, phone, phone_in, mob FROM {$sqlname}user WHERE identity = '$identity'" );
-foreach ( $r as $da ) {
+$r = $db -> getAll("SELECT iduser, phone, phone_in, mob FROM {$sqlname}user WHERE identity = '$identity'");
+foreach ($r as $da) {
 
-	if ( $da['phone'] != '' ) {
-		$users[ prepareMobPhone( $da['phone'] ) ] = $da['iduser'];
+	if ($da['phone'] != '') {
+		$users[prepareMobPhone($da['phone'])] = $da['iduser'];
 	}
-	if ( $da['phone_in'] != '' ) {
-		$users[ prepareMobPhone( $da['phone_in'] ) ] = $da['iduser'];
+	if ($da['phone_in'] != '') {
+		$users[prepareMobPhone($da['phone_in'])] = $da['iduser'];
 	}
-	if ( $da['mob'] != '' ) {
-		$users[ prepareMobPhone( $da['mob'] ) ] = $da['iduser'];
+	if ($da['mob'] != '') {
+		$users[prepareMobPhone($da['mob'])] = $da['iduser'];
 	}
 
 }
 
 //посмотреим дату последнего звонка из истории звонков
-if ( $last_datum == '' ) {
-	$last_datum = $db -> getOne( "SELECT MAX(datum) FROM {$sqlname}callhistory WHERE identity = '$identity'" );
+if ($last_datum == '') {
+	$last_datum = $db -> getOne("SELECT MAX(datum) FROM {$sqlname}callhistory WHERE identity = '$identity'");
 }
 
 //если проверок не было (на старте) или была больше 30 дней назад
 //то берем за месяц
-if ( $hours > 0 || $last_datum == '' || (int)diffDate2( $last_datum ) > 30 ) {
+if ($hours > 0 || $last_datum == '' || (int)diffDate2($last_datum) > 30) {
 
 	//берем статистику за месяц
-	if ( !$hours ) {
+	if (!$hours) {
 		$hours = 24 * 30;
 	}
 
-	$delta     = $hours * 3600;//период времени, за который делаем запрос в часах
-	$zone      = $GLOBALS['tzone'];//смещение временной зоны сервера
+	$delta = $hours * 3600;    //период времени, за который делаем запрос в часах
+	$zone  = $GLOBALS['tzone'];//смещение временной зоны сервера
 
 	//$dateStart = date( 'Y-m-d H:i:s', mktime( date( 'H' ), date( 'i' ), date( 's' ), date( 'm' ), date( 'd' ), date( 'Y' ) ) - $delta );
-	$dateStart = modifyDatetime( current_datumtime(), [
+	$dateStart = modifyDatetime(current_datumtime(), [
 		"format" => 'Y-m-d H:i:s',
 		"hours"  => -$hours
-	] );
+	]);
 
 }
 else {
@@ -149,37 +157,37 @@ else {
 //проверяем не чаще, чем раз в 5 минут
 //иначе, при большом количестве пользователей
 //резко возрастает нагрузка на сервер
-if ( !$isforce && diffDateTimeSeq( $dateStart ) < 300 ) {
+if (!$isforce && diffDateTimeSeq($dateStart) < 300) {
 
 	$return = ["result" => "Данные обновлены менее 5 минут назад"];
-	print json_encode_cyr( $return );
+	print json_encode_cyr($return);
 	exit();
 
 }
 
 // пометим процесс активным
-file_put_contents( $logfile, "1" );
+file_put_contents($logfile, "1");
 
 //$dateEnd = date( 'Y-m-d H:i:s', mktime( date( 'H' ), date( 'i' ), date( 's' ), date( 'm' ), date( 'd' ), date( 'Y' ) ) );
 $dateEnd = modifyDatetime(NULL, ["minutes" => 5]);
 
 //Делаем запрос на подготовку статистики и получаем key этого запроса
 $data = [
-	"from_date"   => modifyDatetime( $dateStart, ["format" => "Y-m-d H:i:s"] ),
-	"to_date"     => modifyDatetime( $dateEnd, ["format" => "Y-m-d H:i:s"] )
+	"from_date" => modifyDatetime($dateStart, ["format" => "Y-m-d H:i:s"]),
+	"to_date"   => modifyDatetime($dateEnd, ["format" => "Y-m-d H:i:s"])
 ];
 
-$result = getCallHistoryExtra( $data );
+$result = getCallHistoryExtra($data);
 
-//file_put_contents($rootpath."/cash/callhistory.json", json_encode_cyr($result));
+file_put_contents($rootpath."/cash/callhistory.json", json_encode_cyr($result));
 //exit();
 
-if( $result['resp_status'] == 'ok' ) {
+if ($result['resp_status'] == 'ok') {
 
 	$list = [];
 
 	// массив сотрудников (будем отсекать лишние звонки)
-	$extentions   = $db -> getIndCol("phone_in", "SELECT phone_in, iduser FROM {$sqlname}user WHERE COALESCE(phone_in, '') != '' AND identity = '$identity'");
+	$extentions = $db -> getIndCol("phone_in", "SELECT phone_in, iduser FROM {$sqlname}user WHERE COALESCE(phone_in, '') != '' AND identity = '$identity'");
 
 	foreach ($result['calls'] as $call) {
 
@@ -192,29 +200,29 @@ if( $result['resp_status'] == 'ok' ) {
 		$direction = $call[11] == 'inbound' ? "income" : "outcome";
 
 		// если ни звонящий, ни абонент не являются сотрудниками црм, то выходим
-		if( !array_key_exists($call[2], $extentions) && !array_key_exists($call[3], $extentions)){
+		if (!array_key_exists($call[2], $extentions) && !array_key_exists($call[3], $extentions)) {
 			continue;
 		}
 
 		// если звонящий и абонент не являются сотрудниками црм, то это внутренний вызов. выходим
-		if( array_key_exists($call[2], $extentions) && array_key_exists($call[3], $extentions)){
+		if (array_key_exists($call[2], $extentions) && array_key_exists($call[3], $extentions)) {
 			//continue;
 		}
 
-		if(array_key_exists($call[2], $extentions)){
+		if (array_key_exists($call[2], $extentions)) {
 			$direction = 'outcome';
 			$phone     = $call[3];
 			$extention = $call[2];
 			$iduser    = $extentions[$extention];
 		}
 
-		if( strlen($call[2]) < 11 && strlen($call[2]) == strlen($call[3]) ){
+		if (strlen($call[2]) < 11 && strlen($call[2]) == strlen($call[3])) {
 			$direction = 'inner';
 		}
 
 		$u = getxCallerID($phone);
 
-		if ( (int)$call[7] == 0 ) {
+		if ((int)$call[7] == 0) {
 			$rezult = 'NOANSWER';
 		}
 
@@ -239,7 +247,7 @@ if( $result['resp_status'] == 'ok' ) {
 
 	$xdata['data']['from_date'] = $data['from_date'];
 	$xdata['data']['to_date']   = $data['to_date'];
-	$xdata['list'] = $list;
+	$xdata['list']              = $list;
 
 	// file_put_contents($rootpath."/cash/callhistory-data.json", json_encode_cyr($xdata));
 
@@ -259,11 +267,11 @@ if( $result['resp_status'] == 'ok' ) {
 		}
 		else {
 
-			$data = $call;
+			$zdata = $call;
 
-			unset($data['uid'], $data['callid']);
+			unset($zdata['uid'], $zdata['callid']);
 
-			$db -> query("UPDATE {$sqlname}callhistory SET ?u WHERE id = '$id'", $data);
+			$db -> query("UPDATE {$sqlname}callhistory SET ?u WHERE id = '$id'", $zdata);
 			$upd++;
 
 		}
@@ -309,23 +317,29 @@ if( $result['resp_status'] == 'ok' ) {
 
 	}
 
-	if ($_REQUEST['printres'] == 'yes') {
+	if ($printres == 'yes') {
 		$rez = 'Успешно.<br>Обновлено записей: '.$upd.'<br>Новых записей: '.$new;
 	}
 
 }
-else{
+else {
 
 	$rez = $result['error'];
 
 }
 
-$return = ["result" => $rez];
+$return = [
+	"result"  => $rez,
+	//"request" => $_REQUEST,
+	"period"  => $data,
+	//"sip"     => $sip,
+	//"response" => $result
+];
 
-file_put_contents( $logfile, "0" );
+file_put_contents($logfile, "0");
 
 //очищаем подключение к БД
-unset( $db );
+unset($db);
 
-print json_encode_cyr( $return );
+print json_encode_cyr($return);
 exit();
