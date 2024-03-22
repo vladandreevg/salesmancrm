@@ -722,7 +722,7 @@ function get_people($iuser, string $asarray = "no", bool $onlyactive = false) {
 	$sqlname  = $GLOBALS['sqlname'];
 	$db       = $GLOBALS['db'];
 
-	global $isadmin;
+	global $isadminAPI;
 
 	if ( $iuser < 1 ) {
 		$iuser = 0;
@@ -734,7 +734,7 @@ function get_people($iuser, string $asarray = "no", bool $onlyactive = false) {
 
 	$users = [];
 
-	if ( $isadmin == 'on' || in_array( $itipuser, ["Руководитель организации", "Поддержка продаж", "Руководитель с доступом", 'Администратор'] ) ) {
+	if ( $isadminAPI == 'on' || in_array( $itipuser, ["Руководитель организации", "Поддержка продаж", "Руководитель с доступом", 'Администратор'] ) ) {
 
 		$users = $db -> getCol( "SELECT iduser FROM {$sqlname}user WHERE identity = '$identity' $ao" );
 
