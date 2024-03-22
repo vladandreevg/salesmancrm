@@ -232,7 +232,7 @@ if ( $action == 'edit' || $action == 'clone' || $action == 'addprovider' ) {
 			</div>
 
 			<?php
-			if( $id > 0 ){
+			//if( $id > 0 ){
 			?>
 			<div class="flex-container box--child mt10 mb10">
 
@@ -241,7 +241,7 @@ if ( $action == 'edit' || $action == 'clone' || $action == 'addprovider' ) {
 					<input name="invoice_paydate" type="text" class="w160 inputdate" id="date_plan" value="<?= $rashod['invoice_paydate'] ?>">
 				</div>
 			</div>
-			<?php } ?>
+			<?php //} ?>
 
 			<div class="flex-container box--child mt10 mb10">
 
@@ -2194,6 +2194,33 @@ if ( $action == 'statement.edit' ) {
 				<div class="flex-string wp80 pl10">
 
 					<textarea name="des" id="des" rows="3" class="wp97"><?= $bank['content'] ?></textarea>
+
+				</div>
+
+			</div>
+			<div class="flex-container box--child mt10 mb10">
+
+				<div class="flex-string wp20 text-right"></div>
+				<div class="flex-string wp80 pl10 pb10">
+
+					<?php
+					if ( $bank['do'] == 'on' ) {
+
+						print '<b class="green">Проведено</b><input name="do" type="hidden" id="do" value="on" />';
+
+					}
+					else {
+						?>
+						<div class="checkbox">
+							<label>
+								<input name="do" type="checkbox" id="do" value="on" <?php print ( $bank['do'] == 'on' ) ? 'checked' : ''; ?> />
+								<span class="custom-checkbox"><i class="icon-ok"></i></span>
+								&nbsp;<b>Провести?</b>
+							</label>
+						</div>
+						<?php
+					}
+					?>
 
 				</div>
 

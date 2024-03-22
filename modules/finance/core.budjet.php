@@ -729,6 +729,8 @@ if ($action == 'statement.edit') {
 
 	$statement = BankStatement ::info($id);
 
+	$statement['clid'] = (int)$_REQUEST['clid'] > 0 ? (int)$_REQUEST['clid'] : $statement['clid'];
+
 	// добавим запись в журнал расходов
 	$arg = [
 		"cat"      => $_REQUEST['cat'],
@@ -738,7 +740,7 @@ if ($action == 'statement.edit') {
 		"bmon"     => $statement['mon'],
 		"summa"    => $statement['summa'],
 		"datum"    => $_REQUEST['datum'],
-		"do"       => "on",
+		"do"       => $_REQUEST['do'] == 'on' ? "on" : NULL,
 		"rs"       => $statement['rs'],
 		"iduser"   => $iduser1,
 		"identity" => $identity
@@ -758,23 +760,37 @@ if ($action == 'statement.edit') {
 
 	}
 
-	$response = Budget ::edit(0, $arg);
+	if( $_REQUEST['do'] == 'on' ) {
 
-	//свяжем расход
-	if ($response['data'] > 0) {
+		$response = Budget ::edit(0, $arg);
 
-		BankStatement ::edit($id, ["bid" => $response['data']]);
+		//свяжем расход
+		if ($response['data'] > 0) {
 
-		$prvdr = [
-			'bid'      => $response['data'],
-			"summa"    => $statement['summa'],
-			'conid'    => $arg['conid'] + 0,
-			'partid'   => $arg['partid'] + 0,
-			"identity" => $identity
-		];
+			BankStatement ::edit($id, ["bid" => $response['data']]);
 
-		//добавим расход в таблицу dogprovider
-		$db -> query("INSERT INTO {$sqlname}dogprovider SET ?u", $prvdr);
+			$prvdr = [
+				'bid'      => $response['data'],
+				"summa"    => $statement['summa'],
+				'conid'    => (int)$arg['conid'],
+				'partid'   => (int)$arg['partid'],
+				"identity" => $identity
+			];
+
+			//добавим расход в таблицу dogprovider
+			$db -> query("INSERT INTO {$sqlname}dogprovider SET ?u", $prvdr);
+
+		}
+
+	}
+	else{
+
+		$arg['clid'] = $statement['clid'];
+
+		$res = BankStatement ::edit($id, $arg);
+		if($res > 0){
+			$response['result'] = "Изменено";
+		}
 
 	}
 

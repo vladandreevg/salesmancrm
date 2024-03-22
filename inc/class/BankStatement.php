@@ -136,7 +136,9 @@ class BankStatement {
 			$mon  = (int)getMonth($datum);
 
 			//поищем клиента по реквизитам ИНН
-			$client = ( $tip == "plus" ) ? $db -> getRow("SELECT clid, type, title FROM {$sqlname}clientcat WHERE clid > 0 AND (recv LIKE '%$item[outRS]%' OR recv LIKE '%$item[outINN]%') AND identity = '$identity'") : $db -> getRow("SELECT clid, type, title FROM {$sqlname}clientcat WHERE clid > 0 AND (recv LIKE '%$item[inRS]%' OR recv LIKE '%$item[inINN]%') AND identity = '$identity'");
+			$client = ( $tip == "plus" ) ?
+				$db -> getRow("SELECT clid, type, title FROM {$sqlname}clientcat WHERE clid > 0 AND (recv LIKE '%$item[outRS]%' OR recv LIKE '%$item[outINN]%') AND identity = '$identity'") :
+				$db -> getRow("SELECT clid, type, title FROM {$sqlname}clientcat WHERE clid > 0 AND (recv LIKE '%$item[inRS]%' OR recv LIKE '%$item[inINN]%') AND identity = '$identity'");
 
 			//обработаем клиента
 			if (

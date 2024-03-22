@@ -337,7 +337,7 @@ if ( $action == "clientlist" ) {
 	if ( $_REQUEST["tip"] == "contragent" ) {
 		$sort .= " and type IN ('partner','contractor')";
 	}
-	elseif( !empty($_REQUEST['xtip']) ){
+	elseif( !empty($_REQUEST['xtip']) && $_REQUEST['xtip'] != 'undefined' ){
 		$sort .= " and type = '".$_REQUEST['xtip']."'";
 	}
 
