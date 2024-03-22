@@ -1366,7 +1366,8 @@ class Notify {
 		$settings     = $db -> getOne( "SELECT usersettings FROM {$sqlname}user WHERE iduser = '$iduser' and identity = '$identity'" );
 		$usersettings = json_decode( $settings, true );
 
-		return (!empty( $usersettings['notify'] )) ? $usersettings['notify'] : array_keys( self ::events() );
+		//return (!empty( $usersettings['notify'] )) ? $usersettings['notify'] : array_keys( self ::events() );
+		return (!empty( $usersettings['notify'] )) ? $usersettings['notify'] : [];
 
 	}
 

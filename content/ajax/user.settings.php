@@ -243,7 +243,7 @@ if ($action == "save") {
 	$param['menuClient']     = $_REQUEST['menuClient'];
 	$param['menuPerson']     = $_REQUEST['menuPerson'];
 	$param['menuDeal']       = $_REQUEST['menuDeal'];
-	$param['notify']         = array_keys($_REQUEST['notify']);
+	$param['notify']         = array_keys((array)$_REQUEST['notify']);
 	$param['filterAllBy']    = $userSettings['filterAllBy'];
 	$param['subscribs']    = $_REQUEST['subscribs'];
 	//$usersettings       = json_encode_cyr($param);

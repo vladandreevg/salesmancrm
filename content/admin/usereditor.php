@@ -420,7 +420,7 @@ if ($action == "edit.do") {
 	$param['menuClient']            = untag($_REQUEST['menuClient']);
 	$param['menuPerson']            = untag($_REQUEST['menuPerson']);
 	$param['menuDeal']              = untag($_REQUEST['menuDeal']);
-	$param['notify']                = array_keys($_REQUEST['notify']);
+	$param['notify']                = array_keys((array)$_REQUEST['notify']);
 	$param['filterAllBy']           = untag($_REQUEST['filterAllBy']);
 	$param['filterAllByClientEdit'] = untag($_REQUEST['filterAllByClientEdit']);
 	$param['filterAllByClientCard'] = untag($_REQUEST['filterAllByClientCard']);
@@ -2683,7 +2683,7 @@ if ($action == "edit") {
 								<div class="flex-string w70 pl10 relativ">
 								
 									<label for="notify['.$event.']" class="switch">
-										<input type="checkbox" name="notify['.$event.']" id="notify['.$event.']" value="on" '.( in_array($event, $eventsSubscribe) || empty($eventsSubscribe) ? "checked" : "" ).'>
+										<input type="checkbox" name="notify['.$event.']" id="notify['.$event.']" value="on" '.( in_array($event, $eventsSubscribe) || ( (int)$xuser == 0 && empty($eventsSubscribe)) ? "checked" : "" ).'>
 										<span class="slider"></span>
 									</label>
 	

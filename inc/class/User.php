@@ -128,7 +128,7 @@ class User {
 
 		if ( (int)$id > 0 ) {
 
-			$res                = $db -> getRow( "SELECT * FROM ".$sqlname."user WHERE iduser = '$id' and identity = '$identity'" );
+			$res                = $db -> getRow( "SELECT * FROM {$sqlname}user WHERE iduser = '$id' and identity = '$identity'" );
 			$user['title']      = $res["title"];
 			$user['tip']        = $res["tip"];
 			$user['otdel']      = $res["otdel"];
@@ -264,7 +264,7 @@ class User {
 			];
 			unset( $user['subscribe'] );
 
-			$user['assistants'] = $db -> getCol("SELECT iduser FROM ".$sqlname."user WHERE zam = '$id' and identity = '$identity'");
+			$user['assistants'] = $db -> getCol("SELECT iduser FROM {$sqlname}user WHERE zam = '$id' and identity = '$identity'");
 
 			$response = [
 				"result" => $user,
@@ -369,7 +369,7 @@ class User {
 
 		if ( (int)$id > 0 ) {
 
-			$utitle = $db -> getOne( "SELECT title FROM ".$sqlname."user WHERE iduser = '$id'" );
+			$utitle = $db -> getOne( "SELECT title FROM {$sqlname}user WHERE iduser = '$id'" );
 
 			if ( $utitle == '' ) {
 				$utitle = "Не определен";
@@ -434,7 +434,7 @@ class User {
 			$sort = " and mid = '$mid'";
 		}
 
-		$re = $db -> getAll( "SELECT iduser, mid, title, tip, secrty, avatar, isadmin FROM ".$sqlname."user WHERE iduser > 0 $sort and identity = '$identity' ORDER BY field(COALESCE(secrty, 'no'), 'yes','no') ASC, mid, title" );
+		$re = $db -> getAll( "SELECT iduser, mid, title, tip, secrty, avatar, isadmin FROM {$sqlname}user WHERE iduser > 0 $sort and identity = '$identity' ORDER BY field(COALESCE(secrty, 'no'), 'yes','no') ASC, mid, title" );
 		//print $db -> lastQuery();
 		foreach ( $re as $da ) {
 
@@ -453,7 +453,7 @@ class User {
 				//"canDeleted" => self ::canDeleted( $da[ "iduser" ] )
 			];
 
-			$count = (int)$db -> getOne( "SELECT COUNT(*) FROM ".$sqlname."user WHERE mid = '".$da["iduser"]."' AND identity = '$identity'" );
+			$count = (int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}user WHERE mid = '".$da["iduser"]."' AND identity = '$identity'" );
 			if ( $count > 0 ) {
 
 				$level++;
@@ -526,7 +526,7 @@ class User {
 			$sort = " and mid = '$mid'";
 		}
 
-		$re = $db -> getAll( "SELECT iduser, mid, title, tip, secrty, avatar, isadmin, otdel FROM ".$sqlname."user WHERE iduser > 0 $sort AND secrty = 'yes' and identity = '$identity' ORDER BY mid, title" );
+		$re = $db -> getAll( "SELECT iduser, mid, title, tip, secrty, avatar, isadmin, otdel FROM {$sqlname}user WHERE iduser > 0 $sort AND secrty = 'yes' and identity = '$identity' ORDER BY mid, title" );
 		foreach ( $re as $da ) {
 
 			$uname = yexplode( " ", $da["title"] );
@@ -544,7 +544,7 @@ class User {
 				"otdel"   => (int)$da['otdel'],
 			];
 
-			$count = $db -> getOne( "SELECT COUNT(*) FROM ".$sqlname."user WHERE mid = '".$da["iduser"]."' AND identity = '$identity'" );
+			$count = $db -> getOne( "SELECT COUNT(*) FROM {$sqlname}user WHERE mid = '".$da["iduser"]."' AND identity = '$identity'" );
 			if ( $count > 0 ) {
 
 				$level++;
@@ -572,10 +572,10 @@ class User {
 	/**
 	 * Вывод списка сотрудников любой степени вложенности
 	 *
-	 * @param null   $id     integer - iduser сотрудника или 0, для вывода всех
+	 * @param null $id integer - iduser сотрудника или 0, для вывода всех
 	 * @param string $active - выводить только активных
-	 * @param int    $level  - уровень вывода
-	 * @param null   $mid    - руководитель - текущий сотрудник
+	 * @param int|null $level - уровень вывода
+	 * @param null $mid - руководитель - текущий сотрудник
 	 *
 	 * @return array - массив с результатом
 	 *
@@ -623,7 +623,7 @@ class User {
 			$filter = " AND secrty = 'no'";
 		}
 
-		$re = $db -> query( "SELECT iduser, mid, title, secrty, tip, avatar, isadmin FROM ".$sqlname."user WHERE iduser > 0 $sort $filter and secrty = 'yes' and identity = '$identity' ORDER BY mid, title" );
+		$re = $db -> query( "SELECT iduser, mid, title, secrty, tip, avatar, isadmin FROM {$sqlname}user WHERE iduser > 0 $sort $filter and secrty = 'yes' and identity = '$identity' ORDER BY mid, title" );
 		while ($da = $db -> fetch( $re )) {
 
 			$ures[] = [
@@ -638,7 +638,7 @@ class User {
 				"canDeleted" => self ::canDeleted( $da["iduser"] )
 			];
 
-			$count = (int)$db -> getOne( "SELECT COUNT(*) FROM ".$sqlname."user WHERE mid = '".$da["iduser"]."' $filter AND identity = '$identity'" );
+			$count = (int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}user WHERE mid = '".$da["iduser"]."' $filter AND identity = '$identity'" );
 			if ( $count > 0 ) {
 
 
@@ -725,12 +725,12 @@ class User {
 			$filter = " AND secrty = 'no'";
 		}
 
-		$re = $db -> getAll( "SELECT iduser, mid, title, secrty, tip, user_post, avatar, otdel, isadmin, adate FROM ".$sqlname."user WHERE iduser > 0 $sort $filter and secrty = 'yes' and identity = '$identity' ORDER BY mid, title" );
+		$re = $db -> getAll( "SELECT iduser, mid, title, secrty, tip, user_post, avatar, otdel, isadmin, adate FROM {$sqlname}user WHERE iduser > 0 $sort $filter and secrty = 'yes' and identity = '$identity' ORDER BY mid, title" );
 		foreach ( $re as $da ) {
 
 			$users = [];
 
-			$count = (int)$db -> getOne( "SELECT COUNT(*) FROM ".$sqlname."user WHERE mid = '".$da["iduser"]."' $filter AND identity = '$identity'" );
+			$count = (int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}user WHERE mid = '".$da["iduser"]."' $filter AND identity = '$identity'" );
 			if ( $count > 0 ) {
 				$users = self ::userOrgChart( NULL, $active, (int)$da['iduser'] );
 			}
@@ -833,7 +833,7 @@ class User {
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
-		$user = $db -> getRow( "SELECT iduser, mid, title, secrty, tip FROM ".$sqlname."user WHERE iduser = '$id' and identity = '$identity'" );
+		$user = $db -> getRow( "SELECT iduser, mid, title, secrty, tip FROM {$sqlname}user WHERE iduser = '$id' and identity = '$identity'" );
 
 		$user['secrty'] = ($user['secrty'] == 'yes') ? "true" : "false";
 
@@ -881,7 +881,7 @@ class User {
 
 		$u = $users = [];
 
-		$boss = $db -> getRow( "SELECT iduser, mid, tip, title, secrty FROM ".$sqlname."user WHERE iduser = '$id' and identity = '$identity' ORDER BY iduser, title" );
+		$boss = $db -> getRow( "SELECT iduser, mid, tip, title, secrty FROM {$sqlname}user WHERE iduser = '$id' and identity = '$identity' ORDER BY iduser, title" );
 
 		$users[0] = [
 			"id"     => (int)$boss['iduser'],
@@ -909,7 +909,7 @@ class User {
 
 				//$users = getUserCatalog($id);
 
-				$res = $db -> query( "SELECT iduser FROM ".$sqlname."user WHERE (mid = '$boss[mid]' or iduser = '$id') and secrty = 'yes' and identity = '$identity' ORDER BY iduser, title" );
+				$res = $db -> query( "SELECT iduser FROM {$sqlname}user WHERE (mid = '$boss[mid]' or iduser = '$id') and secrty = 'yes' and identity = '$identity' ORDER BY iduser, title" );
 				while ($da = $db -> fetch( $res )) {
 
 					$u = self ::userCatalog( (int)$da["iduser"] );
@@ -933,9 +933,9 @@ class User {
 			break;
 			case 'Менеджер продаж':
 
-				$boss2 = $db -> getRow( "SELECT iduser, mid, tip, title, secrty FROM ".$sqlname."user WHERE iduser = '$boss[mid]' and identity = '$identity' ORDER BY iduser, title" );
+				$boss2 = $db -> getRow( "SELECT iduser, mid, tip, title, secrty FROM {$sqlname}user WHERE iduser = '$boss[mid]' and identity = '$identity' ORDER BY iduser, title" );
 
-				$res = $db -> query( "SELECT iduser, mid, title, secrty, tip FROM ".$sqlname."user WHERE mid = '$boss2[mid]' and secrty = 'yes' and identity = '$identity' ORDER BY iduser, title" );
+				$res = $db -> query( "SELECT iduser, mid, title, secrty, tip FROM {$sqlname}user WHERE mid = '$boss2[mid]' and secrty = 'yes' and identity = '$identity' ORDER BY iduser, title" );
 				while ($da = $db -> fetch( $res )) {
 
 					$users[] = [
@@ -987,7 +987,7 @@ class User {
 
 		$phones = $emails = [];
 
-		$users = $db -> getAll( "SELECT email, phone, mob FROM ".$sqlname."user WHERE identity = '$identity'" );
+		$users = $db -> getAll( "SELECT email, phone, mob FROM {$sqlname}user WHERE identity = '$identity'" );
 		foreach ( $users as $user ) {
 
 			if ( $user['phone'] != '' ) {
@@ -1033,16 +1033,16 @@ class User {
 		$all = 0;
 
 		//проверим наличие клиентов
-		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM ".$sqlname."clientcat WHERE iduser = '$id' AND identity = '$identity'" );
+		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}clientcat WHERE iduser = '$id' AND identity = '$identity'" );
 
 		//проверим наличие персон
-		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM ".$sqlname."personcat WHERE iduser = '$id' and identity = '$identity'" );
+		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}personcat WHERE iduser = '$id' and identity = '$identity'" );
 
 		//проверим наличие сделок
-		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM ".$sqlname."dogovor WHERE iduser = '$id' and identity = '$identity'" );
+		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}dogovor WHERE iduser = '$id' and identity = '$identity'" );
 
 		//проверим наличие подчиненных
-		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM ".$sqlname."user WHERE mid = '$id' and identity = '$identity'" );
+		$all += (int)$db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}user WHERE mid = '$id' and identity = '$identity'" );
 
 		if ( $iduser1 == $id ) {
 			$all++;
@@ -1071,9 +1071,9 @@ class User {
 
 		$otdel = [];
 
-		$all = $db -> getIndCol( "idcategory", "SELECT idcategory, title FROM ".$sqlname."otdel_cat WHERE identity = '$identity' ORDER BY title" );
+		$all = $db -> getIndCol( "idcategory", "SELECT idcategory, title FROM {$sqlname}otdel_cat WHERE identity = '$identity' ORDER BY title" );
 
-		$users = $db -> getAll( "SELECT iduser, otdel FROM ".$sqlname."user WHERE identity = '$identity'" );
+		$users = $db -> getAll( "SELECT iduser, otdel FROM {$sqlname}user WHERE identity = '$identity'" );
 		foreach ( $users as $user ) {
 
 			$otdel[ $user['iduser'] ] = (int)$user['otdel'] > 0 ? $all[ (int)$user['otdel'] ] : NULL;
