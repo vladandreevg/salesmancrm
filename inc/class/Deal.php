@@ -3531,7 +3531,7 @@ class Deal {
 				"content"       => $row['content'],
 				"html"          => nl2br($row['content']),
 				"datum"         => $row['datum'],
-				"datumf"        => format_date_rus_name($row['datum_plan']),
+				"datumf"        => format_date_rus_name($row['datum']),
 				"datum_plan"    => $row['datum_plan'],
 				"datum_planf"   => format_date_rus_name($row['datum_plan']),
 				"datum_close"   => $row['datum_close'] != '0000-00-00' && !is_null($row['datum_close']) ? $row['datum_close'] : NULL,
