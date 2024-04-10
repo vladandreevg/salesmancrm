@@ -150,7 +150,7 @@ class Deal {
 
 		}
 
-		$this -> settingsUser = User::settings($this -> iduser1);
+		$this -> settingsUser = User ::settings($this -> iduser1);
 
 		date_default_timezone_set($this -> tmzone);
 
@@ -286,10 +286,10 @@ class Deal {
 				{$sqlname}dogovor.identity = '$identity'
 			");
 
-		if( (int)$r['did'] == 0 ){
+		if ((int)$r['did'] == 0) {
 
 			return [
-				"code" => 400,
+				"code"   => 400,
 				"result" => "error",
 				"error"  => "Сделка не найдена"
 			];
@@ -300,7 +300,7 @@ class Deal {
 
 		$dostup = $db -> getCol("SELECT iduser FROM {$sqlname}dostup WHERE did = '$did'");
 
-		$accesse = array_map(static function($a){
+		$accesse = array_map(static function ($a) {
 			return (int)$a;
 		}, $dostup);
 
@@ -316,7 +316,7 @@ class Deal {
 			//"step"          => $r['step'],
 			"stepName"      => $r['stepName'],
 			"isFrozen"      => $r['isFrozen'] == 0,
-			"idcategory"     => (int)$r['idcategory'],
+			"idcategory"    => (int)$r['idcategory'],
 			"direction"     => (int)$r['direction'],
 			"directionName" => $r['directionName'],
 			"adres"         => $r['adres'],
@@ -442,12 +442,12 @@ class Deal {
 			];
 		}
 
-		$response['client']         = get_client_info($r['clid'], "yes");
-		$response['client']['recv'] = get_client_recv($r['clid'], 'yes');
+		$response['client']             = get_client_info($r['clid'], "yes");
+		$response['client']['recv']     = get_client_recv($r['clid'], 'yes');
 		$response['client']['bankinfo'] = $response['client']['recv'];
 
-		$response['payer']         = get_client_info($r['payer'], "yes");
-		$response['payer']['recv'] = get_client_recv($r['payer'], 'yes');
+		$response['payer']             = get_client_info($r['payer'], "yes");
+		$response['payer']['recv']     = get_client_recv($r['payer'], 'yes');
 		$response['payer']['bankinfo'] = $response['payer']['recv'];
 
 		$person = [];
@@ -1770,10 +1770,10 @@ class Deal {
 				if (empty($params['title'])) {
 					$deal['title'] = $dealOld['title'];
 				}
-				if( !empty($params['datum_start']) ){
+				if (!empty($params['datum_start'])) {
 					$params['datum_start'] = untag($params['datum_start']);
 				}
-				if( !empty($params['datum_end']) ){
+				if (!empty($params['datum_end'])) {
 					$params['datum_end'] = untag($params['datum_end']);
 				}
 
@@ -1790,7 +1790,7 @@ class Deal {
 
 			}
 
-			if( !empty($params['payer']) ){
+			if (!empty($params['payer'])) {
 				$params['payer'] = (int)$params['payer'];
 			}
 
@@ -2027,15 +2027,15 @@ class Deal {
 			//проверка только если данные переданы из формы сделки
 			if ($params['calculate'] != 'yes' && ( isset($params['title']) || isset($params['title_dog']) )) {
 
-				if( !empty($params['kol']) ){
-					$oldParams["kol"]   = $dealOld['kol'];
-					$newParams["kol"]   = pre_format($params['kol']);
-					$deal['kol']   = pre_format($params['kol']);
+				if (!empty($params['kol'])) {
+					$oldParams["kol"] = $dealOld['kol'];
+					$newParams["kol"] = pre_format($params['kol']);
+					$deal['kol']      = pre_format($params['kol']);
 				}
-				if( !empty($params['marga']) ){
+				if (!empty($params['marga'])) {
 					$oldParams["marga"] = $dealOld['marga'];
 					$newParams["marga"] = pre_format($params['marga']);
-					$deal['marga'] = pre_format($params['marga']);
+					$deal['marga']      = pre_format($params['marga']);
 				}
 
 			}
@@ -2690,7 +2690,7 @@ class Deal {
 			$oldstep = current_dogstepname($stepOld);
 			$newstep = current_dogstepname($step);
 
-			if($oldstep != $newstep) {
+			if ($oldstep != $newstep) {
 
 				try {
 
@@ -2832,7 +2832,7 @@ class Deal {
 				}
 
 			}
-			else{
+			else {
 
 				$response['result']        = 'Error';
 				$response['error']['code'] = 302;
@@ -2925,10 +2925,10 @@ class Deal {
 			$deal['coid']        = (int)$params['coid'];
 			$deal['co_kol']      = pre_format($params['co_kol']);
 
-			$deal['marga']       = isset($params['marga']) ? pre_format($params['marga']) : (float)getDogData($did, 'marga');
-			$deal['kol_fact']    = isset($params['kol_fact']) ? pre_format($params['kol_fact']) : (float)getDogData($did, 'kol');
+			$deal['marga']    = isset($params['marga']) ? pre_format($params['marga']) : (float)getDogData($did, 'marga');
+			$deal['kol_fact'] = isset($params['kol_fact']) ? pre_format($params['kol_fact']) : (float)getDogData($did, 'kol');
 
-			$deal['close']       = 'yes';
+			$deal['close'] = 'yes';
 
 			if ($status == 'lose') {
 				$deal['marga'] = 0;
@@ -3524,9 +3524,9 @@ class Deal {
 				"uid"           => !empty($row['uid']) ? $row['uid'] : NULL,
 				"close"         => $row['close'] == 'yes' ? true : NULL,
 				"iduser"        => (int)$row['iduser'],
-				"user"          => current_user((int)$row['iduser'] ),
+				"user"          => current_user((int)$row['iduser']),
 				"autor"         => (int)$row['autor'],
-				"autorName"     => current_user( (int)$row['autor'] ),
+				"autorName"     => current_user((int)$row['autor']),
 				"title"         => $row['title'],
 				"content"       => $row['content'],
 				"html"          => nl2br($row['content']),
@@ -3578,26 +3578,26 @@ class Deal {
 				}
 
 				$r['inputs'][] = [
-					"field"     => $field['title'],
-					"value"     => $row[$field['field']],
-					"html"      => nl2br($row[$field['field']]),
-					"format"    => $field['type'] == 'datum' ? format_date_rus_name($row[$field['field']]) : NULL,
-					"formattime"    => $field['type'] == 'datetime' ? modifyDatetime($row[$field['field']], ["format" => "d.m.Y H:s"]) : NULL,
-					"isDate"    => $field['type'] == 'datum' ? true : NULL,
+					"field"      => $field['title'],
+					"value"      => $row[$field['field']],
+					"html"       => nl2br($row[$field['field']]),
+					"format"     => $field['type'] == 'datum' ? format_date_rus_name($row[$field['field']]) : NULL,
+					"formattime" => $field['type'] == 'datetime' ? modifyDatetime($row[$field['field']], ["format" => "d.m.Y H:s"]) : NULL,
+					"isDate"     => $field['type'] == 'datum' ? true : NULL,
 					"isDateTime" => $field['type'] == 'datetime' ? true : NULL,
-					"isAddress" => $field['type'] == 'adres' ? true : NULL,
+					"isAddress"  => $field['type'] == 'adres' ? true : NULL,
 				];
 
 			}
 
 			$state = $row['close'] == 'yes' ? "close" : "active";
 
-			if( $params['bytype'] ) {
+			if ($params['bytype']) {
 
 				$list[$state][] = $r;
 
 			}
-			else{
+			else {
 
 				$list[] = $r;
 
@@ -3645,7 +3645,7 @@ class Deal {
 				$ifields[] = 'marga';
 			}
 			else {
-				$ifields[] = $do[ 'fld_name' ];
+				$ifields[] = $do['fld_name'];
 			}
 
 		}
@@ -3702,8 +3702,8 @@ class Deal {
 				"content"    => $do['content']
 			];
 
-			if((int)$stepInHold['step'] == (int)$do['idcategory']){
-				$z['inHold'] = true;
+			if ((int)$stepInHold['step'] == (int)$do['idcategory']) {
+				$z['inHold']      = true;
 				$z['inHoldInput'] = $stepInHold['input'];
 			}
 
@@ -3763,7 +3763,7 @@ class Deal {
 				"isDefault" => $do['isDefault']
 			];
 
-			if(empty($r['isDefault'])){
+			if (empty($r['isDefault'])) {
 				unset($r['isDefault']);
 			}
 
@@ -3775,7 +3775,12 @@ class Deal {
 
 	}
 
-	public function list($params = []): array {
+	/**
+	 * Список сделок (для API v.3.0)
+	 * @param array $params
+	 * @return array
+	 */
+	public function list(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
@@ -3790,7 +3795,7 @@ class Deal {
 		//задаем лимиты по-умолчанию
 		$page = $params['page'];
 		$ord  = !empty($params['ord']) ? $params['ord'] : 'datum';
-		$tuda  = !empty($params['tuda']) ? $params['tuda'] : 'DESC';
+		$tuda = !empty($params['tuda']) ? $params['tuda'] : 'DESC';
 
 		$limit = 200;
 		$sort  = '';
@@ -3812,7 +3817,7 @@ class Deal {
 
 		//print "$ord\n";
 
-		if(array_key_exists($ord, $synonyms)){
+		if (array_key_exists($ord, $synonyms)) {
 			$ord = $synonyms[$ord];
 			//print "$ord\n";
 		}
@@ -4012,7 +4017,7 @@ class Deal {
 						break;
 					case 'clid':
 
-						$deal[$field]        = (int)$da[$field];
+						$deal[$field] = (int)$da[$field];
 						//$deal['clientTitle'] = current_client($da[$field]);
 						$deal['clientTitle'] = $da['client'];
 
@@ -4097,7 +4102,7 @@ class Deal {
 
 				$bankinfo = get_client_recv($da['payer'], 'yes');
 
-				foreach ((new Client()) ->bankInfoField as $key => $value) {
+				foreach (( new Client() ) -> bankInfoField as $key => $value) {
 
 					$deal['bankinfo'][$value] = $bankinfo[$value];
 
@@ -4134,7 +4139,11 @@ class Deal {
 
 			if ($params['uids'] == 'yes' || $params['uids']) {
 
-				$ruids = UIDs ::info(["did" => $da['did']]);
+				$ruids = UIDs ::info([
+					"did"   => $da['did'],
+					"name"  => $params['uidname'],
+					"names" => (array)$params['uidnames'],
+				]);
 				if ($ruids['result'] == 'Success') {
 					$deal['uids'] = $ruids['data'];
 				}
@@ -4153,7 +4162,7 @@ class Deal {
 		}
 
 		//$count = (int)$db -> getOne("SELECT COUNT(*) as count FROM {$sqlname}dogovor WHERE did > 0 $sort and identity = '$identity'");
-		$count = (int)$db -> getOne("
+		$count       = (int)$db -> getOne("
 			SELECT 
 			    COUNT(deal.did)
 			FROM {$sqlname}dogovor `deal`
@@ -4165,12 +4174,12 @@ class Deal {
 		$count_pages = ceil($count / $limit);
 
 		return [
-			"list"     => $list,
-			"page"     => (int)$page,
-			"pageall"  => (int)$count_pages,
-			"ord"      => $ord,
-			"tuda"     => $tuda,
-			"count"    => count($list)
+			"list"    => $list,
+			"page"    => (int)$page,
+			"pageall" => (int)$count_pages,
+			"ord"     => $ord,
+			"tuda"    => $tuda,
+			"count"   => count($list)
 		];
 
 	}

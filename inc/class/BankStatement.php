@@ -107,6 +107,8 @@ class BankStatement {
 
 		}
 
+		file_put_contents($rootpath."/cash/bank-pre.json", json_encode_cyr($list));
+
 		// формируем окончательный массив
 		foreach ($list as $item) {
 

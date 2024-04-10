@@ -630,7 +630,10 @@ if ($action == 'import.statement.on') {
 
 	foreach ($data as $item) {
 
-		$bank = BankStatement ::info($item['id']);
+		$clid = 0;
+		$barg = [];
+
+		$bank = BankStatement ::info((int)$item['id']);
 
 		$clid = (int)$item['clid'];
 
@@ -638,7 +641,7 @@ if ($action == 'import.statement.on') {
 		$barg['category'] = (int)$item['category'];
 
 		// добавим контрагента
-		if ($addContragent == "yes" && $bank['clid'] < 1) {
+		if ($addContragent == "yes" && $bank['clid'] == 0) {
 
 			$t    = ($bank['tip'] == 'dohod') ? $bank['from'] : $bank['to'];
 			$cinn = ($bank['tip'] == 'dohod') ? $bank['fromINN'] : $bank['toINN'];
@@ -662,7 +665,6 @@ if ($action == 'import.statement.on') {
 			if ($a['data'] > 0) {
 				$clid = $a['data'];
 			}
-
 			elseif ($a['exists'] > 0) {
 				$clid = $a['exists'];
 			}
@@ -674,6 +676,8 @@ if ($action == 'import.statement.on') {
 			if ($clid > 0) {
 				$barg['clid'] = $clid;
 			}
+
+			unset($bank, $client);
 
 		}
 

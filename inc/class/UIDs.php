@@ -57,26 +57,30 @@ class UIDs {
 
 		$sort = '';
 
-		if ( isset( $params['id'] ) && (int)$params['id'] > 0 )
-			$sort .= "id = '$params[id]' AND";
-
-		elseif ( isset( $params['name'] ) && $params['name'] != '' )
-			$sort .= "name = '$params[name]' AND";
-
-		elseif ( isset( $params['value'] ) && $params['value'] != '' )
-			$sort .= "value = '$params[value]' AND";
-
-		elseif ( isset( $params['lid'] ) && (int)$params['lid'] > 0 )
-			$sort .= "lid = '$params[lid]' AND";
-
-		elseif ( isset( $params['eid'] ) && (int)$params['eid'] > 0 )
-			$sort .= "eid = '$params[eid]' AND";
-
-		elseif ( isset( $params['clid'] ) && (int)$params['clid'] > 0 )
-			$sort .= "clid = '$params[clid]' AND";
-
-		elseif ( isset( $params['did'] ) && (int)$params['did'] > 0 )
-			$sort .= "did = '$params[did]' AND";
+		if ( isset( $params['id'] ) && (int)$params['id'] > 0 ) {
+			$sort .= "id = '$params[id]' AND ";
+		}
+		if ( isset( $params['name'] ) && $params['name'] != '' ) {
+			$sort .= "name = '$params[name]' AND ";
+		}
+		if ( is_array( $params['names'] ) && !empty($params['names']) ) {
+			$sort .= "name IN (".yimplode(",", $params['names'], "'").") AND ";
+		}
+		if ( isset( $params['value'] ) && $params['value'] != '' ) {
+			$sort .= "value = '$params[value]' AND ";
+		}
+		if ( isset( $params['lid'] ) && (int)$params['lid'] > 0 ) {
+			$sort .= "lid = '$params[lid]' AND ";
+		}
+		if ( isset( $params['eid'] ) && (int)$params['eid'] > 0 ) {
+			$sort .= "eid = '$params[eid]' AND ";
+		}
+		if ( isset( $params['clid'] ) && (int)$params['clid'] > 0 ) {
+			$sort .= "clid = '$params[clid]' AND ";
+		}
+		if ( isset( $params['did'] ) && (int)$params['did'] > 0 ) {
+			$sort .= "did = '$params[did]' AND ";
+		}
 
 		if ( $sort != '' ) {
 

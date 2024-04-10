@@ -229,7 +229,7 @@ class Budget {
 		if ($id > 0) {
 
 			$budget['fid']    = $fida;
-			$budget['iduser'] = (int)$iduser1;
+			//$budget['iduser'] = (int)$iduser1;
 
 			// Проверка на существование в БД
 			$bid = (int)$db -> getOne("SELECT count(*) FROM {$sqlname}budjet WHERE id='$id' and identity = '$identity'");
@@ -292,7 +292,7 @@ class Budget {
 						"did"          => (int)$budget['did'],
 						"conid"        => (int)$budget['conid'],
 						"partid"       => (int)$budget['partid'],
-						"iduser"       => (int)$budget['iduser'],
+						"iduser"       => $iduser1,//(int)$budget['iduser'],
 						"date_plan"    => $budget['date_plan'],
 						"invoice"      => $budget['invoice'],
 						"invoice_date" => $budget['invoice_date'],

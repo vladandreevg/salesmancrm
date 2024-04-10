@@ -1820,8 +1820,9 @@ if ( $action == 'import.statement.s2' ) {
 		// обрабатываем файл
 		if ( !empty( $text ) ) {
 
-			//require_once "../../inc/class/BankStatement.php";
 			$statements = BankStatement ::convert( $text );
+
+			file_put_contents($rootpath."/cash/bank.json", json_encode_cyr($statements));
 
 			$statement = $statements['statement'];
 			$balance   = $statements['balance'];

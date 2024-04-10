@@ -48,6 +48,7 @@ $query = "
 		bj.rs,
 		bj.invoice,
 		bj.invoice_date,
+		bj.invoice_paydate as dfact,
 		bj.date_plan,
 		recv.title as rstitle,
 		mc.name_shot as company,
@@ -80,6 +81,7 @@ while ($data = $db -> fetch($result)) {
 		"id"           => (int)$data['id'],
 		"bid"          => (int)$data['bid'],
 		"invoice"      => $data['invoice'],
+		"dfact"        => $data['dfact'],
 		"invoice_date" => $data['invoice_date'],
 		"date_plan"    => $data['date_plan'],
 		"datum"        => $data['datum'],
@@ -127,7 +129,7 @@ foreach ($list as $item) {
 
 		$str1 .= '
 			<tr class="ha '.$bgcolor.'">
-				<td class="text-center">--</td>
+				<td class="text-center">'.get_sfdate2($item['dfact']).'</td>
 				<td class="text-center">'.get_sfdate2($item['date_plan']).'</td>
 				<td>
 					'.(!empty($item['invoice']) ? '
