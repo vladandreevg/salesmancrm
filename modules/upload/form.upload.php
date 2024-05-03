@@ -720,7 +720,7 @@ if ($action == "info") {
 
 		});
 
-		$("#dtitle").autocomplete("/content/card/deal.helpers.php?action=doglist&clid=" + $('#clid').val(), {
+		$("#dtitle").autocomplete("/content/deal.helpers.php?action=doglist&clid=" + $('#clid').val(), {
 			autofill: true,
 			minChars: 0,
 			cacheLength: 5,

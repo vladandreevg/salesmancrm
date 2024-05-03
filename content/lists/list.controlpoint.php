@@ -58,7 +58,7 @@ elseif ($d1 != '' && $d2 != '') {
 }
 
 if( !empty($point) ){
-	$sort = " and ccid IN (".yimplode(",", $point).")";
+	$sort .= " and ccid IN (".yimplode(",", $point).")";
 }
 
 $sort .= ( $iduser != '' ) ? " and iduser= '$iduser'" : get_people($iduser1);

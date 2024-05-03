@@ -1769,6 +1769,10 @@ class Budget {
 			$csort .= "cr.iduser = '$iduser1' AND";
 		}
 
+		if (!empty($rs)) {
+			$csort .= " cr.rs IN (".implode(",", $rs).") AND";
+		}
+
 		// оплаты
 		$payments  = [];
 		$xpayments = $db -> getAll("
