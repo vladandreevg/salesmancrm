@@ -10,6 +10,7 @@
 
 namespace Chats;
 
+use Exception;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 
@@ -49,11 +50,11 @@ class FacebookProvider {
 	 *
 	 * @param string $channel_id
 	 */
-	public function __construct( $channel_id = '') {
+	public function __construct(string $channel_id = '') {
 
 		global $api_key;
 
-		$rootpath = realpath( __DIR__.'/../../../../../' );
+		$rootpath = dirname( __DIR__, 5 );
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -70,21 +71,23 @@ class FacebookProvider {
 		$this -> tmzone   = $GLOBALS['tmzone'];
 
 		$this -> api_key    = $api_key = $GLOBALS['db'] -> getOne( "SELECT api_key FROM ".$GLOBALS['sqlname']."settings WHERE id = '$GLOBALS[identity]'" );
-		$scheme             = isset( $_SERVER['HTTP_SCHEME'] ) ? $_SERVER['HTTP_SCHEME'] : (((isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://');
+		$scheme             = $_SERVER['HTTP_SCHEME'] ?? (((isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://');
 		$this -> serverhost = $scheme.$_SERVER["HTTP_HOST"];
 
 		$this -> webhookurl = $this -> serverhost.'/plugins/socialChats/php/webhooks/Facebook/'.$this -> api_key.'/'.$channel_id.'/';
 
 		// тут почему-то не срабатывает
-		if ( !empty( $params ) )
-			foreach ( $params as $key => $val )
+		if ( !empty( $params ) ) {
+			foreach ( $params as $key => $val ) {
 				$this ->{$key} = $val;
+			}
+		}
 
 		date_default_timezone_set( $this -> tmzone );
 
 	}
 
-	public static function providerName() {
+	public static function providerName(): array {
 
 		return [
 			"name"      => "facebook",
@@ -101,27 +104,29 @@ class FacebookProvider {
 	 * https://qna.habr.com/q/541971 - хорошо пояснили как эта ебатня работает (чоб ты сдох МЦ)
 	 *
 	 * @param int $id - id записи канала
+	 * @throws Exception
 	 */
 	public static function settingsForm($id = 0) {
 
 		$api_key = $GLOBALS['db'] -> getOne( "SELECT api_key FROM ".$GLOBALS['sqlname']."settings WHERE id = '$GLOBALS[identity]'" );
 
-		$scheme     = isset( $_SERVER['HTTP_SCHEME'] ) ? $_SERVER['HTTP_SCHEME'] : (((isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://');
+		$scheme     = $_SERVER['HTTP_SCHEME'] ?? (((isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://');
 		$serverhost = $scheme.$_SERVER["HTTP_HOST"];
 
 		$channel = Chats ::channelsInfo( $id );
 
-		if ( !isset( $channel['settings']['verify_token'] ) || $channel['settings']['verify_token'] == '' )
+		if ( !isset( $channel['settings']['verify_token'] ) || $channel['settings']['verify_token'] == '' ) {
 			$channel['settings']['verify_token'] = Chats ::genkey( 1, 25 );
-
-		if ( !isset( $channel['settings']['channel_id'] ) )
+		}
+		if ( !isset( $channel['settings']['channel_id'] ) ) {
 			$channel['settings']['channel_id'] = '{ID страницы}';
-
-		if ( !isset( $channel['name'] ) )
+		}
+		if ( !isset( $channel['name'] ) ) {
 			$channel['name'] = 'Страница в Facebook';
-
-		if($channel['settings'][ 'link' ] == '')
-			$channel['settings'][ 'link' ] = 'https://m.me/ID_страницы?ref=subscribe';
+		}
+		if($channel['settings'][ 'link' ] == '') {
+			$channel['settings']['link'] = 'https://m.me/ID_страницы?ref=subscribe';
+		}
 
 		?>
 		<div class="column grid-10">
@@ -281,7 +286,7 @@ class FacebookProvider {
 	 *                  - id - id канала
 	 *                  - username - имя канала
 	 */
-	public function check($params = []) {
+	public function check(array $params = []) {
 
 		$res = [];
 
@@ -315,19 +320,20 @@ class FacebookProvider {
 
 		}
 
-		if ( !empty( $res['response'] ) )
+		if ( !empty( $res['response'] ) ) {
 			$result = [
 				"ok"         => true,
 				"channel_id" => $res['response']['id'],
 				"name"       => $res['response']['name'],
 				"link"       => $res['response']['id'],
 			];
-
-		else
+		}
+		else {
 			$result = [
 				"ok"      => false,
 				"message" => $res['error']['error_msg']
 			];
+		}
 
 		return $result;
 
@@ -367,7 +373,7 @@ class FacebookProvider {
 	 * @param array $params - данные из метода $chat -> channelInfo()
 	 * @return array
 	 */
-	public function setWebhook($params = []) {
+	public function setWebhook(array $params = []): array {
 
 		return [
 			"status"  => "ok",
@@ -385,7 +391,7 @@ class FacebookProvider {
 	 *              - str **status** - статус установки (ok - успешно, error - ошибка)
 	 *              - str **message** - сообщение
 	 */
-	public function deleteWebhook($params = []) {
+	public function deleteWebhook(array $params = []): array {
 
 		return [
 			"status"  => "ok",
@@ -401,7 +407,7 @@ class FacebookProvider {
 	 *
 	 * @return mixed
 	 */
-	public function getInfo($params = []) {
+	public function getInfo(array $params = []) {
 
 		return [];
 
@@ -416,7 +422,7 @@ class FacebookProvider {
 	 *
 	 * @return array
 	 */
-	public function sendMessage($params = []) {
+	public function sendMessage(array $params = []): array {
 
 		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
@@ -455,7 +461,7 @@ class FacebookProvider {
 
 			$message_id = $message['message_id'];
 
-			$res['ok'] = ($message_id != '') ? true : false;
+			$res['ok'] = $message_id != '';
 
 			//$string = is_array($response) ? array2string($response) : $response;
 			//file_put_contents($GLOBALS['rootpath'].'/cash/sch-webhooks.log', current_datumtime()."\nFBresp\n".$string."\n\n", FILE_APPEND);
@@ -473,14 +479,12 @@ class FacebookProvider {
 		//$string = is_array($res) ? array2string($res) : $res;
 		//file_put_contents($GLOBALS['rootpath'].'/cash/sch-webhooks.log', current_datumtime()."\nFB\n".$string."\n\n", FILE_APPEND);
 
-		$result = [
+		return [
 			"result"      => $res['ok'] ? 'ok' : 'error',
 			"message_id"  => $message_id,
 			"error_code"  => $res['response']['code'],
 			"description" => $res['response']['error']
 		];
-
-		return $result;
 
 	}
 
@@ -494,7 +498,7 @@ class FacebookProvider {
 	 * @param array $params
 	 * @return array
 	 */
-	public function sendFile($params = []) {
+	public function sendFile(array $params = []): array {
 
 		$rootpath = $GLOBALS['rootpath'];
 
@@ -615,7 +619,7 @@ class FacebookProvider {
 
 				$message_id = $message['message_id'];
 
-				$res['ok'] = ($message_id != '') ? true : false;
+				$res['ok'] = $message_id != '';
 
 			}
 
@@ -627,14 +631,12 @@ class FacebookProvider {
 
 		}
 
-		$result = [
+		return [
 			"result"      => $res['ok'] ? 'ok' : 'error',
 			"message_id"  => $message_id,
 			"error_code"  => $res['response']['code'],
 			"description" => $res['response']['error']
 		];
-
-		return $result;
 
 	}
 
@@ -654,7 +656,7 @@ class FacebookProvider {
 	 *
 	 * @return array
 	 */
-	public function deleteMessage($message = []) {
+	public function deleteMessage(array $message = []): array {
 
 		$params['settings'] = !is_array( $message['channel']['settings'] ) ? json_decode( $message['channel']['settings'], true ) : $message['channel']['settings'];
 
@@ -695,14 +697,12 @@ class FacebookProvider {
 		$message_id = 0;
 		$res['ok']  = false;
 
-		$result = [
+		return [
 			"result"      => $res['ok'] ? 'ok' : 'error',
 			"message_id"  => $message_id,
 			"error_code"  => $res['error']['error_code'],
 			"description" => $res['error']['error_msg']
 		];
-
-		return $result;
 
 	}
 
@@ -714,7 +714,7 @@ class FacebookProvider {
 	 *
 	 * @return array
 	 */
-	public function setReadStateMessage($messages = [], $params = []) {
+	public function setReadStateMessage(array $messages = [], array $params = []): array {
 
 		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
@@ -728,13 +728,11 @@ class FacebookProvider {
 
 		$res['ok'] = false;
 
-		$result = [
+		return [
 			"result"      => $res['ok'] ? 'ok' : 'error',
 			"error_code"  => $res['response']['error'],
 			"description" => $res['response']['error']
 		];
-
-		return $result;
 
 	}
 
@@ -745,9 +743,9 @@ class FacebookProvider {
 	 *
 	 * @return mixed
 	 */
-	public function getUsers($params = []) {
+	public function getUsers(array $params = []) {
 
-		return $result = [];
+		return [];
 
 	}
 
@@ -765,7 +763,7 @@ class FacebookProvider {
 	 *              - str **client_lastname** - фамилия
 	 *              - str **client_avatar** - ссылка на аватар
 	 */
-	public function getUserInfo($user_id = 0, $params = []) {
+	public function getUserInfo(int $user_id = 0, array $params = []): array {
 
 		$rootpath = $GLOBALS['rootpath'];
 
@@ -853,7 +851,7 @@ class FacebookProvider {
 	 * @param array $channel
 	 * @return array
 	 */
-	public function eventFilter($params = [], $channel = []) {
+	public function eventFilter(array $params = [], array $channel = []): array {
 
 		$rootpath = $GLOBALS['rootpath'];
 
@@ -943,8 +941,9 @@ class FacebookProvider {
 
 			}
 
-			if($message['text'] != '' || !empty($message['attachment']))
+			if($message['text'] != '' || !empty($message['attachment'])) {
 				$message['event'] = "newMessage";
+			}
 
 		}
 
@@ -960,7 +959,7 @@ class FacebookProvider {
 	 * @param array   $params
 	 * @return bool
 	 */
-	public function chatTransfer($chat_id = '', $params = [], $iduser = 0) {
+	public function chatTransfer(string $chat_id = '', array $params = [], int $iduser = 0) {
 
 		return true;
 
@@ -974,7 +973,7 @@ class FacebookProvider {
 	 * @param array   $params
 	 * @return bool
 	 */
-	public function chatInvite($chat_id = '', $params = [], $iduser = 0) {
+	public function chatInvite(string $chat_id = '', array $params = [], int $iduser = 0) {
 
 		return true;
 

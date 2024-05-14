@@ -1658,7 +1658,9 @@ class Chats {
 
 		if ( $id == 0 ) {
 
-			$this -> logChat( $params['chat_id'], 'dialog', $params['status'] );
+			if(!empty($params['status'])) {
+				$this -> logChat($params['chat_id'], 'dialog', $params['status']);
+			}
 
 			$db -> query( "INSERT INTO {$sqlname}chats_chat SET ?u", arrayNullClean( $d ) );
 			$id = $db -> InsertId();
@@ -1670,7 +1672,9 @@ class Chats {
 
 			//print_r($d);
 
-			$this -> logChat( $params['chat_id'], 'dialog', $params['status'] );
+			if(!empty($params['status'])) {
+				$this -> logChat((string)$params['chat_id'], 'dialog', (string)$params['status']);
+			}
 
 			$db -> query( "UPDATE {$sqlname}chats_chat SET ?u WHERE id = '$id'", arrayNullClean( $d ) );
 

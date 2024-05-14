@@ -49,7 +49,7 @@ class TelegramProvider {
 	 */
 	public function __construct() {
 
-		$rootpath = realpath( __DIR__.'/../../../../../' );
+		$rootpath = dirname( __DIR__, 5 );
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -70,15 +70,17 @@ class TelegramProvider {
 		$this -> serverhost = $scheme.$_SERVER["HTTP_HOST"];
 
 		// тут почему-то не срабатывает
-		if ( !empty( $params ) )
-			foreach ( $params as $key => $val )
+		if ( !empty( $params ) ) {
+			foreach ( $params as $key => $val ) {
 				$this ->{$key} = $val;
+			}
+		}
 
 		date_default_timezone_set( $this -> tmzone );
 
 	}
 
-	public static function providerName() {
+	public static function providerName(): array {
 
 		return [
 			"name"      => "telegram",
@@ -95,12 +97,13 @@ class TelegramProvider {
 	 *
 	 * @param int $id - id записи канала
 	 */
-	public static function settingsForm($id = 0) {
+	public static function settingsForm(int $id = 0) {
 
 		$channel = Chats ::channelsInfo( $id );
 
-		if($channel['settings'][ 'link' ] == '')
-			$channel['settings'][ 'link' ] = 'https://tlgg.ru/ИМЯ_БОТА?start=subscribe';
+		if($channel['settings'][ 'link' ] == '') {
+			$channel['settings']['link'] = 'https://tlgg.ru/ИМЯ_БОТА?start=subscribe';
+		}
 
 		?>
 		<div class="column grid-10 relative">
@@ -200,13 +203,11 @@ class TelegramProvider {
 	 *                  - id - id канала
 	 *                  - username - имя канала
 	 */
-	public function check($params = []) {
+	public function check(array $params = []) {
 
 		$proxy = $this -> proxy;
 
-		$telegram = new Telegram( $params['token'], true, $proxy );
-
-		return $telegram -> getMe();
+		return (new Telegram( $params['token'], true, $proxy )) -> getMe();
 
 	}
 
@@ -235,7 +236,7 @@ class TelegramProvider {
 	 *              - str **status** - статус установки (ok - успешно, error - ошибка)
 	 *              - str **message** - сообщение
 	 */
-	public function setWebhook($params = []) {
+	public function setWebhook(array $params = []): array {
 
 		$api_key    = $this -> api_key;
 		$serverhost = $this -> serverhost;
@@ -271,7 +272,7 @@ class TelegramProvider {
 	 *              - str **status** - статус установки (ok - успешно, error - ошибка)
 	 *              - str **message** - сообщение
 	 */
-	public function deleteWebhook($params = []) {
+	public function deleteWebhook(array $params = []): array {
 
 		$api_key = $this -> api_key;
 		$proxy   = $this -> proxy;
@@ -302,7 +303,7 @@ class TelegramProvider {
 	 * @param array $params
 	 * @return mixed
 	 */
-	public function getInfo($params = []) {
+	public function getInfo(array $params = []) {
 
 		$proxy = $this -> proxy;
 
@@ -315,9 +316,7 @@ class TelegramProvider {
 
 		}
 
-		$telegram = new Telegram( $params['token'], true, $proxy );
-
-		return $telegram -> getMe();
+		return (new Telegram( $params['token'], true, $proxy )) -> getMe();
 
 	}
 
@@ -327,7 +326,7 @@ class TelegramProvider {
 	 * @param array $params
 	 * @return array
 	 */
-	public function sendMessage($params = []) {
+	public function sendMessage(array $params = []): array {
 
 		// todo: добавить возможность отправки изображений, документов
 
@@ -354,14 +353,12 @@ class TelegramProvider {
 
 		//print_r($res);
 
-		$result = [
+		return [
 			"result"      => $res['ok'] ? 'ok' : 'error',
 			"message_id"  => $res['result']['message_id'],
 			"error_code"  => $res['error_code'],
 			"description" => $res['description']
 		];
-
-		return $result;
 
 	}
 
@@ -371,7 +368,7 @@ class TelegramProvider {
 	 * @param array $params
 	 * @return array
 	 */
-	public function sendFile($params = []) {
+	public function sendFile(array $params = []): array {
 
 		$proxy    = $this -> proxy;
 		$rootpath = $GLOBALS['rootpath'];
@@ -433,7 +430,7 @@ class TelegramProvider {
 	 *
 	 * @return array
 	 */
-	public function deleteMessage($message = []) {
+	public function deleteMessage(array $message = []) {
 
 		//print_r($message);
 
@@ -462,14 +459,12 @@ class TelegramProvider {
 
 		//print_r($res);
 
-		$result = [
+		return [
 			"result"      => $res['ok'] ? 'ok' : 'error',
 			"message_id"  => $res['result']['message_id'],
 			"error_code"  => $res['error_code'],
 			"description" => $res['description']
 		];
-
-		return $result;
 
 	}
 
@@ -487,7 +482,7 @@ class TelegramProvider {
 	 *              - str **client_lastname** - фамилия
 	 *              - str **client_avatar** - ссылка на аватар
 	 */
-	public function getUserInfo($user_id = 0, $params = []): array {
+	public function getUserInfo(int $user_id = 0, array $params = []): array {
 
 		$proxy    = $this -> proxy;
 		$rootpath = $GLOBALS['rootpath'];
@@ -520,8 +515,9 @@ class TelegramProvider {
 			$url = "/files/chatcash/{$user_id}.jpg";
 
 		}
-		else
+		else {
 			$url = '';
+		}
 
 		if ( !empty( $res['error'] ) ) {
 
@@ -553,7 +549,7 @@ class TelegramProvider {
 	 * @param array $params
 	 * @return string
 	 */
-	public function getFileLink($file_id, $params = []): string {
+	public function getFileLink($file_id, array $params = []): string {
 
 		$proxy = $this -> proxy;
 
@@ -586,7 +582,7 @@ class TelegramProvider {
 	 * @param array $channel
 	 * @return array
 	 */
-	public function eventFilter($params = [], $channel = []) {
+	public function eventFilter(array $params = [], array $channel = []) {
 
 		$rootpath = $GLOBALS['rootpath'];
 
@@ -695,12 +691,13 @@ class TelegramProvider {
 
 	/**
 	 * Заглушка для метода передачи чата другому оператору
-	 * @param string $chat_id
+	 *
+	 * @param string  $chat_id
 	 * @param integer $iduser
-	 * @param array $params
+	 * @param array   $params
 	 * @return bool
 	 */
-	public function chatTransfer($chat_id = '', $params = [], $iduser = 0){
+	public function chatTransfer(string $chat_id = '', array $params = [], int $iduser = 0){
 
 		return true;
 
@@ -708,12 +705,13 @@ class TelegramProvider {
 
 	/**
 	 * Заглушка для метода приглашение оператора в чат
-	 * @param string $chat_id
+	 *
+	 * @param string  $chat_id
 	 * @param integer $iduser
-	 * @param array $params
+	 * @param array   $params
 	 * @return bool
 	 */
-	public function chatInvite($chat_id = '', $params = [], $iduser = 0){
+	public function chatInvite(string $chat_id = '', array $params = [], int $iduser = 0){
 
 		return true;
 

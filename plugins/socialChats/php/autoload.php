@@ -7,9 +7,9 @@
  *
  * @param $class
  */
-spl_autoload_register( function($class) {
+spl_autoload_register( static function($class) {
 
-	$rootpath = realpath( __DIR__.'/../' )."/php/Class";
+	$rootpath = dirname( __DIR__ )."/php/Class";
 
 	$name = yexplode( "\\", $class );
 
@@ -24,8 +24,9 @@ spl_autoload_register( function($class) {
 
 		if ( strpos($class, 'Provider') !== false && !class_exists( $class, false ) ) {
 
-			if(file_exists($rootpath."/Providers/{$class}.php"))
+			if(file_exists($rootpath."/Providers/{$class}.php")) {
 				require_once $rootpath."/Providers/{$class}.php";
+			}
 
 		}
 

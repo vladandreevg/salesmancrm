@@ -164,7 +164,7 @@ arsort($total);
 
 				$chartData['new'][] = '
 					{
-						value: '.round($value/array_sum($new) * 100, 2).',
+						value: '.(array_sum($new) > 0 ? round($value / array_sum($new) * 100, 2) : 0).',
 						color: "rgba('.$color['r'].','.$color['g'].','.$color['b'].',0.9)",
 						highlight: "rgba('.$color['r'].','.$color['g'].','.$color['b'].',0.5)",
 						label: "'.$chnls[$key]['name'].'"

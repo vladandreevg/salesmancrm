@@ -11,8 +11,8 @@
 
 use Chats\Chats;
 
-$rootpath = realpath( __DIR__.'/../../../' );
-$ypath    = realpath( __DIR__.'/../../../' )."/plugins/socialChats";
+$rootpath = dirname( __DIR__, 3 );
+$ypath    = $rootpath."/plugins/socialChats";
 
 error_reporting( E_ERROR );
 
@@ -52,7 +52,7 @@ if ( $action == 'operator.get' ) {
 }
 if ( $action == 'operator.delete' ) {
 
-	$iduser = $_REQUEST['iduser'];
+	$iduser = (int)$_REQUEST['iduser'];
 
 	$u = $chat -> getOperators();
 	$u = array_values( arraydel( $u, $iduser ) );
@@ -67,7 +67,7 @@ if ( $action == 'operator.delete' ) {
 
 if ( $action == 'operator.edit.do' ) {
 
-	$users = array_values( $_REQUEST['users'] );
+	$users = array_values( (array)$_REQUEST['users'] );
 	$chat -> setOperators( $users );
 
 	print 'Выполнено';
@@ -111,8 +111,8 @@ if ( $action == 'operator.edit.form' ) {
 		<hr>
 
 		<div class="text-right">
-			<A href="javascript:void(0)" onClick="saveAccess()" class="button">Сохранить</A>&nbsp;
-			<A href="javascript:void(0)" onClick="DClose()" class="button">Отмена</A>
+			<A href="javascript:void(0)" onclick="saveAccess()" class="button">Сохранить</A>&nbsp;
+			<A href="javascript:void(0)" onclick="DClose()" class="button">Отмена</A>
 		</div>
 
 	</form>
@@ -200,34 +200,6 @@ if ( $action == 'channel.get' ) {
 
 	$channels = $chat -> getChannels();
 
-	/*
-	$dir = "plugins/socialChats/php/Class/Providers/";
-	$list = [];
-
-	$files = getDirFiles($dir);
-
-	foreach ($files as $file){
-
-		if($file != '' && $file != 'ExampleProvider.php'){
-
-			require_once $rootpath."/plugins/socialChats/php/Class/Providers/$file";
-
-			$provider = str_replace(".php","",$file);
-
-			$type = "Chats\\".$provider;
-			//print "\n";
-
-			$prvdr = new $type();
-
-			$list[] = $prvdr -> getProviderName();
-
-		}
-
-	}
-
-	print_r($list);
-	*/
-
 	print json_encode_cyr( $channels );
 
 	exit();
@@ -235,7 +207,7 @@ if ( $action == 'channel.get' ) {
 }
 if ( $action == 'channel.delete' ) {
 
-	$id = $_REQUEST['id'];
+	$id = (int)$_REQUEST['id'];
 
 	$mes = $chat -> deleteChannels( $id );
 
@@ -245,48 +217,9 @@ if ( $action == 'channel.delete' ) {
 
 }
 
-/*
-if ( $action == "channel.chat" ) {
-
-	$id = $_REQUEST['id'];
-
-	$channels = $chat -> checkChannelChat();
-
-	print json_encode_cyr( $channels );
-
-	exit();
-
-}
-if ( $action == "channel.info" ) {
-
-	$id  = $_REQUEST['id'];
-	$res = $chat -> checkChannelInfo( $id );
-
-	//print_r( $res );
-
-	?>
-	<DIV class="zagolovok"><B>Информация</B></DIV>
-	<form action="php/modal.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
-		<input name="id" type="hidden" id="id" value="<?= $id ?>">
-
-		<div class="rezult pad10 row fs-12"></div>
-
-	</form>
-
-	<script>
-
-		$('#dialog').css('width', '500px');
-
-	</script>
-	<?php
-
-	exit();
-}
-*/
-
 if ( $action == 'channel.edit.do' ) {
 
-	$id = $_REQUEST['id'];
+	$id = (int)$_REQUEST['id'];
 
 	$settings = $_REQUEST;
 
@@ -326,7 +259,7 @@ if ( $action == "channel.fields.form" ) {
 }
 if ( $action == "channel.edit.form" ) {
 
-	$id      = $_REQUEST['id'] + 0;
+	$id      = (int)$_REQUEST['id'];
 	$channel = [];
 
 	if ( $id > 0 )
@@ -401,8 +334,8 @@ if ( $action == "channel.edit.form" ) {
 
 			<a href="javascript:void(0)" onclick="getToken('blank.html')" class="button greenbtn pull-aright hidden" data-id="oauth"><i class="icon-ok-circled"></i>Получить ключ</a>
 
-			<A href="javascript:void(0)" onClick="saveForm()" class="button">Сохранить</A>&nbsp;
-			<A href="javascript:void(0)" onClick="DClose()" class="button">Отмена</A>
+			<A href="javascript:void(0)" onclick="saveForm()" class="button">Сохранить</A>&nbsp;
+			<A href="javascript:void(0)" onclick="DClose()" class="button">Отмена</A>
 
 		</div>
 
@@ -410,14 +343,14 @@ if ( $action == "channel.edit.form" ) {
 
 	<script>
 
-		$(document).ready(function () {
+		$(function () {
 
 			$('#dialog').css('width', '500px');
 			$('#type').trigger('change');
 
 		});
 
-		$('#type').bind('change', function () {
+		$('#type').on('change', function () {
 
 			var id = <?php echo $id ?>;
 			var type = $('option:selected', this).val();
@@ -428,7 +361,7 @@ if ( $action == "channel.edit.form" ) {
 				$('.row[data-id="fields"]').html(data);
 
 			})
-				.complete(function () {
+				.done(function () {
 
 					$('#dialog').center();
 
@@ -438,7 +371,7 @@ if ( $action == "channel.edit.form" ) {
 
 		function checkConnection() {
 
-			$('.rezult').append('<div id="loader"><img src="../../../images/loading.svg"></div>');
+			$('.rezult').append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
 
 			var str = 'action=channel.check&type=' + $('#type').val() + '&token=' + $('#token').val();
 			var url = $('#Form').attr("action");
@@ -500,7 +433,7 @@ if ( $action == "channel.edit.form" ) {
 				DClose();
 
 				$(document).off('change keyup', '#channel_id');
-				$('#type').unbind('change');
+				$('#type').off('change');
 
 			}, 'json');
 		}
@@ -546,8 +479,9 @@ if ( $action == 'getJsCode' ) {
 
 	}
 
-	if($wiget['key'] == '')
+	if($wiget['key'] == '') {
 		$wiget['key'] = md5( $identity.$_SERVER["HTTP_HOST"] );
+	}
 
 	?>
 	<DIV class="zagolovok"><B>Код для сайта</B></DIV>
@@ -561,7 +495,7 @@ if ( $action == 'getJsCode' ) {
 
 			<div class="flex-string wp100 pl10 pr10">
 
-				<div class="flex-container box--child flex-vertical">
+				<div class="flex-container0 box--child flex-vertical">
 
 					<div class="divider mt10 mb10">Позиция</div>
 
@@ -647,8 +581,8 @@ if ( $action == 'getJsCode' ) {
 
 	<div class="text-right">
 
-		<A href="javascript:void(0)" onClick="saveForm()" class="button">Сохранить</A>&nbsp;
-		<A href="javascript:void(0)" onClick="DClose()" class="button">Отмена</A>
+		<A href="javascript:void(0)" onclick="saveForm()" class="button">Сохранить</A>&nbsp;
+		<A href="javascript:void(0)" onclick="DClose()" class="button">Отмена</A>
 
 	</div>
 
@@ -677,7 +611,7 @@ if ( $action == 'getJsCode' ) {
 
 		var editorCodeMirror;
 
-		$(document).ready(function () {
+		$(function () {
 
 			editorCodeMirror = CodeMirror(document.getElementById("coder"), {
 				value: $('#content').text(),
@@ -760,11 +694,12 @@ if ( $action == 'getChannelUrls' ) {
 
 	foreach ( $list as $item ) {
 
-		if ( $item['active'] )
+		if ( $item['active'] ) {
 			$icons[] = [
 				"icon" => strtolower( $item['otype'] ),
 				"uri"  => $item['uri']
 			];
+		}
 
 	}
 

@@ -12,24 +12,25 @@ error_reporting( E_ERROR );
 
 header( 'Access-Control-Allow-Origin: *' );
 
-$rootpath = realpath( __DIR__.'/../../../' );
+$rootpath = dirname( __DIR__, 3 );
+$ypath    = $rootpath."/plugins/socialChats";
 
 require_once $rootpath."/inc/config.php";
 require_once $rootpath."/inc/dbconnector.php";
 require_once $rootpath."/inc/func.php";
 
-require_once "../php/autoload.php";
-require_once "../vendor/autoload.php";
+require_once $ypath."/php/autoload.php";
+require_once $ypath."/vendor/autoload.php";
 
-logIt($_REQUEST);
+logIt( $_REQUEST );
 
-$channel    = $_REQUEST[ 'channel' ];
-$apikey     = $_REQUEST[ 'api_key' ];
-$channel_id = $_REQUEST[ 'botid' ];
+$channel    = $_REQUEST['channel'];
+$apikey     = $_REQUEST['api_key'];
+$channel_id = $_REQUEST['botid'];
 
-if(empty($_REQUEST)){
+if ( empty( $_REQUEST ) ) {
 
-	$url = yexplode("/", $_SERVER['REQUEST_URI']);
+	$url = yexplode( "/", $_SERVER['REQUEST_URI'] );
 
 	$channel    = $_REQUEST['channel'] = $url[4];
 	$apikey     = $_REQUEST['api_key'] = $url[5];
@@ -48,32 +49,33 @@ $provider -> callbackServerConfirmation();
 /**
  * объединяе данные, пришедшие разными путями
  */
-$params   = $_REQUEST;
+$params = $_REQUEST;
 
 $inparams = json_decode( file_get_contents( 'php://input' ), true );
 
-if(!empty($inparams))
-	$params   = array_merge( $params, $inparams );
+if ( !empty( $inparams ) ) {
+	$params = array_merge( $params, $inparams );
+}
 
-$params[ 'channel_id' ] = $channel_id;
+$params['channel_id'] = $channel_id;
 
 // записываем входящие параметры
 logIt( $params, "income_parameters" );
 
 
 //Запись массива в файл
-function logIt( $array = [], $name = '' ) {
+function logIt($array = [], $name = '') {
 
 	$string = is_array( $array ) ? array2string( $array ) : $array;
-	file_put_contents( $GLOBALS[ 'rootpath' ].'/cash/sch-webhooks.log', current_datumtime()."\n$name\n$string\n\n", FILE_APPEND );
+	file_put_contents( $GLOBALS['rootpath'].'/cash/sch-webhooks.log', current_datumtime()."\n$name\n$string\n\n", FILE_APPEND );
 
 }
 
 //Найдем identity по настройкам
 $res      = $db -> getRow( "select id, api_key, timezone from ".$sqlname."settings where api_key = '$apikey'" );
-$tmzone   = $res[ 'timezone' ];
-$api_key  = $res[ 'api_key' ];
-$identity = $res[ 'id' ] + 0;
+$tmzone   = $res['timezone'];
+$api_key  = $res['api_key'];
+$identity = (int)$res['id'];
 
 require_once $rootpath."/inc/settings.php";
 
@@ -106,6 +108,7 @@ print 'ok';
 //print_r($params);
 
 use Chats\Chats;
+
 $chat = new Chats();
 
-$chat -> newWebhookEvent( $params[ 'channel_id' ], $params );
+$chat -> newWebhookEvent( $params['channel_id'], $params );

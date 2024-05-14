@@ -56,17 +56,17 @@ class VkProvider {
 
 		$params = $this -> params;
 
-		$this -> identity = $GLOBALS[ 'identity' ];
-		$this -> iduser1  = $GLOBALS[ 'iduser1' ];
-		$this -> sqlname  = $GLOBALS[ 'sqlname' ];
-		$this -> db       = $GLOBALS[ 'db' ];
-		$this -> fpath    = $GLOBALS[ 'fpath' ];
-		$this -> opts     = $GLOBALS[ 'opts' ];
-		$this -> tmzone   = $GLOBALS[ 'tmzone' ];
+		$this -> identity = $GLOBALS['identity'];
+		$this -> iduser1  = $GLOBALS['iduser1'];
+		$this -> sqlname  = $GLOBALS['sqlname'];
+		$this -> db       = $GLOBALS['db'];
+		$this -> fpath    = $GLOBALS['fpath'];
+		$this -> opts     = $GLOBALS['opts'];
+		$this -> tmzone   = $GLOBALS['tmzone'];
 
-		$this -> api_key    = $GLOBALS[ 'db' ] -> getOne( "SELECT api_key FROM ".$GLOBALS[ 'sqlname' ]."settings WHERE id = '$GLOBALS[identity]'" );
-		$scheme             = isset( $_SERVER[ 'HTTP_SCHEME' ] ) ? $_SERVER[ 'HTTP_SCHEME' ] : ( ( ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] != 'off' ) || 443 == $_SERVER[ 'SERVER_PORT' ] ) ? 'https://' : 'http://' );
-		$this -> serverhost = $scheme.$_SERVER[ "HTTP_HOST" ];
+		$this -> api_key    = $GLOBALS['db'] -> getOne( "SELECT api_key FROM ".$GLOBALS['sqlname']."settings WHERE id = '$GLOBALS[identity]'" );
+		$scheme             = isset( $_SERVER['HTTP_SCHEME'] ) ? $_SERVER['HTTP_SCHEME'] : (((isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://');
+		$this -> serverhost = $scheme.$_SERVER["HTTP_HOST"];
 
 		// тут почему-то не срабатывает
 		if ( !empty( $params ) )
@@ -94,15 +94,15 @@ class VkProvider {
 	 *
 	 * @param int $id - id записи канала
 	 */
-	public static function settingsForm( $id = 0 ) {
+	public static function settingsForm($id = 0) {
 
 		//$scheme     = isset( $_SERVER[ 'HTTP_SCHEME' ] ) ? $_SERVER[ 'HTTP_SCHEME' ] : ( ( ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] != 'off' ) || 443 == $_SERVER[ 'SERVER_PORT' ] ) ? 'https://' : 'http://' );
 		//$serverhost = $scheme.$_SERVER[ "HTTP_HOST" ];
 
 		$channel = Chats ::channelsInfo( $id );
 
-		if($channel['settings'][ 'link' ] == '')
-			$channel['settings'][ 'link' ] = 'https://vk.com/club{ID_страницы}';
+		if ( $channel['settings']['link'] == '' )
+			$channel['settings']['link'] = 'https://vk.com/club{ID_страницы}';
 
 		?>
 		<div class="column grid-10">
@@ -116,29 +116,29 @@ class VkProvider {
 
 		<div class="column grid-10 relative">
 			<span class="label">ID приложения вконтакте</span>
-			<input type="text" name="app_id" id="app_id" class="wp100 required" value="<?= $channel[ 'settings' ][ 'app_id' ] ?>">
+			<input type="text" name="app_id" id="app_id" class="wp100 required" value="<?= $channel['settings']['app_id'] ?>">
 		</div>
 
 		<div class="column grid-10 relative">
 			<span class="label">Секретный код приложения</span>
-			<input type="text" name="app_secret" id="app_secret" class="wp100" value="<?= $channel[ 'settings' ][ 'app_secret' ] ?>">
+			<input type="text" name="app_secret" id="app_secret" class="wp100" value="<?= $channel['settings']['app_secret'] ?>">
 		</div>
 
 		<div class="column grid-10 relative">
 			<span class="label">Токен группы</span>
-			<input type="text" name="group_token" id="group_token" class="wp100" value="<?= $channel[ 'settings' ][ 'group_token' ] ?>">
+			<input type="text" name="group_token" id="group_token" class="wp100" value="<?= $channel['settings']['group_token'] ?>">
 		</div>
 
 		<div class="column grid-10 relative">
 			<span class="label">ID группы</span>
-			<input type="text" name="channel_id" id="channel_id" class="wp100" value="<?= $channel[ 'channel_id' ] ?>">
+			<input type="text" name="channel_id" id="channel_id" class="wp100" value="<?= $channel['channel_id'] ?>">
 			<div class="fs-09 gray2">Можно получить из URL сообщества: https://vk.com/<b class="red">salesmancrm</b>
 			</div>
 		</div>
 
 		<div class="column grid-10 relative hidden">
 			<span class="label">CONFIRMATION_TOKEN</span>
-			<input type="text" name="confirmation_token" id="confirmation_token" class="wp100" value="<?= $channel[ 'settings' ][ 'confirmation_token' ] ?>">
+			<input type="text" name="confirmation_token" id="confirmation_token" class="wp100" value="<?= $channel['settings']['confirmation_token'] ?>">
 			<div class="fs-09 gray2">Строка для подтверждения адреса сервера из настроек Callback API вида
 				<b class="red">d8v2ve07</b></div>
 		</div>
@@ -152,7 +152,7 @@ class VkProvider {
 
 		<div class="column grid-10 relative">
 			<span class="label">Токен приложения</span>
-			<input type="text" name="token" id="token" class="wp100" value="<?= $channel[ 'token' ] ?>">
+			<input type="text" name="token" id="token" class="wp100" value="<?= $channel['token'] ?>">
 			<div class="fs-09 gray2">Получить после Авторизации - скопировать из адреса окна авторизации</div>
 		</div>
 
@@ -160,18 +160,18 @@ class VkProvider {
 
 		<div class="column grid-10 relative">
 			<span class="label">Callback Server ID</span>
-			<input type="text" name="server_id" id="server_id" class="wp100" value="<?= $channel[ 'settings' ][ 'server_id' ] ?>">
+			<input type="text" name="server_id" id="server_id" class="wp100" value="<?= $channel['settings']['server_id'] ?>">
 			<div class="fs-09 gray2">ID Callback-сервера</div>
 		</div>
 
 		<div class="column grid-10 relative">
 			<span class="label">Имя группы:</span>
-			<input type="text" name="name" id="name" class="wp100" value="<?= $channel[ 'name' ] ?>">
+			<input type="text" name="name" id="name" class="wp100" value="<?= $channel['name'] ?>">
 		</div>
 
 		<div class="column grid-10 relative">
 			<span class="label">Ссылка:</span>
-			<input type="text" name="link" id="link" class="wp100" value="<?= $channel['settings'][ 'link' ] ?>">
+			<input type="text" name="link" id="link" class="wp100" value="<?= $channel['settings']['link'] ?>">
 		</div>
 
 		<script>
@@ -181,7 +181,7 @@ class VkProvider {
 
 				let id = $(this).val();
 
-				$('#link').val('https://vk.com/club'+id+'?ref=subscribe');
+				$('#link').val('https://vk.com/club' + id + '?ref=subscribe');
 
 			});
 
@@ -222,7 +222,7 @@ class VkProvider {
 						$('.rezult').html('Ответ: <b>Соединение установлено</b>');
 						$('#channel_id').val(data.channel_id);
 						$('#name').val(data.name);
-						$('#link').val('https://vk.com/club'+data.channel_id);
+						$('#link').val('https://vk.com/club' + data.channel_id);
 
 					}
 					else $('.rezult').html('Ошибка: <b>' + data.message + '</b>');
@@ -249,29 +249,29 @@ class VkProvider {
 	 *                  - username - имя канала
 	 * @throws VKException
 	 */
-	public function check( $params = [] ) {
+	public function check($params = []) {
 
-		$app_id       = $params[ 'app_id' ];
-		$app_secret   = $params[ 'app_secret' ];
-		$access_token = $params[ 'token' ];
-		$channel_id   = $params[ 'channel_id' ];
+		$app_id       = $params['app_id'];
+		$app_secret   = $params['app_secret'];
+		$access_token = $params['token'];
+		$channel_id   = $params['channel_id'];
 
 		$vk = new VK( $app_id, $app_secret, $access_token );
 		$vk -> setApiVersion( '5.103' );
 		$res = $vk -> api( 'groups.getById', ['group_ids' => $channel_id] );
 
 
-		if ( !empty( $res[ 'response' ] ) )
+		if ( !empty( $res['response'] ) )
 			$result = [
 				"ok"         => true,
-				"channel_id" => $res[ 'response' ][ 0 ][ 'id' ],
-				"name"       => $res[ 'response' ][ 0 ][ 'name' ]
+				"channel_id" => $res['response'][0]['id'],
+				"name"       => $res['response'][0]['name']
 			];
 
 		else
 			$result = [
 				"ok"      => false,
-				"message" => $res[ 'error' ][ 'error_msg' ]
+				"message" => $res['error']['error_msg']
 			];
 
 		return $result;
@@ -288,12 +288,12 @@ class VkProvider {
 
 		$params = json_decode( file_get_contents( 'php://input' ), true );
 
-		if ( $params[ 'type' ] == 'confirmation' ) {
+		if ( $params['type'] == 'confirmation' ) {
 
-			$channel_id = $params[ 'group_id' ];
+			$channel_id = $params['group_id'];
 			$settings   = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}chats_channels WHERE channel_id = '$channel_id'" ), true );
 
-			print $settings[ 'confirmation_token' ];
+			print $settings['confirmation_token'];
 
 			exit();
 
@@ -310,22 +310,22 @@ class VkProvider {
 	 *                      - str **message** - сообщение
 	 * @throws VKException
 	 */
-	public function setWebhook( $params = [] ) {
+	public function setWebhook($params = []) {
 
 		$api_key    = $this -> api_key;
 		$serverhost = $this -> serverhost;
 		$db         = $this -> db;
 		$sqlname    = $this -> sqlname;
 
-		$params[ 'settings' ] = !is_array( $params[ 'settings' ] ) ? json_decode( $params[ 'settings' ], true ) : $params[ 'settings' ];
+		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
 		//print_r($params);
 
-		$app_id     = $params[ 'settings' ][ 'app_id' ];
-		$app_secret = $params[ 'settings' ][ 'app_secret' ];
+		$app_id     = $params['settings']['app_id'];
+		$app_secret = $params['settings']['app_secret'];
 		//$group_token  = $params['settings']['group_token'];
-		$access_token = $params[ 'token' ];
-		$channel_id   = $params[ 'channel_id' ];
+		$access_token = $params['token'];
+		$channel_id   = $params['channel_id'];
 
 		$server_id = 0;
 
@@ -343,13 +343,13 @@ class VkProvider {
 		// находим наш по имени
 		foreach ( $servers as $server ) {
 
-			$r = parse_url($server[ 'url' ]);
-			$s = parse_url($serverhost);
+			$r = parse_url( $server['url'] );
+			$s = parse_url( $serverhost );
 			//print_r($r);
 
 			//if ( $server[ 'title' ] == 'SalesMan CRM' && $server[ 'status' ] == 'ok' )
 			//if ( $server[ 'title' ] == $serverhost && $server[ 'status' ] == 'ok' )
-			if ( $r['host'] == $s['host'] && $server[ 'status' ] == 'ok' ) {
+			if ( $r['host'] == $s['host'] && $server['status'] == 'ok' ) {
 
 				$server_id = $server['id'];
 				break;
@@ -363,13 +363,13 @@ class VkProvider {
 			'group_id' => $channel_id
 		] );
 
-		$confirmationCode = $res[ 'response' ][ 'code' ];
+		$confirmationCode = $res['response']['code'];
 
 		// добавляем код в настройки
 		if ( is_string( $confirmationCode ) ) {
 
-			$settings                         = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}chats_channels WHERE channel_id = '$channel_id'" ), true );
-			$settings[ 'confirmation_token' ] = $confirmationCode;
+			$settings                       = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}chats_channels WHERE channel_id = '$channel_id'" ), true );
+			$settings['confirmation_token'] = $confirmationCode;
 
 			$db -> query( "UPDATE {$sqlname}chats_channels SET ?u WHERE channel_id = '$channel_id'", ["settings" => json_encode_cyr( $settings )] );
 
@@ -392,7 +392,7 @@ class VkProvider {
 
 			//print_r( $res );
 
-			$server_id = $res[ 'response' ][ 'server_id' ];
+			$server_id = $res['response']['server_id'];
 
 		}
 		// или обновляем существующий
@@ -409,30 +409,30 @@ class VkProvider {
 
 			//print_r( $res );
 
-			$server_id = $res[ 'response' ][ 'server_id' ];
+			$server_id = $res['response']['server_id'];
 
 		}
 
 		if ( $server_id > 0 ) {
 
-			$res[ 'ok' ]          = true;
-			$res[ 'description' ] = 'Callback Server добавлен';
+			$res['ok']          = true;
+			$res['description'] = 'Callback Server добавлен';
 
 			/**
 			 * Добавим id канала в настройки
 			 */
 
-			$settings                = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}chats_channels WHERE channel_id = '$channel_id'" ), true );
-			$settings[ 'server_id' ] = $server_id;
+			$settings              = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}chats_channels WHERE channel_id = '$channel_id'" ), true );
+			$settings['server_id'] = $server_id;
 
 			$db -> query( "UPDATE {$sqlname}chats_channels SET ?u WHERE channel_id = '$channel_id'", ["settings" => json_encode_cyr( $settings )] );
 
 		}
 
 		return [
-			"status"    => ( $res[ 'ok' ] ) ? "ok" : "error",
+			"status"    => ($res['ok']) ? "ok" : "error",
 			"server_id" => $server_id,
-			"message"   => $res[ 'description' ]
+			"message"   => $res['description']
 		];
 
 	}
@@ -446,7 +446,7 @@ class VkProvider {
 	 *              - str **status** - статус установки (ok - успешно, error - ошибка)
 	 *              - str **message** - сообщение
 	 */
-	public function deleteWebhook( $params = [] ) {
+	public function deleteWebhook($params = []) {
 
 		$result = [
 			"status"  => "ok",
@@ -464,7 +464,7 @@ class VkProvider {
 	 *
 	 * @return mixed
 	 */
-	public function getInfo( $params = [] ) {
+	public function getInfo($params = []) {
 
 		$result = [];
 
@@ -480,23 +480,23 @@ class VkProvider {
 	 *
 	 * @return array
 	 */
-	public function sendMessage( $params = [] ) {
+	public function sendMessage($params = []) {
 
-		$params[ 'settings' ] = !is_array( $params[ 'settings' ] ) ? json_decode( $params[ 'settings' ], true ) : $params[ 'settings' ];
+		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
 		//print_r($params);
 
-		$app_id       = $params[ 'settings' ][ 'app_id' ];
-		$app_secret   = $params[ 'settings' ][ 'app_secret' ];
-		$group_token  = $params[ 'settings' ][ 'group_token' ];
-		$access_token = $params[ 'token' ];
-		$channel_id   = $params[ 'channel_id' ];
-		$user_id      = $params[ 'chat_id' ];
+		$app_id       = $params['settings']['app_id'];
+		$app_secret   = $params['settings']['app_secret'];
+		$group_token  = $params['settings']['group_token'];
+		$access_token = $params['token'];
+		$channel_id   = $params['channel_id'];
+		$user_id      = $params['chat_id'];
 
 		// todo: добавить возможность отправки изображений, документов
 
-		$message_id  = 0;
-		$res[ 'ok' ] = false;
+		$message_id = 0;
+		$res['ok']  = false;
 
 		try {
 
@@ -506,13 +506,13 @@ class VkProvider {
 				'group_id'  => $channel_id,
 				'user_id'   => $user_id,
 				'random_id' => Chats ::genkey( 4, 64 ),
-				'message'   => $params[ 'text' ]
+				'message'   => $params['text']
 			] );
 
-			if ( $res[ 'response' ] > 0 ) {
+			if ( $res['response'] > 0 ) {
 
-				$res[ 'ok' ] = true;
-				$message_id  = $res[ 'response' ];
+				$res['ok']  = true;
+				$message_id = $res['response'];
 
 			}
 
@@ -521,15 +521,15 @@ class VkProvider {
 		}
 		catch ( VKException $e ) {
 
-			$res[ 'ok' ] = false;
+			$res['ok'] = false;
 
 		}
 
 		$result = [
-			"result"      => $res[ 'ok' ] ? 'ok' : 'error',
+			"result"      => $res['ok'] ? 'ok' : 'error',
 			"message_id"  => $message_id,
-			"error_code"  => $res[ 'response' ][ 'error' ],
-			"description" => $res[ 'response' ][ 'error' ]
+			"error_code"  => $res['response']['error'],
+			"description" => $res['response']['error']
 		];
 
 		return $result;
@@ -543,20 +543,20 @@ class VkProvider {
 	 * @return array
 	 * @throws VKException
 	 */
-	public function sendFile( $params = [] ) {
+	public function sendFile($params = []) {
 
 		//print_r($params);
 
-		$rootpath = $GLOBALS[ 'rootpath' ];
+		$rootpath = $GLOBALS['rootpath'];
 
 		//$params[ 'settings' ] = !is_array( $params[ 'channel' ][ 'settings' ] ) ? json_decode( $params[ 'channel' ][ 'settings' ], true ) : $params[ 'channel' ][ 'settings' ];
 
-		$app_id       = $params[ 'settings' ][ 'app_id' ];
-		$app_secret   = $params[ 'settings' ][ 'app_secret' ];
-		$group_token  = $params[ 'settings' ][ 'group_token' ];
-		$access_token = $params[ 'token' ];
-		$channel_id   = $params[ 'channel_id' ];
-		$user_id      = $params[ 'chat_id' ];
+		$app_id       = $params['settings']['app_id'];
+		$app_secret   = $params['settings']['app_secret'];
+		$group_token  = $params['settings']['group_token'];
+		$access_token = $params['token'];
+		$channel_id   = $params['channel_id'];
+		$user_id      = $params['chat_id'];
 
 		//print_r($params);
 
@@ -581,7 +581,7 @@ class VkProvider {
 		 * Для фото и документов идут разные методы
 		 */
 
-		if ( !empty( $params[ 'attachments' ][ 'photo' ] ) ) {
+		if ( !empty( $params['attachments']['photo'] ) ) {
 
 			// сначала получае ссылку на сервер
 			$server = $vk -> api( 'photos.getMessagesUploadServer', [
@@ -591,13 +591,13 @@ class VkProvider {
 
 			//print_r($server);
 
-			if ( !isset( $server[ 'error' ] ) ) {
+			if ( !isset( $server['error'] ) ) {
 
-				$server_url = $server[ 'response' ][ 'upload_url' ];
+				$server_url = $server['response']['upload_url'];
 
-				$f = $params[ 'attachments' ][ 'photo' ][ 0 ];
+				$f = $params['attachments']['photo'][0];
 
-				$param[ 'photo' ] = curl_file_create( $rootpath.$f[ 'url' ], $f[ 'type' ], $f[ 'title' ] );
+				$param['photo'] = curl_file_create( $rootpath.$f['url'], $f['type'], $f['title'] );
 
 				// отправляем через системную функцию
 				$fu = Chats ::outSender( $server_url, $param, false );
@@ -612,9 +612,9 @@ class VkProvider {
 					$vk = new VK( $app_id, $app_secret, $group_token );
 					$vk -> setApiVersion( '5.103' );
 					$ds = $vk -> api( 'photos.saveMessagesPhoto', [
-						'photo'  => $file[ 'photo' ],
-						'server' => $file[ 'server' ],
-						'hash'   => $file[ 'hash' ]
+						'photo'  => $file['photo'],
+						'server' => $file['server'],
+						'hash'   => $file['hash']
 					] );
 
 					$attach = "photo{$ds['response'][0]['owner_id']}_{$ds[ 'response' ][ 0 ][ 'id' ]}";
@@ -633,16 +633,16 @@ class VkProvider {
 						'reply_to'   => 0
 					] );
 
-					if ( $fs[ 'response' ] > 0 ) {
+					if ( $fs['response'] > 0 ) {
 
-						$fs[ 'ok' ] = true;
-						$message_id = $fs[ 'response' ];
+						$fs['ok']   = true;
+						$message_id = $fs['response'];
 
 						$result = [
-							"result"      => $fs[ 'ok' ] ? 'ok' : 'error',
+							"result"      => $fs['ok'] ? 'ok' : 'error',
 							"message_id"  => $message_id,
-							"error_code"  => $res[ 'response' ][ 'error' ],
-							"description" => $res[ 'response' ][ 'error' ]
+							"error_code"  => $res['response']['error'],
+							"description" => $res['response']['error']
 						];
 
 					}
@@ -654,14 +654,14 @@ class VkProvider {
 
 				$result = [
 					"result"      => 'error',
-					"error_code"  => $server[ 'response' ][ 'error' ],
-					"description" => $server[ 'response' ][ 'error_msg' ]
+					"error_code"  => $server['response']['error'],
+					"description" => $server['response']['error_msg']
 				];
 
 			}
 
 		}
-		elseif ( !empty( $params[ 'attachments' ][ 'doc' ] ) ) {
+		elseif ( !empty( $params['attachments']['doc'] ) ) {
 
 			// сначала получае ссылку на сервер
 			$server = $vk -> api( 'docs.getMessagesUploadServer', [
@@ -672,13 +672,13 @@ class VkProvider {
 
 			//print_r($server);
 
-			if ( !isset( $server[ 'error' ] ) ) {
+			if ( !isset( $server['error'] ) ) {
 
-				$server_url = $server[ 'response' ][ 'upload_url' ];
+				$server_url = $server['response']['upload_url'];
 
-				$f = $params[ 'attachments' ][ 'doc' ][ 0 ];
+				$f = $params['attachments']['doc'][0];
 
-				$param[ 'file' ] = curl_file_create( $rootpath.$f[ 'url' ], $f[ 'type' ], $f[ 'title' ] );
+				$param['file'] = curl_file_create( $rootpath.$f['url'], $f['type'], $f['title'] );
 
 				//++ print_r($param);
 
@@ -694,8 +694,8 @@ class VkProvider {
 					$vk = new VK( $app_id, $app_secret, $group_token );
 					$vk -> setApiVersion( '5.103' );
 					$ds = $vk -> api( 'docs.save', [
-						'file'  => $file[ 'file' ],
-						'title' => $f[ 'title' ],
+						'file'  => $file['file'],
+						'title' => $f['title'],
 						'tags'  => 'doc,salesman'
 					] );
 
@@ -710,21 +710,21 @@ class VkProvider {
 						'group_id'   => $channel_id,
 						'user_id'    => $user_id,
 						'random_id'  => Chats ::genkey( 4, 64 ),
-						'message'    => 'Примите файл '.$f[ 'title' ],
+						'message'    => 'Примите файл '.$f['title'],
 						'attachment' => $attach,
 						'reply_to'   => 0
 					] );
 
-					if ( $fs[ 'response' ] > 0 ) {
+					if ( $fs['response'] > 0 ) {
 
-						$fs[ 'ok' ] = true;
-						$message_id = $fs[ 'response' ];
+						$fs['ok']   = true;
+						$message_id = $fs['response'];
 
 						$result = [
-							"result"      => $fs[ 'ok' ] ? 'ok' : 'error',
+							"result"      => $fs['ok'] ? 'ok' : 'error',
 							"message_id"  => $message_id,
-							"error_code"  => $res[ 'response' ][ 'error' ],
-							"description" => $res[ 'response' ][ 'error' ]
+							"error_code"  => $res['response']['error'],
+							"description" => $res['response']['error']
 						];
 
 					}
@@ -736,8 +736,8 @@ class VkProvider {
 
 				$result = [
 					"result"      => 'error',
-					"error_code"  => $server[ 'response' ][ 'error' ],
-					"description" => $server[ 'response' ][ 'error_msg' ]
+					"error_code"  => $server['response']['error'],
+					"description" => $server['response']['error_msg']
 				];
 
 			}
@@ -763,22 +763,22 @@ class VkProvider {
 	 *
 	 * @return array
 	 */
-	public function deleteMessage( $message = [] ) {
+	public function deleteMessage($message = []) {
 
-		$params[ 'settings' ] = !is_array( $message[ 'channel' ][ 'settings' ] ) ? json_decode( $message[ 'channel' ][ 'settings' ], true ) : $message[ 'channel' ][ 'settings' ];
+		$params['settings'] = !is_array( $message['channel']['settings'] ) ? json_decode( $message['channel']['settings'], true ) : $message['channel']['settings'];
 
 		//print_r($params);
 
-		$app_id       = $params[ 'settings' ][ 'app_id' ];
-		$app_secret   = $params[ 'settings' ][ 'app_secret' ];
-		$group_token  = $params[ 'settings' ][ 'group_token' ];
-		$access_token = $message[ 'channel' ][ 'token' ];
-		$channel_id   = $message[ 'channel_id' ];
+		$app_id       = $params['settings']['app_id'];
+		$app_secret   = $params['settings']['app_secret'];
+		$group_token  = $params['settings']['group_token'];
+		$access_token = $message['channel']['token'];
+		$channel_id   = $message['channel_id'];
 
 		// todo: добавить возможность отправки изображений, документов
 
-		$message_id  = 0;
-		$res[ 'ok' ] = false;
+		$message_id = 0;
+		$res['ok']  = false;
 
 		try {
 
@@ -786,30 +786,30 @@ class VkProvider {
 			$vk -> setApiVersion( '5.103' );
 			$res = $vk -> api( 'messages.delete', [
 				'group_id'       => $channel_id,
-				'message_ids'    => $message[ 'message_id' ],
+				'message_ids'    => $message['message_id'],
 				'delete_for_all' => '1'
 			] );
 
 			//print_r($res);
 
-			if ( !empty( $res[ 'response' ] ) ) {
+			if ( !empty( $res['response'] ) ) {
 
-				$res[ 'ok' ] = true;
+				$res['ok'] = true;
 
 			}
 
 		}
 		catch ( VKException $e ) {
 
-			$res[ 'ok' ] = false;
+			$res['ok'] = false;
 
 		}
 
 		$result = [
-			"result"      => $res[ 'ok' ] ? 'ok' : 'error',
+			"result"      => $res['ok'] ? 'ok' : 'error',
 			"message_id"  => $message_id,
-			"error_code"  => $res[ 'error' ][ 'error_code' ],
-			"description" => $res[ 'error' ][ 'error_msg' ]
+			"error_code"  => $res['error']['error_code'],
+			"description" => $res['error']['error_msg']
 		];
 
 		return $result;
@@ -824,21 +824,21 @@ class VkProvider {
 	 *
 	 * @return array
 	 */
-	public function setReadStateMessage( $messages = [], $params = [] ) {
+	public function setReadStateMessage($messages = [], $params = []) {
 
-		$params[ 'settings' ] = !is_array( $params[ 'settings' ] ) ? json_decode( $params[ 'settings' ], true ) : $params[ 'settings' ];
+		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
 		//print_r($params);
 
-		$app_id       = $params[ 'settings' ][ 'app_id' ];
-		$app_secret   = $params[ 'settings' ][ 'app_secret' ];
-		$group_token  = $params[ 'settings' ][ 'group_token' ];
-		$access_token = $params[ 'token' ];
-		$channel_id   = $params[ 'channel_id' ];
+		$app_id       = $params['settings']['app_id'];
+		$app_secret   = $params['settings']['app_secret'];
+		$group_token  = $params['settings']['group_token'];
+		$access_token = $params['token'];
+		$channel_id   = $params['channel_id'];
 
 		// todo: добавить возможность отправки изображений, документов
 
-		$res[ 'ok' ] = false;
+		$res['ok'] = false;
 
 		try {
 
@@ -849,9 +849,9 @@ class VkProvider {
 				'message_ids' => implode( ",", $messages )
 			] );
 
-			if ( $res[ 'response' ] > 0 ) {
+			if ( $res['response'] > 0 ) {
 
-				$res[ 'ok' ] = true;
+				$res['ok'] = true;
 
 			}
 
@@ -860,14 +860,14 @@ class VkProvider {
 		}
 		catch ( VKException $e ) {
 
-			$res[ 'ok' ] = false;
+			$res['ok'] = false;
 
 		}
 
 		$result = [
-			"result"      => $res[ 'ok' ] ? 'ok' : 'error',
-			"error_code"  => $res[ 'response' ][ 'error' ],
-			"description" => $res[ 'response' ][ 'error' ]
+			"result"      => $res['ok'] ? 'ok' : 'error',
+			"error_code"  => $res['response']['error'],
+			"description" => $res['response']['error']
 		];
 
 		return $result;
@@ -881,17 +881,17 @@ class VkProvider {
 	 *
 	 * @return mixed
 	 */
-	public function getUsers( $params = [] ) {
+	public function getUsers($params = []) {
 
-		$params[ 'settings' ] = !is_array( $params[ 'settings' ] ) ? json_decode( $params[ 'settings' ], true ) : $params[ 'settings' ];
+		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
 		//print_r($params);
 
-		$app_id       = $params[ 'settings' ][ 'app_id' ];
-		$app_secret   = $params[ 'settings' ][ 'app_secret' ];
-		$group_token  = $params[ 'settings' ][ 'group_token' ];
-		$access_token = $params[ 'token' ];
-		$channel_id   = $params[ 'channel_id' ];
+		$app_id       = $params['settings']['app_id'];
+		$app_secret   = $params['settings']['app_secret'];
+		$group_token  = $params['settings']['group_token'];
+		$access_token = $params['token'];
+		$channel_id   = $params['channel_id'];
 
 
 		try {
@@ -907,7 +907,7 @@ class VkProvider {
 		}
 		catch ( VKException $e ) {
 
-			$result[ 'error' ] = $e -> getTrace();
+			$result['error'] = $e -> getTrace();
 
 		}
 
@@ -929,7 +929,7 @@ class VkProvider {
 	 *              - str **client_lastname** - фамилия
 	 *              - str **client_avatar** - ссылка на аватар
 	 */
-	public function getUserInfo( $user_id = 0, $params = [] ) {
+	public function getUserInfo($user_id = 0, $params = []) {
 
 		// https://vk.com/dev/users.get
 		// Возвращает расширенную информацию о пользователях.
@@ -937,14 +937,14 @@ class VkProvider {
 		// Этот метод можно вызвать с ключом доступа пользователя.
 		// Этот метод можно вызвать с ключом доступа сообщества.
 
-		$params[ 'settings' ] = !is_array( $params[ 'settings' ] ) ? json_decode( $params[ 'settings' ], true ) : $params[ 'settings' ];
+		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
 		//print_r($params);
 
-		$app_id       = $params[ 'settings' ][ 'app_id' ];
-		$app_secret   = $params[ 'settings' ][ 'app_secret' ];
-		$group_token  = $params[ 'settings' ][ 'group_token' ];
-		$access_token = $params[ 'token' ];
+		$app_id       = $params['settings']['app_id'];
+		$app_secret   = $params['settings']['app_secret'];
+		$group_token  = $params['settings']['group_token'];
+		$access_token = $params['token'];
 
 		try {
 
@@ -956,23 +956,23 @@ class VkProvider {
 				'fields'  => 'sex, city, country, photo_50, photo_100, photo_200, online, online_mobile, domain, contacts, connections, site, status'
 			] );
 
-			if ( !empty( $res[ 'error' ] ) ) {
+			if ( !empty( $res['error'] ) ) {
 
 				$result = [
 					"result"      => 'error',
 					"ok"          => false,
-					"description" => $res[ 'error' ][ 'error_msg' ]
+					"description" => $res['error']['error_msg']
 				];
 
 			}
 			else {
 
 				$result = [
-					'chat_id'          => $res[ 'response' ][ 0 ][ 'id' ],
-					'client_id'        => $res[ 'response' ][ 0 ][ 'id' ],
-					'client_firstname' => $res[ 'response' ][ 0 ][ 'first_name' ],
-					'client_lastname'  => $res[ 'response' ][ 0 ][ 'last_name' ],
-					'client_avatar'    => $res[ 'response' ][ 0 ][ 'photo_100' ],
+					'chat_id'          => $res['response'][0]['id'],
+					'client_id'        => $res['response'][0]['id'],
+					'client_firstname' => $res['response'][0]['first_name'],
+					'client_lastname'  => $res['response'][0]['last_name'],
+					'client_avatar'    => $res['response'][0]['photo_100'],
 				];
 
 			}
@@ -980,7 +980,7 @@ class VkProvider {
 		}
 		catch ( VKException $e ) {
 
-			$result[ 'sys_error' ] = $e -> getTrace();
+			$result['sys_error'] = $e -> getTrace();
 
 		}
 
@@ -997,37 +997,37 @@ class VkProvider {
 	 * @param array $channel
 	 * @return array
 	 */
-	public function eventFilter( $params = [], $channel = [] ) {
+	public function eventFilter($params = [], $channel = []) {
 
 		$rootpath = $GLOBALS['rootpath'];
 
-		$event = $params[ 'type' ];
+		$event = $params['type'];
 
 		$message     = [];
 		$attachments = [];
 
-		if ( !empty( $params[ 'object' ] ) && !isset( $params[ 'object' ][ 'message' ] ) ) {
+		if ( !empty( $params['object'] ) && !isset( $params['object']['message'] ) ) {
 
-			$message[ 'message_id' ] = $params[ 'object' ][ 'id' ];
-			$message[ 'chat_id' ]    = $params[ 'object' ][ 'user_id' ] == '' ? $params[ 'object' ][ 'peer_id' ] : $params[ 'object' ][ 'user_id' ];
-			$message[ 'text' ]       = $params[ 'object' ][ 'body' ] != '' ? $params[ 'object' ][ 'body' ] : $params[ 'object' ][ 'text' ];
-			$message[ 'direction' ]  = $params[ 'object' ][ 'out' ] == 1 ? "out" : "in";
-			$attachments             = $params[ 'object' ][ 'attachments' ];
+			$message['message_id'] = $params['object']['id'];
+			$message['chat_id']    = $params['object']['user_id'] == '' ? $params['object']['peer_id'] : $params['object']['user_id'];
+			$message['text']       = $params['object']['body'] != '' ? $params['object']['body'] : $params['object']['text'];
+			$message['direction']  = $params['object']['out'] == 1 ? "out" : "in";
+			$attachments           = $params['object']['attachments'];
 
 		}
-		elseif ( !empty( $params[ 'object' ][ 'message' ] ) ) {
+		elseif ( !empty( $params['object']['message'] ) ) {
 
-			$message[ 'message_id' ] = $params[ 'object' ][ 'message' ][ 'id' ];
-			$message[ 'chat_id' ]    = $params[ 'object' ][ 'message' ][ 'from_id' ];
-			$message[ 'text' ]       = $params[ 'object' ][ 'message' ][ 'text' ];
-			$message[ 'direction' ]  = $params[ 'object' ][ 'message' ][ 'out' ] == 1 ? "out" : "in";
-			$attachments             = $params[ 'object' ][ 'message' ][ 'attachments' ];
+			$message['message_id'] = $params['object']['message']['id'];
+			$message['chat_id']    = $params['object']['message']['from_id'];
+			$message['text']       = $params['object']['message']['text'];
+			$message['direction']  = $params['object']['message']['out'] == 1 ? "out" : "in";
+			$attachments           = $params['object']['message']['attachments'];
 
 		}
 
 		foreach ( $attachments as $attach ) {
 
-			switch ( $attach[ 'type' ] ) {
+			switch ($attach['type']) {
 
 				case "link":
 				case "video":
@@ -1037,39 +1037,39 @@ class VkProvider {
 				case "doc":
 
 					// сохраним на диск
-					$filename = md5( basename( $attach[ 'doc' ][ 'url' ] ) ).".".$attach[ 'doc' ][ 'ext' ];
+					$filename = md5( basename( $attach['doc']['url'] ) ).".".$attach['doc']['ext'];
 
 					// сохраним файл в кэше, т.к. к серверу телеграм хер подключишься
-					$fc = file_get_contents( $attach[ 'doc' ][ 'url' ] );
+					$fc = file_get_contents( $attach['doc']['url'] );
 					file_put_contents( $rootpath."/files/chatcash/files/".$filename, $fc );
 
-					$message[ 'attachment' ][ 'doc' ][] = [
+					$message['attachment']['doc'][] = [
 						"url"   => "/files/chatcash/files/".$filename,
 						//"url"   => $attach[ 'doc' ][ 'url' ],
-						"title" => $attach[ 'doc' ][ 'title' ],
-						"size"  => $attach[ 'doc' ][ 'size' ],
-						"ext"   => $attach[ 'doc' ][ 'ext' ],
+						"title" => $attach['doc']['title'],
+						"size"  => $attach['doc']['size'],
+						"ext"   => $attach['doc']['ext'],
 						"icon"  => get_icon3( $filename ),
 					];
 
 				break;
 				case "photo":
 
-					$r        = parse_url( $attach[ 'photo' ][ 'sizes' ][ '3' ][ 'url' ] );
-					$filename = basename( $r[ 'path' ] );
+					$r        = parse_url( $attach['photo']['sizes']['3']['url'] );
+					$filename = basename( $r['path'] );
 
 					// сохраним на диск
-					$xfilename = md5( basename( $attach[ 'photo' ][ 'url' ] ) ).".jpeg";
+					$xfilename = md5( basename( $attach['photo']['url'] ) ).".jpeg";
 
 					// сохраним файл в кэше, т.к. к серверу телеграм хер подключишься
-					$fc = file_get_contents( $attach[ 'photo' ][ 'sizes' ][ '3' ][ 'url' ] );
+					$fc = file_get_contents( $attach['photo']['sizes']['3']['url'] );
 					file_put_contents( $rootpath."/files/chatcash/files/".$xfilename, $fc );
 
-					$message[ 'attachment' ][ 'photo' ][] = [
+					$message['attachment']['photo'][] = [
 						"url"     => "/files/chatcash/files/".$xfilename,
 						//"url"     => $attach[ 'photo' ][ 'sizes' ][ '3' ][ 'url' ],
 						"title"   => $filename,
-						"preview" => $attach[ 'photo' ][ 'sizes' ][ '1' ][ 'url' ],
+						"preview" => $attach['photo']['sizes']['1']['url'],
 						"icon"    => 'icon-file-image yelw',
 					];
 
@@ -1081,9 +1081,9 @@ class VkProvider {
 
 		// находим чат
 		$ch   = new Chats();
-		$chat = $ch -> chatInfo( 0, $message[ 'chat_id' ] );
+		$chat = $ch -> chatInfo( 0, $message['chat_id'] );
 
-		switch ( $event ) {
+		switch ($event) {
 
 			case "message_new":
 			case "message_reply":
@@ -1092,17 +1092,17 @@ class VkProvider {
 				if ( empty( $chat ) ) {
 
 					// запрашиваем данные пользователя
-					$user = self ::getUserInfo( $message[ 'chat_id' ], $channel );
+					$user = $this -> getUserInfo( $message['chat_id'], $channel );
 
-					$message[ 'client_firstname' ] = $user[ 'client_firstname' ];
-					$message[ 'client_lastname' ]  = $user[ 'client_lastname' ];
-					$message[ 'client_avatar' ]    = $user[ 'client_avatar' ];
+					$message['client_firstname'] = $user['client_firstname'];
+					$message['client_lastname']  = $user['client_lastname'];
+					$message['client_avatar']    = $user['client_avatar'];
 
 					$message['type'] = 'vk';
 
 				}
 
-				$message[ 'event' ] = "newMessage";
+				$message['event'] = "newMessage";
 
 			break;
 
@@ -1114,12 +1114,13 @@ class VkProvider {
 
 	/**
 	 * Заглушка для метода передачи чата другому оператору
-	 * @param string $chat_id
+	 *
+	 * @param string  $chat_id
 	 * @param integer $iduser
-	 * @param array $params
+	 * @param array   $params
 	 * @return bool
 	 */
-	public function chatTransfer($chat_id = '', $params = [], $iduser = 0){
+	public function chatTransfer($chat_id = '', $params = [], $iduser = 0) {
 
 		return true;
 
@@ -1127,42 +1128,45 @@ class VkProvider {
 
 	/**
 	 * Заглушка для метода приглашение оператора в чат
-	 * @param string $chat_id
+	 *
+	 * @param string  $chat_id
 	 * @param integer $iduser
-	 * @param array $params
+	 * @param array   $params
 	 * @return bool
 	 */
-	public function chatInvite($chat_id = '', $params = [], $iduser = 0){
+	public function chatInvite($chat_id = '', $params = [], $iduser = 0) {
 
 		return true;
 
 	}
 
 	// получение файла для скачивания. Не работает
-	public function getFile($params = [], $ids = []){
+	public function getFile($params = [], $ids = []) {
 
-		$params[ 'settings' ] = !is_array( $params[ 'settings' ] ) ? json_decode( $params[ 'settings' ], true ) : $params[ 'settings' ];
+		$params['settings'] = !is_array( $params['settings'] ) ? json_decode( $params['settings'], true ) : $params['settings'];
 
 		//print_r($params);
 
-		$app_id       = $params[ 'settings' ][ 'app_id' ];
-		$app_secret   = $params[ 'settings' ][ 'app_secret' ];
-		$group_token  = $params[ 'settings' ][ 'group_token' ];
-		$access_token = $params[ 'token' ];
+		$app_id       = $params['settings']['app_id'];
+		$app_secret   = $params['settings']['app_secret'];
+		$group_token  = $params['settings']['group_token'];
+		$access_token = $params['token'];
 
 		try {
 
 			$vk = new VK( $app_id, $app_secret, $group_token );
 			$vk -> setApiVersion( '5.131' );
 
-			$result = $vk -> api( 'docs.getById', ["docs" => yimplode(",", $ids), "access_token" => $access_token] );
+			$result = $vk -> api( 'docs.getById', ["docs"         => yimplode( ",", $ids ),
+			                                       "access_token" => $access_token
+			] );
 
-			print_r($result);
+			//print_r($result);
 
 		}
 		catch ( VKException $e ) {
 
-			$result[ 'sys_error' ] = $e -> getTrace();
+			$result['sys_error'] = $e -> getTrace();
 
 		}
 

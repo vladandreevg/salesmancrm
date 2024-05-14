@@ -21,15 +21,20 @@ class Viber {
 	public $ch;
 	public $answer, $info;
 	public $headers;
+	public $error;
 
 	public function __construct($token) {
 		$this -> auth = 'X-Viber-Auth-Token: '.$token;
 	}
 
-	private function start($url, $request): void {
+	private function start($method, $request = null): void {
 
-		if (is_array($request)) {
+		if (is_array($request) && !empty($request)) {
 			$request = json_encode($request);
+		}
+
+		if(empty($request)){
+			$request = [];
 		}
 
 		$this -> headers = [
@@ -44,7 +49,7 @@ class Viber {
 		//curl_setopt($this -> ch, CURLOPT_BINARYTRANSFER, 1);
 		//curl_setopt($this -> ch, CURLOPT_SSL_VERIFYPEER, false);
 		//curl_setopt($this -> ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($this -> ch, CURLOPT_URL, self::url.$url);
+		curl_setopt($this -> ch, CURLOPT_URL, $this -> url.$method);
 
 		if ($request != '') {
 			curl_setopt($this -> ch, CURLOPT_POSTFIELDS, $request);
@@ -57,6 +62,7 @@ class Viber {
 		curl_setopt($this -> ch, CURLOPT_HTTPHEADER, $this -> headers);
 		$this -> answer = curl_exec($this -> ch);
 		$this -> info   = curl_getinfo($this -> ch);
+		$this -> error  = curl_error($this -> ch);
 		curl_close($this -> ch);
 
 	}
@@ -67,7 +73,7 @@ class Viber {
 	 */
 	public function botInfo(): bool {
 
-		$this -> start($this -> url, 'get_account_info');
+		$this -> start('get_account_info');
 		$this -> exec();
 
 		return true;
@@ -95,7 +101,7 @@ class Viber {
 			"send_photo"  => true
 		];
 
-		$this -> start('set_webhook', json_encode($params));
+		$this -> start('set_webhook', $params);
 		$this -> exec();
 
 		// Error!

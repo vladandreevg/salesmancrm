@@ -26,26 +26,26 @@ class ExampleProvider {
 	 *
 	 * @var mixed
 	 */
-	var $identity, $iduser1, $sqlname, $db, $fpath, $opts, $skey, $ivc, $tmzone;
+	public $identity, $iduser1, $sqlname, $db, $fpath, $opts, $skey, $ivc, $tmzone;
 
 	/**
 	 * Передача различных параметров
 	 *
 	 * @var array
 	 */
-	var $params = [];
+	public $params = [];
 
-	var $api_key = '';
-	var $serverhost = '';
+	public $api_key = '';
+	public $serverhost = '';
 
 	/**
 	 * Работает только с объектом
 	 * Подключает необходимые файлы, задает первоначальные параметры
 	 * Chats constructor
 	 */
-	function __construct() {
+	public function __construct() {
 
-		$rootpath = realpath( __DIR__.'/../../../../../' );
+		$rootpath = dirname( __DIR__, 5 );
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -62,19 +62,21 @@ class ExampleProvider {
 		$this -> tmzone   = $GLOBALS[ 'tmzone' ];
 
 		$this -> api_key    = $GLOBALS[ 'db' ] -> getOne( "SELECT api_key FROM ".$GLOBALS[ 'sqlname' ]."settings WHERE id = '$GLOBALS[identity]'" );
-		$scheme             = isset( $_SERVER[ 'HTTP_SCHEME' ] ) ? $_SERVER[ 'HTTP_SCHEME' ] : ( ( ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] != 'off' ) || 443 == $_SERVER[ 'SERVER_PORT' ] ) ? 'https://' : 'http://' );
+		$scheme             = $_SERVER['HTTP_SCHEME'] ?? (((isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://');
 		$this -> serverhost = $scheme.$_SERVER[ "HTTP_HOST" ];
 
 		// тут почему-то не срабатывает
-		if ( !empty( $params ) )
-			foreach ( $params as $key => $val )
+		if ( !empty( $params ) ) {
+			foreach ( $params as $key => $val ) {
 				$this ->{$key} = $val;
+			}
+		}
 
 		date_default_timezone_set( $this -> tmzone );
 
 	}
 
-	public static function providerName() {
+	public static function providerName(): array {
 
 		return [
 			"name"      => "example",
@@ -93,7 +95,7 @@ class ExampleProvider {
 	 */
 	public static function settingsForm( $id = 0 ) {
 
-		$scheme     = isset( $_SERVER[ 'HTTP_SCHEME' ] ) ? $_SERVER[ 'HTTP_SCHEME' ] : ( ( ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] != 'off' ) || 443 == $_SERVER[ 'SERVER_PORT' ] ) ? 'https://' : 'http://' );
+		$scheme     = $_SERVER['HTTP_SCHEME'] ?? (((isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://');
 		$serverhost = $scheme.$_SERVER[ "HTTP_HOST" ];
 
 		$channel = Chats ::channelsInfo( $id );
@@ -225,7 +227,7 @@ class ExampleProvider {
 	 *                  - id - id канала
 	 *                  - username - имя канала
 	 */
-	public function check( $params = [] ) {
+	public function check(array $params = [] ) {
 
 		$app_id       = $params[ 'app_id' ];
 		$app_secret   = $params[ 'app_secret' ];
@@ -234,18 +236,19 @@ class ExampleProvider {
 
 		$res = [];
 
-		if ( !empty( $res[ 'response' ] ) )
+		if ( !empty( $res[ 'response' ] ) ) {
 			$result = [
 				"ok"         => true,
-				"channel_id" => $res[ 'response' ][ 'id' ],
-				"name"       => $res[ 'response' ][ 'name' ]
+				"channel_id" => $res['response']['id'],
+				"name"       => $res['response']['name']
 			];
-
-		else
+		}
+		else {
 			$result = [
 				"ok"      => false,
-				"message" => $res[ 'error' ][ 'error_msg' ]
+				"message" => $res['error']['error_msg']
 			];
+		}
 
 		return $result;
 

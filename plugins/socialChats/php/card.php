@@ -11,8 +11,8 @@
 
 use Chats\Chats;
 
-$rootpath = realpath( __DIR__.'/../../../' );
-$ypath    = realpath( __DIR__.'/../../../' )."/plugins/socialChats";
+$rootpath = dirname( __DIR__, 3 );
+$ypath    = $rootpath."/plugins/socialChats";
 
 error_reporting( E_ERROR );
 
@@ -25,11 +25,11 @@ require_once $rootpath."/inc/func.php";
 require_once $ypath."/php/autoload.php";
 require_once $ypath."/vendor/autoload.php";
 
-$action = $_REQUEST[ 'action' ];
-$clid   = $_REQUEST[ 'clid' ];
-$pid    = $_REQUEST[ 'pid' ];
+$action = $_REQUEST['action'];
+$clid   = (int)$_REQUEST['clid'];
+$pid    = (int)$_REQUEST['pid'];
 
-$icons = $channel = [];
+$icons    = $channel = [];
 $whatsapp = '';
 
 $chat = new Chats();
@@ -38,12 +38,12 @@ $users = $chat -> getOperatorsFull();
 //$icons = Chats ::channelsIcon();
 
 $channels = $chat -> getChannels();
-foreach ($channels as $ch){
+foreach ( $channels as $ch ) {
 
-	$icons[$ch['channel_id']] = $ch['icon'];
-	$channel[$ch['channel_id']] = $ch['messenger'];
+	$icons[ $ch['channel_id'] ]   = $ch['icon'];
+	$channel[ $ch['channel_id'] ] = $ch['messenger'];
 
-	if($ch['messenger'] == 'Whatsapp'){
+	if ( $ch['messenger'] == 'Whatsapp' ) {
 
 		$whatsapp = $ch['channel_id'];
 
@@ -132,25 +132,22 @@ $template = '
 // получение списка сообщений
 if ( $action == 'messages' ) {
 
-	//print_r($_REQUEST);
-
-	$page = $_REQUEST[ 'page' ];
-	//$clid = $_REQUEST[ 'clid' ];
-	//$pid  = $_REQUEST[ 'pid' ];
-	$sort = '';
+	$page = $_REQUEST['page'];
+	$sort     = '';
 	$dateText = '';
 	$current  = current_datum();
 
 	$list = [];
 
-	if ( $pid > 0 )
+	if ( $pid > 0 ) {
 		$sort .= " pid = '$pid' AND";
-
-	elseif ( $clid > 0 )
+	}
+	elseif ( $clid > 0 ) {
 		$sort .= " clid = '$clid' AND";
-
-	else
+	}
+	else {
 		goto ext;
+	}
 
 	$query = "
 		SELECT 
@@ -164,7 +161,7 @@ if ( $action == 'messages' ) {
 	$result = $db -> query( $query );
 	$total  = $db -> numRows( $result );
 
-	$page = ( !isset( $page ) || empty( $page ) || $page <= 0 ) ? 1 : (int)$page;
+	$page = (empty( $page ) || $page <= 0) ? 1 : (int)$page;
 
 	$lines_per_page = 30;
 
@@ -177,23 +174,23 @@ if ( $action == 'messages' ) {
 	$data = $db -> getAll( $query );
 	foreach ( $data as $da ) {
 
-		$echat = $chat -> chatInfoShort( 0, $da[ 'chat_id' ] );
+		$echat = $chat -> chatInfoShort( 0, $da['chat_id'] );
 
 		$dateDivider = NULL;
 
-		$avatar = ( $da[ 'direction' ] == 'in' ) ? $echat[ 'avatar' ] : $users[ $da[ 'iduser' ] ][ 'avatar' ];
-		$color  = ( $da[ 'direction' ] == 'in' ) ? "blue" : "green";
-		$name   = ( $da[ 'direction' ] == 'in' ) ? $echat[ 'firstname' ].' '.$echat[ 'lastname' ] : $users[ $da[ 'iduser' ] ][ 'title' ];
-		$direct = ( $da[ 'direction' ] == 'in' ) ? 'icon-reply' : 'icon-forward-1';
+		$avatar = ($da['direction'] == 'in') ? $echat['avatar'] : $users[ $da['iduser'] ]['avatar'];
+		$color  = ($da['direction'] == 'in') ? "blue" : "green";
+		$name   = ($da['direction'] == 'in') ? $echat['firstname'].' '.$echat['lastname'] : $users[ $da['iduser'] ]['title'];
+		$direct = ($da['direction'] == 'in') ? 'icon-reply' : 'icon-forward-1';
 
-		$date = get_smdate( $da[ 'datum' ] );
+		$date = get_smdate( $da['datum'] );
 
-		$text = htmlspecialchars_decode( nl2br( $da[ 'content' ] ) );
+		$text = htmlspecialchars_decode( nl2br( $da['content'] ) );
 
-		$readability = $da[ 'readability' ] != '' ? json_decode( $da[ 'readability' ], true ) : NULL;
-		$attachent   = $da[ 'attachment' ] != NULL ? json_decode( $da[ 'attachment' ], true ) : NULL;
+		$readability = $da['readability'] != '' ? json_decode( $da['readability'], true ) : NULL;
+		$attachent   = $da['attachment'] != NULL ? json_decode( $da['attachment'], true ) : NULL;
 
-		$date = get_smdate( $da[ 'datum' ] );
+		$date = get_smdate( $da['datum'] );
 
 		if ( diffDate2( $date, $current ) < 0 && $dateText != $date ) {
 
@@ -209,26 +206,26 @@ if ( $action == 'messages' ) {
 		}
 
 		$list[] = [
-			'id'            => $da[ 'id' ],
-			'message_id'    => $da[ 'message_id' ],
-			'chat_id'       => $da[ 'chat_id' ],
+			'id'            => (int)$da['id'],
+			'message_id'    => $da['message_id'],
+			'chat_id'       => $da['chat_id'],
 			'datum'         => $date,
-			'direction'     => $da[ 'direction' ],
-			'status'        => $da[ 'status' ],
+			'direction'     => $da['direction'],
+			'status'        => $da['status'],
 			'avatar'        => $avatar,
 			'color'         => $color,
-			'background'    => $echat[ 'color' ],
-			'iduser'        => $da[ 'iduser' ],
+			'background'    => $echat['color'],
+			'iduser'        => $da['iduser'],
 			'name'          => $name,
 			'content'       => link_it( $text ),
-			'date'          => getTime( (string)$da[ 'datum' ] ),
+			'date'          => getTime( (string)$da['datum'] ),
 			'dateDivider'   => $dateDivider,
-			'boxbg'         => $da[ 'direction' ] == 'out' ? 'user' : '',
-			'readability'   => ( $readability[ 'title' ] != '' || $readability[ 'image' ] != '' ) ? $readability : NULL,
+			'boxbg'         => $da['direction'] == 'out' ? 'user' : '',
+			'readability'   => ($readability['title'] != '' || $readability['image'] != '') ? $readability : NULL,
 			'attachment'    => $attachent,
 			'hasAttachment' => $attachent != NULL ? true : NULL,
 			"diricon"       => $direct,
-			"icon"          => $icons[$da['channel_id']]
+			"icon"          => $icons[ $da['channel_id'] ]
 		];
 
 	}
@@ -251,46 +248,51 @@ if ( $action == 'messages' ) {
 if ( $action == '' ) {
 
 	// все мобильные номера карточки
-	$phones = getMobileFromCard($clid, $pid, true);
+	$phones = getMobileFromCard( (int)$clid, (int)$pid, true );
 
-	if($pid > 0) {
+	if ( $pid > 0 ) {
 
 		$chats = $db -> getAll( "SELECT chat_id, channel_id, CONCAT(client_firstname, ' ', client_lastname) as name, pid, phone, type FROM {$sqlname}chats_chat WHERE pid = '$pid'" );
 
 	}
-	elseif($clid > 0){
+	elseif ( $clid > 0 ) {
 
-		$pids = $db -> getCol("SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid'");
+		$pids = $db -> getCol( "SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid'" );
 
-		if(!empty($pids))
-			$chats = $db -> getAll( "SELECT chat_id, channel_id, CONCAT(client_firstname, ' ', client_lastname) as name, pid, phone, type FROM {$sqlname}chats_chat WHERE clid = '$clid' OR pid IN (".yimplode(",", $pids).")" );
-		else
-			$chats = $db -> getAll( "SELECT chat_id, channel_id, CONCAT(client_firstname, ' ', client_lastname) as name, pid, phone, type FROM {$sqlname}chats_chat WHERE clid = '$clid'" );
+		if ( !empty( $pids ) ) {
+			$chats = $db -> getAll( "SELECT chat_id, channel_id, CONCAT(COALESCE(client_firstname, ''), ' ', COALESCE(client_lastname, '')) as name, pid, phone, type FROM {$sqlname}chats_chat WHERE clid = '$clid' OR pid IN (".yimplode( ",", $pids ).")" );
+		}
+		else {
+			$chats = $db -> getAll( "SELECT chat_id, channel_id, CONCAT(COALESCE(client_firstname, ''), ' ', COALESCE(client_lastname, '')) as name, pid, phone, type FROM {$sqlname}chats_chat WHERE clid = '$clid'" );
+		}
 
 	}
 
-	if($whatsapp != '') {
+	//print_r($chats);
+
+	if ( $whatsapp != '' ) {
 
 		// смотрим, какие чаты уже есть в массиве
 		$chatsID = [];
-		foreach ($chats as $chat){
+		foreach ( $chats as $chat ) {
 
 			$chatsID[] = $chat['chat_id'];
 
 		}
 
-		foreach ($phones as $person) {
+		foreach ( $phones as $person ) {
 
 			// если чата нет в массиве, то добавляем
-			if( !in_array( $person[ 'phone' ]."@c.us", $chatsID, true ) )
+			if ( !in_array( $person['phone']."@c.us", $chatsID ) ) {
 				$chats[] = [
-					"chat_id"    => $person[ 'phone' ]."@c.us",
+					"chat_id"    => $person['phone']."@c.us",
 					"channel_id" => $whatsapp,
-					"name"       => $person[ 'title' ],
-					"pid"        => $person[ 'pid' ],
-					"phone"      => $person[ 'phone' ],
+					"name"       => $person['title'],
+					"pid"        => $person['pid'],
+					"phone"      => $person['phone'],
 					"type"       => "Whatsapp"
 				];
+			}
 
 		}
 
@@ -298,63 +300,63 @@ if ( $action == '' ) {
 
 	//print_r($channel);
 
-	?>
-	<?php
-	if( !empty($chats) ){
-	?>
-	<div class="chat--form">
-		<form action="/plugins/socialChats/php/chats.php" method="post" enctype="multipart/form-data" name="sendForm" id="sendForm">
-			<input type="hidden" id="action" name="action" value="send">
-			<input type="hidden" id="chat_id" name="chat_id" value="<?php echo $chats[0]['chat_id']?>">
-			<input type="hidden" id="channel_id" name="channel_id" value="<?php echo $chats[0]['channel_id']?>">
-			<input type="hidden" id="pid" name="pid" value="<?php echo $chats[0]['pid']?>">
-			<input type="hidden" id="clid" name="clid" value="<?php echo $clid?>">
-			<input type="hidden" id="phone" name="phone" value="<?php echo $chats[0]['phone']?>">
-			<input type="hidden" id="type" name="type" value="<?php echo $chats[0]['type']?>">
-			<div class="filebox wp100 hidden">
+	if ( !empty( $chats ) ) {
+		?>
+		<div class="chat--form">
+			<form action="/plugins/socialChats/php/chats.php" method="post" enctype="multipart/form-data" name="sendForm" id="sendForm">
+				<input type="hidden" id="action" name="action" value="send">
+				<input type="hidden" id="chat_id" name="chat_id" value="<?php echo $chats[0]['chat_id'] ?>">
+				<input type="hidden" id="channel_id" name="channel_id" value="<?php echo $chats[0]['channel_id'] ?>">
+				<input type="hidden" id="pid" name="pid" value="<?php echo $chats[0]['pid'] ?>">
+				<input type="hidden" id="clid" name="clid" value="<?php echo $clid ?>">
+				<input type="hidden" id="phone" name="phone" value="<?php echo $chats[0]['phone'] ?>">
+				<input type="hidden" id="type" name="type" value="<?php echo $chats[0]['type'] ?>">
+				<div class="filebox wp100 hidden">
 
-				<div class="eupload relative">
-					<input name="file[]" id="file[]" type="file" onchange="addefile();" class="file wp100" multiple>
-					<div class="idel hand delbox" title="Удалить">
-						<i class="icon-cancel-circled red"></i>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="channel-select wp100">
-				<div class="tags">Выбор канала:</div>
-				<?php
-				foreach ($chats as $i => $chat){
-
-					print '
-					<div class="chat--tag '.($i == 0 ? 'active' : '').'" data-chat="'.$chat['chat_id'].'" data-phone="'.$chat['phone'].'" data-pid="'.$chat['pid'].'" data-channel="'.$chat['channel_id'].'" title="'.$chat['chat_id'].'">
-						<img src="/plugins/socialChats/assets/images/'.$icons[$chat['channel_id']].'" width="12" style="vertical-align:middle">&nbsp;'.$chat['name'].'
-					</div>
-					';
-
-				}
-				?>
-			</div>
-			<div class="messagetext wp100">
-
-				<div class="attachment p10 hand" id="addFile">
-					<i class="icon-attach-1 fs-20 gray2"></i>
-				</div>
-				<div class="keyboard p10">
-
-					<textarea name="text" id="message" placeholder="Написать сообщение"></textarea>
-
-					<div class="send">
-						<i class="icon-paper-plane fs-20 blue"></i>
+					<div class="eupload relative">
+						<input name="file[]" id="file[]" type="file" onchange="addefile();" class="file wp100" multiple>
+						<div class="idel hand delbox" title="Удалить">
+							<i class="icon-cancel-circled red"></i>
+						</div>
 					</div>
 
 				</div>
-				<div class="infodiv hidden p5 fs-09 description" style="overflow: auto;"></div>
 
-			</div>
-		</form>
-	</div>
+				<div class="channel-select wp100">
+					<div class="tags">Выбор канала:</div>
+					<?php
+					foreach ( $chats as $i => $chat ) {
+
+						$chat['name'] = $chat['name'] == '' ? '??' : $chat['name'];
+
+						print '
+						<div class="chat--tag '.($i == 0 ? 'active' : '').'" data-chat="'.$chat['chat_id'].'" data-phone="'.$chat['phone'].'" data-pid="'.$chat['pid'].'" data-channel="'.$chat['channel_id'].'" title="'.$chat['chat_id'].'">
+							<img src="/plugins/socialChats/assets/images/'.$icons[ $chat['channel_id'] ].'" width="12" style="vertical-align:middle">&nbsp;'.$chat['name'].'
+						</div>
+						';
+
+					}
+					?>
+				</div>
+				<div class="messagetext wp100">
+
+					<div class="attachment p10 hand" id="addFile">
+						<i class="icon-attach-1 fs-20 gray2"></i>
+					</div>
+					<div class="keyboard p10">
+
+						<textarea name="text" id="message" placeholder="Написать сообщение"></textarea>
+
+						<div class="send">
+							<i class="icon-paper-plane fs-20 blue"></i>
+						</div>
+
+					</div>
+					<div class="infodiv hidden p5 fs-09 description" style="overflow: auto;"></div>
+
+				</div>
+			</form>
+		</div>
 	<?php } ?>
 	<div class="chat--dialogs"></div>
 	<div id="chatpages" class="viewdiv relativ">
@@ -386,7 +388,7 @@ if ( $action == '' ) {
 
 		$.Mustache.load('/plugins/socialChats/assets/tpl/chat.mustache');
 
-		$(document).ready(function () {
+		$(function () {
 
 			chatgetMessages().then(function () {
 
@@ -429,7 +431,7 @@ if ( $action == '' ) {
 
 					}
 
-					$('.chat--pages').empty().html( pg );
+					$('.chat--pages').empty().html(pg);
 
 				})
 				.then(r => {
@@ -487,7 +489,7 @@ if ( $action == '' ) {
 		}
 
 		$(document).off('click', '.chat--tag');
-		$(document).on('click', '.chat--tag', function(){
+		$(document).on('click', '.chat--tag', function () {
 
 			var chat_id = $(this).data('chat');
 			var channel_id = $(this).data('channel');
@@ -563,48 +565,50 @@ if ( $action == '' ) {
 		});
 
 		// удаляем файлы для загрузки
-		$(document).off('click', '.fdel');
-		$(document).on('click', '.fdel', function () {
+		$(document)
+			.off('click', '.fdel')
+			.on('click', '.fdel', function () {
 
-			var currentIndex = $(this).parent(".infodiv").data('index');
-			var count = $('.eupload').length;
+				var currentIndex = $(this).parent(".infodiv").data('index');
+				var count = $('.eupload').length;
 
-			if (count > 1)
-				$('.eupload:eq(' + currentIndex + ')').remove();
-			else
-				$('.eupload:eq(' + currentIndex + ')').find('#file\\[\\]').val('');
+				if (count > 1)
+					$('.eupload:eq(' + currentIndex + ')').remove();
+				else
+					$('.eupload:eq(' + currentIndex + ')').find('#file\\[\\]').val('');
 
-			$(this).parent(".infodiv").remove();
+				$(this).parent(".infodiv").remove();
 
-			if ($('.sfile').size() === 0)
-				$('.description').empty().addClass('hidden');
+				if ($('.sfile').size() === 0)
+					$('.description').empty().addClass('hidden');
 
-		});
+			});
 
 		/**
 		 * отправка сообщения
 		 */
-		$(document).off('click', '.send');
-		$(document).on('click', '.send', function () {
+		$(document)
+			.off('click', '.send')
+			.on('click', '.send', function () {
 
-			if (!$('#message').prop('disabled'))
-				sendmessage();
+				if (!$('#message').prop('disabled'))
+					sendmessage();
 
-			else {
+				else {
 
-				Swal.fire({
-					imageUrl: '/assets/images/error.svg',
-					imageWidth: 50,
-					imageHeight: 50,
-					html: 'Сначала надо принять диалог',
-					icon: 'info',
-					showConfirmButton: false,
-					timer: 3500
-				});
+					Swal.fire({
+						imageUrl: '/assets/images/error.svg',
+						imageWidth: 50,
+						imageHeight: 50,
+						html: 'Сначала надо принять диалог',
+						icon: 'info',
+						showConfirmButton: false,
+						timer: 3500
+					});
 
-			}
+				}
 
-		});
+			});
 
 		/*Отправка*/
 		var sendmessage = function () {
@@ -624,7 +628,7 @@ if ( $action == '' ) {
 		}
 
 		/*Поиск мобильных. Отключено, т.к. требуется загрузка вкладки Контакты*/
-		var findPhones = async function(){
+		var findPhones = async function () {
 
 			$('.phonenumber.ismob').each(function () {
 
