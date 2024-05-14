@@ -2254,6 +2254,71 @@ if (  ($step == 1 || PHP_SAPI == 'cli') && getVersion() == $lastVer ) {
 		
 	}
 
+	$db -> query("SET FOREIGN_KEY_CHECKS=0;");
+
+	$db -> query("SET sql_mode='NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES';");
+	$db -> query("UPDATE `{$sqlname}budjet` SET datum = NULL WHERE datum = '0000-00-00 00:00:00';");
+
+	$fi = $db -> getRow( "SHOW COLUMNS FROM {$sqlname}field LIKE 'fld_sub'" );
+	if ( $fi['Field'] == '' ) {
+
+		$db -> query("ALTER TABLE `{$sqlname}field` ADD COLUMN `fld_sub` VARCHAR(10) NULL DEFAULT NULL COMMENT 'доп.разделение для карточек клиентов - клиент, поставщик, партнер..' AFTER `fld_var`");
+
+	}
+
+	$fi = $db -> getRow( "SHOW COLUMNS FROM {$sqlname}budjet LIKE 'date_plan'" );
+	if ( $fi['Field'] == '' ) {
+
+		$db -> query("ALTER TABLE `{$sqlname}budjet`
+				ADD COLUMN `date_plan` DATE NULL DEFAULT NULL COMMENT 'плановая дата' AFTER `partid`,
+				ADD COLUMN `invoice` VARCHAR(255) NULL DEFAULT NULL COMMENT 'номер счета' AFTER `date_plan`,
+				ADD COLUMN `invoice_date` DATE NULL DEFAULT NULL COMMENT 'дата счета' AFTER `invoice`,
+				ADD COLUMN `invoice_paydate` DATE NULL DEFAULT NULL COMMENT 'дата оплаты счета' AFTER `invoice_date`
+			");
+
+	}
+
+	//создадим таблицу для шаблонов проектов, если надо
+	$da = $db -> getOne( "SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}projects_templates'" );
+	if ( $da == 0 ) {
+
+		$db -> query( "CREATE TABLE `{$sqlname}projects_templates` (
+				    `id`       INT(10)      NOT NULL AUTO_INCREMENT,
+				    `title`    VARCHAR(255) NULL DEFAULT 'untitled' COMMENT 'Название шаблона',
+				    `autor`    INT(10)      NULL DEFAULT NULL COMMENT 'iduser автора',
+				    `datum`    TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP,
+				    `content`  TEXT         NULL DEFAULT NULL COMMENT 'Содержание работ в json',
+				    `state`    INT(10)      NULL DEFAULT '1' COMMENT 'Статус: 1 - активен, 0 - не активен',
+				    `identity` INT(10)      NULL DEFAULT '1',
+				    PRIMARY KEY (`id`) USING BTREE
+				)
+				COMMENT ='Шаблоны проектов'
+				ENGINE = InnoDB
+			" );
+
+	}
+
+	//создадим таблицу для лога статусов
+	$da = $db -> getOne( "SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}budjetlog'" );
+	if ( $da == 0 ) {
+
+		$db -> query( "CREATE TABLE `{$sqlname}budjetlog` (
+				`id` INT(10) NOT NULL AUTO_INCREMENT,
+				`datum` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'дата изменения',
+				`status` VARCHAR(10) NULL DEFAULT NULL COMMENT 'статус расхода',
+				`bjid` INT(10) NULL DEFAULT NULL COMMENT 'id расхода',
+				`iduser` INT(10) NULL DEFAULT NULL COMMENT 'id пользователя user.iduser внес изменение',
+				`comment` VARCHAR(255) NULL DEFAULT NULL COMMENT 'комментарий',
+				`identity` INT(10) NOT NULL DEFAULT '1',
+				PRIMARY KEY (`id`) USING BTREE,
+				INDEX `status` (`status`) USING BTREE,
+				INDEX `bjid` (`bjid`) USING BTREE
+			)
+			COMMENT='Лог изменений статуса расходов'
+			ENGINE=InnoDB" );
+
+	}
+
 	$message = 'Необходимые изменения в БД внесены';
 	
 	if ( PHP_SAPI === 'cli' ) {
