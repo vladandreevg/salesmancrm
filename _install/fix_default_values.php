@@ -1,9 +1,9 @@
 <?php
 set_time_limit(0);
 
-error_reporting( E_ERROR );
+error_reporting(E_ERROR);
 
-$rootpath = dirname( __DIR__ );
+$rootpath = dirname(__DIR__);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -22,29 +22,70 @@ $tofile = '';
 $db -> query("SET sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'");
 $tofile .= $db -> lastQuery().";\n";
 
-$tables = ['clientcat','dogovor','personcat','history','speca','contract','contract_temp','tasks','dogprovider','modcatalog_akt','leads','credit','mycomps','mycomps_recv','modcatalog_zayavka','modcatalog_sklad','modcatalog_skladmovepoz','modcatalog_zayavkapoz','complect_cat','projects','projects_work_types','projects_work','projects_statuslog'];
+$tables = [
+	'clientcat',
+	'dogovor',
+	'personcat',
+	'history',
+	'speca',
+	'contract',
+	'contract_temp',
+	'tasks',
+	'dogprovider',
+	'leads',
+	'credit',
+	'mycomps',
+	'mycomps_recv',
+	'modcatalog',
+	'modcatalog_aktpoz',
+	'modcatalog_akt',
+	'modcatalog_dop',
+	'modcatalog_field',
+	'modcatalog_fieldcat',
+	'modcatalog_zayavka',
+	'modcatalog_sklad',
+	'modcatalog_skladmovepoz',
+	'modcatalog_zayavkapoz',
+	'modcatalog_log',
+	'modcatalog_offer',
+	'modcatalog_reserv',
+	'modcatalog_set',
+	'complect_cat',
+	'projects',
+	'projects_work_types',
+	'projects_work',
+	'projects_statuslog',
+	'moddaycontrol',
+	//'moddaycontrol_poz',
+	'modworkplan',
+	'modworkplan_listcategory',
+	'modworkplan_listworker',
+	'modworkplan_work',
+	'modworkplan_workcontractor',
+	'notes',
+];
 
 foreach ($tables as $table) {
-	
-	$dap = $db -> getOne( "SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}$table'" );
-	if ( (int)$dap == 0 ) {
-		
+
+	$dap = $db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}$table'");
+	if ((int)$dap == 0) {
+
 		continue;
-		
+
 	}
 
 	$fields = $db -> getAll("SHOW FIELDS FROM {$sqlname}$table");
 
 	$str = [];
 
-	foreach ($fields as $i => $field){
+	foreach ($fields as $i => $field) {
 
 		$fcurrent = $field['Field'];
-		$fprev    = $fields[$i-1]['Field'];
+		$fprev    = $fields[$i - 1]['Field'];
 
-		$ftype    = $field['Type'];
+		$ftype = $field['Type'];
 
-		if($field['Extra'] != 'auto_increment') {
+		if ($field['Extra'] != 'auto_increment') {
 
 			if (stripos($fcurrent, 'input') !== false) {
 
@@ -60,7 +101,7 @@ foreach ($tables as $table) {
 				$null  = $field['Null'] == 'YES' ? 'NULL' : '';
 				$extra = $field['Extra'] != 'DEFAULT_GENERATED' ? $field['Extra'] : '';
 
-				if(stripos($field['Extra'], 'DEFAULT_GENERATED') !== false){
+				if (stripos($field['Extra'], 'DEFAULT_GENERATED') !== false) {
 					$extra = '';
 				}
 
@@ -68,31 +109,40 @@ foreach ($tables as $table) {
 					$def = '0';
 				}
 				elseif ($ftype == 'timestamp' && $field['Extra'] == '') {
-					$def = 'NULL';
+					$def  = 'NULL';
+					$null = 'NULL';
+				}
+				elseif ($ftype == 'date' && $field['Extra'] == '') {
+					$def  = 'NULL';
 					$null = 'NULL';
 				}
 
 				$null = $field['Null'] == 'NO' ? '' : 'NULL';
 
-				if($def == "'CURRENT_TIMESTAMP'"){
-					$def = "CURRENT_TIMESTAMP";
+				if ($def == "'CURRENT_TIMESTAMP'") {
+					$def  = "CURRENT_TIMESTAMP";
 					$null = $field['Null'] == 'NO' ? 'NOT NULL' : 'NULL';
 				}
 
-				if( $fcurrent == 'date_create' ){
+				if ($fcurrent == 'date_create') {
 					$def = "CURRENT_TIMESTAMP";
 				}
-				if( $fcurrent == 'datum' && $table == 'speca' ){
+				if ($fcurrent == 'datum' && $table == 'speca') {
 					$def = "CURRENT_TIMESTAMP";
 				}
-				if( $fcurrent == 'datum' && $table == 'contract' ){
-					$def = "NULL";
-					$null = 'NULL';
+				if ($fcurrent == 'datum' && $table == 'contract') {
+					$def   = "NULL";
+					$null  = 'NULL';
 					$ftype = 'DATETIME';
 				}
-				if( $fcurrent == 'datum' && in_array($table,['modcatalog_akt','leads']) ){
-					$def = "CURRENT_TIMESTAMP";
-					$null = 'NOT NULL';
+				if (
+					$fcurrent == 'datum' && in_array($table, [
+						'modcatalog_akt',
+						'leads'
+					])
+				) {
+					$def   = "CURRENT_TIMESTAMP";
+					$null  = 'NOT NULL';
 					$ftype = 'timestamp';
 				}
 
@@ -117,16 +167,16 @@ $tofile .= $db -> lastQuery().";$br";
 
 file_put_contents($rootpath."/cash/fix_default_values_log.sql", $tofile);
 
-if( PHP_SAPI === 'cli' ){
-	
+if (PHP_SAPI === 'cli') {
+
 	print "\nПрограмма выполнена успешно!\n";
-	
+
 }
 else {
-	
+
 	print "<hr>";
 	print "Программа выполнена успешно!<br>";
-	
+
 }
 
 print "Лог выполненных запросов сохранен в файл: "."/cash/fix_default_values_log.sql";
