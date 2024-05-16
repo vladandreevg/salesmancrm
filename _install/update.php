@@ -152,7 +152,7 @@ if ( $count == 0 ) {
 /*YMailer*/
 
 //версия, на которую будем обновлять БД
-$lastVer = '2024.1';
+$lastVer = '2024.2';
 $step    = (int)$_REQUEST['step'];
 $currentVersion = getVersion();
 
@@ -163,7 +163,8 @@ $seria = [
 	'2022.2',
 	'2022.3',
 	'2023.1',
-	'2024.1'
+	'2024.1',
+	'2024.2'
 ];
 
 //printf("Step: %s; Sapi: %s; Ver: %s; LastVer: %s; IsLast: %s\n", $step, PHP_SAPI, getVersion(), $lastVer, getVersion() == $lastVer);
@@ -1109,6 +1110,38 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 		$currentVer = getVersion();
 
 		$db -> query("SET FOREIGN_KEY_CHECKS=1;");
+
+		if ( $currentVer == $lastVer ) {
+
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+
+		}
+
+		if (PHP_SAPI != 'cli') {
+
+			$message = 'Обновление до версии '.$currentVer.' установлено.<br>
+			<div class="main_div div-center">
+				<A href="update.php?step=1" class="button"><b>Продолжить</b> установку</A>
+			</div>
+			';
+
+		}
+
+		if ( PHP_SAPI === 'cli' ) {
+
+			print $message."\n";
+
+		}
+
+	}
+	if ( getVersion() == '2024.1' ) {
+
+		/**
+		 * Обновим версию
+		 */
+		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2024.2']);
+
+		$currentVer = getVersion();
 
 		if ( $currentVer == $lastVer ) {
 
