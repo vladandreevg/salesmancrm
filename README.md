@@ -117,10 +117,10 @@ rm salesman.zip
 
 ```shell
 # Установка git
-yum git install
+yum install git -y
 # Переходим в каталог установки
 cd /var/www/
-# Клонируем репозиторий
+# Клонируем репозиторий в текущую папку
 git clone https://github.com/vladandreevg/salesmancrm.git ./
 ```
 
