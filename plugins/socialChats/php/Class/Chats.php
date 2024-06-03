@@ -1786,7 +1786,7 @@ class Chats {
 			$data = $db -> getRow( "SELECT * FROM {$sqlname}chats_dialogs WHERE id = '$id'" );
 		}
 
-		elseif ( $message_id > 0 ) {
+		elseif ( !empty($message_id) ) {
 			$data = $db -> getRow( "SELECT * FROM {$sqlname}chats_dialogs WHERE message_id = '$message_id'" );
 		}
 
