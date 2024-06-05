@@ -707,6 +707,13 @@ if ( $action == 'edit' ) {
 
 									print '<li title="Заказчик. '.$d['fld_title'].'"><b class="blue">{{castomerF'.$d['fld_name'].'}}</b></li>';
 
+									if($d['fld_temp'] == 'datum'){
+										print '<li title="Заказчик. '.$d['fld_title'].' - ДД.ММ.ГГГГ"><b class="blue">{{castomerF'.$d['fld_name'].'Format}}</b></li>';
+									}
+									elseif($d['fld_temp'] == 'datetime'){
+										print '<li title="Заказчик. '.$d['fld_title'].' - ДД.ММ.ГГГГ ЧЧ:ММ"><b class="blue">{{castomerF'.$d['fld_name'].'Format}}</b></li>';
+									}
+
 								}
 								?>
 
@@ -747,6 +754,13 @@ if ( $action == 'edit' ) {
 								foreach ( $res as $data ) {
 
 									print '<li title="'.$data['fld_title'].'"><b class="green">{{dealF'.$data['fld_name'].'}}</b></li>';
+
+									if($data['fld_temp'] == 'datum'){
+										print '<li title="'.$data['fld_title'].' - ДД.ММ.ГГГГ"><b class="blue">{{dealF'.$data['fld_name'].'Format}}</b></li>';
+									}
+									elseif($data['fld_temp'] == 'datetime'){
+										print '<li title="'.$data['fld_title'].' - ДД.ММ.ГГГГ ЧЧ:ММ"><b class="blue">{{dealF'.$data['fld_name'].'Format}}</b></li>';
+									}
 
 								}
 								?>
@@ -1349,6 +1363,13 @@ if ( $action == '' ) {
 
 							print '<li title="Заказчик. '.$d['fld_title'].'"><b class="blue">{{castomerF'.$d['fld_name'].'}}</b></li>';
 
+							if($d['fld_temp'] == 'datum'){
+								print '<li title="Заказчик. '.$d['fld_title'].' - ДД.ММ.ГГГГ"><b class="blue">{{castomerF'.$d['fld_name'].'Format}}</b></li>';
+							}
+							elseif($d['fld_temp'] == 'datetime'){
+								print '<li title="Заказчик. '.$d['fld_title'].' - ДД.ММ.ГГГГ ЧЧ:ММ"><b class="blue">{{castomerF'.$d['fld_name'].'Format}}</b></li>';
+							}
+
 						}
 						?>
 
@@ -1384,6 +1405,13 @@ if ( $action == '' ) {
 						foreach ( $res as $data ) {
 
 							print '<li title="'.$data['fld_title'].'"><b class="green">{{dealF'.$data['fld_name'].'}}</b></li>';
+
+							if($data['fld_temp'] == 'datum'){
+								print '<li title="'.$data['fld_title'].' - ДД.ММ.ГГГГ"><b class="green">{{dealF'.$data['fld_name'].'Format}}</b></li>';
+							}
+							elseif($data['fld_temp'] == 'datetime'){
+								print '<li title="'.$data['fld_title'].' - ДД.ММ.ГГГГ ЧЧ:ММ"><b class="green">{{dealF'.$data['fld_name'].'Format}}</b></li>';
+							}
 
 						}
 						?>
@@ -1489,6 +1517,13 @@ if ( $action == '' ) {
 
 					print '<li><b class="blue">{{castomerF'.$d['fld_name'].'}}</b> - Заказчик. '.$d['fld_title'].'</li>';
 
+					if($data['fld_temp'] == 'datum'){
+						print '<li><b class="blue">{{castomerF'.$data['fld_name'].'Format}}</b> - Заказчик. '.$data['fld_title'].' - ДД.ММ.ГГГГ</li>';
+					}
+					elseif($data['fld_temp'] == 'datetime'){
+						print '<li><b class="blue">{{castomerF'.$data['fld_name'].'Format}}</b> - Заказчик. '.$data['fld_title'].' - ДД.ММ.ГГГГ ЧЧ:ММ</li>';
+					}
+
 				}
 				?>
 				<li>
@@ -1539,6 +1574,13 @@ if ( $action == '' ) {
 				foreach ( $res as $data ) {
 
 					print '<li><b class="green">{{dealF'.$data['fld_name'].'}}</b> - '.$data['fld_title'].' (из сделки)</li>';
+
+					if($data['fld_temp'] == 'datum'){
+						print '<li><b class="green">{{dealF'.$data['fld_name'].'Format}}</b> - '.$data['fld_title'].' - ДД.ММ.ГГГГ</li>';
+					}
+					elseif($data['fld_temp'] == 'datetime'){
+						print '<li><b class="green">{{dealF'.$data['fld_name'].'Format}}</b> - '.$data['fld_title'].' - ДД.ММ.ГГГГ ЧЧ:ММ</li>';
+					}
 
 				}
 				?>
