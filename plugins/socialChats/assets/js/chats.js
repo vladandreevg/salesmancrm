@@ -721,64 +721,6 @@ let $mainFunc = {
 
 			});
 
-		/*
-		$.getJSON("php/chats.php?action=list", str, function (viewData) {
-
-			elm.empty().mustache('chatsTpl', viewData);
-
-			// пока отключено
-			/!*
-			var page = parseInt(viewData.page);
-			var pageall = parseInt(viewData.pageall);
-
-			var pg = 'Страница ' + page + ' из ' + pageall;
-
-			if (pageall > 1) {
-
-				var prev = page - 1;
-				var next = page + 1;
-
-				if (page === 1)
-					pg = pg + '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + next + '\')" title="Следующая"><i class="icon-angle-right"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + pageall + '\')" title="Последняя"><i class="icon-angle-double-right"></i></a>&nbsp;';
-
-				else if (page === pageall)
-					pg = pg + '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'1\')" title="Начало"><i class="icon-angle-double-left"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + prev + '\')" title="Предыдущая"><i class="icon-angle-left"></i></a>&nbsp;';
-
-				else
-					pg = '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'1\')" title="Начало"><i class="icon-angle-double-left"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + prev + '\')" title="Предыдущая"><i class="icon-angle-left"></i></a>&nbsp;' + pg + '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + next + '\')" title="Следующая"><i class="icon-angle-right"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + pageall + '\')" title="Последняя"><i class="icon-angle-double-right"></i></a>&nbsp;';
-
-			}
-
-			$('.pagediv[data-id="tab-chats"]').addClass('redbg').html(pg);
-			*!/
-
-		})
-			.complete(function () {
-
-				if ($chat_id === 0)
-					$chat_id = $('.chatlist:not(.hidden):first').data('chat');
-
-				if (listonly === undefined) {
-
-					$lastMessageID = 0;
-
-					if(!isMobile) {
-
-						$mainFunc.dialog(true)
-							.then(r => function () {
-								elm.scrollTo('div[data-chat="' + $chat_id + '"]');
-							});
-						//.then(r => $mainFunc.unreadChats);
-
-					}
-
-				}
-
-				$mainFunc.unreadChats();
-
-			});
-		*/
-
 	},
 	"changpage": async function (page) {
 
@@ -896,6 +838,17 @@ let $mainFunc = {
 
 				$el.data('avatar', avatarka);
 
+			}
+			else{
+				Swal.fire({
+					imageUrl: 'assets/images/error.svg',
+					imageWidth: 50,
+					imageHeight: 50,
+					html: data.message,
+					icon: 'info',
+					showConfirmButton: false,
+					timer: 1500
+				});
 			}
 
 		}, 'json');
@@ -1086,17 +1039,19 @@ let $mainFunc = {
 			},
 			success: function (data) {
 
-				if (data.result !== 'ok') {
+				if (data.result !== 'ok' || data.response.text.result === 'error') {
 
 					Swal.fire({
 						imageUrl: 'assets/images/error.svg',
 						imageWidth: 50,
 						imageHeight: 50,
-						html: '' + data.result + '',
+						html: '' + data.errors + '',
 						icon: 'info',
 						showConfirmButton: false,
 						timer: 3500
 					});
+					
+					//return false;
 
 				}
 
@@ -1175,7 +1130,7 @@ let $mainFunc = {
 
 		//$('.dialogs').find('.space-100').prepend('<div class="notify"><i class="icon-mail-alt"></i> Отправляю сообщение...</div>');
 
-		$('#sendForm').submit();
+		$('#sendForm').trigger('submit');
 
 	},
 	// удаление письма

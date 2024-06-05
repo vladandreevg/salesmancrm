@@ -314,7 +314,7 @@ class ViberProvider {
 		//print_r($viber);
 		//print_r($res);
 
-		if ( !empty( $res['user'] ) ) {
+		if ( empty( $res['user'] ) && $res['status_message'] != 'ok' ) {
 
 			$result = [
 				"result"      => 'error',

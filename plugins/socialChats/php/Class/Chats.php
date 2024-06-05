@@ -1793,20 +1793,25 @@ class Chats {
 		if ( !empty( $data ) ) {
 
 			$chat    = $this -> chatInfo( 0, $data['chat_id'] );
-			$channel = $this -> channelInfo( 0, $chat['channel_id'] );
 
-			$message = [
-				'id'          => $data['id'],
-				'message_id'  => $data['message_id'],
-				'chat_id'     => $chat['chat_id'],
-				'channel_id'  => $chat['channel_id'],
-				'client_id'   => $chat['client_id'],
-				'direction'   => $chat['direction'],
-				'content'     => htmlspecialchars_decode( $data['content'] ),
-				'attachments' => json_decode( $data['attachment'], true ),
-				'chat'        => $chat,
-				'channel'     => $channel
-			];
+			if(!empty($chat['channel_id'])) {
+
+				$channel = $this -> channelInfo(0, $chat['channel_id']);
+
+				$message = [
+					'id'          => $data['id'],
+					'message_id'  => $data['message_id'],
+					'chat_id'     => $chat['chat_id'],
+					'channel_id'  => $chat['channel_id'],
+					'client_id'   => $chat['client_id'],
+					'direction'   => $chat['direction'],
+					'content'     => htmlspecialchars_decode($data['content']),
+					'attachments' => json_decode($data['attachment'], true),
+					'chat'        => $chat,
+					'channel'     => $channel
+				];
+
+			}
 
 		}
 
@@ -2498,32 +2503,52 @@ class Chats {
 
 		$chat = $this -> chatInfo( $id, $chat_id );
 
-		$channel = $this -> channelInfo( 0, $chat['channel_id'] );
+		//print_r($chat);
 
-		// получаем адаптированные данные
-		$type = $channel['type']."Provider";
-		$type = "Chats\\".$type;
+		if(!empty($chat['channel_id'])) {
 
-		$provider = new $type();
-		$result   = $provider -> getUserInfo( $chat_id, $channel );
+			$channel = $this -> channelInfo(0, (string)$chat['channel_id']);
 
-		//print_r($result);
+			// получаем адаптированные данные
+			$type = $channel['type']."Provider";
+			$type = "Chats\\".$type;
 
-		if ( $result['ok'] ) {
+			$provider = new $type();
+			$result   = $provider -> getUserInfo($chat_id, $channel);
 
-			$userdata = [
-				"ok"               => true,
-				"client_firstname" => $result['client_firstname'],
-				"client_lastname"  => $result['client_lastname'],
-				"client_avatar"    => $this -> cashAvatar( $result['client_avatar'] ),
-			];
+			//print_r($result);
+			//exit();
 
-			$this -> editChat( $chat['id'], $userdata );
+			if (( $result['ok'] || $result['result'] != 'error' ) && !empty($result['client_firstname'])) {
+
+				$userdata = [
+					"ok"               => true,
+					"client_firstname" => $result['client_firstname'],
+					"client_lastname"  => $result['client_lastname'],
+					"client_avatar"    => $this -> cashAvatar($result['client_avatar']),
+				];
+
+				$this -> editChat($chat['id'], $userdata);
+
+			}
+			else {
+
+				$userdata = [
+					'ok' => false,
+					"result" => "error",
+					"message" => $result['description']
+				];
+
+			}
 
 		}
 		else {
 
-			$userdata['ok'] = false;
+			$userdata = [
+				'ok' => false,
+				"result" => "error",
+				"message" => "Ошибка: Диалог не прикреплен к каналу"
+			];
 
 		}
 
