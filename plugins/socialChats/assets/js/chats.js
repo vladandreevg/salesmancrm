@@ -1053,10 +1053,15 @@ let $mainFunc = {
 			})
 			.then(function () {
 
-				let lastMessage = $('.answer:last').data('messageid');
+				//let lastMessage = $('.answer:last').data('messageid');
 
-				if (isnew === true)
-					$('.dialogs').scrollTo('div[data-messageid="' + lastMessage + '"]');
+				if (isnew === true) {
+					//$('.dialogs').scrollTo('div[data-messageid="' + lastMessage + '"]');
+					$('.dialogs')
+						.animate({
+							scrollTop: $(".dialogs")[0].scrollHeight
+						}, 1000);
+				}
 
 				// сохраняем в локальное хранилище
 				localStorage.setItem("lastChat", $chat_id);

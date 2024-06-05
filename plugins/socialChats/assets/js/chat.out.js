@@ -54,7 +54,7 @@
 		// Call our main function
 		main();
 
-		console.log('scriptLoadHandler');
+		//console.log('scriptLoadHandler');
 
 	}
 
@@ -164,4 +164,4 @@
 
 })(); // We call our anonymous function immediately
 
-console.log(salesman);
+//console.log(salesman);
