@@ -35,6 +35,7 @@ class ComposerStaticInitd78f0ad12edec735ff3b798c1c73ec6b
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Mike4ip\\ApiMessenger' => __DIR__ . '/..' . '/mikechip/apimessenger/src/apimessenger.php',
         'Mike4ip\\ChatApi' => __DIR__ . '/..' . '/mikechip/chatapi/chatapi.class.php',
     );

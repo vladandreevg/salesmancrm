@@ -1,184 +1,192 @@
-[
-    {
-        "name": "facebook/graph-sdk",
-        "version": "5.7.0",
-        "version_normalized": "5.7.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/facebook/php-graph-sdk.git",
-            "reference": "2d8250638b33d73e7a87add65f47fabf91f8ad9b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/2d8250638b33d73e7a87add65f47fabf91f8ad9b",
-            "reference": "2d8250638b33d73e7a87add65f47fabf91f8ad9b",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.4|^7.0"
-        },
-        "require-dev": {
-            "guzzlehttp/guzzle": "~5.0",
-            "mockery/mockery": "~0.8",
-            "phpunit/phpunit": "~4.0"
-        },
-        "suggest": {
-            "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client",
-            "paragonie/random_compat": "Provides a better CSPRNG option in PHP 5"
-        },
-        "time": "2018-12-11T22:56:31+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "5.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Facebook\\": "src/Facebook/"
+{
+    "packages": [
+        {
+            "name": "facebook/graph-sdk",
+            "version": "5.7.0",
+            "version_normalized": "5.7.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/php-graph-sdk.git",
+                "reference": "2d8250638b33d73e7a87add65f47fabf91f8ad9b"
             },
-            "files": [
-                "src/Facebook/polyfills.php"
-            ]
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/2d8250638b33d73e7a87add65f47fabf91f8ad9b",
+                "reference": "2d8250638b33d73e7a87add65f47fabf91f8ad9b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4|^7.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "~5.0",
+                "mockery/mockery": "~0.8",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client",
+                "paragonie/random_compat": "Provides a better CSPRNG option in PHP 5"
+            },
+            "time": "2018-12-11T22:56:31+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Facebook\\": "src/Facebook/"
+                },
+                "files": [
+                    "src/Facebook/polyfills.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Facebook Platform"
+            ],
+            "authors": [
+                {
+                    "name": "Facebook",
+                    "homepage": "https://github.com/facebook/php-graph-sdk/contributors"
+                }
+            ],
+            "description": "Facebook SDK for PHP",
+            "homepage": "https://github.com/facebook/php-graph-sdk",
+            "keywords": [
+                "facebook",
+                "sdk"
+            ],
+            "install-path": "../facebook/graph-sdk"
         },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Facebook Platform"
-        ],
-        "authors": [
-            {
-                "name": "Facebook",
-                "homepage": "https://github.com/facebook/php-graph-sdk/contributors"
-            }
-        ],
-        "description": "Facebook SDK for PHP",
-        "homepage": "https://github.com/facebook/php-graph-sdk",
-        "keywords": [
-            "facebook",
-            "sdk"
-        ]
-    },
-    {
-        "name": "mikechip/apimessenger",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/mikechip/whatsapp-api-messenger-sdk.git",
-            "reference": "7a5aba6c3fdef62570ebf14e8bea6981742fb806"
+        {
+            "name": "mikechip/apimessenger",
+            "version": "1.1.0",
+            "version_normalized": "1.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikechip/whatsapp-api-messenger-sdk.git",
+                "reference": "7a5aba6c3fdef62570ebf14e8bea6981742fb806"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikechip/whatsapp-api-messenger-sdk/zipball/7a5aba6c3fdef62570ebf14e8bea6981742fb806",
+                "reference": "7a5aba6c3fdef62570ebf14e8bea6981742fb806",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "^7.2",
+                "ext-json": "^1.6",
+                "php": ">=7.2"
+            },
+            "time": "2019-04-27T07:16:44+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "src/apimessenger.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Boris Stelmakh",
+                    "email": "mikael.chip@gmail.com"
+                }
+            ],
+            "description": "api-messenger.com PHP SDK",
+            "install-path": "../mikechip/apimessenger"
         },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/mikechip/whatsapp-api-messenger-sdk/zipball/7a5aba6c3fdef62570ebf14e8bea6981742fb806",
-            "reference": "7a5aba6c3fdef62570ebf14e8bea6981742fb806",
-            "shasum": ""
+        {
+            "name": "mikechip/chatapi",
+            "version": "2.0.0",
+            "version_normalized": "2.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikechip/whatsapp-chatapi-sdk.git",
+                "reference": "d883ffb2df76167d0a266dd507d9baa82d9cd379"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikechip/whatsapp-chatapi-sdk/zipball/d883ffb2df76167d0a266dd507d9baa82d9cd379",
+                "reference": "d883ffb2df76167d0a266dd507d9baa82d9cd379",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "time": "2019-04-27T06:36:19+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "chatapi.class.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Boris Stelmakh",
+                    "email": "mikael.chip@gmail.com"
+                }
+            ],
+            "description": "Simple middleware to work with Chat-API.com",
+            "install-path": "../mikechip/chatapi"
         },
-        "require": {
-            "ext-curl": "^7.2",
-            "ext-json": "^1.6",
-            "php": ">=7.2"
-        },
-        "time": "2019-04-27T07:16:44+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/apimessenger.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL-3.0-or-later"
-        ],
-        "authors": [
-            {
-                "name": "Boris Stelmakh",
-                "email": "mikael.chip@gmail.com"
-            }
-        ],
-        "description": "api-messenger.com PHP SDK"
-    },
-    {
-        "name": "mikechip/chatapi",
-        "version": "2.0.0",
-        "version_normalized": "2.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/mikechip/whatsapp-chatapi-sdk.git",
-            "reference": "d883ffb2df76167d0a266dd507d9baa82d9cd379"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/mikechip/whatsapp-chatapi-sdk/zipball/d883ffb2df76167d0a266dd507d9baa82d9cd379",
-            "reference": "d883ffb2df76167d0a266dd507d9baa82d9cd379",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=7.0.0"
-        },
-        "time": "2019-04-27T06:36:19+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "chatapi.class.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL-2.0-or-later"
-        ],
-        "authors": [
-            {
-                "name": "Boris Stelmakh",
-                "email": "mikael.chip@gmail.com"
-            }
-        ],
-        "description": "Simple middleware to work with Chat-API.com"
-    },
-    {
-        "name": "vladkens/vk",
-        "version": "v0.1.9",
-        "version_normalized": "0.1.9.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/vladkens/VK.git",
-            "reference": "bab4b4763764e443982963617c208ec3db7c52f5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/vladkens/VK/zipball/bab4b4763764e443982963617c208ec3db7c52f5",
-            "reference": "bab4b4763764e443982963617c208ec3db7c52f5",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2015-08-02T19:34:58+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "VK": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Vlad Pronsky",
-                "email": "vladkens@yandex.ru"
-            }
-        ],
-        "description": "The PHP class for vk.com API with support OAuth.",
-        "keywords": [
-            "api",
-            "oauth",
-            "vk",
-            "vk.com"
-        ]
-    }
-]
+        {
+            "name": "vladkens/vk",
+            "version": "v0.1.9",
+            "version_normalized": "0.1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vladkens/VK.git",
+                "reference": "bab4b4763764e443982963617c208ec3db7c52f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vladkens/VK/zipball/bab4b4763764e443982963617c208ec3db7c52f5",
+                "reference": "bab4b4763764e443982963617c208ec3db7c52f5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "time": "2015-08-02T19:34:58+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "VK": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vlad Pronsky",
+                    "email": "vladkens@yandex.ru"
+                }
+            ],
+            "description": "The PHP class for vk.com API with support OAuth.",
+            "keywords": [
+                "api",
+                "oauth",
+                "vk",
+                "vk.com"
+            ],
+            "install-path": "../vladkens/vk"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

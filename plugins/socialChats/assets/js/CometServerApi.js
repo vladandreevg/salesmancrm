@@ -22,7 +22,7 @@ if( !window._tabSignal)
 {
     var _tabSignal = function(opt)
     {
-        this.slotArray = new Array();
+        this.slotArray = [];
         this.debug = false;
 
         this.sigId = 0;
@@ -1205,12 +1205,14 @@ var _cometServerApi = function(opt)
     /**
      * Запуск соединения
      * @param {Object} opt Объект с параметрами
-     * @param {function} callBack Колбек на факт установки соединения
      * @return {Boolean}
      */
-    this.start = function(opt, callBack)
-    {
+    this.start = function (opt = {}) {
         this.options.isStart = true;
+        
+        if (typeof callBack === undefined) {
+            var callBack = function () {}
+        }
 
         if(opt !== undefined)
         {
@@ -1220,7 +1222,7 @@ var _cometServerApi = function(opt)
             }
         }
 
-        if(this.options.wss != undefined)
+        if(this.options.wss !== undefined)
         {
             this.UseWss(this.options.wss)
         }
@@ -1251,7 +1253,7 @@ var _cometServerApi = function(opt)
 
         if(!this.options.dev_id)
         {
-            if(this.options.nodeArray[0] == "app.comet-server.ru")
+            if(this.options.nodeArray[0] === "app.comet-server.ru")
             {
                 console.warn("Comet: Not set dev_id", this.options.dev_id);
                 console.warn("Comet: set dev_id = 15 for testing and demo access. Do not use this in production.", this.options.dev_id);

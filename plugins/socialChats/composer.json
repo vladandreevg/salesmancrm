@@ -1,8 +1,9 @@
 {
-  "require": {
-	"vladkens/vk": "v0.1.9",
-    "facebook/graph-sdk": "5.7.0",
-	"mikechip/chatapi": "*",
-    "mikechip/apimessenger": "1.1.0"
-  }
+	"require": {
+		"vladkens/vk": "v0.1.9",
+		"facebook/graph-sdk": "5.7.0",
+		"mikechip/chatapi": "*",
+		"mikechip/apimessenger": "1.1.0",
+		"php": ">=7.2"
+	}
 }

@@ -208,21 +208,21 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 							return CKEDITOR.LINEUTILS_BEFORE | CKEDITOR.LINEUTILS_AFTER;
 					}
 				}
-			} ).start( function( relations, x, y ) {
-				locator.locate( relations );
-
+			} ).start(function (relations, x, y) {
+				locator.locate(relations);
+				
 				var locations = locator.locations,
-					uid, type;
-
-				liner.prepare( relations, locations );
-
-				for ( uid in locations ) {
-					for ( type in locations[ uid ] )
-						liner.placeLine( { uid: uid, type: type } );
+						uid, type;
+				
+				liner.prepare(relations, locations);
+				
+				for (uid in locations) {
+					for (type in locations[uid])
+						liner.placeLine({uid: uid, type: type});
 				}
-
+				
 				liner.cleanup();
-			} );
+			});
 		}
 
 		CKEDITOR.disableAutoInline = true;

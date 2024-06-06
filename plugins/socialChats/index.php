@@ -10,8 +10,8 @@
 
 use Chats\Comet;
 
-$rootpath = realpath( __DIR__.'/../../' );
-$ypath    = realpath( __DIR__.'/../../' )."/plugins/socialChats/";
+$rootpath = dirname(__DIR__, 2);
+$ypath    = $rootpath."/plugins/socialChats/";
 
 error_reporting( E_ERROR );
 

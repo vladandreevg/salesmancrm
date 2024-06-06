@@ -13,13 +13,15 @@
  */
 const chatsbaseURL = "/plugins/socialChats";
 
-$(document).ready(function () {
+$(function () {
 
 	chatsFunc.setIndicator();
 
 	if(cometDevID !== '') {
+		
+		let comet = {dev_id: cometDevID, user_id: cometUserID, user_key: cometUserKey, node: "app.comet-server.ru"}
 
-		cometApi.start({dev_id: cometDevID, user_id: cometUserID, user_key: cometUserKey, node: "app.comet-server.ru"});
+		cometApi.start(comet);
 
 		// подписка на канал. Сообщения всем операторам, если чат не назначен
 		cometApi.subscription(cometChannel, function (msg) {

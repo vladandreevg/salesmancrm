@@ -215,7 +215,7 @@ $(function () {
 
 	}
 
-	$(document).keydown(function (e) {
+	$(document).on('keydown', function (e) {
 
 		var keycode;
 
@@ -230,7 +230,7 @@ $(function () {
 			isCtrl = true;
 
 	});
-	$(document).keyup(function () {
+	$(document).on('keyup', function () {
 
 		isCtrl = false;
 
@@ -244,7 +244,7 @@ $(function () {
 	});
 	$('.ydropString:not(.disabled)').each(function () {
 
-		var txt = $.trim(striptags($(this).find('label').text()).replace(/<[^p].*?>/g, ''));
+		var txt = striptags($(this).find('label').text()).replace(/<[^p].*?>/g, '').trim();
 
 		$(this).prop("title", txt);
 
@@ -480,7 +480,7 @@ $(function () {
 		return false;
 
 	});
-	$(document).mouseup(function (e) { // событие клика по веб-документу
+	$(document).on('mouseup', function (e) { // событие клика по веб-документу
 
 		var div = $(".ydropDown.open"); // тут указываем ID элемента
 
@@ -503,7 +503,7 @@ $(function () {
 		$(this).find('#mapii').toggleClass('icon-angle-down icon-angle-up');
 
 	});
-	$(document).mouseup(function (e) { // событие клика по веб-документу
+	$(document).on('mouseup', function (e) { // событие клика по веб-документу
 
 		//console.log(e);
 
@@ -657,7 +657,7 @@ let $mainFunc = {
 
 				elm.empty().mustache('chatsTpl', viewData);
 
-				$secPageTotal = viewData.pageall;
+				//$secPageTotal = viewData.pageall;
 
 				var page = parseInt(viewData.page);
 				var pageall = parseInt(viewData.pageall);
@@ -720,64 +720,6 @@ let $mainFunc = {
 				//getDialog = setTimeout($mainFunc.dialog, 5000);
 
 			});
-
-		/*
-		$.getJSON("php/chats.php?action=list", str, function (viewData) {
-
-			elm.empty().mustache('chatsTpl', viewData);
-
-			// пока отключено
-			/!*
-			var page = parseInt(viewData.page);
-			var pageall = parseInt(viewData.pageall);
-
-			var pg = 'Страница ' + page + ' из ' + pageall;
-
-			if (pageall > 1) {
-
-				var prev = page - 1;
-				var next = page + 1;
-
-				if (page === 1)
-					pg = pg + '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + next + '\')" title="Следующая"><i class="icon-angle-right"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + pageall + '\')" title="Последняя"><i class="icon-angle-double-right"></i></a>&nbsp;';
-
-				else if (page === pageall)
-					pg = pg + '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'1\')" title="Начало"><i class="icon-angle-double-left"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + prev + '\')" title="Предыдущая"><i class="icon-angle-left"></i></a>&nbsp;';
-
-				else
-					pg = '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'1\')" title="Начало"><i class="icon-angle-double-left"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + prev + '\')" title="Предыдущая"><i class="icon-angle-left"></i></a>&nbsp;' + pg + '&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + next + '\')" title="Следующая"><i class="icon-angle-right"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onClick="$mainFunc.changpage(\'' + pageall + '\')" title="Последняя"><i class="icon-angle-double-right"></i></a>&nbsp;';
-
-			}
-
-			$('.pagediv[data-id="tab-chats"]').addClass('redbg').html(pg);
-			*!/
-
-		})
-			.complete(function () {
-
-				if ($chat_id === 0)
-					$chat_id = $('.chatlist:not(.hidden):first').data('chat');
-
-				if (listonly === undefined) {
-
-					$lastMessageID = 0;
-
-					if(!isMobile) {
-
-						$mainFunc.dialog(true)
-							.then(r => function () {
-								elm.scrollTo('div[data-chat="' + $chat_id + '"]');
-							});
-						//.then(r => $mainFunc.unreadChats);
-
-					}
-
-				}
-
-				$mainFunc.unreadChats();
-
-			});
-		*/
 
 	},
 	"changpage": async function (page) {
@@ -853,14 +795,14 @@ let $mainFunc = {
 	// оператор принимает чат
 	chatSetUser: function (iduser) {
 
-		$.get('php/chats.php?action=chatSetUser&chat_id=' + $chat_id + '&iduser=' + iduser, function (data) {
+		$.getJSON('php/chats.php?action=chatSetUser&chat_id=' + $chat_id + '&iduser=' + iduser, function (data) {
 
 			$mainFunc.chats();
 			$mainFunc.dialog().then(function () {
 				$mainFunc.consumerInfo();
 			});
 
-		}, 'json');
+		});
 
 	},
 	// обновление информации о посетителе от провайдера
@@ -869,7 +811,7 @@ let $mainFunc = {
 		let $el = $('.chatlist[data-chat="'+ $chat_id +'"]');
 		let $el2 = $('.fullavatar');
 
-		$.get('php/chats.php?action=chatUpdateInfo&chat_id=' + $chat_id , function (data) {
+		$.getJSON('php/chats.php?action=chatUpdateInfo&chat_id=' + $chat_id , function (data) {
 
 			if( data.ok ) {
 
@@ -897,8 +839,19 @@ let $mainFunc = {
 				$el.data('avatar', avatarka);
 
 			}
+			else{
+				Swal.fire({
+					imageUrl: 'assets/images/error.svg',
+					imageWidth: 50,
+					imageHeight: 50,
+					html: data.message,
+					icon: 'info',
+					showConfirmButton: false,
+					timer: 1500
+				});
+			}
 
-		}, 'json');
+		});
 
 	},
 	// удаление чата
@@ -920,7 +873,7 @@ let $mainFunc = {
 
 			if (result.value) {
 
-				$.get('php/chats.php?action=deleteChat&chat_id=' + $chat_id, function (data) {
+				$.getJSON('php/chats.php?action=deleteChat&chat_id=' + $chat_id, function (data) {
 
 					if(data.result) {
 
@@ -931,7 +884,7 @@ let $mainFunc = {
 							imageUrl: 'assets/images/success.svg',
 							imageWidth: 50,
 							imageHeight: 50,
-							html: data.result,
+							html: data.message,
 							icon: 'info',
 							showConfirmButton: false,
 							timer: 1500
@@ -944,7 +897,7 @@ let $mainFunc = {
 							imageUrl: 'assets/images/error.svg',
 							imageWidth: 50,
 							imageHeight: 50,
-							html: data.result,
+							html: data.message,
 							icon: 'info',
 							showConfirmButton: false,
 							timer: 1500
@@ -952,8 +905,13 @@ let $mainFunc = {
 
 					}
 
-				}, 'json');
+				});
 
+			}
+			else{
+				
+				razdel();
+				
 			}
 
 		});
@@ -1086,17 +1044,19 @@ let $mainFunc = {
 			},
 			success: function (data) {
 
-				if (data.result !== 'ok') {
+				if (data.result !== 'ok' || data.response.text.result === 'error') {
 
 					Swal.fire({
 						imageUrl: 'assets/images/error.svg',
 						imageWidth: 50,
 						imageHeight: 50,
-						html: '' + data.result + '',
+						html: '' + data.errors + '',
 						icon: 'info',
 						showConfirmButton: false,
 						timer: 3500
 					});
+					
+					//return false;
 
 				}
 
@@ -1175,7 +1135,7 @@ let $mainFunc = {
 
 		//$('.dialogs').find('.space-100').prepend('<div class="notify"><i class="icon-mail-alt"></i> Отправляю сообщение...</div>');
 
-		$('#sendForm').submit();
+		$('#sendForm').trigger('submit');
 
 	},
 	// удаление письма
@@ -1197,13 +1157,13 @@ let $mainFunc = {
 
 			if (result.value) {
 
-				$.get('php/chats.php?action=deleteMessage&message_id=' + id, function () {
+				$.getJSON('php/chats.php?action=deleteMessage&message_id=' + id, function () {
 
 					$('.dialogs').find('.answer[data-id="' + id + '"]').remove();
 
 					//$mainFunc.dialog();
 
-				}, 'json');
+				});
 
 			}
 
@@ -1222,7 +1182,7 @@ let $mainFunc = {
 			$('.contactinfo').empty().mustache('profileTpl', viewData).animate({scrollTop: 0}, 200);
 
 		})
-			.complete(function () {
+			.done(function () {
 
 				$('select').each(function () {
 					$(this).trigger('change');
@@ -1301,7 +1261,7 @@ let $mainFunc = {
 				timer: 1500
 			});
 
-		}, 'json');
+		});
 
 	},
 	// передать чат
@@ -1385,7 +1345,7 @@ let $mainFunc = {
 	}
 };
 
-$(window).resize(function () {
+$(window).on('resize', function () {
 
 	if (this.resizeTO) clearTimeout(this.resizeTO);
 	this.resizeTO = setTimeout(function () {
@@ -1393,7 +1353,7 @@ $(window).resize(function () {
 	}, 500);
 
 });
-$(window).bind('resizeEnd', function () {
+$(window).on('resizeEnd', function () {
 
 	if (isMobilee.any() || $(window).width() < 767) {
 		isMobile = true;
@@ -1414,7 +1374,7 @@ $(window).load(function () {
 
 });
 
-$(document).keydown(function (e) {
+$(document).on('keydown', function (e) {
 
 	var keycode;
 
@@ -1436,7 +1396,7 @@ $(document).keydown(function (e) {
 		isCtrl = true;
 
 });
-$(document).keyup(function () {
+$(document).on('keyup', function () {
 
 	isCtrl = false;
 
@@ -1492,7 +1452,7 @@ $(document).on('click', 'a[data-tip="statfilter"]', function (e) {
 
 	if (action === 'do') {
 
-		$stats.view();
+		//$stats.view();
 
 	}
 	else if (action === 'cancel') {
@@ -1508,7 +1468,7 @@ $(document).on('click', 'a[data-tip="statfilter"]', function (e) {
 
 		$('li[data-id="filter"]').removeClass('open');
 
-		$stats.view();
+		//$stats.view();
 
 	}
 
@@ -1634,7 +1594,7 @@ $(document).on('click', '.popblock:not(.disabled)', function () {
 	$(this).find('#mapii').toggleClass('icon-angle-down icon-angle-up');
 
 });
-$(document).mouseup(function (e) { // событие клика по веб-документу
+$(document).on('mouseup', function (e) { // событие клика по веб-документу
 
 	//console.log(e);
 
@@ -1764,55 +1724,28 @@ $(document).on('click', '.chatlist', function () {
 /**
  * отправка сообщения
  */
-$(document).off('click', '.send');
-$(document).on('click', '.send', function () {
-
-	if(!$('#message').prop('disabled'))
-		$mainFunc.sendmessage();
-
-	else{
-
-		Swal.fire({
-			imageUrl: 'assets/images/error.svg',
-			imageWidth: 50,
-			imageHeight: 50,
-			html: 'Сначала надо принять диалог',
-			icon: 'info',
-			showConfirmButton: false,
-			timer: 3500
-		});
-
-	}
-
-	/*
-	var $el = $(this).closest('.messagetext');
-	var str = $('#sendForm').serialize();
-
-	$.get('php/chats.php?chat_id='+$chat_id, str, function(data){
-
-		if(data !== 'ok'){
-
+$(document)
+	.off('click', '.send')
+	.on('click', '.send', function () {
+	
+		if(!$('#message').prop('disabled'))
+			$mainFunc.sendmessage();
+	
+		else{
+	
 			Swal.fire({
 				imageUrl: 'assets/images/error.svg',
 				imageWidth: 50,
 				imageHeight: 50,
-				html: '' + data + '',
+				html: 'Сначала надо принять диалог',
 				icon: 'info',
 				showConfirmButton: false,
 				timer: 3500
 			});
-
+	
 		}
-
-		$('#message').text('');
-		$el.find('#message').val('');
-
-		$mainFunc.dialog(true);
-
+	
 	});
-	*/
-
-});
 
 $(document).on('click', '.deletemessage', function () {
 
@@ -1821,13 +1754,6 @@ $(document).on('click', '.deletemessage', function () {
 	$mainFunc.deletemessage($id);
 
 });
-
-// отключено, т.к. реагирует на onhashchange
-/*$(document).on('click', '.ytab', function () {
-
-	razdel();
-
-});*/
 
 $(document).on('click', 'li[data-id="newchats"]', function () {
 
@@ -1939,38 +1865,40 @@ $(document).on('change', '#file\\[\\]', function () {
 });
 
 // имитация клика на поле выбора файла кнопкой
-$(document).off('click', '#addFile');
-$(document).on('click', '#addFile', function () {
-
-	var $elm = $('.filebox').find('.eupload:last').find('input[type="file"]');
-
-	if(!$('#message').prop('disabled')) {
-		$elm.click();
-		//$elm.closest('.eupload').addClass('warning');
-	}
-
-	console.log('clicked');
-
-});
+$(document)
+	.off('click', '#addFile')
+	.on('click', '#addFile', function () {
+	
+		var $elm = $('.filebox').find('.eupload:last').find('input[type="file"]');
+	
+		if(!$('#message').prop('disabled')) {
+			$elm.trigger('click');
+			//$elm.closest('.eupload').addClass('warning');
+		}
+	
+		//console.log('clicked');
+	
+	});
 
 // удаляем файлы для загрузки
-$(document).off('click', '.fdel');
-$(document).on('click', '.fdel', function () {
-
-	var currentIndex = $(this).closest(".infodiv").data('index');
-	var count = $('.eupload').length;
-
-	if (count > 1)
-		$('.eupload:eq(' + currentIndex + ')').remove();
-	else
-		$('.eupload:eq(' + currentIndex + ')').find('#file\\[\\]').val('');
-
-	$(this).closest(".infodiv").remove();
-
-	if ($('.sfile').size() === 0)
-		$('.description').empty().addClass('hidden');
-
-});
+$(document)
+	.off('click', '.fdel')
+	.on('click', '.fdel', function () {
+	
+		var currentIndex = $(this).closest(".infodiv").data('index');
+		var count = $('.eupload').length;
+	
+		if (count > 1)
+			$('.eupload:eq(' + currentIndex + ')').remove();
+		else
+			$('.eupload:eq(' + currentIndex + ')').find('#file\\[\\]').val('');
+	
+		$(this).closest(".infodiv").remove();
+	
+		if ($('.sfile').size() === 0)
+			$('.description').empty().addClass('hidden');
+	
+	});
 
 /**
  * Функция преобразует строку (особенно содержащую пробелы) в строку для http-запросов
@@ -2085,7 +2013,7 @@ function selItem(tip, id) {
 			$("#client\\[tip_cmr\\]").find('[value="' + data.tip_cmr + '"]').prop("selected", true);
 
 		})
-			.complete(function () {
+			.done(function () {
 
 				//Формат номеров телефонов
 				reloadMasks();
@@ -2120,7 +2048,7 @@ function selItem(tip, id) {
 					$("#client\\[tip_cmr\\]").find('[value="' + data2.tip_cmr + '"]').prop("selected", true);
 
 				})
-					.complete(function () {
+					.done(function () {
 
 						$('select').each(function () {
 							$(this).trigger('change');
@@ -2145,7 +2073,7 @@ function selItem(tip, id) {
 			}
 
 		})
-			.complete(function () {
+			.done(function () {
 
 				//Формат номеров телефонов
 				reloadMasks();
@@ -2407,7 +2335,7 @@ function doLoad(url){
 		$("a.button:contains('Закрыть')").addClass('bcancel');
 
 	})
-		.complete(function() {
+		.done(function() {
 
 			$('#dialog').css('display', 'block');
 			$('.dialog-preloader').css('display', 'none');

@@ -196,8 +196,10 @@ if ( $action == 'send' ) {
 			$response['text'] = $chat -> sendMessage( $id );
 
 			if ( $response['text']['result'] == 'error' ) {
-				$errors[] = "Отправка сообщения: ".$response['text']['message'];
+				$errors[] = "Ошибка: ".$response['text']['message'];
+				$chat -> deleteMessage( $id );
 			}
+
 
 			//print_r( $s );
 
@@ -322,7 +324,7 @@ if ( $action == 'deleteChat' ) {
 
 	$mes = $chat -> deleteChat( $id, $chat_id );
 
-	print yimplode( "\n", $mes );
+	print json_encode_cyr( $mes );
 
 	exit();
 

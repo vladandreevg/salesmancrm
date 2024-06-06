@@ -104,18 +104,19 @@
 							'   </li>' +
 							'</ul>');
 
-						jQuery('.chat-main').off('click');
-						jQuery('.chat-main').on('click', function () {
-
-							jQuery('.chat-container').toggleClass('open');
-							jQuery('.chat-main').toggleClass('chat-icon-chat chat-icon-cancel');
-
-							if (jQuery('.chat-container').hasClass('open'))
-								clearInterval($interval);
-							else
-								startShake();
-
-						});
+						jQuery('.chat-main')
+							.off('click')
+							.on('click', function () {
+	
+								jQuery('.chat-container').toggleClass('open');
+								jQuery('.chat-main').toggleClass('chat-icon-chat chat-icon-cancel');
+	
+								if (jQuery('.chat-container').hasClass('open'))
+									clearInterval($interval);
+								else
+									startShake();
+	
+							});
 
 						jQuery(document).mouseup(function (e) {
 

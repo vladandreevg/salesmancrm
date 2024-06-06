@@ -22,7 +22,7 @@ if ( defined( 'SMPLUGIN' ) ) {
 	 *
 	 * @param array $argv
 	 */
-	function activate_socialchats($argv = []) {
+	function activate_socialchats(array $argv = []) {
 
 		$isCloud  = $GLOBALS['isCloud'];
 		$identity = $GLOBALS['identity'];
@@ -36,28 +36,8 @@ if ( defined( 'SMPLUGIN' ) ) {
 
 		$mes = [];
 
-		if ( $isCloud == true ) {
-
-			//создаем папки хранения файлов
-			if ( !file_exists( $ypath."/settings/".$identity ) ) {
-
-				mkdir( $ypath."/settings/".$identity, 0777 );
-				chmod( $ypath."/settings/".$identity, 0777 );
-
-			}
-
-			createDir($rootpath."/files/{$identity}/chatcash");
-			createDir($rootpath."/files/{$identity}/chatcash/files");
-
-			$spath .= $identity."/";
-
-		}
-		else{
-
-			createDir($rootpath."/files/chatcash");
-			createDir($rootpath."/files/chatcash/files");
-
-		}
+		createDir($rootpath."/files/chatcash");
+		createDir($rootpath."/files/chatcash/files");
 
 		//если таблицы нет, то создаем её
 		$da = $db -> getOne( "SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}chats_channels'" );
@@ -238,7 +218,7 @@ if ( defined( 'SMPLUGIN' ) ) {
 	 *
 	 * @param array $argv
 	 */
-	function deactivate_socialchats($argv = []) {
+	function deactivate_socialchats(array $argv = []) {
 
 		$rootpath = $GLOBALS['rootpath'];
 
@@ -251,7 +231,7 @@ if ( defined( 'SMPLUGIN' ) ) {
 	 *
 	 * @param array $argv
 	 */
-	function update_socialchats($argv = []) {
+	function update_socialchats(array $argv = []) {
 
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
@@ -276,7 +256,7 @@ require_once $rootpath."/plugins/socialChats/php/Class/Chats.php";
 
 $chatUsers = (new Chats\Chats) -> getOperators();
 
-$iduser1 = $GLOBALS['iduser1'];
+global $iduser1;
 
 if( in_array( $iduser1, $chatUsers ) ) {
 
@@ -321,9 +301,9 @@ if( in_array( $iduser1, $chatUsers ) ) {
 
 	function js_main_socialchats() {
 
-		require_once $GLOBALS['rootpath']."/plugins/socialChats/php/autoload.php";
+		global $rootpath, $iduser1;
 
-		$iduser1 = $GLOBALS['iduser1'];
+		require_once $rootpath."/plugins/socialChats/php/autoload.php";
 
 		// параметры comet-сервера
 		$comet  = new Chats\Comet($iduser1);

@@ -450,8 +450,7 @@ if ( $action == 'getJsCode.do' ) {
 
 	$params = $_REQUEST;
 
-	unset( $params['action'] );
-	unset( $params['content'] );
+	unset($params['action'], $params['content']);
 
 	$rgb = hexToRgb( $params['color'] );
 

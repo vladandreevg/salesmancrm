@@ -538,11 +538,11 @@ gulp.task('selenium', done => {
         if (err) return done(err);
 
         selenium.start((err, child) => {
-            if (err) return done(err);
+	        if (err) return done(err);
 
-            selenium.child = child;
+	        selenium.child = child;
 
-            done();
+	        done();
         });
     });
 });

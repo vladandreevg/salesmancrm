@@ -148,10 +148,10 @@ class Chats {
 		$list = [];
 
 		if ( $id != '' ) {
-			$list = $db -> getRow("select * from ".$sqlname."chats_channels WHERE id = '$id'");
+			$list = $db -> getRow("select * from {$sqlname}chats_channels WHERE id = '$id'");
 		}
 		elseif ( $name != '' ) {
-			$list = $db -> getRow("select * from ".$sqlname."chats_channels WHERE name = '$name'");
+			$list = $db -> getRow("select * from {$sqlname}chats_channels WHERE name = '$name'");
 		}
 
 		for ( $i = 0; $i < 20; $i++ ) {
@@ -194,7 +194,7 @@ class Chats {
 		}
 
 		if ( $id > 0 ) {
-			$type = $db -> getOne( "SELECT type FROM ".$sqlname."chats_channels WHERE id = '$id'" );
+			$type = $db -> getOne( "SELECT type FROM {$sqlname}chats_channels WHERE id = '$id'" );
 		}
 
 		if ( $type != '' ) {
@@ -589,7 +589,7 @@ class Chats {
 
 		$list = [];
 
-		$data = $db -> getAll( "SELECT * FROM ".$sqlname."chats_channels WHERE identity = '$identity'" );
+		$data = $db -> getAll( "SELECT * FROM {$sqlname}chats_channels WHERE identity = '$identity'" );
 		foreach ( $data as $da ) {
 
 			$stngs = json_decode( $da['settings'], true );
@@ -636,13 +636,13 @@ class Chats {
 		if ( (int)$id == 0 ) {
 
 			$params['identity'] = $identity;
-			$db -> query( "INSERT INTO ".$sqlname."chats_channels SET ?u", $params );
+			$db -> query( "INSERT INTO {$sqlname}chats_channels SET ?u", $params );
 			$id = $db -> insertId();
 
 		}
 		else {
 
-			$db -> query( "UPDATE ".$sqlname."chats_channels SET ?u WHERE id = '$id'", $params );
+			$db -> query( "UPDATE {$sqlname}chats_channels SET ?u WHERE id = '$id'", $params );
 
 		}
 
@@ -693,7 +693,7 @@ class Chats {
 
 		}
 
-		$db -> query( "DELETE FROM ".$sqlname."chats_channels WHERE id = '$id'" );
+		$db -> query( "DELETE FROM {$sqlname}chats_channels WHERE id = '$id'" );
 		$mes[] = 'Канал удален';
 
 		return $mes;
@@ -746,7 +746,7 @@ class Chats {
 
 		$providers = self ::channelsProvider();
 
-		$da = $db -> getRow( "SELECT * FROM ".$sqlname."chats_channels WHERE ".($id > 0 ? "id = '$id' AND" : "channel_id = '$channel_id' AND")." identity = '$identity'" );
+		$da = $db -> getRow( "SELECT * FROM {$sqlname}chats_channels WHERE ".($id > 0 ? "id = '$id' AND" : "channel_id = '$channel_id' AND")." identity = '$identity'" );
 
 		if ( !empty( $da ) ) {
 
@@ -821,8 +821,8 @@ class Chats {
 				'lastname'    => $da['client_lastname'],
 				'avatar'      => ($da['client_avatar']) ? $this -> cashAvatar( $da['client_avatar'] ) : $avatar,
 				'users'       => $da['users'],
-				'pid'         => $da['pid'],
-				'clid'        => $da['clid'],
+				'pid'         => (int)$da['pid'],
+				'clid'        => (int)$da['clid'],
 				'color'       => self ::getColor( $da['client_firstname'] ),
 				'status'      => $da['status'],
 				'phone'       => $da['phone'],
@@ -1115,7 +1115,7 @@ class Chats {
 			FROM {$sqlname}chats_chat 
 			WHERE 
 				(SELECT max(datum) FROM {$sqlname}chats_dialogs WHERE {$sqlname}chats_dialogs.chat_id = {$sqlname}chats_chat.chat_id) IS NOT NULL AND
-				FIND_IN_SET('$iduser1', REPLACE(".$sqlname."chats_chat.users, ';',',')) > 0 AND
+				FIND_IN_SET('$iduser1', REPLACE({$sqlname}chats_chat.users, ';',',')) > 0 AND
 				-- {$sqlname}chats_chat.status = 'free' AND
 				{$sqlname}chats_chat.identity = '$identity'
 			ORDER BY lastdate DESC
@@ -1303,11 +1303,13 @@ class Chats {
 		}
 
 		// добавляемые сотрудники
-		$userNew = !is_array( $user ) ? yexplode( ",", $user ) : $user;
+		$userNew = $user;//!is_array( $user ) ? yexplode( ",", $user ) : $user;
 
-		$users = array_unique( array_merge( $userNew, $usersExist ) );
+		$users = array_unique((array)array_merge($userNew, $usersExist));
 
-		$this -> logChat( $chat_id, 'operator', $users );
+		foreach ($users  as  $xuser)  {
+			$this -> logChat( $chat_id, 'operator', $xuser );
+		}
 
 		return $this -> editChat( $chat['id'], [
 			"users"   => $users,
@@ -1439,15 +1441,14 @@ class Chats {
 		$dateText = '';
 		$sort     = '';
 
-		if ( $filters['lastmessage'] > 0 && !isset( $filters['page'] ) )
+		if ( $filters['lastmessage'] > 0 && !isset( $filters['page'] ) ) {
 			$sort .= "AND id > '$filters[lastmessage]'";
+		}
 
-		if ( isset( $filters['page'] ) && $filters['page'] == 1 )
+		if ( isset( $filters['page'] ) && $filters['page'] == 1 ) {
 			$p = "LIMIT 0, 30";
+		}
 		else {
-
-			//if($filters['maxid'] > 0)
-			//$sort .= "AND id < '$filters[maxid]'";
 
 			$pp2 = $filters['page'] * 30;
 			$pp1 = ($filters['page'] - 1) * 30;
@@ -1455,13 +1456,13 @@ class Chats {
 
 		}
 
-		$totalPages  = round( $db -> getOne( "SELECT COUNT(*) / 30 FROM ".$sqlname."chats_dialogs WHERE chat_id = '$chat_id' $sort AND identity = '$identity'" ) + 0.5, 0 );
+		$totalPages  = round( $db -> getOne( "SELECT COUNT(*) / 30 FROM {$sqlname}chats_dialogs WHERE chat_id = '$chat_id' $sort AND identity = '$identity'" ) + 0.5, 0 );
 		$currentPage = $filters['page'];
 
 		/**
 		 * Выводим последние 30 записей с двойной сортировкой
 		 */
-		$data = $db -> getAll( "SELECT * FROM (SELECT * FROM ".$sqlname."chats_dialogs WHERE chat_id = '$chat_id' $sort AND identity = '$identity' ORDER BY id DESC $p) A ORDER BY id" );
+		$data = $db -> getAll( "SELECT * FROM (SELECT * FROM {$sqlname}chats_dialogs WHERE chat_id = '$chat_id' $sort AND identity = '$identity' ORDER BY id DESC $p) A ORDER BY id" );
 		$q    = $db -> lastQuery();
 		foreach ( $data as $da ) {
 
@@ -1473,13 +1474,13 @@ class Chats {
 
 			$date = get_smdate( $da['datum'] );
 
-			if ( diffDate2( $date, $current ) < 0 && $dateText != $date ) {
+			if ( diffDate2( $date, $current ) < 0 ) {
 
 				$dateText    = $date;
 				$dateDivider = format_date_rus_name( $dateText );
 
 			}
-			elseif ( diffDate2( $date, $current ) == 0 && $dateText != $date ) {
+			elseif ( $dateText != $date && diffDate2( $date, $current ) == 0 ) {
 
 				$dateText    = $date;
 				$dateDivider = 'Сегодня';
@@ -1490,14 +1491,16 @@ class Chats {
 
 			$readability = $da['readability'] != '' ? json_decode( $da['readability'], true ) : self :: parseURL( $text );
 
-			if ( $da['readability'] == '' )
-				$this -> editMessage( $da['id'], [
-					"readability" => self :: parseURL( $text ),
+			if ( $da['readability'] == '' ) {
+				$this -> editMessage($da['id'], [
+					"readability" => self :: parseURL($text),
 					"direction"   => $da['direction']
-				] );
+				]);
+			}
 
-			if ( $da['status'] != 'seen' && $filters['viz'] )
-				$this -> messageStatusChange( $da['id'], "seen" );
+			if ( $da['status'] != 'seen' && $filters['viz'] ) {
+				$this -> messageStatusChange($da['id'], "seen");
+			}
 
 			$attachent = $da['attachment'] != NULL ? json_decode( $da['attachment'], true ) : NULL;
 
@@ -1505,7 +1508,7 @@ class Chats {
 			// обработку смотри в /content/helpers/get.file.php
 
 			$list[] = [
-				'id'            => $da['id'],
+				'id'            => (int)$da['id'],
 				'message_id'    => $da['message_id'],
 				'chat_id'       => $da['chat_id'],
 				'datum'         => $da['datum'],
@@ -1514,7 +1517,7 @@ class Chats {
 				'avatar'        => $avatar,
 				'color'         => $color,
 				'background'    => $chat['color'],
-				'iduser'        => $da['iduser'],
+				'iduser'        => (int)$da['iduser'],
 				'name'          => $name,
 				'content'       => link_it( $text ),
 				'date'          => getTime( (string)$da['datum'] ),
@@ -1523,19 +1526,19 @@ class Chats {
 				'readability'   => ($readability['title'] != '' || $readability['image'] != '') ? $readability : NULL,
 				'attachment'    => $attachent,
 				'hasAttachment' => $attachent != NULL ? true : NULL,
-				"diricon"       => $direct = ($da['direction'] == 'in') ? 'icon-reply' : 'icon-forward-1'
+				"diricon"       => ($da['direction'] == 'in') ? 'icon-reply' : 'icon-forward-1'
 			];
 
 			//$list = array_reverse($list);
 
 		}
 
-		$total = $data = $db -> getOne( "SELECT COUNT(*) FROM ".$sqlname."chats_dialogs WHERE chat_id = '$chat_id' AND identity = '$identity'" );
+		$total = $data = $db -> getOne( "SELECT COUNT(*) FROM {$sqlname}chats_dialogs WHERE chat_id = '$chat_id' AND identity = '$identity'" );
 
 		/**
 		 * Пометим сообщения прочитанными
 		 */
-		$db -> query( "UPDATE ".$sqlname."chats_dialogs SET ?u WHERE chat_id = '$chat_id' AND identity = '$identity'", ["status" => 'seen'] );
+		$db -> query( "UPDATE {$sqlname}chats_dialogs SET ?u WHERE chat_id = '$chat_id' AND identity = '$identity'", ["status" => 'seen'] );
 
 		$chat['users'] = yexplode( ",", $chat['users'] );
 
@@ -1605,8 +1608,9 @@ class Chats {
 				"identity" => $identity
 			];
 
-			if ( $datum != '' )
+			if ( $datum != '' ) {
 				$data['datum'] = $datum;
+			}
 
 			$db -> query( "INSERT INTO {$sqlname}chats_logs SET ?u", $data );
 			$id = $db -> InsertId();
@@ -1647,11 +1651,13 @@ class Chats {
 			'identity'         => $identity
 		];
 
-		if ( $id == 0 )
-			$id = (int)$db -> getOne( "SELECT id FROM {$sqlname}chats_chat WHERE client_id = '$params[client_id]'" );
+		if ( $id == 0 ) {
+			$id = (int)$db -> getOne("SELECT id FROM {$sqlname}chats_chat WHERE client_id = '$params[client_id]'");
+		}
 
-		if ( $id == 0 && $params['chat_id'] != '' )
-			$id = (int)$db -> getOne( "SELECT id FROM {$sqlname}chats_chat WHERE chat_id = '$params[chat_id]'" );
+		if ( $id == 0 && $params['chat_id'] != '' ) {
+			$id = (int)$db -> getOne("SELECT id FROM {$sqlname}chats_chat WHERE chat_id = '$params[chat_id]'");
+		}
 
 		//print $db -> lastQuery()."<br>";
 		//print $id;
@@ -1668,15 +1674,18 @@ class Chats {
 		}
 		else {
 
-			unset( $d['type'], $d['channel_id'], $d['chat_id'], $d['client_id'], $d['identity'] );
+			$chat_id = $d['chat_id'];
 
-			//print_r($d);
+			unset( $d['type'], $d['channel_id'], $d['chat_id'], $d['client_id'], $d['identity'] );
 
 			if(!empty($params['status'])) {
 				$this -> logChat((string)$params['chat_id'], 'dialog', (string)$params['status']);
 			}
 
-			$db -> query( "UPDATE {$sqlname}chats_chat SET ?u WHERE id = '$id'", arrayNullClean( $d ) );
+			//$db -> query( "UPDATE {$sqlname}chats_chat SET ?u WHERE id = '$id'", arrayNullClean( $d ) );
+			// обновим данные во всех записях чатов
+			$db -> query( "UPDATE {$sqlname}chats_chat SET ?u WHERE chat_id = '$chat_id'", arrayNullClean( $d ) );
+			//print $db -> lastQuery()."<br>";
 
 		}
 
@@ -1704,18 +1713,10 @@ class Chats {
 			"message" => "Не найдено"
 		];
 
-		if ( !empty( $info ) ) {
+		if ( $info['id'] > 0 ) {
 
-			$this -> params = ["silence" => true];
-
-			$db -> query( "DELETE FROM {$sqlname}chats_chat WHERE id = '$info[id]'" );
-
-			$data = $db -> getAll( "SELECT * FROM (SELECT * FROM ".$sqlname."chats_dialogs WHERE chat_id = '$info[chat_id]' AND identity = '$identity'" );
-			foreach ( $data as $da ) {
-
-				$this -> deleteMessage( $da['id'] );
-
-			}
+			$db -> query( "DELETE FROM {$sqlname}chats_chat WHERE id = '$info[id]' AND identity = '$identity'" );
+			$db -> query( "DELETE FROM {$sqlname}chats_dialogs WHERE chat_id = '$info[chat_id]' AND identity = '$identity'" );
 
 			$result = [
 				"result"  => true,
@@ -1737,12 +1738,26 @@ class Chats {
 	 */
 	public function setChatStatus(int $id = 0, string $chat_id = '', string $status = ''): void {
 
-		$this -> editChat( $id, [
+		$sqlname  = $this -> sqlname;
+		$db       = $this -> db;
+
+		/*$this -> editChat( $id, [
 			'chat_id' => $chat_id,
 			'status'  => $status
-		] );
+		] );*/
 
-		//self::logChat($chat_id, 'dialog', $status);
+		if($id > 0) {
+			$db -> query("UPDATE {$sqlname}chats_chat SET ?u WHERE id = '$id'", [
+				'status'  => $status
+			]);
+		}
+		elseif(!empty($chat_id)){
+			$db -> query("UPDATE {$sqlname}chats_chat SET ?u WHERE chat_id = '$chat_id'", [
+				'status'  => $status
+			]);
+		}
+
+		$this -> logChat($chat_id, 'dialog', $status);
 
 	}
 
@@ -1793,20 +1808,25 @@ class Chats {
 		if ( !empty( $data ) ) {
 
 			$chat    = $this -> chatInfo( 0, $data['chat_id'] );
-			$channel = $this -> channelInfo( 0, $chat['channel_id'] );
 
-			$message = [
-				'id'          => $data['id'],
-				'message_id'  => $data['message_id'],
-				'chat_id'     => $chat['chat_id'],
-				'channel_id'  => $chat['channel_id'],
-				'client_id'   => $chat['client_id'],
-				'direction'   => $chat['direction'],
-				'content'     => htmlspecialchars_decode( $data['content'] ),
-				'attachments' => json_decode( $data['attachment'], true ),
-				'chat'        => $chat,
-				'channel'     => $channel
-			];
+			if(!empty($chat['channel_id'])) {
+
+				$channel = $this -> channelInfo(0, $chat['channel_id']);
+
+				$message = [
+					'id'          => $data['id'],
+					'message_id'  => $data['message_id'],
+					'chat_id'     => $chat['chat_id'],
+					'channel_id'  => $chat['channel_id'],
+					'client_id'   => $chat['client_id'],
+					'direction'   => $chat['direction'],
+					'content'     => htmlspecialchars_decode($data['content']),
+					'attachments' => json_decode($data['attachment'], true),
+					'chat'        => $chat,
+					'channel'     => $channel
+				];
+
+			}
 
 		}
 
@@ -2498,32 +2518,55 @@ class Chats {
 
 		$chat = $this -> chatInfo( $id, $chat_id );
 
-		$channel = $this -> channelInfo( 0, $chat['channel_id'] );
+		//print_r($chat);
 
-		// получаем адаптированные данные
-		$type = $channel['type']."Provider";
-		$type = "Chats\\".$type;
+		if(!empty($chat['channel_id'])) {
 
-		$provider = new $type();
-		$result   = $provider -> getUserInfo( $chat_id, $channel );
+			$channel = $this -> channelInfo(0, (string)$chat['channel_id']);
 
-		//print_r($result);
+			// получаем адаптированные данные
+			$type = $channel['type']."Provider";
+			$type = "Chats\\".$type;
 
-		if ( $result['ok'] ) {
+			$provider = new $type();
+			$result   = $provider -> getUserInfo($chat_id, $channel);
 
-			$userdata = [
-				"ok"               => true,
-				"client_firstname" => $result['client_firstname'],
-				"client_lastname"  => $result['client_lastname'],
-				"client_avatar"    => $this -> cashAvatar( $result['client_avatar'] ),
-			];
+			//print_r($result);
+			//exit();
 
-			$this -> editChat( $chat['id'], $userdata );
+			if (( $result['ok'] || $result['result'] != 'error' ) && !empty($result['client_firstname'])) {
+
+				$userdata = [
+					"ok"               => true,
+					"chat_id"          => $chat_id,
+					"client_firstname" => $result['client_firstname'],
+					"client_lastname"  => $result['client_lastname'],
+					"client_avatar"    => $this -> cashAvatar($result['client_avatar']),
+				];
+
+				//print_r($userdata);
+
+				$this -> editChat($chat['id'], $userdata);
+
+			}
+			else {
+
+				$userdata = [
+					'ok' => false,
+					"result" => "error",
+					"message" => $result['description']
+				];
+
+			}
 
 		}
 		else {
 
-			$userdata['ok'] = false;
+			$userdata = [
+				'ok' => false,
+				"result" => "error",
+				"message" => "Ошибка: Диалог не прикреплен к каналу"
+			];
 
 		}
 

@@ -6,7 +6,7 @@
 /*        www.isaler.ru         */
 /*        ver. 2019.x           */
 /* ============================ */
-$(document).ready( function() {
+$( function() {
 
 	$("#dialog").draggable({handle: ".zagolovok", cursor: "move", opacity: "0.85", containment: "document"});
 
@@ -17,7 +17,7 @@ $(document).ready( function() {
 
 });
 
-$(window).bind('resizeEnd', function () {
+$(window).on('resizeEnd', function () {
 
 	if (isMobilee.any() || $(window).width() < 767) {
 		isMobile = true;
@@ -32,7 +32,7 @@ $(window).bind('resizeEnd', function () {
 	$('#dialog').center();
 
 });
-$(window).resize(function () {
+$(window).on('resize', function () {
 
 	if (this.resizeTO) clearTimeout(this.resizeTO);
 	this.resizeTO = setTimeout(function () {
@@ -49,13 +49,13 @@ $(window).resize(function () {
 
 });
 
-$(document).keydown(function(e){
+$(document).on('keydown', function(e){
 	if(e == null) { // ie
 		keycode = event.keyCode;
 	} else { // mozilla
 		keycode = e.which;
 	}
-	if(keycode == 27){ // escape, close box, esc
+	if(keycode === 27){ // escape, close box, esc
 		DClose();
 		$('.popmenu.nothide').removeClass('open');
 	}
@@ -168,7 +168,7 @@ var $app = {
 			$('div[data-id="channels"]').empty().mustache('channelTpl', datalist);
 
 		}, 'json')
-			.complete(function () {
+			.done(function () {
 
 			});
 
@@ -232,7 +232,7 @@ var $app = {
 			$('div[data-id="users"]').empty().mustache('userTpl', datalist);
 
 		}, 'json')
-			.complete(function () {
+			.done(function () {
 			});
 
 	},
@@ -296,7 +296,7 @@ function doLoad(url){
 		$("a.button:contains('Закрыть')").addClass('bcancel');
 
 	})
-		.complete(function() {
+		.done(function() {
 
 			$('#dialog').css('display', 'block');
 			$('.dialog-preloader').css('display', 'none');
