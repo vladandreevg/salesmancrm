@@ -6,11 +6,11 @@
  * @version  6.4
  */
 
-error_reporting( E_ERROR );
-ini_set( 'display_errors', 1 );
-header( "Pragma: no-cache" );
+error_reporting(E_ERROR);
+ini_set('display_errors', 1);
+header("Pragma: no-cache");
 
-$rootpath = realpath( __DIR__.'/../' );
+$rootpath = dirname(__DIR__);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -19,37 +19,37 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
-$da1 = $_REQUEST[ 'da1' ];
-$da2 = $_REQUEST[ 'da2' ];
-$act = $_REQUEST[ 'act' ];
-$per = $_REQUEST[ 'per' ];
+$da1 = $_REQUEST['da1'];
+$da2 = $_REQUEST['da2'];
+$act = $_REQUEST['act'];
+$per = $_REQUEST['per'];
 
-if ( !$per ) {
+if (!$per) {
 	$per = 'nedelya';
 }
 
-$user_list    = (array)$_REQUEST[ 'user_list' ];
-$clients_list = (array)$_REQUEST[ 'clients_list' ];
-$persons_list = (array)$_REQUEST[ 'persons_list' ];
-$fields       = (array)$_REQUEST[ 'field' ];
-$field_query  = (array)$_REQUEST[ 'field_query' ];
+$user_list    = (array)$_REQUEST['user_list'];
+$clients_list = (array)$_REQUEST['clients_list'];
+$persons_list = (array)$_REQUEST['persons_list'];
+$fields       = (array)$_REQUEST['field'];
+$field_query  = (array)$_REQUEST['field_query'];
 
 $sort = $clist = $plist = '';
 
 //массив выбранных пользователей
-if ( !empty( $user_list ) ) {
-	$sort .= " deal.iduser IN (".yimplode( ",", $user_list ).") AND ";
+if (!empty($user_list)) {
+	$sort .= " deal.iduser IN (".yimplode(",", $user_list).") AND ";
 }
 else {
-	$sort .= " deal.iduser IN (".yimplode( ",", (array)get_people( $iduser1, 'yes' ) ).") AND ";
+	$sort .= " deal.iduser IN (".yimplode(",", (array)get_people($iduser1, 'yes')).") AND ";
 }
 
 //составляем запрос по клиентам и персонам
-if( !empty($clients_list) ) {
-	$sort .= "deal.clid IN (".yimplode( ",", $clients_list ).") and ";
+if (!empty($clients_list)) {
+	$sort .= "deal.clid IN (".yimplode(",", $clients_list).") and ";
 }
-if( !empty($persons_list) ) {
-	$sort .= "deal.pid IN (".yimplode( ",", $persons_list ).") and ";
+if (!empty($persons_list)) {
+	$sort .= "deal.pid IN (".yimplode(",", $persons_list).") and ";
 }
 
 
@@ -58,19 +58,21 @@ $ar = [
 	'sid',
 	'close'
 ];
-foreach ( $fields as $i => $field ) {
+foreach ($fields as $i => $field) {
 
-	if ( !in_array( $field, $ar ) && !in_array( $field, [
+	if (
+		!in_array($field, $ar) && !in_array($field, [
 			'close',
 			'mcid'
-		] ) ) {
-		$sort .= " deal.".$field." = '".$field_query[ $i ]."' AND ";
+		])
+	) {
+		$sort .= " deal.".$field." = '".$field_query[$i]."' AND ";
 	}
-	elseif ( $field == 'close' ) {
-		$sort .= $field_query[ $i ] != 'yes' ? " COALESCE(deal.{$field}, 'no') != 'yes' AND " : " COALESCE(deal.{$field}, 'no') == 'yes' AND ";
+	elseif ($field == 'close') {
+		$sort .= $field_query[$i] != 'yes' ? " COALESCE(deal.{$field}, 'no') != 'yes' AND " : " COALESCE(deal.{$field}, 'no') == 'yes' AND ";
 	}
-	elseif ( $field == 'mcid' ) {
-		$mc = $field_query[ $i ];
+	elseif ($field == 'mcid') {
+		$mc = $field_query[$i];
 	}
 
 }
@@ -86,24 +88,24 @@ $all_kol_c   = 0;
 $all_marga_c = 0;
 $i           = 0;
 
-$result = $db -> getAll( "SELECT * FROM ".$sqlname."direction WHERE identity = '$identity' ORDER BY title" );
-foreach ( $result as $data_array ) {
+$result = $db -> getAll("SELECT * FROM ".$sqlname."direction WHERE identity = '$identity' ORDER BY title");
+foreach ($result as $data_array) {
 
-	$result4 = $db -> getRow( "
+	$result4 = $db -> getRow("
 		SELECT 
 		    COUNT(deal.did) as count, 
 		    SUM(deal.kol) as kol 
 		FROM ".$sqlname."dogovor `deal`
 		WHERE 
 			deal.datum_plan between '$da1' and '$da2' and 
-			deal.direction = '".$data_array[ 'id' ]."' and 
+			deal.direction = '".$data_array['id']."' and 
 			$sort
 			deal.identity = '$identity'
-		" );
-	$new_d   = $result4[ 'count' ];
-	$kol     = $result4[ 'kol' ];
+		");
+	$new_d   = $result4['count'];
+	$kol     = $result4['kol'];
 
-	$result6 = $db -> getRow( "
+	$result6 = $db -> getRow("
 		SELECT 
 		    COUNT(deal.did) as count, 
 		    SUM(deal.kol) as kol, 
@@ -112,22 +114,24 @@ foreach ( $result as $data_array ) {
 		FROM ".$sqlname."dogovor `deal` 
 		WHERE 
 			deal.datum_close between '$da1' and '$da2' and 
-			deal.direction = '".$data_array[ 'id' ]."' and 
+			deal.direction = '".$data_array['id']."' and 
 			$sort
 			deal.identity = '$identity'
-		" );
-	$cl_d    = $result6[ 'count' ];
+		");
+	$cl_d    = $result6['count'];
+	$kol_c = $result6['kol_fact'];
 
-	if ( $plan_form == 'datum_close' ) {
+	/*if ($plan_form == 'datum_close') {
 		$kol_c = $result6['kol_fact'];
 	}
 	else {
 		$kol_c = $result6['kol'];
-	}
-	$marga_c = $result6[ 'marga' ];
+	}*/
 
-	$effect[ $i ] = [
-		"dogovor"    => $data_array[ 'title' ],
+	$marga_c = $result6['marga'];
+
+	$effect[$i] = [
+		"dogovor"    => $data_array['title'],
 		"new_dogs"   => $new_d,
 		"kol_new"    => $kol,
 		"close_dogs" => $cl_d,
@@ -135,14 +139,14 @@ foreach ( $result as $data_array ) {
 		"marga"      => $marga_c
 	];
 
-	$datas[] = '{"Направление":"'.$data_array[ 'title' ].'","Статус":"Активно","Кол-во":"'.$new_d.'"}';
-	$datas[] = '{"Направление":"'.$data_array[ 'title' ].'","Статус":"Закрыто","Кол-во":"'.$cl_d.'"}';
+	$datas[] = '{"Направление":"'.$data_array['title'].'","Статус":"Активно","Кол-во":"'.$new_d.'"}';
+	$datas[] = '{"Направление":"'.$data_array['title'].'","Статус":"Закрыто","Кол-во":"'.$cl_d.'"}';
 
-	$all_new_d += $new_d;
-	$all_cl_d  += $cl_d;
-	$all_kol += pre_format( $kol );
-	$all_kol_c += pre_format( $kol_c );
-	$all_marga_c += pre_format( $marga_c );
+	$all_new_d   += $new_d;
+	$all_cl_d    += $cl_d;
+	$all_kol     += pre_format($kol);
+	$all_kol_c   += pre_format($kol_c);
+	$all_marga_c += pre_format($marga_c);
 
 	$hist    = 0;
 	$hist_d  = 0;
@@ -155,32 +159,35 @@ foreach ( $result as $data_array ) {
 	++$i;
 
 }
-$count = count( $datas );
-$datas = implode( ",", $datas );
+$count = count($datas);
+$datas = implode(",", $datas);
 ?>
 <style>
 	.dimple-custom-axis-line {
-		stroke       : black !important;
-		stroke-width : 1.1;
+		stroke: black !important;
+		stroke-width: 1.1;
 	}
+
 	.dimple-custom-axis-label {
-		font-family : Arial !important;
-		font-size   : 11px !important;
-		font-weight : 500;
+		font-family: Arial !important;
+		font-size: 11px !important;
+		font-weight: 500;
 	}
+
 	.dimple-custom-gridline {
-		stroke-width     : 1;
-		stroke-dasharray : 5;
-		fill             : none;
-		stroke           : #CFD8DC !important;
+		stroke-width: 1;
+		stroke-dasharray: 5;
+		fill: none;
+		stroke: #CFD8DC !important;
 	}
 </style>
 
-<div class="zagolovok_rep" align="center"><b>Анализ сделок<b class="red">по направлениям</b> за период&nbsp;с&nbsp;<?= format_date_rus( $da1 ) ?>&nbsp;по&nbsp;<?= format_date_rus( $da2 ) ?></b></div>
-
+<div class="zagolovok_rep" align="center">
+	<b>Анализ сделок<b class="red">по направлениям</b> за период&nbsp;с&nbsp;<?= format_date_rus($da1) ?>&nbsp;по&nbsp;<?= format_date_rus($da2) ?></b></div>
 <hr>
 
-<?php if ( $count > 0 ) { ?>
+<?php
+if ($count > 0) { ?>
 	<div id="graf" style="display:block; height:350px">
 		<div id="chart" style="padding:5px; height:100%"></div>
 		<script type="text/javascript" src="/assets/js/dimple.js/dimple.min.js"></script>
@@ -285,7 +292,8 @@ $datas = implode( ",", $datas );
 		</script>
 	</div>
 	<hr>
-<?php } ?>
+<?php
+} ?>
 
 <table class="wp95">
 	<thead>
@@ -301,38 +309,39 @@ $datas = implode( ",", $datas );
 	</THEAD>
 	<TBODY>
 	<?php
-	for ( $j = 0; $j < $i; $j++ ) {
+	for ($j = 0; $j < $i; $j++) {
 		?>
 		<TR height="40" class="ha">
 			<TD align="center"><?= $j + 1 ?></TD>
 			<TD>
-				<DIV class="ellipsis" title="<?= $effect[ $j ][ 'dogovor' ] ?>"><?= $effect[ $j ][ 'dogovor' ] ?></DIV>
+				<DIV class="ellipsis" title="<?= $effect[$j]['dogovor'] ?>"><?= $effect[$j]['dogovor'] ?></DIV>
 			</TD>
 			<TD align="center">
-				<DIV title="<?= $effect[ $j ][ 'new_dogs' ] ?>"><?= $effect[ $j ][ 'new_dogs' ] ?></DIV>
+				<DIV title="<?= $effect[$j]['new_dogs'] ?>"><?= $effect[$j]['new_dogs'] ?></DIV>
 			</TD>
 			<TD align="right" nowrap>
-				<DIV title="<?= num_format( $effect[ $j ][ 'kol_new' ] ) ?>"><?= num_format( $effect[ $j ][ 'kol_new' ] ) ?></DIV>
+				<DIV title="<?= num_format($effect[$j]['kol_new']) ?>"><?= num_format($effect[$j]['kol_new']) ?></DIV>
 			</TD>
 			<TD align="center">
-				<DIV title="<?= $effect[ $j ][ 'close_dogs' ] ?>"><?= $effect[ $j ][ 'close_dogs' ] ?></DIV>
+				<DIV title="<?= $effect[$j]['close_dogs'] ?>"><?= $effect[$j]['close_dogs'] ?></DIV>
 			</TD>
 			<TD align="right" nowrap>
-				<DIV title="<?= num_format( $effect[ $j ][ 'kol_close' ] ) ?>"><?= num_format( $effect[ $j ][ 'kol_close' ] ) ?></DIV>
+				<DIV title="<?= num_format($effect[$j]['kol_close']) ?>"><?= num_format($effect[$j]['kol_close']) ?></DIV>
 			</TD>
 			<TD align="right" nowrap>
-				<DIV title="<?= num_format( $effect[ $j ][ 'marga' ] ) ?>"><?= num_format( $effect[ $j ][ 'marga' ] ) ?></DIV>
+				<DIV title="<?= num_format($effect[$j]['marga']) ?>"><?= num_format($effect[$j]['marga']) ?></DIV>
 			</TD>
 		</TR>
-	<?php } ?>
+	<?php
+	} ?>
 	<TR bgcolor="#FC9" height="35">
 		<TD align="center">&nbsp;</TD>
 		<TD align="center"><B>ИТОГО</B></TD>
 		<TD align="center"><B><?= $all_new_d ?></B></TD>
-		<TD align="right" nowrap><B><?= num_format( $all_kol ) ?></B></TD>
+		<TD align="right" nowrap><B><?= num_format($all_kol) ?></B></TD>
 		<TD align="center"><B><?= $all_cl_d ?></B></TD>
-		<TD align="right" nowrap><B><?= num_format( $all_kol_c ) ?></B></TD>
-		<TD align="right" nowrap><B><?= num_format( $all_marga_c ) ?></B></TD>
+		<TD align="right" nowrap><B><?= num_format($all_kol_c) ?></B></TD>
+		<TD align="right" nowrap><B><?= num_format($all_marga_c) ?></B></TD>
 	</TR>
 	</TBODY>
 </TABLE>

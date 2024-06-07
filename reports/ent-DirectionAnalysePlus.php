@@ -8,11 +8,11 @@
 /*        ver. 2017.x           */
 /* ============================ */
 /* Developer: Iskopaeva Liliya  */
-error_reporting( E_ERROR );
-ini_set( 'display_errors', 1 );
-header( "Pragma: no-cache" );
+error_reporting(E_ERROR);
+ini_set('display_errors', 1);
+header("Pragma: no-cache");
 
-$rootpath = realpath( __DIR__.'/../' );
+$rootpath = dirname(__DIR__);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -25,9 +25,9 @@ function dateFormat($date_orig, $format = 'excel') {
 
 	$date_new = '';
 
-	if ( $format == 'excel' ) {
+	if ($format == 'excel') {
 
-		if ( $date_orig != '0000-00-00' and $date_orig != '' and $date_orig != NULL ) {
+		if ($date_orig != '0000-00-00' and $date_orig != '' and $date_orig != NULL) {
 			/*
 			$dstart = $date_orig;
 			$dend = '1970-01-01';
@@ -35,47 +35,53 @@ function dateFormat($date_orig, $format = 'excel') {
 			*/
 			$date_new = $date_orig;
 		}
-		else $date_new = '';
+		else {
+			$date_new = '';
+		}
 
 	}
-	elseif ( $format == 'date' ) {
+	elseif ($format == 'date') {
 
-		if ( $date_orig && $date_orig != '0000-00-00' ) {
+		if ($date_orig && $date_orig != '0000-00-00') {
 
-			$date_new = explode( "-", $date_orig );
+			$date_new = explode("-", $date_orig);
 			$date_new = $date_new[1].".".$date_new[2].".".$date_new[0];
 
 		}
-		else $date_new = '';
+		else {
+			$date_new = '';
+		}
 
 	}
-	elseif ( $date_orig != '0000-00-00' || $date_orig == '' )
+	elseif ($date_orig != '0000-00-00' || $date_orig == '') {
 		$date_new = '';
+	}
 
 	return $date_new;
 }
 
 function num2excelExt($string, $s = 2) {
 
-	if ( !$string )
+	if (!$string) {
 		$string = 0;
+	}
 
-	$string = str_replace( ",", ".", $string );
-	$string = str_replace( " ", " ", $string );
+	$string = str_replace(",", ".", $string);
+	$string = str_replace(" ", " ", $string);
 
-	$string = number_format( $string, $s, '.', ' ' );
+	$string = number_format($string, $s, '.', ' ');
 
 	return $string;
 }
 
 function date2mounthyear($date) {
-	$date = yexplode( "-", $date );
+	$date = yexplode("-", $date);
 
 	return $date[0]."-".$date[1];
 }
 
 function date2array($date) {
-	$date = yexplode( "-", $date );
+	$date = yexplode("-", $date);
 
 	return [
 		$date[0],
@@ -92,12 +98,14 @@ $clientTip       = (array)$_REQUEST['clientTip'];
 $clientTerritory = (array)$_REQUEST['clientTerritory'];
 $clientPath      = (array)$_REQUEST['clientPath'];
 
-$per = getPeriod( 'month' );
+$per = getPeriod('month');
 
-if ( !$da1 )
+if (!$da1) {
 	$da1 = $per[0];
-if ( !$da2 )
+}
+if (!$da2) {
 	$da2 = $per[1];
+}
 
 $user_list   = (array)$_REQUEST['user_list'];
 $fields      = (array)$_REQUEST['field'];
@@ -125,24 +133,24 @@ $color = [
 	'#9E9D24'
 ];
 
-$thisfile = basename( $_SERVER['PHP_SELF'] );
+$thisfile = basename($_SERVER['PHP_SELF']);
 
 //массив пользователей
-$userlist = (!empty( $user_list )) ? $user_list : (array)get_people( $iduser1, "yes" );
+$userlist = ( !empty($user_list) ) ? $user_list : (array)get_people($iduser1, "yes");
 
 //фильтр по типам клиентов
-if ( !empty( $clientTip ) ) {
-	$sort .= " and {$sqlname}clientcat.type IN (".yimplode( ",", $clientTip, "'" ).")";
+if (!empty($clientTip)) {
+	$sort .= " and {$sqlname}clientcat.type IN (".yimplode(",", $clientTip, "'").")";
 }
 
 //фильтр по территории
-if ( !empty( $clientTerritory ) ) {
-	$sort .= " and {$sqlname}clientcat.territory IN (".yimplode( ",", $clientTerritory, "'" ).")";
+if (!empty($clientTerritory)) {
+	$sort .= " and {$sqlname}clientcat.territory IN (".yimplode(",", $clientTerritory, "'").")";
 }
 
 //фильтр по источнику
-if ( !empty( $clientPath ) ) {
-	$sort .= " and {$sqlname}clientcat.clientpath IN (".yimplode( ",", $clientPath, "'" ).")";
+if (!empty($clientPath)) {
+	$sort .= " and {$sqlname}clientcat.clientpath IN (".yimplode(",", $clientPath, "'").")";
 }
 
 //составляем запрос по параметрам сделок
@@ -150,37 +158,39 @@ $ar = [
 	'close',
 	'sid'
 ];
-foreach ( $fields as $i => $field ) {
+foreach ($fields as $i => $field) {
 
-	if ( !in_array( $field, $ar ) && !in_array( $field, [
+	if (
+		!in_array($field, $ar) && !in_array($field, [
 			'close',
 			'mcid'
-		] ) ) {
-		$sort .= " {$sqlname}dogovor.".$field." = '".$field_query[ $i ]."' AND ";
+		])
+	) {
+		$sort .= " {$sqlname}dogovor.".$field." = '".$field_query[$i]."' AND ";
 	}
-	elseif ( $field == 'close' ) {
-		$sort .= $field_query[ $i ] != 'yes' ? " COALESCE({$sqlname}dogovor.{$field}, 'no') != 'yes' AND " : " COALESCE({$sqlname}dogovor.{$field}, 'no') == 'yes' AND ";
+	elseif ($field == 'close') {
+		$sort .= $field_query[$i] != 'yes' ? " COALESCE({$sqlname}dogovor.{$field}, 'no') != 'yes' AND " : " COALESCE({$sqlname}dogovor.{$field}, 'no') == 'yes' AND ";
 	}
-	elseif ( $field == 'mcid' ) {
-		$mc = $field_query[ $i ];
+	elseif ($field == 'mcid') {
+		$mc = $field_query[$i];
 	}
 
 }
 
-$format = ($action == 'export') ? 'excel' : 'date';
+$format = ( $action == 'export' ) ? 'excel' : 'date';
 
 //массив направлений
-$da = $db -> getAll( "SELECT id, title FROM {$sqlname}direction WHERE identity = '$identity'" );
-foreach ( $da as $data ) {
+$da = $db -> getAll("SELECT id, title FROM {$sqlname}direction WHERE identity = '$identity'");
+foreach ($da as $data) {
 
-	$directions1[ $data['id'] ] = $data['title'];
+	$directions1[$data['id']] = $data['title'];
 
 }
 $directions2 = ["0" => "----- ВНЕ НАПРАВЛЕНИЙ -----"];
 
 $directions = $directions1 + $directions2;
 
-if ( $action == "newDogs" ) {
+if ($action == "newDogs") {
 
 	$direction = $_REQUEST['direction'];
 
@@ -220,20 +230,20 @@ if ( $action == "newDogs" ) {
 	WHERE
 		{$sqlname}dogovor.datum between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
 		{$sqlname}dogovor.direction = '".$direction."' and
-		{$sqlname}dogovor.iduser in (".implode( ",", $userlist ).") and
+		{$sqlname}dogovor.iduser in (".implode(",", $userlist).") and
 		{$sqlname}dogovor.identity = '$identity'
 		$sort
 	ORDER BY {$sqlname}dogovor.datum";
 
-	$result = $db -> query( $q );
+	$result = $db -> query($q);
 
-	while ($data = $db -> fetch( $result )) {
+	while ($data = $db -> fetch($result)) {
 
 		$color = '';
 		$icon  = '';
 		$kolf  = '';
 
-		if ( $data['close'] == 'yes' ) {
+		if ($data['close'] == 'yes') {
 			$dfact = $data['dclose'];
 			$icon  = '<i class="icon-lock red"></i>';
 			$kolf  = $data['kolf'];
@@ -244,20 +254,22 @@ if ( $action == "newDogs" ) {
 		}
 
 		//цветовая схема
-		if ( $data['close'] == 'yes' and $data['kolf'] > 0 )
+		if ($data['close'] == 'yes' and $data['kolf'] > 0) {
 			$color = 'greenbg-sub';
-		if ( $data['close'] == 'yes' and $data['kolf'] == 0 )
+		}
+		if ($data['close'] == 'yes' and $data['kolf'] == 0) {
 			$color = 'redbg-sub';
+		}
 
 		//Здоровье сделки. конец.
-		$dogs[ $data['user'] ][] = [
-			"datum"   => dateFormat( $data['dcreate'], $format ),
+		$dogs[$data['user']][] = [
+			"datum"   => dateFormat($data['dcreate'], $format),
 			"did"     => $data['did'],
 			"dogovor" => $data['dogovor'],
 			"tip"     => $data['tips'],
 			"step"    => $data['step'],
-			"dplan"   => dateFormat( $data['dplan'], $format ),
-			"dfact"   => dateFormat( $dfact, $format ),
+			"dplan"   => dateFormat($data['dplan'], $format),
+			"dfact"   => dateFormat($dfact, $format),
 			"client"  => $data['client'],
 			"clid"    => $data['clid'],
 			"summa"   => $data['kol'],
@@ -273,7 +285,7 @@ if ( $action == "newDogs" ) {
 
 	$string = '';
 
-	foreach ( $dogs as $user => $val ) {
+	foreach ($dogs as $user => $val) {
 
 		$string .= '
 			<tr height="35" class="bluebg">
@@ -281,7 +293,7 @@ if ( $action == "newDogs" ) {
 			</tr>
 		';
 
-		foreach ( $val as $k => $v ) {
+		foreach ($val as $k => $v) {
 
 			$string .= '
 			<tr height="40" class="ha">
@@ -291,7 +303,7 @@ if ( $action == "newDogs" ) {
 					<div class="ellipsis"><a href="javascript:void(0)" onclick="openClient(\''.$v['clid'].'\')" title=""><i class="icon-building broun"></i>&nbsp;'.$v['client'].'</a></div>
 				</td>
 				<td>'.$v['step'].'%</td>
-				<td align="right">'.num_format( $v['summa'] ).'</td>
+				<td align="right">'.num_format($v['summa']).'</td>
 				<td></td>
 			</tr>
 			';
@@ -300,12 +312,12 @@ if ( $action == "newDogs" ) {
 
 	}
 
-	if ( count( $dogs ) > 0 )
+	if (count($dogs) > 0) {
 		print '
 	<div class="pad10">
 		<div class="pull-aright fs-14"><i class="icon-cancel-circled gray hand cancel"></i></div>
 		<div class="Bold fs-14 blue margbot5">Новые сделки</div>
-		<div class="margbot5">Направление: <b>'.strtr( $direction, $directions ).'</b></div>
+		<div class="margbot5">Направление: <b>'.strtr($direction, $directions).'</b></div>
 		<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0" class="bgwhite">
 		<thead>
 		<tr>
@@ -320,12 +332,15 @@ if ( $action == "newDogs" ) {
 		</table>
 	</div>
 	';
-	else print '<div class="warning w250">Нет данных</div>';
+	}
+	else {
+		print '<div class="warning w250">Нет данных</div>';
+	}
 
 	exit();
 
 }
-if ( $action == "vistChet" ) {
+if ($action == "vistChet") {
 
 	$direction = $_REQUEST['direction'];
 
@@ -351,15 +366,15 @@ if ( $action == "vistChet" ) {
 	WHERE
 		{$sqlname}credit.datum between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
 		{$sqlname}dogovor.direction = '".$direction."' and
-		{$sqlname}credit.iduser in (".implode( ",", $userlist ).") and
+		{$sqlname}credit.iduser in (".implode(",", $userlist).") and
 		{$sqlname}credit.identity = '$identity'
 		$sort
 	ORDER BY {$sqlname}credit.datum";
 
-	$result = $db -> query( $q );
-	while ($data = $db -> fetch( $result )) {
+	$result = $db -> query($q);
+	while ($data = $db -> fetch($result)) {
 
-		if ( $data['do'] == 'on' ) {
+		if ($data['do'] == 'on') {
 			$icon = '<i class="icon-ok green"></i>';
 		}
 		else {
@@ -367,9 +382,9 @@ if ( $action == "vistChet" ) {
 		}
 
 		//Здоровье сделки. конец.
-		$dogs[ $data['user'] ][] = [
-			"datum"   => dateFormat( $data['datum'], $format ),
-			"dplan"   => dateFormat( $data['dplan'], $format ),
+		$dogs[$data['user']][] = [
+			"datum"   => dateFormat($data['datum'], $format),
+			"dplan"   => dateFormat($data['dplan'], $format),
 			"invoice" => $data['invoice'],
 			"did"     => $data['did'],
 			"dogovor" => $data['dogovor'],
@@ -383,7 +398,7 @@ if ( $action == "vistChet" ) {
 
 	$string = '';
 
-	foreach ( $dogs as $user => $val ) {
+	foreach ($dogs as $user => $val) {
 
 		$string .= '
 			<tr height="35" class="bluebg">
@@ -391,7 +406,7 @@ if ( $action == "vistChet" ) {
 			</tr>
 		';
 
-		foreach ( $val as $k => $v ) {
+		foreach ($val as $k => $v) {
 
 			$string .= '
 			<tr height="35" class="ha">
@@ -399,7 +414,7 @@ if ( $action == "vistChet" ) {
 				<td width="100">'.$v['dplan'].'</td>
 				<td width="100" align="right">'.$v['invoice'].'</td>
 				<td width="30">'.$v['icon'].'</td>
-				<td width="100" align="right">'.num2excelExt( $v['summa'] ).'</td>
+				<td width="100" align="right">'.num2excelExt($v['summa']).'</td>
 				<td width="350">
 					<div class="ellipsis"><a href="javascript:void(0)" onclick="viewDogovor(\''.$v['did'].'\')"><i class="icon-briefcase blue"></i>&nbsp;'.$v['dogovor'].'</a></div><br>
 					<div class="ellipsis"><a href="javascript:void(0)" onclick="openClient(\''.$v['clid'].'\')" title=""><i class="icon-building broun"></i>&nbsp;'.$v['client'].'</a></div>
@@ -412,12 +427,12 @@ if ( $action == "vistChet" ) {
 
 	}
 
-	if ( count( $dogs ) > 0 )
+	if (count($dogs) > 0) {
 		print '
 	<div class="pad10">
 		<div class="pull-aright fs-14"><i class="icon-cancel-circled gray hand cancel"></i></div>
 		<div class="Bold fs-14 blue margbot5">Выставленные счета</div>
-		<div class="margbot5">Направление: <b>'.strtr( $direction, $directions ).'</b></div>
+		<div class="margbot5">Направление: <b>'.strtr($direction, $directions).'</b></div>
 		<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0" class="bgwhite">
 		<thead>
 		<tr>
@@ -434,12 +449,15 @@ if ( $action == "vistChet" ) {
 		</table>
 	</div>
 	';
-	else print '<div class="warning w250">Нет данных</div>';
+	}
+	else {
+		print '<div class="warning w250">Нет данных</div>';
+	}
 
 	exit();
 
 }
-if ( $action == "doInvoice" ) {
+if ($action == "doInvoice") {
 
 	$direction = $_REQUEST['direction'];
 
@@ -465,15 +483,15 @@ if ( $action == "doInvoice" ) {
 	WHERE
 		{$sqlname}credit.invoice_date between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
 		{$sqlname}dogovor.direction = '".$direction."' and
-		{$sqlname}credit.iduser in (".implode( ",", $userlist ).") and
+		{$sqlname}credit.iduser in (".implode(",", $userlist).") and
 		{$sqlname}credit.identity = '$identity'
 		$sort
 	ORDER BY {$sqlname}credit.invoice_date";
 
-	$result = $db -> query( $q );
-	while ($data = $db -> fetch( $result )) {
+	$result = $db -> query($q);
+	while ($data = $db -> fetch($result)) {
 
-		if ( $data['do'] == 'on' ) {
+		if ($data['do'] == 'on') {
 			$icon = '<i class="icon-ok green"></i>';
 		}
 		else {
@@ -481,9 +499,9 @@ if ( $action == "doInvoice" ) {
 		}
 
 		//Здоровье сделки. конец.
-		$dogs[ $data['user'] ][] = [
-			"datum"   => dateFormat( $data['datum'], $format ),
-			"dplan"   => dateFormat( $data['dplan'], $format ),
+		$dogs[$data['user']][] = [
+			"datum"   => dateFormat($data['datum'], $format),
+			"dplan"   => dateFormat($data['dplan'], $format),
 			"invoice" => $data['invoice'],
 			"did"     => $data['did'],
 			"dogovor" => $data['dogovor'],
@@ -497,7 +515,7 @@ if ( $action == "doInvoice" ) {
 
 	$string = '';
 
-	foreach ( $dogs as $user => $val ) {
+	foreach ($dogs as $user => $val) {
 
 		$string .= '
 			<tr height="35" class="bluebg">
@@ -505,7 +523,7 @@ if ( $action == "doInvoice" ) {
 			</tr>
 		';
 
-		foreach ( $val as $k => $v ) {
+		foreach ($val as $k => $v) {
 
 			$string .= '
 			<tr height="35" class="ha">
@@ -513,7 +531,7 @@ if ( $action == "doInvoice" ) {
 				<td width="100">'.$v['dplan'].'</td>
 				<td width="100" align="right">'.$v['invoice'].'</td>
 				<td width="30">'.$v['icon'].'</td>
-				<td width="100" align="right">'.num2excelExt( $v['summa'] ).'</td>
+				<td width="100" align="right">'.num2excelExt($v['summa']).'</td>
 				<td width="350">
 					<div class="ellipsis"><a href="javascript:void(0)" onclick="viewDogovor(\''.$v['did'].'\')"><i class="icon-briefcase blue"></i>&nbsp;'.$v['dogovor'].'</a></div><br>
 					<div class="ellipsis"><a href="javascript:void(0)" onclick="openClient(\''.$v['clid'].'\')" title=""><i class="icon-building broun"></i>&nbsp;'.$v['client'].'</a></div>
@@ -526,12 +544,12 @@ if ( $action == "doInvoice" ) {
 
 	}
 
-	if ( count( $dogs ) > 0 )
+	if (count($dogs) > 0) {
 		print '
 	<div class="pad10">
 		<div class="pull-aright fs-14"><i class="icon-cancel-circled gray hand cancel"></i></div>
 		<div class="Bold fs-14 blue margbot5">Оплаченные счета</div>
-		<div class="margbot5">Направление: <b>'.strtr( $direction, $directions ).'</b></div>
+		<div class="margbot5">Направление: <b>'.strtr($direction, $directions).'</b></div>
 		<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0" class="bgwhite">
 		<thead>
 		<tr>
@@ -548,17 +566,20 @@ if ( $action == "doInvoice" ) {
 		</table>
 	</div>
 	';
-	else print '<div class="warning w250">Нет данных</div>';
+	}
+	else {
+		print '<div class="warning w250">Нет данных</div>';
+	}
 
 	exit();
 
 }
-if ( $action == "" ) {
+if ($action == "") {
 
 	$dogs = $total = [];
 
 	//все сделки (оставила фильтр по дате и по сотруднику)
-	$vseDogs = $db -> getRow( "
+	$vseDogs = $db -> getRow("
 			SELECT 
 				COUNT(*) as count
 			FROM {$sqlname}dogovor 
@@ -568,13 +589,13 @@ if ( $action == "" ) {
 			WHERE 
 				{$sqlname}dogovor.did > 0 and 
 				{$sqlname}dogovor.datum between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
-				{$sqlname}dogovor.iduser in (".implode( ",", $userlist ).") and 
+				{$sqlname}dogovor.iduser in (".implode(",", $userlist).") and 
 				{$sqlname}dogovor.identity = '$identity'
 				$sort
-			" );
+			");
 
 	//формирование данных
-	foreach ( $directions as $key => $val ) {
+	foreach ($directions as $key => $val) {
 
 		//прибыль
 		$q = "
@@ -591,24 +612,24 @@ if ( $action == "" ) {
 		WHERE 
 			{$sqlname}credit.do = 'on' and 
 			{$sqlname}credit.invoice_date between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
-			{$sqlname}dogovor.iduser in (".implode( ",", $userlist ).") and 
+			{$sqlname}dogovor.iduser in (".implode(",", $userlist).") and 
 			{$sqlname}dogovor.direction = '".$key."' and 
 			{$sqlname}credit.identity = '$identity'
 			$sort
 		";
 
-		$result = $db -> query( $q );
-		while ($da = $db -> fetch( $result )) {
+		$result = $db -> query($q);
+		while ($da = $db -> fetch($result)) {
 
 			//% оплаченной суммы от суммы по договору
-			$dolya                  = ($da['summa'] > 0) ? $da['marga'] / $da['summa'] : 0;
-			$dogs[ $key ]['pribil'] += $da['credit'] * $dolya;
+			$dolya                = ( $da['summa'] > 0 ) ? $da['marga'] / $da['summa'] : 0;
+			$dogs[$key]['pribil'] += $da['credit'] * $dolya;
 
 		}
 
 		//Оплачено счетов (сумма и кол-во)
 		// Ср. прибыль = Прибыль / кол-во ОП
-		$data = $db -> getRow( "
+		$data = $db -> getRow("
 		SELECT 
 			COUNT(*) as count, 
 			SUM({$sqlname}credit.summa_credit) as summa 
@@ -620,18 +641,18 @@ if ( $action == "" ) {
 		WHERE 
 			{$sqlname}credit.did > 0 and 
 			{$sqlname}credit.do = 'on' and 
-			{$sqlname}credit.invoice_date between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
-			{$sqlname}credit.iduser in (".implode( ",", $userlist ).") and 
-			{$sqlname}credit.did IN (SELECT did FROM {$sqlname}dogovor WHERE direction = '".$key."' and identity = '$identity') and 
+			{$sqlname}credit.invoice_date between '$da1 00:00:00' and '$da2 23:59:59' and
+			{$sqlname}credit.iduser in (".implode(",", $userlist).") and 
+			{$sqlname}credit.did IN (SELECT did FROM {$sqlname}dogovor WHERE direction = '$key' and identity = '$identity') and 
 			{$sqlname}credit.identity = '$identity'
 			$sort
-		" );
+		");
 
-		$dogs[ $key ]['doInvoice']      = $data['count'];
-		$dogs[ $key ]['doInvoiceSumma'] = $data['summa'];
+		$dogs[$key]['doInvoice']      = $data['count'];
+		$dogs[$key]['doInvoiceSumma'] = $data['summa'];
 
 		//новые сделки
-		$data                    = $db -> getRow( "
+		$data                  = $db -> getRow("
 			SELECT 
 				COUNT(*) as count
 			FROM {$sqlname}dogovor 
@@ -640,27 +661,27 @@ if ( $action == "" ) {
 				LEFT JOIN {$sqlname}territory_cat ON {$sqlname}territory_cat.idcategory = {$sqlname}clientcat.territory
 			WHERE 
 				{$sqlname}dogovor.did > 0 and 
-				{$sqlname}dogovor.datum between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
-				{$sqlname}dogovor.iduser in (".implode( ",", $userlist ).") and 
-				{$sqlname}dogovor.direction = '".$key."' and 
+				{$sqlname}dogovor.datum between '$da1 00:00:00' and '$da2 23:59:59' and
+				{$sqlname}dogovor.iduser in (".implode(",", $userlist).") and 
+				{$sqlname}dogovor.direction = '$key' and 
 				{$sqlname}dogovor.identity = '$identity'
 				$sort
-			" );
-		$dogs[ $key ]['newDogs'] = $data['count'];
+			");
+		$dogs[$key]['newDogs'] = $data['count'];
 
 		//% - процент созданных сделок от общего числа
-		$dogs[ $key ]['prozDogs'] = $vseDogs['count'] > 0 ? ($dogs[ $key ]['newDogs'] * 100) / $vseDogs['count'] : 0;
+		$dogs[$key]['prozDogs'] = $vseDogs['count'] > 0 ? ( $dogs[$key]['newDogs'] * 100 ) / $vseDogs['count'] : 0;
 
 		//Конверсия - ОП / НС
-		$dogs[ $key ]['konversia'] = $dogs[ $key ]['newDogs'] > 0 ? $dogs[ $key ]['doInvoice'] / $dogs[ $key ]['newDogs'] : 0;
+		$dogs[$key]['konversia'] = $dogs[$key]['newDogs'] > 0 ? $dogs[$key]['doInvoice'] / $dogs[$key]['newDogs'] : 0;
 
 		//средний чек
-		$dogs[ $key ]['ratio'] = $dogs[ $key ]['newDogs'] > 0 ? $dogs[ $key ]['doInvoice'] / $dogs[ $key ]['newDogs'] : 0;
+		$dogs[$key]['ratio'] = $dogs[$key]['newDogs'] > 0 ? $dogs[$key]['doInvoice'] / $dogs[$key]['newDogs'] : 0;
 
 		//Выставлено счетов (сумма и кол-во)
 		//Ср. чек = оборот в оплаченных счетах / ОП (кол-во оплаченные счета)
 
-		$data = $db -> getRow( "
+		$data = $db -> getRow("
 		SELECT 
 			COUNT(*) as count, 
 			SUM({$sqlname}credit.summa_credit) as summa 
@@ -671,16 +692,16 @@ if ( $action == "" ) {
 			LEFT JOIN {$sqlname}dogovor ON {$sqlname}dogovor.did = {$sqlname}credit.did
 		WHERE 
 			{$sqlname}credit.did > 0 and 
-			{$sqlname}credit.datum between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
-			{$sqlname}credit.iduser in (".implode( ",", $userlist ).") and 
-			{$sqlname}credit.did IN (SELECT did FROM {$sqlname}dogovor WHERE direction = '".$key."' and identity = '$identity') and 
+			{$sqlname}credit.datum between '$da1 00:00:00' and '$da2 23:59:59' and
+			{$sqlname}credit.iduser in (".implode(",", $userlist).") and 
+			{$sqlname}credit.did IN (SELECT did FROM {$sqlname}dogovor WHERE direction = '$key' and identity = '$identity') and 
 			{$sqlname}credit.identity = '$identity'
 			$sort
-		" );
+		");
 
-		$dogs[ $key ]['vistChetSumma'] = $data['summa'];
-		$dogs[ $key ]['vistChet']      = $data['count'];
-		$dogs[ $key ]['oborot']        = $dogs[ $key ]['doInvoice'] > 0 ? $dogs[ $key ]['doInvoiceSumma'] / $dogs[ $key ]['doInvoice'] : 0;
+		$dogs[$key]['vistChetSumma'] = $data['summa'];
+		$dogs[$key]['vistChet']      = $data['count'];
+		$dogs[$key]['oborot']        = $dogs[$key]['doInvoice'] > 0 ? $dogs[$key]['doInvoiceSumma'] / $dogs[$key]['doInvoice'] : 0;
 
 	}
 	?>
@@ -695,14 +716,13 @@ if ( $action == "" ) {
 	<div class="noprint">
 
 		<hr>
-
 		<div class="pad5 mt20 gray2 Bold">Фильтры по клиентам:</div>
 		<!--дополнителный фильтры-->
 		<table width="100%" border="0" cellspacing="0" cellpadding="5" class="noborder">
 			<tr>
 				<td width="20%">
 					<div class="ydropDown">
-						<span>По Типу клиента</span><span class="ydropCount"><?= count( $clientTip ) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+						<span>По Типу клиента</span><span class="ydropCount"><?= count($clientTip) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 						<div class="yselectBox" style="max-height: 300px;">
 
 							<div class="right-text">
@@ -715,36 +735,46 @@ if ( $action == "" ) {
 
 							<div class="ydropString ellipsis">
 								<label>
-									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="client" <?php if ( in_array( "client", $clientTip ) )
-										print 'checked'; ?>>&nbsp;Клиент: юр.лицо
+									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="client" <?php
+									if (in_array("client", $clientTip)) {
+										print 'checked';
+									} ?>>&nbsp;Клиент: юр.лицо
 								</label>
 							</div>
 
 							<div class="ydropString ellipsis">
 								<label>
-									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="person" <?php if ( in_array( "person", $clientTip ) )
-										print 'checked'; ?>>&nbsp;Клиент: физ.лицо
+									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="person" <?php
+									if (in_array("person", $clientTip)) {
+										print 'checked';
+									} ?>>&nbsp;Клиент: физ.лицо
 								</label>
 							</div>
 
 							<div class="ydropString ellipsis">
 								<label>
-									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="partner" <?php if ( in_array( "partner", $clientTip ) )
-										print 'checked'; ?>>&nbsp;Партнер
+									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="partner" <?php
+									if (in_array("partner", $clientTip)) {
+										print 'checked';
+									} ?>>&nbsp;Партнер
 								</label>
 							</div>
 
 							<div class="ydropString ellipsis">
 								<label>
-									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="contractor" <?php if ( in_array( "contractor", $clientTip ) )
-										print 'checked'; ?>>&nbsp;Поставщик
+									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="contractor" <?php
+									if (in_array("contractor", $clientTip)) {
+										print 'checked';
+									} ?>>&nbsp;Поставщик
 								</label>
 							</div>
 
 							<div class="ydropString ellipsis">
 								<label>
-									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="concurent" <?php if ( in_array( "concurent", $clientTip ) )
-										print 'checked'; ?>>&nbsp;Конкурент
+									<input class="taskss" name="clientTip[]" type="checkbox" id="clientTip[]" value="concurent" <?php
+									if (in_array("concurent", $clientTip)) {
+										print 'checked';
+									} ?>>&nbsp;Конкурент
 								</label>
 							</div>
 
@@ -753,7 +783,7 @@ if ( $action == "" ) {
 				</td>
 				<td width="20%">
 					<div class="ydropDown">
-						<span>По Территории</span><span class="ydropCount"><?= count( $clientTerritory ) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+						<span>По Территории</span><span class="ydropCount"><?= count($clientTerritory) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 						<div class="yselectBox" style="max-height: 300px;">
 							<div class="right-text">
 								<div class="ySelectAll w0 inline" title="Выделить всё"><i class="icon-plus-circled"></i>Всё
@@ -763,22 +793,25 @@ if ( $action == "" ) {
 								</div>
 							</div>
 							<?php
-							$result = $db -> getAll( "SELECT * FROM {$sqlname}territory_cat WHERE identity = '$identity' ORDER BY title" );
-							foreach ( $result as $data ) {
+							$result = $db -> getAll("SELECT * FROM {$sqlname}territory_cat WHERE identity = '$identity' ORDER BY title");
+							foreach ($result as $data) {
 								?>
 								<div class="ydropString ellipsis">
 									<label>
-										<input class="taskss" name="clientTerritory[]" type="checkbox" id="clientTerritory[]" value="<?= $data['idcategory'] ?>" <?php if ( in_array( $data['idcategory'], $clientTerritory ) )
-											print 'checked'; ?>>&nbsp;<?= $data['title'] ?>
+										<input class="taskss" name="clientTerritory[]" type="checkbox" id="clientTerritory[]" value="<?= $data['idcategory'] ?>" <?php
+										if (in_array($data['idcategory'], $clientTerritory)) {
+											print 'checked';
+										} ?>>&nbsp;<?= $data['title'] ?>
 									</label>
 								</div>
-							<?php } ?>
+							<?php
+							} ?>
 						</div>
 					</div>
 				</td>
 				<td width="20%">
 					<div class="ydropDown">
-						<span>По Источнику</span><span class="ydropCount"><?= count( $clientPath ) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+						<span>По Источнику</span><span class="ydropCount"><?= count($clientPath) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 						<div class="yselectBox" style="max-height: 300px;">
 							<div class="right-text">
 								<div class="ySelectAll w0 inline" title="Выделить всё"><i class="icon-plus-circled"></i>Всё
@@ -788,16 +821,19 @@ if ( $action == "" ) {
 								</div>
 							</div>
 							<?php
-							$result = $db -> getAll( "SELECT * FROM {$sqlname}clientpath WHERE identity = '$identity' ORDER BY name" );
-							foreach ( $result as $data ) {
+							$result = $db -> getAll("SELECT * FROM {$sqlname}clientpath WHERE identity = '$identity' ORDER BY name");
+							foreach ($result as $data) {
 								?>
 								<div class="ydropString ellipsis">
 									<label>
-										<input class="taskss" name="clientPath[]" type="checkbox" id="clientPath[]" value="<?= $data['id'] ?>" <?php if ( in_array( $data['id'], $clientPath ) )
-											print 'checked'; ?>>&nbsp;<?= $data['name'] ?>
+										<input class="taskss" name="clientPath[]" type="checkbox" id="clientPath[]" value="<?= $data['id'] ?>" <?php
+										if (in_array($data['id'], $clientPath)) {
+											print 'checked';
+										} ?>>&nbsp;<?= $data['name'] ?>
 									</label>
 								</div>
-							<?php } ?>
+							<?php
+							} ?>
 						</div>
 					</div>
 				</td>
@@ -805,8 +841,7 @@ if ( $action == "" ) {
 			</tr>
 		</table>
 
-	</div>
-	<br>
+	</div><br>
 	<table id="table" class="sortable">
 		<thead>
 		<tr height="45">
@@ -832,23 +867,23 @@ if ( $action == "" ) {
 		function cmp($a, $b) {
 			return $b['pribil'] > $a['pribil'];
 		}
+		uasort($dogs, 'cmp');
 
-		uasort( $dogs, 'cmp' );
 		$i = 0;
-		foreach ( $dogs as $key => $val ) {
+		foreach ($dogs as $key => $val) {
 			?>
 			<tr height="45" class="ha" data-dir="<?= $key ?>">
-				<td><span><?= strtr( $key, $directions ) ?></span></td>
+				<td><span><?= strtr($key, $directions) ?></span></td>
 				<?php
 				print '
-				<td align="center">'.number_format( $val['pribil'], 2, ',', '' ).'</td>
-				<td align="center">'.($val['doInvoice'] > 0 ? number_format( $val['pribil'] / $val['doInvoice'], 2, ',', '' ) : 0).'</td>
-				<td align="center">'.number_format( $val['prozDogs'], 0, ',', '' ).'</td>
-				<td align="center">'.number_format( $val['konversia'], 2, ',', '' ).'</td>
+				<td align="center">'.number_format($val['pribil'], 2, ',', '').'</td>
+				<td align="center">'.( $val['doInvoice'] > 0 ? number_format($val['pribil'] / $val['doInvoice'], 2, ',', '') : 0 ).'</td>
+				<td align="center">'.number_format($val['prozDogs'], 0, ',', '').'</td>
+				<td align="center">'.number_format($val['konversia'], 2, ',', '').'</td>
 				<td align="center" title ="Загрузить список" onclick="showData(\''.$key.'\',\'newDogs\')">'.$val['newDogs'].'</td>
 				<td align="center" onclick="showData(\''.$key.'\',\'vistChet\')" title ="Загрузить список">'.$val['vistChet'].'</td>
 				<td align="center" onclick="showData(\''.$key.'\',\'doInvoice\')" title ="Загрузить список">'.$val['doInvoice'].'</td>
-				<td align="center">'.number_format( $val['oborot'], 2, ',', '' ).'</td>
+				<td align="center">'.number_format($val['oborot'], 2, ',', '').'</td>
 				
 				';
 				$total['pribil']         += $val['pribil'];
@@ -862,8 +897,9 @@ if ( $action == "" ) {
 			</tr>
 			<?php
 			$i++;
-			if ( $i > count( $color ) )
+			if ($i > count($color)) {
 				$i = 0;
+			}
 		}
 		?>
 		</tbody>
@@ -874,16 +910,15 @@ if ( $action == "" ) {
 			</td>
 			<?php
 			print '
-			<td align="center">'.number_format( $total['pribil'], 2, ',', '' ).'</td>
-			<td align="center">'.number_format( $total['pribil'] / $total['doInvoice'], 2, ',', '' ).'</td>
+			<td align="center">'.number_format($total['pribil'], 2, ',', '').'</td>
+			<td align="center">'.( $total['doInvoice'] > 0 ? number_format($total['pribil'] / $total['doInvoice'], 2, ',', '') : '0' ).'</td>
 			<td align="center">'.$total['prozDogs'].'</td>
-			<td align="center">'.number_format( $total['doInvoice'] / $total['newDogs'], 2, ',', '' ).'</td>
+			<td align="center">'.( $total['newDogs'] > 0 ? number_format($total['doInvoice'] / $total['newDogs'], 2, ',', '') : '0' ).'</td>
 			<td align="center">'.$total['newDogs'].'</td>
 			<td align="center">'.$total['vistChet'].'</td>
 			<td align="center">'.$total['doInvoice'].'</td>
-			<td align="center">'.number_format( $total['doInvoiceSumma'] / $total['doInvoice'], 2, ',', '' ).'</td>
-			
-		';
+			<td align="center">'.( $total['doInvoice'] > 0 ? number_format($total['doInvoiceSumma'] / $total['doInvoice'], 2, ',', '') : '0' ).'</td>
+			';
 			?>
 		</tr>
 		</tfoot>
@@ -910,9 +945,11 @@ if ( $action == "" ) {
 				$('#datas').html('<hr>' + data);
 				$(".nano").nanoScroller();
 
-				$('.cancel').bind('click', function () {
-					$('#datas').empty();
-				});
+				$('.cancel')
+					.off('click')
+					.on('click', function () {
+						$('#datas').empty();
+					});
 
 			});
 
@@ -932,4 +969,5 @@ if ( $action == "" ) {
 		sorter.limitid = "pagelimit";
 		sorter.init("table", 1);
 	</script>
-<?php } ?>
+<?php
+} ?>
