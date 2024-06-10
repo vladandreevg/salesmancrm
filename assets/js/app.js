@@ -135,7 +135,7 @@ var $elcenter = $('.ui-layout-center');
 var $elwest = $('.ui-layout-west');
 var $eleast = $('.ui-layout-east');
 var $elnorth = $('.ui-layout-north');
-const $edialog = $('#dialog');
+let $edialog = $('#dialog');
 
 /**
  * Окошко телефонии
@@ -184,7 +184,7 @@ var calendarMonth = {
 };
 
 // блокировка ошибок
-window.onerror = blockError;
+//window.onerror = blockError;
 
 /**
  * Подключение js-файла
@@ -1108,15 +1108,16 @@ $(window).on('resize', function () {
 		$(this).trigger('resizeEnd');
 	}, 500);
 
-	if ($edialog.is(':visible')) {
+	if ($('#dialog').is(':visible')) {
 		
-		$edialog.center();
+		$('#dialog').center();
 		$('.dialog-preloader').center();
 		$('#dialog_container').css('height', $(window).height());
 
 	}
 
 	$('.ui-layout-north').css("position", "absolute");
+	
 
 });
 $(window).on('resizeEnd', function () {
@@ -1166,6 +1167,9 @@ $(window).on('resizeEnd', function () {
 
 	}
 
+});
+$(window).on('resizeend', 250, function() {
+	$('#dialog').center();
 });
 $(window).load(function () {
 
@@ -2399,6 +2403,8 @@ $.fn.center = function () {
 	//if ($(window).width() > 760) {
 
 	this.css("position", "absolute");
+	
+	//console.log('center');
 
 	if (!isMobile || $(window).width() > 500) {
 

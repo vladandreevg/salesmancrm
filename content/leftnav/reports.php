@@ -79,6 +79,11 @@ $sort = get_people( $iduser1 );
 					<i class="icon-user-1 gray"></i>&nbsp;<b>Сотрудники</b>&nbsp;<i class="icon-angle-up pull-aright" id="mapic"></i>
 				</div>
 
+				<div class="infodiv flex-container wp100 box--child fs-09 mt5">
+					<div class="flex-string wp50 hand" onclick="userSelectAll('activeusersbox')"><i class="icon-buffer"></i>Всё</div>
+					<div class="flex-string wp50 hand text-right" onclick="userUnSelect('activeusersbox')"><i class="icon-th"></i>Ничего</div>
+				</div>
+
 				<div id="filteru" data-step="6" data-intro="<h1>Сотрудники.</h1>Выбор конкретных сотрудников для анализа" data-position="right">
 
 					<DIV class="row margtop10 margleft5" id="param_user1">
@@ -91,7 +96,7 @@ $sort = get_people( $iduser1 );
 
 							if ( !in_array( $d['id'], $u ) ) {
 
-								if ( $d['secrty'] == 'yes' )
+								if ( $d['secrty'] == 'yes' ) {
 									$usersActivee .= '
 									<label class="flex-container fs-10 ha box--child wp100 p3">
 										<div class="flex-string wp10">
@@ -101,7 +106,9 @@ $sort = get_people( $iduser1 );
 											<div class="ellipsis">'.$d['title'].'</div>
 										</div>
 									</label>';
-								else $usersUnActivee .= '
+								}
+								else {
+									$usersUnActivee .= '
 									<label class="flex-container fs-10 ha box--child wp100 p3">
 										<div class="flex-string wp10">
 											<input name="user_list[]" type="checkbox" id="user_list[]" value="'.$d['id'].'">
@@ -110,6 +117,7 @@ $sort = get_people( $iduser1 );
 											<div class="ellipsis">'.$d['title'].'</div>
 										</div>
 									</label>';
+								}
 
 							}
 
@@ -117,7 +125,7 @@ $sort = get_people( $iduser1 );
 
 						}
 
-						print $usersActivee;//."<hr>".$usersUnActivee;
+						print '<div id="activeusersbox" class="wp100">'.$usersActivee.'</div>';
 
 						if ( $usersUnActivee != '' ) {
 							?>
@@ -130,11 +138,8 @@ $sort = get_people( $iduser1 );
 							<div id="unactiveusersbox" class="hidden wp100">
 
 								<div class="infodiv flex-container wp100 box--child fs-09 mt5">
-									<div class="flex-string wp50 hand" onclick="userSelectAll()">
-										<i class="icon-buffer"></i>Всё
-									</div>
-									<div class="flex-string wp50 hand" onclick="userUnSelect()"><i class="icon-th"></i>Ничего
-									</div>
+									<div class="flex-string wp50 hand" onclick="userSelectAll('unactiveusersbox')"><i class="icon-buffer"></i>Всё</div>
+									<div class="flex-string wp50 hand text-right" onclick="userUnSelect('unactiveusersbox')"><i class="icon-th"></i>Ничего</div>
 								</div>
 
 								<?= $usersUnActivee ?>

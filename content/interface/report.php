@@ -634,16 +634,16 @@ if ( $acs_analitics != 'on' ) {
 			})
 	});
 
-	function userSelectAll(){
+	function userSelectAll(box){
 
-		var $elm = $('#unactiveusersbox');
+		var $elm = $('#'+box);
 
 		$elm.find('input[type=checkbox]').prop('checked', true);
 
 	}
-	function userUnSelect(){
+	function userUnSelect(box){
 
-		var $elm = $('#unactiveusersbox');
+		var $elm = $('#'+box);
 
 		$elm.find('input[type=checkbox]').prop('checked', false);
 

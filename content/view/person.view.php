@@ -13,7 +13,7 @@ error_reporting( E_ERROR );
 
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -27,7 +27,10 @@ $thisfile = basename( __FILE__ );
 $pid    = (int)$_REQUEST['pid'];
 $action = $_REQUEST['action'];
 
-if ( $acs_prava != 'on' && get_accesse( (int)$clid, (int)$pid, (int)$did ) != 'yes' ) {
+// Проверка на доступность редактирования
+$isAccess = get_accesse($clid, $pid) == "yes" || $isadmin == 'on';
+
+if ( $acs_prava != 'on' && !$isAccess ) {
 
 	print '<div class="zagolovok">Запрет просмотра</div>
 	<div class="warning">
@@ -93,7 +96,8 @@ if ( $data['loyalty'] != '' ) {
 			foreach ($phones as $phone) {
 
 				$ismob        = isPhoneMobile( $phone ) ? 'ismob' : '';
-				$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</span>';
+				//$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</span>';
+				$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$data['pid'].'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 			}
 			$phone = implode( ", ", $phone_list );
@@ -111,7 +115,8 @@ if ( $data['loyalty'] != '' ) {
 			foreach ($phones as $phone) {
 
 				$ismob        = isPhoneMobile( $phone ) ? 'ismob' : '';
-				$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</span>';
+				//$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</span>';
+				$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$data['pid'].'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 			}
 			$mob = implode( ", ", $phone_list );
@@ -129,7 +134,8 @@ if ( $data['loyalty'] != '' ) {
 			foreach ($phones as $phone) {
 
 				$ismob        = isPhoneMobile( $phone ) ? 'ismob' : '';
-				$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</span>';
+				//$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</span>';
+				$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$data['pid'].'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 			}
 			$fax = implode( ", ", $phone_list );
@@ -153,7 +159,8 @@ if ( $data['loyalty'] != '' ) {
 		<?php
 		foreach ($emails as $email) {
 			$apx = $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onClick="$mailer.composeCard(\''.$clid.'\',\''.$pid.'\',\''.trim( $email[ $j ] ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : '';
-			print link_it( $email ).$apx;
+			//print link_it( $email ).$apx;
+			print (( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? link_it( $email ) : hideEmail($email)).$apx;
 		}
 		?>
 		</span>

@@ -15,7 +15,7 @@ use Salesman\Deal;
 error_reporting( E_ERROR );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -29,7 +29,10 @@ $thisfile = basename( __FILE__ );
 $did    = $_REQUEST['did'];
 $action = $_REQUEST['action'];
 
-if ( $acs_prava != 'on' && get_accesse( 0, 0, (int)$did ) != 'yes' ) {
+// Проверка на доступность редактирования
+$isAccess = get_accesse(0, 0, $did) == "yes" || $isadmin == 'on';
+
+if ( $acs_prava != 'on' && !$isAccess ) {
 	print '<div class="zagolovok">Запрет просмотра</div>
 	<div class="warning">
 		<span><i class="icon-attention red icon-5x pull-left"></i></span>
@@ -402,7 +405,7 @@ $dogcontent = $deal['step']['stepname'];
 							foreach ($phones as $phone) {
 
 								$ismob        = isPhoneMobile( $phone ) ? 'ismob' : '';
-								$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$da['pid'].'" data-clid="'.$da['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $deal['client']['clid'], $da['pid'] ).'</span>';
+								$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$da['pid'].'" data-clid="'.$da['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $deal['client']['clid'], $da['pid'] ).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 							}
 							$phone = implode( ", ", $phone_list );
@@ -416,7 +419,7 @@ $dogcontent = $deal['step']['stepname'];
 							foreach ($phones as $phone) {
 
 								$ismob        = isPhoneMobile( $phone ) ? 'ismob' : '';
-								$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$da['pid'].'" data-clid="'.$da['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $deal['client']['clid'], $da['pid'] ).'</span>';
+								$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$da['pid'].'" data-clid="'.$da['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $deal['client']['clid'], $da['pid'] ).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 							}
 							$fax = implode( ", ", $phone_list );
@@ -430,7 +433,7 @@ $dogcontent = $deal['step']['stepname'];
 							foreach ($phones as $phone) {
 
 								$ismob        = isPhoneMobile( $phone ) ? 'ismob' : '';
-								$phone_list[] = '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$da['pid'].'" data-clid="'.$da['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $deal['client']['clid'], $da['pid'] ).'</span>';
+								$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.$ismob.'" data-pid="'.$da['pid'].'" data-clid="'.$da['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $deal['client']['clid'], $da['pid'] ).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 							}
 							$mob = implode( ", ", $phone_list );
@@ -439,11 +442,12 @@ $dogcontent = $deal['step']['stepname'];
 						}
 						if ( $da['email'] != "" ) {
 
-							$ems = yexplode( ",", $da['email'] );
-							foreach ($ems as $em) {
+							$emails = yexplode( ",", $da['email'] );
+							foreach ($email as $xemail) {
 
-								$apx = $ymEnable && $em != '' ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\'\',\''.$da['pid'].'\',\''.trim( $em ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : '';
-								print '<div>'.link_it( $em ).$apx.'</div>';
+								$apx = $ymEnable && $xemail != '' ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\'\',\''.$da['pid'].'\',\''.trim( $xemail ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : '';
+								//print '<div>'.link_it( $email ).$apx.'</div>';
+								print (( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? link_it( $xemail ) : hideEmail($xemail)).$apx;
 
 							}
 

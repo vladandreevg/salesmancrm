@@ -532,18 +532,18 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 
 				<div class="flex-string wp100 gray2 mb5 fs-07 uppercase">Заказчик</div>
 				<div class="flex-string wp100">
-
 					<a href="javascript:void(0)" onclick="openPerson('<?= $data['pid'] ?>')" title="Открыть карточку" class="dright"><i class="icon-link-1 blue"></i></a>
 					<?php if ( get_accesse( 0, (int)$data['pid'] ) == "yes" && $tipuser != 'Поддержка продаж' ) { ?>
 						<a href="javascript:void(0)" onclick="editPerson('<?= $data['pid'] ?>','edit')" title="Редактировать" class="dright gray"><i class="icon-pencil blue"></i></a>
 					<?php } ?>
-					<div class="togglerbox hand inline Bold blue" data-id="clientContact"><?= current_person( $data['pid'] ) ?>&nbsp;<i class="icon-angle-down" id="mapic"></i>
-					</div>&nbsp;
+					<div class="togglerbox hand inline Bold blue" data-id="clientContact"><?= current_person( $data['pid'] ) ?>&nbsp;<i class="icon-angle-down" id="mapic"></i></div>&nbsp;
 					<a href="javascript:void(0)" onclick="viewPerson('<?= $data['pid'] ?>')" title="Просмотр"><i class="icon-info-circled blue"></i></a>
 				</div>
 				<div class="flex-string wp100 hidden" id="clientContact" data-block="person" data-id="<?= $data['pid'] ?>">
 
 					<?php
+					if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
+
 					$info = get_person_info( $data['pid'], 'yes' );
 
 					$phone_list = [];
@@ -584,6 +584,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 							</li>
 						<?php } ?>
 					</ul>
+					<?php } ?>
 
 				</div>
 
@@ -610,6 +611,8 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 				<div class="flex-string wp100 hidden" id="clientContact" data-block="client" data-id="<?= $data['clid'] ?>">
 
 					<?php
+					if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
+
 					$info = Salesman\Client ::info( (int)$data['clid'] );
 
 					$phone_list = [];
@@ -654,6 +657,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 							</li>
 						<?php } ?>
 					</ul>
+					<?php } ?>
 
 				</div>
 
@@ -682,6 +686,8 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 				<div class="flex-string wp100 hidden" id="payerContact" data-block="payer" data-id="<?= $data['payer'] ?>">
 
 					<?php
+					if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
+
 					$info = Client ::info( (int)$data['payer'] );
 
 					$phone_list = [];
@@ -723,6 +729,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 							<span><i class="icon-location blue"></i>&nbsp;<a href="//maps.google.ru/maps?hl=ru&tab=wl&q=<?= $info['client']['address'] ?>" target="_blank"><?= $info['client']['address'] ?></a></span>
 							</li><?php } ?>
 					</ul>
+					<?php } ?>
 
 				</div>
 
@@ -745,9 +752,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 					<div class="flex-string wp100 mt10">
 
 						<a href="javascript:void(0)" onclick="openPerson('<?= $pid ?>')" title="Открыть карточку" class="dright"><i class="icon-link-1 blue"></i></a>
-
 						<a href="javascript:void(0)" onclick="viewPerson('<?= $pid ?>')" class="dright" title="Просмотр"><i class="icon-info-circled blue"></i>&nbsp;&nbsp;</a>
-
 						<?php
 						if ( get_accesse( 0, (int)$pid ) == "yes" && $tipuser != 'Поддержка продаж' ) {
 							?>
@@ -762,6 +767,9 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 					</div>
 					<div class="flex-string wp100 hidden" id="personContacts<?= $pid ?>" data-block="person" data-id="<?= $pid ?>">
 						<?php
+						if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
+
+
 						$info = get_person_info( (int)$pid, 'yes' );
 
 						$phone_list = [];
@@ -803,6 +811,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 								</li>
 							<?php } ?>
 						</ul>
+						<?php } ?>
 					</div>
 				<?php } ?>
 

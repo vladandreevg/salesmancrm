@@ -422,6 +422,9 @@ if ($action == "edit.do") {
 	$param['menuDeal']              = untag($_REQUEST['menuDeal']);
 	$param['notify']                = array_keys((array)$_REQUEST['notify']);
 	$param['filterAllBy']           = untag($_REQUEST['filterAllBy']);
+	$param['hideAllContacts']       = untag($_REQUEST['hideAllContacts']);
+	$param['filterAllByPersonEdit'] = untag($_REQUEST['filterAllByPersonEdit']);
+	$param['filterAllByPersonCard'] = untag($_REQUEST['filterAllByPersonCard']);
 	$param['filterAllByClientEdit'] = untag($_REQUEST['filterAllByClientEdit']);
 	$param['filterAllByClientCard'] = untag($_REQUEST['filterAllByClientCard']);
 	$param['filterAllByDealEdit']   = untag($_REQUEST['filterAllByDealEdit']);
@@ -1631,19 +1634,46 @@ if ($action == "edit") {
 
 						<div class="checkbox mt5">
 							<label>
-								<input name="filterAllByClientCard" type="checkbox" id="filterAllByClientCard" value="yes" <?php
-								print ( $usersettings['filterAllByClientCard'] == 'yes' ? "checked" : "" ); ?>>
+								<input name="hideAllContacts" type="checkbox" id="hideAllContacts" value="yes" <?php
+								print ( $usersettings['hideAllContacts'] == 'yes' ? "checked" : "" ); ?>>
+								<span class="custom-checkbox alert"><i class="icon-ok"></i></span>
+								<span class="title Bold red">Скрывать контактную информацию (телефоны/email, звездочками, кроме своих)</span>
+							</label>
+						</div>
+
+						<div class="checkbox mt5 hidden">
+							<label>
+								<input name="filterAllByPersonCard" type="checkbox" id="filterAllByPersonCard" value="yes" <?php
+								print ( $usersettings['filterAllByPersonCard'] == 'yes' ? "checked" : "" ); ?>>
 								<span class="custom-checkbox success"><i class="icon-ok"></i></span>
-								<span class="title flh-07 fs-09">Клиент - доступ к карточке</span>
+								<span class="title"><b>Контакт</b> - доступ к карточке</span>
 							</label>
 						</div>
 
 						<div class="checkbox mt5">
 							<label>
+								<input name="filterAllByPersonEdit" type="checkbox" id="filterAllByPersonEdit" value="yes" <?php
+								print ( $usersettings['filterAllByPersonEdit'] == 'yes' ? "checked" : "" ); ?>>
+								<span class="custom-checkbox success"><i class="icon-ok"></i></span>
+								<span class="title"><b>Контакт</b> - доступ и редактирование</span>
+							</label>
+						</div>
+
+						<div class="checkbox mt5">
+							<label>
+								<input name="filterAllByClientCard" type="checkbox" id="filterAllByClientCard" value="yes" <?php
+								print ( $usersettings['filterAllByClientCard'] == 'yes' ? "checked" : "" ); ?>>
+								<span class="custom-checkbox success"><i class="icon-ok"></i></span>
+								<span class="title"><b>Клиент</b> - доступ к карточке</span>
+							</label>
+						</div>
+
+						<div class="checkbox mt5 hidden">
+							<label>
 								<input name="filterAllByClientEdit" type="checkbox" id="filterAllByClientEdit" value="yes" <?php
 								print ( $usersettings['filterAllByClientEdit'] == 'yes' ? "checked" : "" ); ?>>
 								<span class="custom-checkbox success"><i class="icon-ok"></i></span>
-								<span class="title flh-07 fs-09">Клиент - доступ и редактирование</span>
+								<span class="title"><b>Клиент</b> - доступ и редактирование</span>
 							</label>
 						</div>
 
@@ -1652,16 +1682,16 @@ if ($action == "edit") {
 								<input name="filterAllByDealCard" type="checkbox" id="filterAllByDealCard" value="yes" <?php
 								print ( $usersettings['filterAllByDealCard'] == 'yes' ? "checked" : "" ); ?>>
 								<span class="custom-checkbox success"><i class="icon-ok"></i></span>
-								<span class="title flh-07 fs-09">Сделка - доступ к карточке</span>
+								<span class="title"><b>Сделка</b> - доступ к карточке</span>
 							</label>
-						</div>
+						</div><b></b>
 
 						<div class="checkbox mt5">
 							<label>
 								<input name="filterAllByDealEdit" type="checkbox" id="filterAllByDealEdit" value="yes" <?php
 								print ( $usersettings['filterAllByDealEdit'] == 'yes' ? "checked" : "" ); ?>>
 								<span class="custom-checkbox success"><i class="icon-ok"></i></span>
-								<span class="title flh-07 fs-09">Сделка - доступ и редактирование</span>
+								<span class="title"><b>Сделка</b> - доступ и редактирование</span>
 							</label>
 						</div>
 

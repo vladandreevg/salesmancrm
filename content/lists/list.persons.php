@@ -258,11 +258,13 @@ while ($da = $db -> fetch($rest)) {
 
 		$phone = '';
 
-		if ($da['tel'] != '')
+		if ($da['tel'] != '') {
 			$phone = yexplode(",", str_replace(";", ",", $da['tel']), 0);
+		}
 
 		if ($phone != '') {
-			$phone = ($isaccess != 'yes' && $acs_prava != 'on') ? '<span class="gray">'.yimplode( ",", hidePhone( $phone ) ).'</span>' : formatPhoneUrl( $phone, (int)$da['clid'], (int)$da['pid'] );
+			//$phone = ($isaccess != 'yes' && $acs_prava != 'on') && $userSettings['hideAllContacts'] == 'yes' ? '<span class="gray">'.yimplode( ",", hidePhone( $phone ) ).'</span>' : formatPhoneUrl( $phone, (int)$da['clid'], (int)$da['pid'] );
+			$phone = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? formatPhoneUrl( $phone, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $phone ).'</span>';
 		}
 
 	}
@@ -271,11 +273,14 @@ while ($da = $db -> fetch($rest)) {
 
 		$mobi = [];
 
-		if ($da['mob'] != '')
+		if ($da['mob'] != '') {
 			$mobi = yexplode(",", str_replace(";", ",", str_replace(" ", "", $da['mob'])), 0);
+		}
 
-		if (!empty($mobi))
-			$mob = ($isaccess != 'yes' && $acs_prava != 'on') ? '<span class="gray">'.yimplode(",", hidePhone($mobi)).'</span>' : formatPhoneUrl($mobi, (int)$da['clid'], (int)$da['pid']);
+		if (!empty($mobi)) {
+			//$mob = ( $isaccess != 'yes' && $acs_prava != 'on' ) && $userSettings['hideAllContacts'] == 'yes' ? '<span class="gray">'.yimplode(",", hidePhone($mobi)).'</span>' : formatPhoneUrl($mobi, (int)$da['clid'], (int)$da['pid']);
+			$mob = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? formatPhoneUrl( $mobi, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $mobi ).'</span>';
+		}
 
 	}
 
@@ -284,11 +289,14 @@ while ($da = $db -> fetch($rest)) {
 		$email = '';
 		$mail = [];
 
-		if ($da['mail'] != '')
+		if ($da['mail'] != '') {
 			$mail = yexplode(",", str_replace(";", ",", str_replace(" ", "", $da['mail'])), 0);
+		}
 
-		if (!empty($mail))
-			$email = ($isaccess != 'yes' && $acs_prava != 'on') ? '<span class="gray">'.yimplode(",", hideEmail($mail)).'</span>' : link_it($mail);
+		if (!empty($mail)) {
+			//$email = ( $isaccess != 'yes' && $acs_prava != 'on' ) && $userSettings['hideAllContacts'] == 'yes' ? '<span class="gray">'.yimplode(",", hideEmail($mail)).'</span>' : link_it($mail);
+			$email = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? link_it( $mail ) : '<span class="gray">'.hideEmail( $mail ).'</span>';
+		}
 
 	}
 

@@ -248,7 +248,7 @@ $isAccess = get_accesse( (int)$clid ) == "yes" || $isadmin == 'on';
 			//print_r($doche);
 
 			$re = $db -> query( "select fld_name, fld_title, fld_temp, fld_stat from {$sqlname}field where fld_tip='client' and fld_on='yes' and identity = '$identity' order by fld_order" );
-			while ($da = $db -> fetch( $re, MYSQLI_ASSOC )) {
+			while ($da = $db -> fetch( $re )) {
 
 				$field = '';
 
@@ -357,13 +357,15 @@ $isAccess = get_accesse( (int)$clid ) == "yes" || $isadmin == 'on';
 				elseif ( $da['fld_name'] == 'phone' && $client['phone'] != "" ) {
 
 					$phone_list = [];
-					$phones     = yexplode( ",", str_replace( ";", ",", str_replace( " ", "", $client['phone'] ) ) );
-					foreach ( $phones as $phone ) {
+					$phones     = yexplode(",", str_replace(";", ",", str_replace(" ", "", $client['phone'])));
+					foreach ($phones as $phone) {
 
-						$phone_list[] = '<span class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $clid ).'</span>';
+						//$phone = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? $phone : hidePhone($phone);
+
+						$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $clid).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 					}
-					$phone = implode( "", $phone_list );
+					$phone = implode("", $phone_list);
 					?>
 					<div class="flex-container p10">
 
@@ -382,7 +384,7 @@ $isAccess = get_accesse( (int)$clid ) == "yes" || $isadmin == 'on';
 					$fax        = yexplode( ",", str_replace( ";", ",", str_replace( " ", "", $client['fax'] ) ) );
 					foreach ( $fax as $phone ) {
 
-						$phone_list[] = '<span class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $clid ).'</span>';
+						$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<span class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $clid ).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
 
 					}
 					$fax = implode( "", $phone_list );
@@ -421,9 +423,9 @@ $isAccess = get_accesse( (int)$clid ) == "yes" || $isadmin == 'on';
 							$emails = explode( ",", str_replace( ";", ",", $client['mail_url'] ) );
 							foreach ( $emails as $email ) {
 
-								$apx = ($ymEnable == true) ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\'\',\''.trim( $email ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : "";
+								$apx = $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\'\',\''.trim( $email ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : "";
 
-								print link_it( $email ).$apx;
+								print (( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? link_it( $email ) : hideEmail($email)).$apx;
 
 							}
 							?>

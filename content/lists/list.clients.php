@@ -438,7 +438,7 @@ while ($da = $db -> fetch( $rest )) {
 			$tel = yexplode(",", str_replace(";", ",", str_replace(" ", "", $da['tel'])), 0);
 		}
 
-		$phone = ($isaccess == 'yes' || $acs_prava == 'on') ? formatPhoneUrl( $tel, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $tel ).'</span>';
+		$phone = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? formatPhoneUrl( $tel, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $tel ).'</span>';
 
 	}
 
@@ -453,7 +453,7 @@ while ($da = $db -> fetch( $rest )) {
 			$mail = yexplode(",", str_replace(";", ",", str_replace(" ", "", $da['pemail'])), 0);
 		}
 
-		$email = ($isaccess == 'yes' || $acs_prava == 'on') ? link_it( $mail ) : '<span class="gray">'.hideEmail( $mail ).'</span>';
+		$email = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? link_it( $mail ) : '<span class="gray">'.hideEmail( $mail ).'</span>';
 
 	}
 
@@ -670,7 +670,8 @@ $clients = [
 	"profile" => ($otherSettings['profile']) ? 'yes' : NULL,
 	"page"    => (int)$page,
 	"pageall" => (int)$count_pages,
-	"count"   => (int)$all_lines
+	"count"   => (int)$all_lines,
+	//"hideAllContacts" => $userSettings['hideAllContacts']
 ];
 
 //print_r($client);
