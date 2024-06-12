@@ -79,8 +79,8 @@ if ( !$userRights['budjet'] ) {
 
 	$folder_ex = $db -> getOne( "SELECT idcategory FROM {$sqlname}file_cat WHERE title='Бюджет' and identity = '$identity'" );
 
-	if ( $folder_ex > 0 ) {
-		$sort .= " and {$sqlname}file.folder != '".$folder_ex."'";
+	if ( (int)$folder_ex > 0 ) {
+		$sort .= " and COALESCE({$sqlname}file.folder, 0) != '".$folder_ex."'";
 	}
 
 }
@@ -95,8 +95,9 @@ $farray = $db -> getCol( "SELECT idcategory FROM {$sqlname}file_cat WHERE shared
 //Сформируем запрос по папкам и подпапкам
 $folders = getFCatalog( $idcategory );
 
-if ( $idcategory > 0 )
+if ( $idcategory > 0 ) {
 	$folders[] = $idcategory;
+}
 //else $folders[] = "null";
 
 if ( !empty( $farray ) ) {
@@ -147,7 +148,7 @@ SELECT
 	{$sqlname}personcat.person as person,
 	{$sqlname}dogovor.title as deal,
 	{$sqlname}user.title as user,
-	{$sqlname}file_cat.title as folder
+	{$sqlname}file_cat.title as xfolder
 FROM {$sqlname}file
 	LEFT JOIN {$sqlname}user ON {$sqlname}file.iduser = {$sqlname}user.iduser
 	LEFT JOIN {$sqlname}personcat ON {$sqlname}file.pid = {$sqlname}personcat.pid
@@ -222,7 +223,7 @@ while ($da = $db -> fetch( $result )) {
 		"user"   => $da['user'],
 		"change" => $change,
 		"view"   => $isView,
-		"folder" => $da['folder']
+		"folder" => $da['xfolder']
 	];
 
 }
