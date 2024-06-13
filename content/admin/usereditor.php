@@ -1617,9 +1617,9 @@ if ($action == "edit") {
 							$u = User ::userBoss($iduser);
 							foreach ($u as $user) {
 
-								if ($user['id'] != $iduser) {
+								//if ($user['id'] != $iduser) {
 									print '<option value="'.$user['id'].'" '.( $user['id'] == $usersettings['filterAllBy'] ? "selected" : "" ).'>'.$user['title'].': '.$user['tip'].'</OPTION>';
-								}
+								//}
 
 							}
 							?>
@@ -1650,7 +1650,7 @@ if ($action == "edit") {
 							</label>
 						</div>
 
-						<div class="checkbox mt5">
+						<div class="checkbox mt5 hidden">
 							<label>
 								<input name="filterAllByPersonEdit" type="checkbox" id="filterAllByPersonEdit" value="yes" <?php
 								print ( $usersettings['filterAllByPersonEdit'] == 'yes' ? "checked" : "" ); ?>>
@@ -1668,7 +1668,7 @@ if ($action == "edit") {
 							</label>
 						</div>
 
-						<div class="checkbox mt5 hidden">
+						<div class="checkbox mt5">
 							<label>
 								<input name="filterAllByClientEdit" type="checkbox" id="filterAllByClientEdit" value="yes" <?php
 								print ( $usersettings['filterAllByClientEdit'] == 'yes' ? "checked" : "" ); ?>>
