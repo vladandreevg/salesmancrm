@@ -138,6 +138,7 @@ if ( $noclient == 'yes' ) {
 
 }
 
+//print
 $q = "
 SELECT
 	DISTINCT(tsk.tid) as tid,
@@ -151,15 +152,23 @@ SELECT
 	tsk.priority as priority,
 	tsk.autor as autor,
 	tsk.iduser as iduser,
+	us.title as user,
 	tsk.clid as clid,
+	cc.title as client,
 	tsk.pid as pid,
 	tsk.did as did,
+	deal.title as deal,
+	step.title as step,
 	tsk.readonly as readonly,
 	tsk.day as day,
 	tsk.des as agenda,
 	as.color as color
 FROM {$sqlname}tasks `tsk`
 	LEFT JOIN {$sqlname}activities `as` ON as.title = tsk.tip
+    LEFT JOIN {$sqlname}dogovor `deal` ON deal.did =  tsk.did
+    LEFT JOIN {$sqlname}dogcategory `step` ON step.idcategory =  deal.idcategory
+    LEFT JOIN {$sqlname}clientcat `cc` ON cc.clid =  tsk.clid
+    LEFT JOIN {$sqlname}user `us` ON us.iduser =  tsk.iduser
 WHERE
 	tsk.tid > 0
 	$sort and
@@ -221,6 +230,8 @@ foreach ( $res as $da ) {
 
 	$address = stripos( texttosmall( $da['tip'] ), 'встреча' ) !== false ? getClientData( $da['clid'], 'address' ) : '';
 
+	// тормозящий блок. поиск связанных напоминаний, при групповом напоминании
+	/*
 	$count = $db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}tasks WHERE maintid = '".$da['tid']."' and identity = '$identity'" );
 
 	$result1 = $db -> getAll( "SELECT iduser FROM {$sqlname}tasks WHERE maintid = '".$da['tid']."' and identity = '$identity'" );
@@ -232,6 +243,7 @@ foreach ( $res as $da ) {
 	if ( !empty( $useri ) ) {
 		$usera = '<i class="icon-user-1 fs-09 flh-10"></i> '.yimplode( ", ", $useri );
 	}
+	*/
 
 	if ( $da['autor'] > 0 ) {
 
@@ -248,19 +260,19 @@ foreach ( $res as $da ) {
 
 	$day = $old != 'old' ? get_dateru( $da['datum'] ) : format_date_rus_name( $da['datum'] );
 
-	if ( $da['clid'] < 1 && $pidd[0] > 0 ) {
-		$person = current_person( $pidd[0] );
+	if ( (int)$da['clid'] < 1 && (int)$pidd[0] > 0 ) {
+		$person = current_person( (int)$pidd[0] );
 	}
 
-	if ( $da['did'] == 0 ) {
+	if ( (int)$da['did'] == 0 ) {
 		$da['did'] = '';
 	}
 
-	if ( $da['autor'] + 0 == 0 ) {
-		$da['autor'] = $da['iduser'];
+	if ( (int)$da['autor'] == 0 ) {
+		$da['autor'] = (int)$da['iduser'];
 	}
 
-	if ( $da['autor'] > 0 ) {
+	if ( (int)$da['autor'] > 0 ) {
 		$autor = strtr( $da['autor'], $users );
 	}
 
@@ -268,19 +280,19 @@ foreach ( $res as $da ) {
 		$da['readonly'] = '';
 	}
 
-	if ( $da['autor'] == $da['iduser'] && $da['readonly'] == 'yes' ) {
+	if ( (int)$da['autor'] == (int)$da['iduser'] && $da['readonly'] == 'yes' ) {
 		$da['readonly'] = '';
 	}
-	if ( $da['autor'] != $da['iduser'] && $da['readonly'] == 'yes' ) {
+	if ( (int)$da['autor'] != (int)$da['iduser'] && $da['readonly'] == 'yes' ) {
 		$da['readonly'] = 'yes';
 	}
-	if ( $da['autor'] == $iduser1 && $da['readonly'] == 'yes' ) {
+	if ( (int)$da['autor'] == $iduser1 && $da['readonly'] == 'yes' ) {
 		$da['readonly'] = '';
 	}
 
 	//mod
 
-	if ( $da['autor'] == 0 || $da['autor'] == $iduser1 ) {
+	if ( (int)$da['autor'] == 0 || (int)$da['autor'] == $iduser1 ) {
 
 		if ( $hours <= $hoursControlTime ) {
 			$change = 'yes';
@@ -295,7 +307,7 @@ foreach ( $res as $da ) {
 
 		$change = '';
 
-		if ( $da['autor'] == $da['iduser'] || $da['author'] == 0 || $da['autor'] == $iduser1 ) {
+		if ( (int)$da['autor'] == (int)$da['iduser'] || (int)$da['author'] == 0 || (int)$da['autor'] == $iduser1 ) {
 
 			$da['readonly'] = '';
 			$change         = 'yes';
@@ -304,7 +316,7 @@ foreach ( $res as $da ) {
 
 	}
 
-	if ( $userSettings['taskCheckBlock'] == 'yes' && $da['iduser'] != $iduser1 ) {
+	if ( $userSettings['taskCheckBlock'] == 'yes' && (int)$da['iduser'] != $iduser1 ) {
 
 		$do = '';
 
@@ -314,8 +326,8 @@ foreach ( $res as $da ) {
 
 
 	$tasks['data'][ $old ]['event'][ $da['datum'] ][] = [
-		"tid"       => $da['tid'],
-		"mainid"    => $da['maintid'],
+		"tid"       => (int)$da['tid'],
+		"mainid"    => (int)$da['maintid'],
 		"datum"     => $da['datum'],
 		"time"      => ($da['day'] != 'yes') ? getTime( (string)$da['totime'] ) : '',
 		"title"     => $da['title'],
@@ -325,12 +337,12 @@ foreach ( $res as $da ) {
 		"color"     => $color,
 		"priority"  => get_priority( 'priority', $da['priority'] ),
 		"speed"     => get_priority( 'speed', $da['speed'] ),
-		"did"       => $da['did'],
-		"deal"      => current_dogovor( $da['did'] ),
-		"step"      => current_dogstep( $da['did'] ),
-		"clid"      => $da['clid'],
-		"client"    => current_client( $da['clid'] ),
-		"pid"       => $pidd[0],
+		"did"       => (int)$da['did'],
+		"deal"      => $da['deal'],
+		"step"      => $da['step'],
+		"clid"      => (int)$da['clid'],
+		"client"    => $da['client'],
+		"pid"       => (int)$pidd[0],
 		"person"    => $person,
 		"readonly"  => $da['readonly'],
 		"day"       => ($da['day'] == 'yes') ? 1 : NULL,
@@ -344,9 +356,9 @@ foreach ( $res as $da ) {
 		"date"      => $day,
 		"year"      => $year,
 		"autor"     => $autor,
-		"user"      => ($noclient == 'yes') ? '' : current_user( $da['iduser'], 'yes' ),
-		"users"     => $usera,
-		"usercount" => (count( $useri ) > 0) ? count( $useri ) : NULL,
+		"user"      => ($noclient == 'yes') ? '' : $da['user'],
+		//"users"     => $usera,
+		//"usercount" => !empty( $useri ) ? count( $useri ) : NULL,
 		//"ll"        => $da['autor'].":".$iduser1.":".$ac_import[7]
 	];
 
