@@ -1637,7 +1637,8 @@ if ($action == "edit") {
 								<input name="hideAllContacts" type="checkbox" id="hideAllContacts" value="yes" <?php
 								print ( $usersettings['hideAllContacts'] == 'yes' ? "checked" : "" ); ?>>
 								<span class="custom-checkbox alert"><i class="icon-ok"></i></span>
-								<span class="title Bold red">Скрывать контактную информацию (телефоны/email, звездочками, кроме своих)</span>
+								<span class="title Bold red">Скрывать контактную информацию</span>
+								<div class="title fs-07 pl30">(телефоны/email, звездочками, кроме своих)</div>
 							</label>
 						</div>
 
