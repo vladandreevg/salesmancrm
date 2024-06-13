@@ -198,8 +198,9 @@ while ($data = $db -> fetch( $resultt )) {
 
 	}
 
-	if ( $data['autor'] > 0 && $data['iduser'] != $iduser1 )
+	if ( $data['autor'] > 0 && $data['iduser'] != $iduser1 ) {
 		$iconuser = '<i class="icon-user-1 blue" title="Назначено мной"></i>';
+	}
 	//elseif ($data['autor'] > 0 && $data['iduser'] == $iduser1 && $data['autor'] != $iduser1) $iconuser = '<i class="icon-user-1 green" title="Назначено мне"></i>';
 
 	$list[0]['tasks'][] = [
@@ -339,11 +340,13 @@ while ($data = $db -> fetch( $resultt )) {
 
 	}
 
-	if ( $showuser == 'yes' )
-		$users = '<div class="em fs-09 gray2">Отв.: '.$usersa[ $data['iduser'] ].'</div>';
+	if ( $showuser == 'yes' ) {
+		$users = '<div class="em fs-09 gray2">Отв.: '.$usersa[$data['iduser']].'</div>';
+	}
 
-	if ( $data['autor'] != $data['iduser'] && $data['readonly'] == 'yes' )
+	if ( $data['autor'] != $data['iduser'] && $data['readonly'] == 'yes' ) {
 		$data['readonly'] = 'yes';
+	}
 
 	if ( $data['autor'] == $data['iduser'] || $data['autor'] == 0 || $data['autor'] == $iduser1 ) {
 
@@ -467,18 +470,22 @@ while ($data = $db -> fetch( $resultt )) {
 
 	$users = ($showuser == 'yes') ? '<span class="smalltxt gray2">Отв.: <b>'.$usersa[ $data['iduser'] ].'</b></span>' : "";
 
+	// отключено: грузит систему
+	/*
 	$result1   = $db -> getAll( "SELECT iduser FROM {$sqlname}tasks WHERE maintid = '".$data['tid']."' and identity = '$identity'" );
 	$usercount = count( $result1 );
 	foreach ( $result1 as $dat ) {
 		$useri[] = strtr( $dat['iduser'], $usersa );
 	}
+	*/
 
 	if ( $usercount > 0 ) {
 		$usera = '<i class="icon-user-1 fs-09 flh-10"></i> '.yimplode( ", ", $useri );
 	}
 
-	if ( $data['autor'] != $data['iduser'] && $data['readonly'] == 'yes' )
+	if ( $data['autor'] != $data['iduser'] && $data['readonly'] == 'yes' ) {
 		$data['readonly'] = 'yes';
+	}
 
 	if ( $data['autor'] == $data['iduser'] || $data['autor'] == 0 || $data['autor'] == $iduser1 ) {
 
@@ -545,8 +552,9 @@ foreach ( $days as $day => $val ) {
 
 	$list[2]['tasks'][] = ["name" => getDay( $day )." ".ru_mon2( getMonth( $day ) ).', <span class="gray2">'.$lang['face']['WeekNameFull'][ (date( 'w', date_to_unix( $day.' 00:00:00' ) ) - 1) ].'</span>'];
 
-	foreach ( $val as $item )
+	foreach ( $val as $item ) {
 		$list[2]['tasks'][] = $item;
+	}
 
 }
 
