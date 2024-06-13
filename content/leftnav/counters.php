@@ -331,7 +331,7 @@
 			$mleadset      = $db -> getRow( "SELECT * FROM ".$sqlname."modules WHERE mpath = 'leads' and identity = '$identity'" );
 			$mleadsettings = json_decode( $mleadset[ 'content' ], true );
 
-			if ( $iduser1 == $mleadsettings[ 'leadСoordinator' ] || in_array( $iduser1, $mleadsettings[ 'leadOperator' ], true ) ) {
+			if ( $iduser1 == $mleadsettings[ 'leadСoordinator' ] || in_array( $iduser1, (array)$mleadsettings[ 'leadOperator' ], true ) ) {
 				?>
 				<li class="pop donthidee" onclick="$('#leadlist').load('/content/vigets/notify.leads.php?action=get_leads');" data-id="leads">
 

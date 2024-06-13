@@ -5807,7 +5807,8 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено.  <a href="update.php" class="button redbtn">Продолжить обновление</a>.
+			';
 
 		}
 		else {
@@ -6615,9 +6616,6 @@ if ( $step == 1 ) {
 							<A href="/" class="button"><b>К рабочему столу</b></A>
 						</div>
 						<br><br>
-					</DIV>
-					<DIV class="infodiv">
-						<br><i class="icon-bitbucket red"></i>Не забывайте удалять файлы <b>install.php</b> и <b>update.php</b><br><br>
 					</DIV>
 				</div>';
 

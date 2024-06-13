@@ -2523,7 +2523,7 @@ if ( !$step ) {
 				<div class="blok infodiv div-center">
 					<DIV class="warning">
 						<h3><i class="icon-attention icon-5x red pull-left"></i><b class="red">Внимание!</b> Данный скрипт не сможет обновить Вашу версию '.$productInfo['name'].'.</h3><br>
-						Для обновления до версии 7.6 воспользуйтесь <a href="update.older.php" class="red"><b>старой версией</b></a> скрипта.<br>После обновления запустите текущий скрипт еще раз.<br><br>
+						Для продолжения обновления требуется обновить Вашу версию до 2022.3 <a href="update.older.php" class="button redbtn"><b>этой версией</b></a> скрипта.<br>После обновления запустите текущий скрипт еще раз.<br><br>
 					</DIV>
 				</div>';
 
