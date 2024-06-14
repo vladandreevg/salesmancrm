@@ -7124,13 +7124,14 @@ function formatPhoneUrlIcon($phone, int $clid = NULL, int $pid = NULL) {
  * @param $xphone
  * @param int|NULL $clid
  * @param int|NULL $pid
+ * @param bool $hide
  * @return array
  */
-function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
+function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL, bool $hide = false): array {
 
-	global $userSettings, $isadmin;
+	global $isadmin, $acs_prava;
 
-	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
+	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on' || $acs_prava == 'on';
 
 	$phone_list = [];
 	$phones     = yexplode(",", str_replace(";", ",", str_replace(" ", "", $xphone)));
@@ -7140,9 +7141,9 @@ function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
 		$isMobile = is_mobile($number);
 
 		$phone_list[] = [
-			"number"   => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? $number : hidePhone($number),
+			"number"   => ( $isAccess && !$hide ) ? $number : hidePhone($number),
 			"isMobile" => $isMobile,
-			"formated" => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? formatPhoneUrl($phone, $clid, $pid) : hidePhone($number)
+			"formated" => ( $isAccess && !$hide ) ? formatPhoneUrl($phone, $clid, $pid) : hidePhone($number)
 		];
 
 	}
@@ -7159,13 +7160,14 @@ function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
  * @param $xmail
  * @param int|NULL $clid
  * @param int|NULL $pid
+ * @param bool $hide
  * @return array
  */
-function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL): array {
+function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL, bool $hide = false): array {
 
-	global $userSettings, $isadmin, $ymEnable;
+	global $isadmin, $ymEnable, $acs_prava;
 
-	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
+	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on' || $acs_prava == 'on';
 
 	$list = [];
 
@@ -7174,10 +7176,10 @@ function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL): array {
 	foreach ($emails as $email) {
 
 		$list[] = [
-			"email"    => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? $email : hideEmail($email),
-			"link"     => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? link_it($email) : hideEmail($email),
+			"email"    => ( $isAccess && !$hide ) ? $email : hideEmail($email),
+			"link"     => ( $isAccess && !$hide ) ? link_it($email) : hideEmail($email),
 			"isMailer" => $ymEnable,
-			"appendix" => $ymEnable && ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : ""
+			"appendix" => $ymEnable && ( $isAccess && !$hide ) ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : ""
 		];
 
 	}

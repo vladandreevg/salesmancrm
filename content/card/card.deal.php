@@ -76,6 +76,8 @@ $isAccess = (get_accesse( 0, 0, (int)$did ) == "yes" && $data['close'] != 'yes')
 
 $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '".$data['direction']."' and identity = '$identity'" );
 
+$hide = $userSettings['hideAllContacts'] == 'yes' && ($isAccess != 'yes' && $acs_prava != 'on');
+
 ?>
 <DIV class="fcontainer relativ bgwhite p0">
 
@@ -542,7 +544,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 				<div class="flex-string wp100 hidden" id="clientContact" data-block="person" data-id="<?= $data['pid'] ?>">
 
 					<?php
-					if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
+					if($isAccess){
 
 					$info = get_person_info( $data['pid'], 'yes' );
 
@@ -553,7 +555,14 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 					$phones = array_merge( $phone1, $phone2 );
 					foreach ( $phones as $phone ) {
 
-						$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $data['pid'] ).'</div>';
+						//$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $data['pid'] ).'</div>';
+
+						if( $hide ){
+							$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+						}
+						else {
+							$phone_list[] = $isAccess || $acs_prava == 'on' ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $clid).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+						}
 
 					}
 
@@ -563,7 +572,14 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 
 						$apx = $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$data['clid'].'\',\'\',\''.trim( $email ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : "";
 
-						$email_list[] = link_it( $email ).$apx;
+						if( $hide ){
+							$email_list[] =  hideEmail($email).$apx;
+						}
+						else {
+							$email_list[] =  ( $isAccess || $acs_prava == 'on' ? link_it($email) : hideEmail($email) ).$apx;
+						}
+
+						//$email_list[] = link_it( $email ).$apx;
 
 					}
 
@@ -611,15 +627,24 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 				<div class="flex-string wp100 hidden" id="clientContact" data-block="client" data-id="<?= $data['clid'] ?>">
 
 					<?php
-					if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
+					if($isAccess){
 
-					$info = Salesman\Client ::info( (int)$data['clid'] );
+					$info = Client ::info( (int)$data['clid'] );
 
 					$phone_list = [];
 					$phones     = yexplode( ",", str_replace( ";", ",", str_replace( " ", "", $info['client']['phone'] ) ) );
 
 					foreach ( $phones as $phone ) {
-						$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $data['pid'] ).'</div>';
+
+						//$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $data['pid'] ).'</div>';
+
+						if( $hide ){
+							$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+						}
+						else {
+							$phone_list[] = $isAccess || $acs_prava == 'on' ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $data['clid']).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+						}
+
 					}
 
 					$phone = yimplode( " ", $phone_list );
@@ -631,7 +656,14 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 
 						$apx = $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$data['clid'].'\',\'\',\''.trim( $email ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : "";
 
-						$email_list[] = link_it( $email ).$apx;
+						//$email_list[] = link_it( $email ).$apx;
+
+						if( $hide ){
+							$email_list[] =  hideEmail($email).$apx;
+						}
+						else {
+							$email_list[] =  ( $isAccess || $acs_prava == 'on' ? link_it($email) : hideEmail($email) ).$apx;
+						}
 
 					}
 
@@ -686,7 +718,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 				<div class="flex-string wp100 hidden" id="payerContact" data-block="payer" data-id="<?= $data['payer'] ?>">
 
 					<?php
-					if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
+					if($isAccess){
 
 					$info = Client ::info( (int)$data['payer'] );
 
@@ -694,7 +726,14 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 					$phones     = yexplode( ",", (string)str_replace( ";", ",", str_replace( " ", "", $info['client']['phone'] ) ) );
 					foreach ( $phones as $phone ) {
 
-						$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="" data-clid="'.$data['payer'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['payer'], $data['pid'] ).'</div>';
+						//$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="" data-clid="'.$data['payer'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['payer'], $data['pid'] ).'</div>';
+
+						if( $hide ){
+							$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+						}
+						else {
+							$phone_list[] = $isAccess || $acs_prava == 'on' ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="" data-clid="'.$data['payer'].'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $data['payer']).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+						}
 
 					}
 					$phone = yimplode( " ", $phone_list );
@@ -705,7 +744,14 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 
 						$apx = $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$data['payer'].'\',\'\',\''.trim( $email ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : "";
 
-						$email_list[] = link_it( $email ).$apx;
+						//$email_list[] = link_it( $email ).$apx;
+
+						if( $hide ){
+							$email_list[] =  hideEmail($email).$apx;
+						}
+						else {
+							$email_list[] =  ( $isAccess || $acs_prava == 'on' ? link_it($email) : hideEmail($email) ).$apx;
+						}
 
 					}
 					$email = yimplode( "", $email_list );
@@ -767,8 +813,7 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 					</div>
 					<div class="flex-string wp100 hidden" id="personContacts<?= $pid ?>" data-block="person" data-id="<?= $pid ?>">
 						<?php
-						if($isAccess && $userSettings['hideAllContacts'] != 'yes'){
-
+						if($isAccess){
 
 						$info = get_person_info( (int)$pid, 'yes' );
 
@@ -776,14 +821,28 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 						$phones     = yexplode( ",", (string)str_replace( ";", ",", str_replace( " ", "", $info['tel'] ) ) );
 						foreach ( $phones as $phone ) {
 
-							$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, (int)$data['clid'], (int)$pid ).'</div>';
+							//$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, (int)$data['clid'], (int)$pid ).'</div>';
+
+							if( $hide ){
+								$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+							}
+							else {
+								$phone_list[] = $isAccess || $acs_prava == 'on' ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $data['clid'], $pid).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+							}
 
 						}
 
 						$phones = yexplode( ",", str_replace( ";", ",", str_replace( " ", "", $info['mob'] ) ) );
 						foreach ( $phones as $phone ) {
 
-							$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</div>';
+							//$phone_list[] = '<div class="phonec phonenumber '.(is_mobile( $phone ) ? 'ismob' : '').'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone( $phone ).'">'.formatPhoneUrl( $phone, $data['clid'], $pid ).'</div>';
+
+							if( $hide ){
+								$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+							}
+							else {
+								$phone_list[] = $isAccess || $acs_prava == 'on' ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="'.$pid.'" data-clid="'.$data['clid'].'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $data['clid'], $pid).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+							}
 
 						}
 
@@ -793,18 +852,27 @@ $direction = $db -> getOne( "SELECT title FROM {$sqlname}direction WHERE id = '"
 						$emails     = yexplode( ",", str_replace( ";", ",", $info['mail'] ) );
 						foreach ( $emails as $email ) {
 
-							$email_list[] = link_it( $email ).($ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$data['payer'].'\',\'\',\''.trim( $email ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : '');
+							//$email_list[] = link_it( $email ).($ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$data['payer'].'\',\'\',\''.trim( $email ).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : '');
+
+							$apx = ($ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : '');
+
+							if( $hide ){
+								$email_list[] =  hideEmail($email).$apx;
+							}
+							else {
+								$email_list[] =  ( $isAccess || $acs_prava == 'on' ? link_it($email) : hideEmail($email) ).$apx;
+							}
 
 						}
 						?>
 						<ul class="table">
-							<?php if ( count( $phone_list ) > 0 ) { ?>
+							<?php if ( !empty( $phone_list ) ) { ?>
 								<li class="xpmt">
 									<div class="fs-09 gray">Телефоны</div>
 									<div class="phoneblock"><?= $phone ?></div>
 								</li>
 							<?php } ?>
-							<?php if ( count( $email_list ) > 0 ) { ?>
+							<?php if ( !empty( $email_list ) ) { ?>
 								<li>
 									<div class="fs-09 gray">Email</div>
 									<span><?= implode( ", ", $email_list ) ?></span>

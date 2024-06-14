@@ -1772,6 +1772,7 @@ if ($action == "edit") {
 					<div class="flex-string wp60 flh-12 pl5">
 						<label for="acs_prava" class="wp100 tooltips" tooltip="Сможет заходить в карточки без права редактора" tooltip-position="top" tooltip-type="success"><b>Может просматривать чужие записи</b></label>
 						<div class="fs-09 blue">Сможет заходить в карточки без права редактора, также видеть номера телефонов и email из чужих записей в разделе Клиенты, Контакты, при поиске</div>
+						<div class="fs-09 red">Имеет приоритет перед настройкой <b>Скрывать контактную информацию</b></div>
 					</div>
 					<div class="flex-string wp40 flh-12">
 

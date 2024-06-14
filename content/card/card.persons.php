@@ -35,6 +35,8 @@ $persons = (new Person()) -> card([
 	"fields" => ['rol','tel','mob','mail','clientpath','loyalty']
 ]);
 
+//print_r($persons);
+
 $html = file_get_contents( $rootpath.'/content/tpl/card.persons.mustache' );
 
 Mustache_Autoloader ::register();

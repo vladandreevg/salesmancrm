@@ -164,7 +164,14 @@ $isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
 				$phones     = yexplode(",", str_replace(";", ",", str_replace(" ", "", $person['tel'])));
 				foreach ($phones as $phone) {
 
-					$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<div class="disable--select phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $person['clid'], $pid).'</div>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+					//$phone_list[] = ( $isAccess && ( $iduser1 === (int)$person['iduser'] && $userSettings['hideAllContacts'] != 'yes') ) ? '<div class="disable--select phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $person['clid'], $pid).'</div>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+
+					if( $userSettings['hideAllContacts'] == 'yes' && ($isAccess != 'yes' && $acs_prava != 'on') ){
+						$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+					}
+					else {
+						$phone_list[] = $isAccess ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $clid).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+					}
 
 				}
 				$phone = implode("", $phone_list);
@@ -186,7 +193,14 @@ $isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
 
 				foreach ($mobi as $phone) {
 
-					$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<div class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $person['clid'], $pid).'</div>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+					//$phone_list[] = ( $isAccess && ( $iduser1 === (int)$person['iduser'] && $userSettings['hideAllContacts'] != 'yes') ) ? '<div class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $person['clid'], $pid).'</div>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+
+					if( $userSettings['hideAllContacts'] == 'yes' && ($isAccess != 'yes' && $acs_prava != 'on') ){
+						$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+					}
+					else {
+						$phone_list[] = $isAccess ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $clid).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+					}
 
 				}
 				$mob = implode("", $phone_list);
@@ -209,7 +223,14 @@ $isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
 
 				foreach ($fax as $phone) {
 
-					$phone_list[] = ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '<div class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $person['clid'], $pid).'</div>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+					//$phone_list[] = ( $isAccess && ( $iduser1 === (int)$person['iduser'] && $userSettings['hideAllContacts'] != 'yes') ) ? '<div class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $person['clid'], $pid).'</div>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+
+					if( $userSettings['hideAllContacts'] == 'yes' && ($isAccess != 'yes' && $acs_prava != 'on') ){
+						$phone_list[] = '<span class="gray">'.hidePhone($phone).'</span>';
+					}
+					else {
+						$phone_list[] = $isAccess || $acs_prava == 'on' ? '<span class="phonec phonenumber '.( is_mobile($phone) ? 'ismob' : '' ).'" data-pid="" data-clid="'.$clid.'" data-phone="'.prepareMobPhone($phone).'">'.formatPhoneUrl($phone, $clid).'</span>' : '<span class="phonec phonenumber">'.hidePhone($phone).'</span>';
+					}
 
 				}
 				$fax = implode("", $phone_list);
@@ -237,7 +258,14 @@ $isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
 
 							$apx = $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : "";
 
-							print (( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? link_it( $email ) : hideEmail($email)).$apx;
+							//print (( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? link_it( $email ) : hideEmail($email)).$apx;
+
+							if( $userSettings['hideAllContacts'] == 'yes' && ($isAccess != 'yes' && $acs_prava != 'on') ){
+								print hideEmail($email).$apx;
+							}
+							else {
+								print ( $isAccess || $acs_prava == 'on' ? link_it($email) : hideEmail($email) ).$apx;
+							}
 
 						}
 						?>

@@ -263,8 +263,16 @@ while ($da = $db -> fetch($rest)) {
 		}
 
 		if ($phone != '') {
+
 			//$phone = ($isaccess != 'yes' && $acs_prava != 'on') && $userSettings['hideAllContacts'] == 'yes' ? '<span class="gray">'.yimplode( ",", hidePhone( $phone ) ).'</span>' : formatPhoneUrl( $phone, (int)$da['clid'], (int)$da['pid'] );
-			$phone = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? formatPhoneUrl( $phone, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $phone ).'</span>';
+
+			if( $userSettings['hideAllContacts'] == 'yes' && ($isaccess != 'yes' && $acs_prava != 'on') ){
+				$phone = '<span class="gray">'.hidePhone( $phone ).'</span>';
+			}
+			else {
+				$phone = ($isaccess == 'yes' || $acs_prava == 'on') && ( $iduser1 === $da['iduser'] && $userSettings['hideAllContacts'] != 'yes') ? formatPhoneUrl( $phone, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $phone ).'</span>';
+			}
+
 		}
 
 	}
@@ -278,8 +286,18 @@ while ($da = $db -> fetch($rest)) {
 		}
 
 		if (!empty($mobi)) {
+
 			//$mob = ( $isaccess != 'yes' && $acs_prava != 'on' ) && $userSettings['hideAllContacts'] == 'yes' ? '<span class="gray">'.yimplode(",", hidePhone($mobi)).'</span>' : formatPhoneUrl($mobi, (int)$da['clid'], (int)$da['pid']);
-			$mob = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? formatPhoneUrl( $mobi, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $mobi ).'</span>';
+
+			//$mob = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? formatPhoneUrl( $mobi, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $mobi ).'</span>';
+
+			if( $userSettings['hideAllContacts'] == 'yes' && ($isaccess != 'yes' && $acs_prava != 'on') ){
+				$mob = '<span class="gray">'.hidePhone( $mob ).'</span>';
+			}
+			else {
+				$mob = ($isaccess == 'yes' || $acs_prava == 'on') && ( $iduser1 === $da['iduser'] && $userSettings['hideAllContacts'] != 'yes') ? formatPhoneUrl( $mob, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $mob ).'</span>';
+			}
+
 		}
 
 	}
@@ -294,8 +312,17 @@ while ($da = $db -> fetch($rest)) {
 		}
 
 		if (!empty($mail)) {
+
 			//$email = ( $isaccess != 'yes' && $acs_prava != 'on' ) && $userSettings['hideAllContacts'] == 'yes' ? '<span class="gray">'.yimplode(",", hideEmail($mail)).'</span>' : link_it($mail);
-			$email = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? link_it( $mail ) : '<span class="gray">'.hideEmail( $mail ).'</span>';
+			//$email = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? link_it( $mail ) : '<span class="gray">'.hideEmail( $mail ).'</span>';
+
+			if( $userSettings['hideAllContacts'] == 'yes' && ($isaccess != 'yes' && $acs_prava != 'on') ){
+				$email = '<span class="gray">'.hideEmail( $mail ).'</span>';
+			}
+			else {
+				$email = ( $isaccess == 'yes' || $acs_prava == 'on' ) ? link_it($mail) : '<span class="gray">'.hideEmail($mail).'</span>';
+			}
+
 		}
 
 	}
