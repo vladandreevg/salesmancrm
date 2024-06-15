@@ -604,6 +604,10 @@ if (!function_exists('mb_ucfirst') && extension_loaded('mbstring')) {
  */
 function highlighter($words, $source, string $format = 'red'): string {
 
+	if(empty($words))  {
+		return (string)$words;
+	}
+
 	// режем запрос на слова (можно использовать explode(' ', $searchq),
 	// но при появлении повторяющихся разделителей они не будут группироваться)
 	$words = preg_split('/ +/', str_replace("/", " ", $words));
@@ -613,7 +617,7 @@ function highlighter($words, $source, string $format = 'red'): string {
 	$pattern = '/'.implode('|', $quoted_words).'/ui';
 
 	// "подсвечиваем" каждое слово
-	return preg_replace($pattern, '<span class="'.$format.'">\\0</span>', $source);
+	return (string)preg_replace($pattern, '<span class="'.$format.'">\\0</span>', $source);
 
 }
 
