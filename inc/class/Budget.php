@@ -2571,6 +2571,9 @@ class Budget {
 
 			}
 
+			// автор расхода
+			$tag['users'][] = $budjet['budget']['iduser'];
+
 			//$tag['users'][] = $params['iduser'];
 			//$tag['users'][] = $iduser1;
 
