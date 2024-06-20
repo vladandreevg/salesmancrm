@@ -4719,6 +4719,22 @@ function mailto(array $params): string {
 
 	}
 
+	// передача файлов из других мест
+	// file должен содержать полный абсолютный путь до файла
+	if (!empty((array)$mailData['xfiles'])) {
+
+		foreach ($mailData['xfiles'] as $f) {
+
+			if ($charset != 'utf-8') {
+				$f['name'] = iconv("utf-8", $charset, $f['name']);
+			}
+
+			$mail -> AddAttachment($f['file'], $f['name']);
+
+		}
+
+	}
+
 
 	$mailsender_rez = ( !$mail -> Send() ) ? 'Ошибка: '.$mail -> ErrorInfo : '';
 

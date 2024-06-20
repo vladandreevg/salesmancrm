@@ -196,7 +196,7 @@ class Cronman {
 	/**
 	 * Редактирование здания
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $params
 	 *                  - name - название задания
 	 *                  - parent - стандартная периодичность: см. $cron::PERIODS;
@@ -213,7 +213,7 @@ class Cronman {
 	 *
 	 * @return int
 	 */
-	public function setTask($id = 0, $params = []): int {
+	public function setTask(int $id = 0, array $params = []): int {
 
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
@@ -277,12 +277,29 @@ class Cronman {
 	}
 
 	/**
+	 * Активация задания
+	 *
+	 * @param $id
+	 * @return bool
+	 */
+	public function enableTask($id): bool {
+
+		$sqlname = $this -> sqlname;
+		$db      = $this -> db;
+
+		$db -> query( "UPDATE {$sqlname}cronmanager SET ?u WHERE id = '$id'", ["active" => "on"] );
+
+		return true;
+
+	}
+
+	/**
 	 * Удаление задания
 	 *
 	 * @param int $id
 	 * @return array
 	 */
-	public function deleteTask($id = 0): array {
+	public function deleteTask(int $id = 0): array {
 
 		$sqlname = $this -> sqlname;
 		$db      = $this -> db;
@@ -394,17 +411,17 @@ class Cronman {
 	 * @param string $time
 	 * @return string
 	 */
-	public function getNextTime($id, $time = ''): string {
+	public function getNextTime($id, string $time = ''): string {
 
 		$this -> compileTaskString( $id );
 
-		$time = $time != '' ? $time : current_datumtime();
+		$xtime = !empty($time) ? $time : current_datumtime();
 
 		$expression = $this -> response['period'];
 
 		$cron = Cron\CronExpression ::factory( $expression );
 
-		return $cron -> getNextRunDate( $time ) -> format( 'Y-m-d H:i:s' );
+		return $cron -> getNextRunDate( $xtime ) -> format( 'Y-m-d H:i:s' );
 
 	}
 
@@ -414,7 +431,7 @@ class Cronman {
 	 * @param array $params
 	 * @return bool
 	 */
-	public function logger($params = []): bool {
+	public function logger(array $params = []): bool {
 
 		$sqlname  = $this -> sqlname;
 		$identity = $this -> identity;
