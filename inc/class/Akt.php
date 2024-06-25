@@ -940,6 +940,10 @@ class Akt {
 			$sort .= " dg.mcid = '$params[mc]' AND";
 		}
 
+		if ( (int)$params['clid'] > 0 ) {
+			$sort .= " (ct.clid = '$params[clid]' OR dg.clid = '$params[clid]') AND ";
+		}
+
 		$query = "
 		SELECT 
 			COUNT(*)
@@ -1024,6 +1028,7 @@ class Akt {
 			ct.identity = '$identity'
 		";
 
+		//print
 		$query = "$query ORDER BY $ordd $tuda LIMIT $lpos,$lines_per_page";
 
 		$result      = $db -> query($query);

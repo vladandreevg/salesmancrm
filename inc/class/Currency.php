@@ -407,14 +407,14 @@ class Currency {
 		$r = $db -> query("SELECT * FROM {$sqlname}currency WHERE id > 0 $s AND identity = '$identity' ORDER BY name");
 		while ($data = $db -> fetch($r)) {
 
-			$list[$data['id']] = [
-				"id"     => $data['id'],
+			$list[(int)$data['id']] = [
+				"id"     => (int)$data['id'],
 				"datum"  => $data['datum'],
 				"name"   => $data['name'],
 				"view"   => $data['view'],
 				"code"   => strtr($data['code'], self::HTMLCODE),
 				"symbol" => $data['code'] != '' ? strtr($data['code'], self::HTMLCODE) : $data['view'],
-				"course" => $data['course']
+				"course" => (float)$data['course']
 			];
 
 		}

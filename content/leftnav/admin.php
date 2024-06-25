@@ -7,8 +7,9 @@
 /*        www.isaler.ru         */
 /*        ver. 2017.x           */
 /* ============================ */
-?>
-<?php
+
+global $productInfo;
+
 if ($isadmin == 'on' || $tipuser == 'Администратор') {
 	?>
 	<DIV id="accordion">
@@ -61,10 +62,7 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 			<div class="menudivider"><b>Клиенты</b></div>
 
 			<A href="#fields" class="menu" title="Настройки форм"><i class="icon-table"></i>&nbsp;Формы</A>
-
-			<?php if (file_exists("/content/admin/efields.php")) { ?>
-				<A href="#efields" class="menu" title="Настройка Экспресс-формы"><i class="icon-table"></i>&nbsp;Экспресс-форма</A>
-			<?php } ?>
+			<A href="#efields" class="menu" title="Настройка Экспресс-формы"><i class="icon-table"></i>&nbsp;Экспресс-форма</A>
 
 			<A href="#industry" class="menu" title="Редактор отраслей клиентов"><i class="icon-commerical-building"></i>
 				<?php
@@ -112,12 +110,8 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 				?>
 			</A>
 
-			<?php if ($tarif == 'Plus' or $tarif == 'Pro') { ?>
-
-				<A href="#profile" class="menu" title="Профиль"><i class="icon-user-md"></i>&nbsp;Профили</A>
-				<A href="#doubles" class="menu" title="Поиск дублей"><i class="icon-search"></i>&nbsp;Поиск дублей</A>
-
-			<?php } ?>
+			<A href="#profile" class="menu" title="Профиль"><i class="icon-user-md"></i>&nbsp;Профили</A>
+			<A href="#doubles" class="menu" title="Поиск дублей"><i class="icon-search"></i>&nbsp;Поиск дублей</A>
 
 			<div class="menudivider" align="center"><b>Сделки</b></div>
 
@@ -132,12 +126,8 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 				?>
 			</A>
 
-			<?php if (file_exists("/content/admin/currency.php")) { ?>
-				<A href="#currency" class="menu" title="Валюты"><i class="icon-euro"></i>&nbsp;Валюты</A>
-			<?php } ?>
-			<?php if (file_exists("/content/admin/dealfieldsforstep.php")) { ?>
-				<A href="#dealfieldsforstep" class="menu" title="Форма Сделки"><i class="icon-table"></i>&nbsp;Поля по этапам Сделки</A>
-			<?php } ?>
+			<A href="#currency" class="menu" title="Валюты"><i class="icon-euro"></i>&nbsp;Валюты</A>
+			<A href="#dealfieldsforstep" class="menu" title="Форма Сделки"><i class="icon-table"></i>&nbsp;Поля по этапам Сделки</A>
 
 			<A href="#multisteps" class="menu" title="МультиВоронка"><i class="icon-sort-alt-down"></i>&nbsp;МультиВоронка</A>
 			<A href="#closedeals" class="menu" title="Статусы закрытых сделок"><i class="icon-medkit"></i>&nbsp;Статусы закрытых сделок</A>
@@ -151,17 +141,9 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 				?>
 			</A>
 
-			<?php if ($tarif == 'Plus' or $tarif == 'Pro') { ?>
+			<A href="#controlpoints" class="menu" title="Контрольные точки"><i class="icon-briefcase"></i>&nbsp;Контрольные точки</A>
 
-				<A href="#controlpoints" class="menu" title="Контрольные точки"><i class="icon-briefcase"></i>&nbsp;Контрольные точки</A>
-
-			<?php } ?>
-
-			<?php if (file_exists("/content/admin/deal.anketa.php")) { ?>
-
-				<A href="#deal.anketa" class="menu" title="Анкеты по сделкам"><i class="icon-doc-inv-alt"></i>&nbsp;Анкеты по сделкам</A>
-
-			<?php } ?>
+			<A href="#deal.anketa" class="menu" title="Анкеты по сделкам"><i class="icon-doc-inv-alt"></i>&nbsp;Анкеты по сделкам</A>
 
 			<div class="menudivider" align="center"><b>Прайс</b></div>
 
@@ -192,8 +174,9 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 
 				$mpath = $data['mpath'];
 
-				if($data['mpath'] == 'modworkplan')
+				if($data['mpath'] == 'modworkplan') {
 					$mpath = 'workplan';
+				}
 
 				$icon = (stripos($data['icon'], '.svg') === false) ? '<i class="'.$data['icon'].'"></i>' : '<img src="modules/'.$mpath.'/images/'.$data['icon'].'" width="16" height="16" class="mr5" style="margin-left:3px">';
 
@@ -230,33 +213,23 @@ if ($isadmin == 'on' || $tipuser == 'Администратор') {
 
 		<DIV data-id="service">
 
-			<?php
-			if (!$isCloud) {
-				?>
-				<A href="#sysinfo" class="menu" title="Информация о системе"><i class="icon-cog-alt"></i>&nbsp;Информация о системе</A>
-				<A href="#error.logs" class="menu" title="Лог ошибок"><i class="icon-cog-alt"></i>&nbsp;Лог ошибок</A>
-			<?php } ?>
+			<A href="#sysinfo" class="menu" title="Информация о системе"><i class="icon-cog-alt"></i>&nbsp;Информация о системе</A>
+			<A href="#error.logs" class="menu" title="Лог ошибок"><i class="icon-cog-alt"></i>&nbsp;Лог ошибок</A>
 
 			<A href="#system.logs" class="menu" title="События в системе"><i class="icon-book"></i>&nbsp;События в системе</A>
 
-			<?php
-			if (!$isCloud) {
-				?>
-				<A href="#backup" class="menu" title="Резервные копии"><i class="icon-hdd"></i>&nbsp;Резервные копии</A>
-			<?php } ?>
+			<A href="#backup" class="menu" title="Резервные копии"><i class="icon-hdd"></i>&nbsp;Резервные копии</A>
 
 			<A href="#cleaner" class="menu" title="Обслуживание и очистка"><i class="icon-trash"></i>&nbsp;Обслуживание и очистка</A>
 
-			<?php
-			if (!$isCloud) {
-				?>
-				<A href="/developer/adminer/" class="menu" title="Adminer. Управление Базой данных" target="blank"><i class="icon-cog-alt"></i>&nbsp;Adminer</A>
-			<?php } ?>
+			<A href="/developer/adminer/" class="menu" title="Adminer. Управление Базой данных" target="blank"><i class="icon-cog-alt"></i>&nbsp;Adminer</A>
 
 		</DIV>
 
 	</DIV>
 	<?php
 }
-else print '<div class="bad text-center">К сожалению у Вас нет прав Администратора</div>';
+else {
+	print '<div class="bad text-center">К сожалению у Вас нет прав Администратора</div>';
+}
 ?>
