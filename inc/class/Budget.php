@@ -237,6 +237,8 @@ class Budget {
 			//если это существующий расход
 			if ($bid > 0) {
 
+				$response['result'] = 'Успешно обновлено';
+
 				//обновляем расход
 				$db -> query("UPDATE {$sqlname}budjet SET ?u WHERE id = '$id' and identity = '$identity'", arrayNullClean($budget));
 				$budget['bid'] = $id;
@@ -319,7 +321,7 @@ class Budget {
 				];
 
 				//свяжем с таблицей dogsprovider
-				if ($dogproviderid > 0 && $contragent > 0) {
+				if ( $dogproviderid > 0 && $contragent > 0 ) {
 
 					//if ($arg['conid'] > 0) $s = "and conid = '".$arg['conid']."'";
 					//elseif ($arg['partid'] > 0) $s = "and partid = '".$arg['partid']."'";
@@ -1906,6 +1908,10 @@ class Budget {
 			$sort .= " bdj.cat IN (".implode(",", $category).") and ";
 		}
 
+		if ( (int)$params['did'] > 0 ) {
+			$sort .= " bdj.did = '$params[did]' and ";
+		}
+
 		if( $userSettings['dostup']['budjet']['onlyself'] == 'yes' ){
 			//$sort .= "bdj.iduser IN (".yimplode(",", get_people( $iduser1, 'yes' )).") and";
 			if($tipuser != 'Поддержка продаж') {
@@ -1916,6 +1922,7 @@ class Budget {
 			}
 		}
 
+		//print
 		$query = "
 			SELECT 
 				bdj.id,
@@ -1961,14 +1968,14 @@ class Budget {
 			}
 
 			if ($data['type'] == 'dohod') {
-				$data['type'] = '<b class="green" title="Поступление"><i class="icon-up-big green"></i></b>';
+				$data['tip'] = '<b class="green" title="Поступление"><i class="icon-up-big green"></i></b>';
 			}
 			if ($data['type'] == 'rashod') {
-				$data['type'] = '<b class="red" title="Расход"><i class="icon-down-big red"></i></b>';
+				$data['tip'] = '<b class="red" title="Расход"><i class="icon-down-big red"></i></b>';
 			}
 
 			if ((int)$data['cat'] == 0) {
-				$data['type'] = '<b class="blue" title="Перемещение"><i class="icon-shuffle blue"></i></b>';
+				$data['tip'] = '<b class="blue" title="Перемещение"><i class="icon-shuffle blue"></i></b>';
 			}
 
 			if ($data['do'] == 'on' && (int)$data['cat'] != 0) {
@@ -2039,7 +2046,8 @@ class Budget {
 				"title"           => $data['title'],
 				"content"         => $data['des'],
 				"summa"           => num_format($data['summa']),
-				"tip"             => $data['type'],
+				"tip"             => $data['tip'],
+				"type"            => $data['type'],
 				"category"        => $data['category'],
 				"istochnik"       => $istochnik,
 				"conid"           => (int)$data['conid'],

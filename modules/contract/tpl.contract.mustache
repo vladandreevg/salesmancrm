@@ -129,9 +129,11 @@
 				<td>
 					{{#deal}}
 					<span class="ellipsis" title="{{deal}}">
-						<a href="javascript:void(0)" title="Карточка: {{deal}}" onclick="openDogovor('{{did}}')">{{#invoice}}
-							<i class="icon-arrows-cw green" title="Сервисная"></i>{{/invoice}}{{^invoice}}
-							<i class="icon-briefcase blue"></i>{{/invoice}}{{deal}}</a>
+						<a href="javascript:void(0)" title="Карточка: {{deal}}" onclick="openDogovor('{{did}}')">
+							{{#isServices}}<i class="icon-arrows-cw green" title="Сервисная"></i>{{/isServices}}
+							{{^isServices}}<i class="icon-briefcase blue"></i>{{/isServices}}
+							{{deal}}
+						</a>
 					</span>
 					{{/deal}}
 					{{#client}}
