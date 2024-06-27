@@ -2063,8 +2063,8 @@ function getSigner(int $id = NULL, int $mcid = NULL): array {
 		foreach ( $xsigners as $xsigner ) {
 
 			$signer[ $xsigner['mcid'] ][] = [
-				"id"        => $xsigner['id'],
-				"mcid"      => $xsigner['mcid'],
+				"id"        => (int)$xsigner['id'],
+				"mcid"      => (int)$xsigner['mcid'],
 				"title"     => $xsigner['title'],
 				"status"    => $xsigner['status'],
 				"signature" => $xsigner['signature'],
@@ -5076,8 +5076,9 @@ function getMargaPayed($did, array $param = []) {
  * @param array $params
  *
  * @return int
- * @package  Func
+ * @throws Exception
  * @category Core
+ * @package  Func
  */
 function addHistorty(array $params = []): int {
 
@@ -7659,6 +7660,10 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 
 				}
 
+			}
+
+			if(!empty($params['filterplus'])){
+				$sort_4 .= " ".$params['filterplus']. " ";
 			}
 
 			$htg = " GROUP BY {$sqlname}dogovor.did";

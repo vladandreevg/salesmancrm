@@ -492,7 +492,7 @@ class Budget {
 			if ($count == 0) {
 
 				$response['result']        = 'Error';
-				$response['error']['code'] = '403';
+				$response['error']['code'] = 403;
 				$response['error']['text'] = "Запись бюджета с указанным id не найдена в пределах аккаунта";
 
 			}
@@ -549,7 +549,7 @@ class Budget {
 				else {
 
 					$response['result']        = 'Error';
-					$response['error']['code'] = '406';
+					$response['error']['code'] = 406;
 					$response['error']['text'] = "Невозможно удалить расход/доход, т.к. он был проведен. Попробуйте отменить проведение";
 				}
 
@@ -558,7 +558,7 @@ class Budget {
 		}
 		else {
 			$response['result']        = 'Error';
-			$response['error']['code'] = '405';
+			$response['error']['code'] = 405;
 			$response['error']['text'] = "Отсутствуют параметры - id расхода/дохода";
 
 		}
