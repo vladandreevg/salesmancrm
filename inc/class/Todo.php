@@ -573,11 +573,11 @@ class Todo {
 		if ( $id > 0 ) {
 
 			//входные данные
-			$task['iduser']   = (int)$params['iduser'] + 0;
+			$task['iduser']   = (int)$params['iduser'];
 			$task['title']    = untag( $params['title'] );
 			$task['des']      = untag( $params['des'] );
-			$task['clid']     = (int)$params['clid'];
-			$task['did']      = (int)$params['did'];
+			$task['clid']     = (int)$params['clid'] > 0 ? $params['clid'] : NULL;
+			$task['did']      = (int)$params['did'] > 0 ? $params['did'] : NULL;
 			//$task['pid']      = yimplode( ";", $params["pid"] );
 			$task['pid']      = is_array( $params["pid"] ) ? yimplode( ";", $params["pid"] ) : $params["pid"];
 			$task['datum']    = untag( $params['datum'] );
@@ -591,17 +591,16 @@ class Todo {
 			$task['autor']    = (int)$params['autor'];
 			$task['day']      = untag( $params['day'] );
 
-			//print_r($task);
-
-			$users = $params['users'];
+			$users = (array)$params['users'];
 
 			$mess = $err = $mailpack = [];
 
-			if ( count( $users ) == 0 && $task['iduser'] > 0 )
+			if ( !empty($users) && $task['iduser'] > 0 ) {
 				$users[] = $task['iduser'];
-
-			if ( count( $users ) == 0 )
+			}
+			if ( empty($users) ) {
 				$users[] = $iduser1;
+			}
 
 			//При отсутствии контакта, устанавливаем контактом напоминания основной контакт клиента
 			$clinfo      = get_client_info( $task['clid'], "yes" );
@@ -612,11 +611,12 @@ class Todo {
 
 			$task['iduser'] = (count( $users ) == 1) ? $users[0] : $iduser1;
 
-			if ( $task['iduser'] == "" )
+			if ( $task['iduser'] == "" ) {
 				$task['iduser'] = $iduser1;
-
-			if ( $iduser1 != $task['iduser'] && $task['autor'] == 0 )
+			}
+			if ( $iduser1 != $task['iduser'] && $task['autor'] == 0 ) {
 				$task['autor'] = $iduser1;
+			}
 
 			//объединим 2 массива - 1 - те, у кого были напоминания, + те, 2 - которые есть в текущем запросе
 			$userf = array_unique( array_merge( $userexist, $users, [$iduser1] ) );

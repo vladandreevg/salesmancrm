@@ -133,23 +133,23 @@ class Storage {
 
 		$res = $db -> getRow( "select * from {$sqlname}price where n_id = '$id' and identity = '$identity'" );
 
-		$data['price']['prid']         = $res["n_id"];
+		$data['price']['prid']         = (int)$res["n_id"];
 		$data['price']['artikul']      = $res["artikul"];
 		$data['price']['title']        = clean( $res["title"] );
 		$data['price']['description']  = $res["descr"];
 		$data['price']['descr']        = $res["descr"];
 		$data['price']['datum']        = $res["datum"];
-		$data['price']['price_in']     = $res["price_in"];
-		$data['price']['price_1']      = $res["price_1"];
-		$data['price']['price_2']      = $res["price_2"];
-		$data['price']['price_3']      = $res["price_3"];
-		$data['price']['price_4']      = $res["price_4"];
-		$data['price']['price_5']      = $res["price_5"];
+		$data['price']['price_in']     = (float)$res["price_in"];
+		$data['price']['price_1']      = (float)$res["price_1"];
+		$data['price']['price_2']      = (float)$res["price_2"];
+		$data['price']['price_3']      = (float)$res["price_3"];
+		$data['price']['price_4']      = (float)$res["price_4"];
+		$data['price']['price_5']      = (float)$res["price_5"];
 		$data['price']['edizm']        = $res["edizm"];
-		$data['price']['folder']       = $res["pr_cat"];
-		$data['price']['categoryID']   = $res["pr_cat"];
+		$data['price']['folder']       = (int)$res["pr_cat"];
+		$data['price']['categoryID']   = (int)$res["pr_cat"];
 		$data['price']['categoryName'] = $db -> getOne( "SELECT title FROM {$sqlname}price_cat WHERE idcategory = '".$res["pr_cat"]."' AND identity = '$identity'" );
-		$data['price']['nds']          = $res["nds"];
+		$data['price']['nds']          = (float)$res["nds"];
 		$data['price']['category'] = $data['price']['categoryName'];
 
 
@@ -157,7 +157,7 @@ class Storage {
 		$data['sklad']['content'] = $res["content"];
 		$data['sklad']['status']  = $res["status"];
 		$data['sklad']['file']    = $res["files"];
-		$data['sklad']['id']      = $res["id"];
+		$data['sklad']['id']      = (int)$res["id"];
 
 		$files = json_decode( $res["files"], true );
 		foreach ( $files as $file ) {
