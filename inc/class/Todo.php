@@ -1598,7 +1598,6 @@ class Todo {
 		$identity = $this -> identity;
 		$iduser1  = $this -> iduser1;
 
-		$isCloud     = $GLOBALS['isCloud'];
 		$productInfo = $GLOBALS['productInfo'];
 		$tzone       = $GLOBALS['tzone'];
 
@@ -1706,7 +1705,9 @@ class Todo {
 			$avtor  = current_user( $author );
 			$author = '[Назначил: <b style="color:red">'.current_user( $author ).'</b>]';
 		}
-		else $author = '[Назначил: <b style="color:red">Я</b>]';
+		else {
+			$author = '[Назначил: <b style="color:red">Я</b>]';
+		}
 
 		$theme = $tip.': '.$title;
 
@@ -1730,10 +1731,12 @@ class Todo {
 		';
 
 		$txt = "Тема: ".$title."\nОписание: ".$des."\nТип: ".$tip;
-		if ( $crd )
+		if ( $crd ) {
 			$txt .= "\n-------------------------------------\n".$crd;
-		if ( $author )
+		}
+		if ( $author ) {
 			$txt .= "-------------------------------------\nАвтор: ".$avtor;
+		}
 
 		$dstart = getTimestamp( $datum." ".$time ) + $tzone * 3600;
 		$dend   = getTimestamp( $datum." ".$time ) + 600 + $tzone * 3600;
@@ -1745,21 +1748,9 @@ class Todo {
 		$ics = $cal -> render( false );
 
 		$filename = 'salesman'.time().'.ics';
-		$handle   = fopen( $rootpath."/files/".$fpath.$filename, 'wb' );
+		$handle   = fopen( $rootpath."/files/".$filename, 'wb' );
 		fwrite( $handle, "$ics\r" );
 		fclose( $handle );
-
-		//для облака отправку уведомлений делаем от имени сервиса
-		if ( $isCloud ) {
-
-			$file = $rootpath."/cash/".$fpath."cloudserver.json";
-
-			$cloudServer = json_decode( file_get_contents( $file ), true );
-
-			$from     = $cloudServer['fromname'];
-			$fromname = "Уведомления CRM";
-
-		}
 
 		if ( $sendo == 'on' ) {
 
@@ -1771,16 +1762,18 @@ class Todo {
 				$theme,
 				$agenda,
 				$ics,
-				$rootpath."/files/".$fpath.$filename
+				$rootpath."/files/".$filename
 			] );
 
 
 			if ( $printrez == "true" ) {
 
-				if ( $r == '' )
+				if ( $r == '' ) {
 					print 'Событие отправлено по Email';
-
-				else print $r;
+				}
+				else {
+					print $r;
+				}
 
 			}
 

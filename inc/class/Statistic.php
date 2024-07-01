@@ -75,7 +75,7 @@ class Statistic {
 	 */
 	public static function all(string $period, array $params = []): array {
 
-		$rootpath = realpath(__DIR__.'/../../');
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -175,7 +175,7 @@ class Statistic {
 	 */
 	public static function clients(string $period, array $params = []): array {
 
-		$rootpath = realpath(__DIR__.'/../../');
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -201,14 +201,14 @@ class Statistic {
 
 				$q = "
 					SELECT 
-						".$sqlname."clientcat.creator as user,
-						COUNT(".$sqlname."clientcat.clid) as count
-					FROM ".$sqlname."clientcat
+						{$sqlname}clientcat.creator as user,
+						COUNT({$sqlname}clientcat.clid) as count
+					FROM {$sqlname}clientcat
 					WHERE 
-						".$sqlname."clientcat.date_create BETWEEN '$per[0]' AND '$per[1]' AND 
+						{$sqlname}clientcat.date_create BETWEEN '$per[0]' AND '$per[1]' AND 
 						$sort
-						".$sqlname."clientcat.identity = '$identity'
-					GROUP BY ".$sqlname."clientcat.creator
+						{$sqlname}clientcat.identity = '$identity'
+					GROUP BY {$sqlname}clientcat.creator
 					ORDER BY count DESC
 				";
 
@@ -307,7 +307,7 @@ class Statistic {
 	 */
 	public static function dealsNew(string $period, array $params = []): array {
 
-		$rootpath = realpath(__DIR__.'/../../');
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -333,15 +333,15 @@ class Statistic {
 
 				$q = "
 					SELECT 
-						".$sqlname."dogovor.autor as iduser,
-						COUNT(".$sqlname."dogovor.did) as count,
-						SUM(".$sqlname."dogovor.kol) as sum
-					FROM ".$sqlname."dogovor
+						{$sqlname}dogovor.autor as iduser,
+						COUNT({$sqlname}dogovor.did) as count,
+						SUM({$sqlname}dogovor.kol) as sum
+					FROM {$sqlname}dogovor
 					WHERE 
-						".$sqlname."dogovor.datum BETWEEN '$per[0]' AND '$per[1]' AND
+						{$sqlname}dogovor.datum BETWEEN '$per[0]' AND '$per[1]' AND
 						$sort 
-						".$sqlname."dogovor.identity = '$identity'
-					GROUP BY ".$sqlname."dogovor.autor
+						{$sqlname}dogovor.identity = '$identity'
+					GROUP BY {$sqlname}dogovor.autor
 					ORDER BY count DESC
 				";
 
@@ -444,7 +444,7 @@ class Statistic {
 	 */
 	public static function dealsClose(string $period, array $params = []): array {
 
-		$rootpath = realpath(__DIR__.'/../../');
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -472,16 +472,16 @@ class Statistic {
 
 				$q = "
 					SELECT 
-						".$sqlname."dogovor.iduser as user,
-						COUNT(".$sqlname."dogovor.did) as count,
-						SUM(".$sqlname."dogovor.kol) as sum
-					FROM ".$sqlname."dogovor
+						{$sqlname}dogovor.iduser as user,
+						COUNT({$sqlname}dogovor.did) as count,
+						SUM({$sqlname}dogovor.kol) as sum
+					FROM {$sqlname}dogovor
 					WHERE 
-						".$sqlname."dogovor.close = 'yes' AND 
-						".$sqlname."dogovor.datum_close BETWEEN '$per[0]' AND '$per[1]' AND
+						{$sqlname}dogovor.close = 'yes' AND 
+						{$sqlname}dogovor.datum_close BETWEEN '$per[0]' AND '$per[1]' AND
 						$sort 
-						".$sqlname."dogovor.identity = '$identity'
-					GROUP BY ".$sqlname."dogovor.iduser
+						{$sqlname}dogovor.identity = '$identity'
+					GROUP BY {$sqlname}dogovor.iduser
 					ORDER BY count DESC
 				";
 
@@ -585,7 +585,7 @@ class Statistic {
 	 */
 	public static function invoices(string $period, array $params = []): array {
 
-		$rootpath = realpath(__DIR__.'/../../');
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -611,16 +611,16 @@ class Statistic {
 
 				$q = "
 					SELECT 
-						".$sqlname."credit.iduser as user,
-						COUNT(".$sqlname."credit.clid) as count,
-						SUM(".$sqlname."credit.summa_credit) as sum
-					FROM ".$sqlname."credit
+						{$sqlname}credit.iduser as user,
+						COUNT({$sqlname}credit.clid) as count,
+						SUM({$sqlname}credit.summa_credit) as sum
+					FROM {$sqlname}credit
 					WHERE 
-						".$sqlname."credit.datum BETWEEN '$per[0]' AND '$per[1]' AND 
-						-- ".$sqlname."credit.do != 'on' AND 
+						{$sqlname}credit.datum BETWEEN '$per[0]' AND '$per[1]' AND 
+						-- {$sqlname}credit.do != 'on' AND 
 						$sort
-						".$sqlname."credit.identity = '$identity'
-					GROUP BY ".$sqlname."credit.iduser
+						{$sqlname}credit.identity = '$identity'
+					GROUP BY {$sqlname}credit.iduser
 					ORDER BY count DESC
 				";
 
@@ -723,7 +723,7 @@ class Statistic {
 	 */
 	public static function payments(string $period, array $params = []): array {
 
-		$rootpath = realpath(__DIR__.'/../../');
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -753,16 +753,16 @@ class Statistic {
 
 				$q = "
 					SELECT 
-						".$sqlname."credit.iduser as user,
-						COUNT(".$sqlname."credit.clid) as count,
-						SUM(".$sqlname."credit.summa_credit) as sum
-					FROM ".$sqlname."credit
+						{$sqlname}credit.iduser as user,
+						COUNT({$sqlname}credit.clid) as count,
+						SUM({$sqlname}credit.summa_credit) as sum
+					FROM {$sqlname}credit
 					WHERE 
-						".$sqlname."credit.invoice_date BETWEEN '$per[0]' AND '$per[1]' AND 
-						".$sqlname."credit.do = 'on' AND 
+						{$sqlname}credit.invoice_date BETWEEN '$per[0]' AND '$per[1]' AND 
+						{$sqlname}credit.do = 'on' AND 
 						$sort
-						".$sqlname."credit.identity = '$identity'
-					GROUP BY ".$sqlname."credit.iduser
+						{$sqlname}credit.identity = '$identity'
+					GROUP BY {$sqlname}credit.iduser
 					ORDER BY count DESC
 				";
 
@@ -858,7 +858,7 @@ class Statistic {
 
 		$identity = $GLOBALS['identity'];
 
-		$rootpath = realpath(__DIR__.'/../../');
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/func.php";
 
