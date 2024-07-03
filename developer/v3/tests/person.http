@@ -1,0 +1,112 @@
+GET http://{{baseurl}}/developer/v3/person/fields
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/person/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"order": "date_edit",
+	"dateStart": "2021-01-01",
+	"dateEnd": "2023-01-31",
+	"fields": "pid,clid,person,ptitle,tel,mob,mail",
+	"socinfo": "no",
+	"filter": {
+		"clientpath": 177
+	}
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/person/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"pid": 2797,
+	"fields": "pid,clid,person,ptitle,tel,mob,mail"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/person/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"clid": "1781",
+	"person": "Апиров Апист Иванович",
+	"ptitle": "Технический директор",
+	"tel": "+7(342)250-50-50, +7(342)290-50-51",
+	"mob": "+7(922)250-50-50",
+	"mail": "a.i.apirov@mailio.ru",
+	"clientpath": "salesman.pro",
+	"loyalty": "0 - Не лояльный"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/person/add.list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"persons": [
+		{
+			"clid": 6276,
+			"person": "Тест 911",
+			"ptitle": "Технический директор",
+			"tel": "+7(342)250-50-98, +7(342)290-50-99",
+			"mob": "+7(922)250-50-99",
+			"mail": "test911@mailio.ru",
+			"clientpath": "salesman.pro",
+			"loyalty": "1 - Пока не понятно"
+		},
+		{
+			"clid": 6276,
+			"person": "Тест 912",
+			"ptitle": "Генеральный директор",
+			"tel": "+7(342)250-20-98, +7(342)290-20-99",
+			"mob": "+7(922)250-20-99",
+			"mail": "test912@mailio.ru",
+			"clientpath": "salesman.pro",
+			"loyalty": "1 - Пока не понятно"
+		}
+	]
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/person/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "pid": 2804,
+	"ptitle": "Технический инженер",
+	"mob": "+7(922)250-59-59",
+	"mail": "a.i.apirovv@mailio.ru",
+	"loyalty": "1 - Пока не понятно"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/person/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"pid": 2804
+}
+
+###

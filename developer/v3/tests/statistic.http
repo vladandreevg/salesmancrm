@@ -1,0 +1,65 @@
+GET http://{{baseurl}}/developer/v3/statistic/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "period": "yearprev"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/statistic/clients
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"period": "yearprev"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/statistic/dealsNew
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"period": "yearprev"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/statistic/dealsClose
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"period": "yearprev"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/statistic/invoices
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"period": "yearprev"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/statistic/payments
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"period": "yearprev"
+}
+
+###

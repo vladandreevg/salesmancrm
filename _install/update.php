@@ -152,7 +152,7 @@ if ( $count == 0 ) {
 /*YMailer*/
 
 //версия, на которую будем обновлять БД
-$lastVer = '2024.2';
+$lastVer = '2024.3';
 $step    = (int)$_REQUEST['step'];
 $currentVersion = getVersion();
 
@@ -164,7 +164,8 @@ $seria = [
 	'2022.3',
 	'2023.1',
 	'2024.1',
-	'2024.2'
+	'2024.2',
+	'2024.3'
 ];
 
 //printf("Step: %s; Sapi: %s; Ver: %s; LastVer: %s; IsLast: %s\n", $step, PHP_SAPI, getVersion(), $lastVer, getVersion() == $lastVer);
@@ -1140,6 +1141,54 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 		 * Обновим версию
 		 */
 		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2024.2']);
+
+		$currentVer = getVersion();
+
+		if ( $currentVer == $lastVer ) {
+
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+
+		}
+
+		if (PHP_SAPI != 'cli') {
+
+			$message = 'Обновление до версии '.$currentVer.' установлено.<br>
+			<div class="main_div div-center">
+				<A href="update.php?step=1" class="button"><b>Продолжить</b> установку</A>
+			</div>
+			';
+
+		}
+
+		if ( PHP_SAPI === 'cli' ) {
+
+			print $message."\n";
+
+		}
+
+	}
+
+	if ( getVersion() == '2024.2' && in_array( '2024.3', $seria)) {
+
+		$db -> query("
+			UPDATE {$sqlname}entry SET datum_do = NULL WHERE datum_do = '0000-00-00 00:00:00'
+		");
+
+		$db -> query("
+		ALTER TABLE `{$sqlname}entry`
+			CHANGE COLUMN `datum` `datum` DATETIME NULL DEFAULT (CURRENT_TIMESTAMP) COMMENT 'дата создания' AFTER `did`,
+			CHANGE COLUMN `datum_do` `datum_do` DATETIME NULL DEFAULT NULL COMMENT 'дата обработки обращения' AFTER `datum`
+		");
+
+		$db -> query("
+		ALTER TABLE `{$sqlname}entry_poz`
+			CHANGE COLUMN `kol` `kol` DOUBLE NULL DEFAULT NULL COMMENT 'количество' AFTER `title`
+		");
+
+		/**
+		 * Обновим версию
+		 */
+		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2024.3']);
 
 		$currentVer = getVersion();
 

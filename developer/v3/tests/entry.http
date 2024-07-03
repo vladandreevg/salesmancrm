@@ -1,0 +1,34 @@
+GET http://{{baseurl}}/developer/v3/entry/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"dateStart": "2017-06-01",
+	"dateEnd": "2018-06-30",
+	"status": "1,2"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/entry/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 59
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/entry/status
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 59,
+    "status": 1
+}
+###

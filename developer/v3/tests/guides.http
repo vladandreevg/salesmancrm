@@ -1,0 +1,55 @@
+GET http://{{baseurl}}/developer/v3/guides/category
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/guides/territory
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/guides/relations
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/guides/clientpath
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/guides/company.list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/guides/company.listfull
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/guides/company.bank
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/guides/company.signers
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###

@@ -1,0 +1,162 @@
+GET http://{{baseurl}}/developer/v3/budget/category
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/budget/fields
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/budget/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 749
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/budget/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"year": 2024,
+    "month": 2
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "date_plan": "2024-07-01",
+	"title": "Заправка принтера",
+	"category": 1,
+    "summa": 1000.00,
+    "did": 982,
+    "clid": 6268,
+	"rs": 19
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 751,
+	"description": "Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона",
+	"summa": 1000.60,
+	"category": 2
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/doit
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 526
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/undoit
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 526
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/move
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"title": "Перемещение_22",
+	"description": "Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона",
+	"summa": 15000.00,
+	"from": 1,
+	"to": 2
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/unmove
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 528
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 526
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/categoryadd
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"title": "Офисные расходы",
+	"subid": 0,
+	"tip": "rashod"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/categoryedit
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 234,
+	"title": "Офисные расходы 2"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/budget/categorydelete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 234
+}
+
+###

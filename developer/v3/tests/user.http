@@ -1,0 +1,39 @@
+GET http://{{baseurl}}/developer/v3/user/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "iduser": 1
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/user/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+POST http://{{baseurl}}/developer/v3/user/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"user": "ivana.petrova@isaler.ru",
+	"password": "PassW0Rd!2",
+	"title": "Ивана Петрова",
+	"tip": "Поддержка продаж",
+	"user_post": "Ассистент менеджера",
+	"bday": "2004-02-02",
+	"phone": "",
+	"phone_in": "",
+	"mob": "",
+	"email": "ivana.petrova@isaler.ru",
+	"boss": "vladislav@isaler.ru",
+	"otdel": "OAP"
+}
+
+###
