@@ -1563,8 +1563,8 @@ class Mailer {
 		$xfid = $params['xfid'];
 
 		//прикрепленные файлы из документов
-		$xfile = $params['xfile'];
-		$xname = $params['xname'];
+		$xfile = (array)$params['xfile'];
+		$xname = (array)$params['xname'];
 
 		$cnames = [];
 

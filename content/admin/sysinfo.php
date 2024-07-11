@@ -274,12 +274,23 @@ $xphp = getPhpInfo();
 
 				<h4 class="mb5">Для Windows</h4>
 
-				<p class="w0 red">Не поддерживается</p>
+				<!--
+				<p class="w0">Должен быть установлен <a href="https://www.libreoffice.org/download/download-libreoffice/" title="Скачать" target="_blank">LibreOffice</a></p>
 
-				<!--<p>в папке с веб-сервером должен быть файл \tools\OfficeToPdf\OfficeToPDF.exe
+				<p>Для корректной работы необходимо добавить исполняемый файл в PATH:</p>
+				<ol>
+					<li>Параметры / Дополнительные параметры системы / Переменные среды</li>
+					<li>Выбрать параметр Path / Изменить</li>
+					<li>В открывшемся списке нажимаем "Создать" -> "Обзор"</li>
+					<li>Выбираем путь установки. Например "C:\Program Files\LibreOffice\program\"</li>
+					<li>Нажимаем Ок + Ок + Ок во всех открытых окнах</li>
+				</ol>
+				-->
+
+				<p>в папке с веб-сервером должен быть файл \SalesmanServer\tools\OfficeToPdf\OfficeToPDF.exe
 					[<a href="https://github.com/cognidox/OfficeToPDF" class="Bold blue" target="_blank" title="OfficeToPDF">OfficeToPDF</a> ]
 					также должен быть установлен пакет Office
-				</p>-->
+				</p>
 			</div>
 
 		</TD>

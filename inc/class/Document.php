@@ -2273,10 +2273,12 @@ class Document {
 			$path = ($disposition == '') ? str_replace( '/', "\\", $rootpath."\\files\\".str_replace( '/', "\\", $fpath ) ) : str_replace( '/', "\\", $rootpath."\\".$disposition."\\".str_replace( '/', "\\", $fpath ) );
 
 			//print $dumper.'\\OfficeToPdf\\OfficeToPDF.exe /print '.$path.$file.' '.$path.$newfile;
-
 			//exec( $dumper.'\\OfficeToPdf\\OfficeToPDF.exe /print '.$path.$file.' '.$path.$newfile, $output, $exit );
 
-			$cmd = 'soffice --headless --convert-to pdf '.$path.$file.' --outdir '.$path;
+			// LibreOffice не может обработать файлы
+			//$cmd = 'soffice --headless --convert-to pdf '.$path.$file.' --outdir '.$path;
+
+			$cmd = $dumper.'\\OfficeToPdf\\OfficeToPDF.exe /print '.$path.$file.' '.$path.$newfile;
 
 			//print $cmd;
 
@@ -2751,7 +2753,7 @@ class Document {
 							
 						}
 
-						$rez = mailto( [
+						$rez = mailto( $x = [
 							"to" => $toMail,
 							"toname"   => $toName,
 							"from"     => $mMail,
@@ -2821,6 +2823,7 @@ class Document {
 							$response['result'] = 'Успешно';
 							$response['data']   = $id;
 							$response['text']   = $msg;
+							$response['email']  = $x;
 
 						}
 
