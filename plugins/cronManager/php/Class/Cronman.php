@@ -77,7 +77,7 @@ class Cronman {
 	 */
 	public function __construct() {
 
-		$rootpath = realpath( __DIR__.'/../../../../' );
+		$rootpath = dirname(__DIR__, 4);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -86,7 +86,7 @@ class Cronman {
 		$params = $this -> params;
 
 		$this -> rootpath = $rootpath;
-		$this -> identity = $GLOBALS['identity'] ?? 1;
+		$this -> identity = $GLOBALS['identity'];
 		$this -> iduser1  = $GLOBALS['iduser1'];
 		$this -> sqlname  = $GLOBALS['sqlname'];
 		$this -> fpath    = $GLOBALS['fpath'];
@@ -194,6 +194,26 @@ class Cronman {
 	}
 
 	/**
+	 * Проверяет наличие задачи по скрипту
+	 * @param $script
+	 * @return int
+	 */
+	public function taskExist($script): int {
+
+		$cronlist = $this -> getTasklist();
+		foreach ($cronlist as $task){
+
+			if(str_contains($task['script'], $script)){
+				return (int)$task['id'];
+			}
+
+		}
+
+		return 0;
+
+	}
+
+	/**
 	 * Редактирование здания
 	 *
 	 * @param int $id
@@ -223,6 +243,11 @@ class Cronman {
 			$params['script'] = str_replace( "{{DIR}}", $this -> rootpath, $params['script'] );
 		}
 
+		$period = $params['period'];
+		if( is_array( $period)){
+			$period = json_encode( $params['period'], true );
+		}
+
 		$d = [
 			"id"       => $params['id'],
 			"uid"      => $params['uid'],
@@ -232,13 +257,13 @@ class Cronman {
 			"task"     => $params['task'],
 			"bin"      => $params['bin'],
 			"script"   => $params['script'],
-			"period"   => $params['parent'] != 'once' ? (is_array( $params['period'] ) ? json_encode( $params['period'], true ) : $params['period']) : NULL,
+			"period"   => $params['parent'] != 'once' ? $period : NULL,
 			"active"   => $params['active'] ?? 'off',
 			'identity' => $identity
 		];
 
 		if ( $id == 0 && $params['uid'] != '' ) {
-			$id = $db -> getOne( "SELECT id FROM {$sqlname}cronmanager WHERE uid = '$params[uid]'" ) + 0;
+			$id = (int)$db -> getOne( "SELECT id FROM {$sqlname}cronmanager WHERE uid = '$params[uid]'" );
 		}
 
 		if ( $id == 0 ) {

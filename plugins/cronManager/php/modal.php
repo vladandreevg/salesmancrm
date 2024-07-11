@@ -399,9 +399,9 @@ if ( $action == "task.edit.form" ) {
 	$id   = $_REQUEST[ 'id' ] + 0;
 	$task = [];
 
-	if ( $id > 0 )
-		$task = $cron -> getTask( $id );
-
+	if ( $id > 0 ) {
+		$task = $cron -> getTask($id);
+	}
 	else {
 
 		$task[ 'parent' ] = 'everyminutes';

@@ -7,8 +7,6 @@
 /*        www.isaler.ru         */
 /*        ver. 2022.x           */
 /* ============================ */
-?>
-<?php
 
 use Cronman\Cronman;
 use Salesman\Guides;
@@ -17,7 +15,7 @@ use Salesman\User;
 set_time_limit( 0 );
 error_reporting( E_ERROR );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 require_once $rootpath."/inc/config.php";
 require_once $rootpath."/inc/dbconnector.php";
@@ -169,19 +167,11 @@ $fieldsClientNames = $db -> getIndCol( "fld_name", "SELECT fld_name, fld_title F
 					<div class="tagsmenu fly1 right hidden" id="fhelper" style="right:0; top: 100%">
 						<div class="blok1 w350 fs-09">
 							<ul>
-								<li>Ознакомьтесь с Документацией на модуль [
-									<a href="https://salesman.pro/docs/54" target="_blank" title="Перейти в Документацию">Справка</a> ]
-								</li>
-								<li>Вы можете использовать <b>поисковые выборки</b> для большей гибкости [
-									<a href="https://salesman.pro/docs/45#searcheditor" target="_blank" title="Перейти в Документацию">Справка</a> ]
-								</li>
-								<li>Если экспорт идет в формате CSV, то данные необходимо
-									<b>Импортировать</b> в Excel - Вкладка "Данные" / Из текста
-								</li>
+								<li>Ознакомьтесь с Документацией на модуль [&nbsp;<a href="https://salesman.pro/docs/54" target="_blank" title="Перейти в Документацию">Справка</a>&nbsp;]</li>
+								<li>Вы можете использовать <b>поисковые выборки</b> для большей гибкости [&nbsp;<a href="https://salesman.pro/docs/45#searcheditor" target="_blank" title="Перейти в Документацию">Справка</a>&nbsp;]</li>
+								<li>Если экспорт идет в формате CSV, то данные необходимо <b>Импортировать</b> в Excel - Вкладка "Данные" / Из текста</li>
 								<li>Чем больше информации экспортируется, тем дольше времени занимает этот процесс!</li>
-								<li>Для
-									<b class="red">исключения полей</b> укажите их в блоке "Исключить" - они не будут выведены в файле экспорта
-								</li>
+								<li>Для <b class="red">исключения полей</b> укажите их в блоке "Исключить" - они не будут выведены в файле экспорта</li>
 								<li>Возможна загрузка только данных контакта, присоединенного к сдекле. Если контактов несколько, то выбирается первый</li>
 							</ul>
 
@@ -202,6 +192,7 @@ $fieldsClientNames = $db -> getIndCol( "fld_name", "SELECT fld_name, fld_title F
 				<div class="flex-container box--child">
 					<label class="flex-string wp50 field"><input name="include[]" type="checkbox" value="lasthist">&nbsp;Дата активности (сделка)</label>
 					<label class="flex-string wp50 field"><input name="include[]" type="checkbox" value="nexttask">&nbsp;Дата след.напоминания (сделка)</label>
+					<label class="flex-string wp50 field"><input name="include[]" type="checkbox" value="historyone">&nbsp;1 активность (сделка)</label>
 					<label class="flex-string wp50 field"><input name="include[]" type="checkbox" value="history">&nbsp;3 активности (сделка)</label>
 					<label class="flex-string wp50 field"><input name="include[]" type="checkbox" value="speca">&nbsp;Спецификацию (сделка)</label>
 					<label class="flex-string wp50 field"><input name="include[]" type="checkbox" value="person">&nbsp;Контакт (тел. + email)</label>

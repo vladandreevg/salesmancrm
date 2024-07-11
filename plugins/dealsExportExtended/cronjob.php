@@ -15,6 +15,7 @@ use Salesman\Notify;
 use Salesman\User;
 
 set_time_limit(0);
+ini_set('memory_limit', '2048M');
 error_reporting(E_ERROR);
 
 $rootpath = realpath(__DIR__.'/../../');
@@ -423,6 +424,17 @@ while ($da = $db -> fetch($result)) {
 	if (in_array('lasthist', $includes) == 'yes') {
 
 		$lh = $db -> getOne("SELECT datum FROM {$sqlname}history WHERE did = '".$da['did']."' and tip NOT IN ('ЛогCRM','СобытиеCRM') and identity = '$identity' ORDER BY cid DESC LIMIT 1");
+
+		$deals[ $g ][ $i ] = $lh;
+		$header[ $i ]      = 'Последняя активность';
+
+		$i++;
+
+	}
+
+	if (in_array('historyone', $includes) == 'yes') {
+
+		$lh = $db -> getOne("SELECT des FROM {$sqlname}history WHERE did = '".$da['did']."' and tip NOT IN ('ЛогCRM','СобытиеCRM') and identity = '$identity' ORDER BY cid DESC LIMIT 1");
 
 		$deals[ $g ][ $i ] = $lh;
 		$header[ $i ]      = 'Последняя активность';
