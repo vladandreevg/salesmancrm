@@ -147,7 +147,7 @@ if ( $action == "uninstall" ) {
 
 	// подключаем хук плагина
 	if ( !empty( $folder ) && file_exists( $rootpath."/plugins/$folder/uninstall.php" ) ) {
-		require_once $rootpath."/plugins/{$folder}/uninstall.php";
+		require_once $rootpath."/plugins/$folder/uninstall.php";
 	}
 
 	// выполняем хук деинсталляции

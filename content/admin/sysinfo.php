@@ -36,6 +36,15 @@ exec("php -v", $php, $exit );
 
 $xphp = getPhpInfo();
 
+$distro = '';
+
+if ( $os == 'Linux' ) {
+
+	exec("cat /etc/*-release", $osa, $exit);
+	$distro = yexplode("=", $osa[0], 1);
+
+}
+
 ?>
 <TABLE id="zebra" class="top">
 	<thead>
@@ -249,7 +258,15 @@ $xphp = getPhpInfo();
 				if ( $os == 'Linux' ) {
 
 					// ищем установки libreoffice
-					exec( 'rpm -qa --qf "%{NAME}\n" | grep libreoffice', $officeComp, $exit );
+					// centos
+					if($distro != 'Ubuntu') {
+						exec('rpm -qa --qf "%{NAME}\n" | grep libreoffice', $officeComp, $exit);
+					}
+					// ubuntu
+					else {
+						exec('dpkg -l | grep libreoffice | awk \'{print $2}\'', $officeComp, $exit);
+					}
+
 					?>
 					<h4>Для Linux</h4>
 
@@ -343,8 +360,7 @@ $xphp = getPhpInfo();
 			<?php
 			//print strtr($info['os'], $os);
 			//print PHP_OS . "<br>";
-
-			print $os;
+			print $os.' '.(!empty($distro) ? "( $distro )" : "");
 			?>
 		</TD>
 	</TR>
