@@ -11,7 +11,7 @@ error_reporting( E_ERROR );
 ini_set( 'display_errors', 1 );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../' );
+$rootpath = dirname(__DIR__);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -162,7 +162,7 @@ $color = [
 
 <hr>
 
-<div style="width: 100%; overflow-x: auto;">
+<div style="width: 99%; overflow-x: auto;">
 
 	<div class="data mb20" style="max-height: 65vh;">
 
