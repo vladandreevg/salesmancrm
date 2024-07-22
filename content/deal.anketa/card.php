@@ -149,7 +149,7 @@ if ($action == 'anketa.list') {
 
 		<!--Вкладки с анкетами-->
 		<?php
-		if (count($list) > 0) {
+		if (!empty($list)) {
 			?>
 			<div id="ytabs">
 
@@ -230,14 +230,15 @@ if ($action == 'anketa.list') {
 
 		});
 
-		$('div[data-type="anketa"]').unbind('click');
-		$('div[data-type="anketa"]').bind('click', function () {
+		$('div[data-type="anketa"]')
+			.off('click')
+			.on('click', function () {
 
-			var id = $(this).data('id');
+				var id = $(this).data('id');
 
-			$anketa.edit(id);
+				$anketa.edit(id, did);
 
-		});
+			});
 
 	</script>
 	<?php
@@ -365,7 +366,7 @@ if ($action == 'anketa.edit') {
 	?>
 	<DIV class="zagolovok"><B>Анкета "<?= $ianketa['title'] ?>"</B></DIV>
 
-	<FORM action="content/deal.anketa/card.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
+	<FORM action="/content/deal.anketa/card.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="anketa.edit.on">
 		<INPUT type="hidden" name="clid" id="clid" value="<?= $clid ?>">
 		<INPUT type="hidden" name="did" id="did" value="<?= $did ?>">
@@ -376,8 +377,8 @@ if ($action == 'anketa.edit') {
 			<div class="viewdiv"><?= $ianketa['content'] ?></div>
 
 			<?php
-			$anketa = new DealAnketa();
-			$forma  = $anketa -> anketaform($ida, $did);
+			//$anketa = new DealAnketa();
+			$forma  = $anketa::anketaform($ida, $did);
 
 			print $forma;
 			?>
