@@ -379,18 +379,23 @@ function doMethod($method, array $param = []): array {
 
 		$result = Send( $url, $postdata, $header );
 
-		if ( $method == "records" )
+		if ( $method == "records" ) {
 			$rez['records'] = $result;
+		}
 		if ( $method == "play" ) {
 
 			//print $result;
 
+			$xrez = '';
+
 			$p = explode( "\n", (string)$result );
 			foreach ( $p as $l ) {
 				if ( stripos( $l, 'Location' ) !== false ) {
-					$rez = yexplode( ": ", $l, 1 );
+					$xrez = yexplode( ": ", $l, 1 );
 				}
 			}
+
+			$rez['file'] = $xrez;
 
 		}
 		else {
@@ -445,4 +450,5 @@ function doMethod($method, array $param = []): array {
 	//print_r(apache_request_headers());
 
 	return $rez;
+
 }
