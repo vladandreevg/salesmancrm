@@ -84,7 +84,7 @@ if (!empty($result)) {
 			if ($bjid == 0) {
 
 				$btn .= '
-					<a href="javascript:void(0)" onclick="editProvider(\''.$dataa['id'].'\',\'addprovider\',\''.$did.'\',\''.$provider.'\')" title="Добавить расход в бюджет"><i class="icon-box broun"><i class="icon-plus-circled red sup"></i></i></a>&nbsp;&nbsp;
+					<a href="javascript:void(0)" onclick="editProvider(\''.$dataa['id'].'\',\'addprovider\',\''.$did.'\',\''.$providerid.'\')" title="Добавить расход в бюджет"><i class="icon-box broun"><i class="icon-plus-circled red sup"></i></i></a>&nbsp;&nbsp;
 					<a href="javascript:void(0)" onclick="editProviderDeal(\'edit\',\''.$dataa['id'].'\',\''.$providerType.'\',\''.$did.'\')" title="Изменить"><i class="icon-pencil blue"></i></a>&nbsp;&nbsp;
 				';
 				$status = 'Расход не добавлен в бюджет';

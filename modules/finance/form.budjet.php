@@ -65,7 +65,7 @@ if ( $action == 'edit' || $action == 'clone' || $action == 'addprovider' ) {
 		$rashod['recal'] = 0;
 
 	}
-	else {
+	elseif ( $action != 'addprovider' ) {
 
 		$rashod = Budget::info($id)['budget'];
 
@@ -93,7 +93,7 @@ if ( $action == 'edit' || $action == 'clone' || $action == 'addprovider' ) {
 
 		$contragent = $clid = (int)$_REQUEST['clid'];
 
-		if ( !$clid ) {
+		if ( $clid == 0 ) {
 			$clid = getDogData($did, 'clid');
 		}
 
@@ -138,7 +138,7 @@ if ( $action == 'edit' || $action == 'clone' || $action == 'addprovider' ) {
 	}
 
 	// для прямого добавления из карточки
-	if( $id == 0 && !empty($tip) ){
+	if( $id == 0 && !empty($tip) && (int)$_REQUEST['agent'] > 0 ){
 
 		$did  = (int)$_REQUEST['did'];
 		$agentid = (int)$_REQUEST['agent'];
