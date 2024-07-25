@@ -21,12 +21,14 @@ include $rootpath."/inc/language/".$language.".php";
 global $userRights;
 
 $page       = $_REQUEST['page'];
+$lines_per_page = $_REQUEST['per_page'];
 $idcategory = $_REQUEST['idcat'];
 $word       = str_replace( " ", "%", $_REQUEST['word'] );
 $sort       = '';
 $tuda       = $_REQUEST['tuda'];
 $ord        = $_REQUEST['ord'];
 $ftype      = $_REQUEST['ftype'];
+$customSort = $_REQUEST['sort'];
 
 function getFCatalog($id, $level = 0, $res = []) {
 
@@ -143,6 +145,7 @@ SELECT
 	{$sqlname}file.ftitle as title,
 	{$sqlname}file.fname as file,
 	{$sqlname}file.iduser as iduser,
+	{$sqlname}file.ftag as ftag,
 	{$sqlname}clientcat.title as client,
 	{$sqlname}personcat.person as person,
 	{$sqlname}dogovor.title as deal,
@@ -159,7 +162,7 @@ WHERE
 	{$sqlname}file.identity = '$identity'
 ";
 
-$lines_per_page = 100; //Стоимость записей на страницу
+$lines_per_page = $lines_per_page ?? 5; //Стоимость записей на страницу
 $result         = $db -> query( $query );
 $all_lines      = $db -> affectedRows( $result );
 
@@ -178,6 +181,12 @@ else {
 
 $page_for_query = $page - 1;
 $lpos           = $page_for_query * $lines_per_page;
+
+if($customSort){
+    $customArrSort = explode('-', $customSort);
+    $ord = $customArrSort[0];
+    $tuda = mb_strtoupper($customArrSort[1]);
+}
 
 $query = "$query ORDER BY {$sqlname}file.$ord $tuda LIMIT $lpos,$lines_per_page";
 
@@ -212,6 +221,7 @@ while ($da = $db -> fetch( $result )) {
 		"icon"   => $icon,
 		"title"  => $da['title'],
 		"datum"  => str_replace( " ", "&nbsp;<br>", $ddate ),
+        "ftag" => $da['ftag'],
 		"size"   => $size,
 		"clid"   => (int)$da['clid'],
 		"client" => $da['client'],

@@ -89,7 +89,7 @@ if ($action == "edit") {
 				</div>
 				<div class="flex-container gray2 mt10 pl5">
 
-					<div class="flex-string wp100 mb5 uppercase "><b>Категория:</b></div>
+			    		<div class="flex-string wp100 mb5 uppercase "><b>Категория:</b></div>
 					<div class="flex-string">
 
 						<span class="select">
@@ -540,24 +540,32 @@ if ($action == 'edit.item.dialog') {
 			//print_r($file);
 
 		}
-
+        $hideLocal = 'hidden';
 		$content = '
 		<div class="pt10" id="checkcontainer">
 		
 			<div class="flex-container box--child">
 			
-				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
+                    <div class="flex-string wp40 infodiv bgwhite radio mt5 ml5">
+                        <label>
+                            <input name="tip" type="radio" id="tip" value="localfile" class="tip" onClick="addMat()" '.($item['type'] == 'file' ? 'checked' : '').'>
+                            <span class="custom-radio" style="top:0"><i class="icon-radio-check"></i></span>
+                            <span class="title Bold">Хранилище CRM</span>
+                        </label>
+                    </div>
+                    
+				<div class="flex-string wp40 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
 						<input name="tip" type="radio" id="tip" value="file" class="tip" onClick="addMat()" '.($item['type'] == 'file' ? 'checked' : '').'>
 						<span class="custom-radio"><i class="icon-radio-check"></i></span>
-						<span class="title Bold">Файл</span>
+						<span class="title Bold">Загрузить файл</span>
 						<input name="file[]" type="file" class="file hidden" id="file[]" multiple onchange="getFileMaterial();">
 					</label>
 					
 				</div>
 				
-				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
+				<div class="flex-string wp40 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
 					<input name="tip" type="radio" id="tip" value="resource" class="tip" onClick="addMat()" '.($item['type'] == 'resource' ? 'checked' : '').'>
@@ -568,7 +576,7 @@ if ($action == 'edit.item.dialog') {
 					
 				</div>
 				
-				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
+				<div class="flex-string wp40 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
 						<input name="tip" type="radio" id="tip" value="text" class="tip" onClick="addMat()"  '.($item['type'] == 'text' ? 'checked' : '').'>
@@ -606,8 +614,15 @@ if ($action == 'edit.item.dialog') {
 			
 				<A href="javascript:void(0)" onClick="getLinkMaterial()" id="addResbtn" class="button '.$hideResbtn.'">указать ссылку на источник</A>
 				<span id="resource" class="pt5 ml5 blue Bold">'.$source.'</span>
-				
 			</span>
+
+
+            <span id="addLocalFile" class="infodiv fs-08 mt5 '.$hideLocal.'">
+                
+				<A href="javascript:void(0)" onClick="getLocalFiles()" id="addLocalFileButton" class="button">Прикрепить файл из хранилища CRM</A>
+				<div id="localFileFiller" class="pt5 ml5 blue Bold"></div> 
+                
+            </span>
 			
 			<div id="addText" class="hidden pt10 pb10">
 				
@@ -648,6 +663,7 @@ if ($action == 'edit.item.dialog') {
 		<input name="lec" type="hidden" id="lec" value="<?=$lec?>">
 		<input type="hidden" id="action" name="action" value="edit.item">
 		<input type="hidden" id="course" name="course" value="<?=$course?>">
+		<input type="hidden" id="localFiles" name="localFiles[]">
 
 		<div id="pole" class="p5" style="overflow-y: auto; overflow-x: hidden; max-height:70vh">
 
@@ -681,6 +697,13 @@ if ($action == 'edit.item.dialog') {
 	</FORM>
 
 	<script>
+        function truncateText(text, maxLength) {
+            if (text.length > maxLength) {
+                return text.slice(0, maxLength) + '...';
+            } else {
+                return text;
+            }
+        }
 
 		var tip = '<?=$item['type']?>';
 		var id = parseInt('<?=$id?>');
@@ -693,6 +716,200 @@ if ($action == 'edit.item.dialog') {
 
 		if(id > 0 && tip !== 'file')
 			$('#filelist').removeClass('hidden').load('/modules/corpuniver/core.corpuniver.php?action=files&type=' + tip + '&id=' + id);
+
+
+        $(document).on('click', '[id^="link-localFile-category"]', function(e) {
+            e.preventDefault();
+            var clickedId = this.dataset.id;
+            fetchCategoryData(clickedId);
+        });
+
+         $(document).ready(function() {
+            $('body').on('click', '#selectLocalFile', function() {
+                $('.localfile_name__selected').removeClass('localfile_name__selected');
+
+                $(this).addClass('localfile_name__selected');
+
+               var currentValue = $('#localFiles').val();
+               var selectedValue = $(this).data('id');
+
+               if (parseInt(currentValue) === parseInt(selectedValue)) {
+                   console.log('currentValue === selectedValue');
+                   $(this).removeClass('localfile_name__selected');
+                   $('#localFiles').val('');
+               } else {
+                   $('#localFiles').val(selectedValue);
+               }
+            });
+        });
+
+         /*$(document).ready(function() {
+            $('table').on('click', '#x-title, #x-size, #x-datum', function() {
+                resetAllArrows();
+                var field = $(this).attr('id').substring(2);
+                changesort(field);
+            });
+        });*/
+
+        function changesort(field,clickedId = null) {
+            //console.log(field);
+            console.log('qwer');
+            var element = $('#x-' + field);
+
+
+            if(element){
+                var icon = element.find('i');
+
+
+                if(icon.hasClass('icon-angle-down')){
+                    var sort = 'asc';
+                }
+                else {
+                    var sort = 'desc';
+                }
+
+                //console.log(sort);
+
+                //console.log('sort='+field+'-'+sort);
+
+
+                fetchCategoryData(clickedId,1,'sort='+field+'-'+sort);
+
+
+
+            }
+        }
+
+        function resetAllArrows() {
+            $('i.icon-angle-down, i.icon-angle-up').removeClass('icon-angle-down icon-angle-up').addClass('icon-angle-neutral');
+        }
+
+        function toggleArrow(element) {
+            console.log(element);
+            if (element.hasClass('icon-angle-down')) {
+                element.removeClass('icon-angle-down').addClass('icon-angle-up');
+            } else if (element.hasClass('icon-angle-up')) {
+                element.removeClass('icon-angle-up').addClass('icon-angle-down');
+            }
+        }
+
+        function fetchCategoryData(clickedId,page = 1,sort = null) {
+            var url;
+            let sortStr = "";
+            let dateSortClass = 'icon-angle-down';
+            let titleSortClass = 'icon-angle-down';
+            let sizeSortClass = 'icon-angle-down';
+
+            if(sort){
+                sortStr = '&'+sort;
+                let sortArr = sortStr.split('-');
+                let sortFields = sortArr[0].split("=");
+
+                switch (sortFields[1]){
+                    case 'datum':
+                        dateSortClass = sortArr[1] == 'asc'? 'icon-angle-up':'icon-angle-down'
+                        break;
+                    case 'ftitle':
+                        titleSortClass = sortArr[1] == 'asc'? 'icon-angle-up':'icon-angle-down';
+                        break;
+                    case 'size':
+                        sizeSortClass = sortArr[1] == 'asc'? 'icon-angle-up':'icon-angle-down'
+                        break;
+                }
+            }
+
+            if (!clickedId) {
+                url = "/modules/upload/list.upload.php?idcat&ord=fid&per_page=10&page="+page+sortStr;
+            } else {
+                url = "/modules/upload/list.upload.php?idcat=" + clickedId + '&ord=fid&per_page=10&page='+page+sortStr;
+            }
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    var html = '';
+                    if (data.list === null) {
+                        html += '<div class="mb10"> Файлов в данной категории еще нет</div>';
+                    } else {
+                        html += '<table>';
+                        html += '<thead><tr>';
+                        html += '<th class="text-left"><div class="ellipsis hand" id="x-datum" onclick="changesort(\'datum\','+clickedId+')" title="Изменить порядок вывода">Дата<i class="'+dateSortClass+'"></i></div></th>';
+                        html += '<th class="text-left"><div class="ellipsis hand" id="x-ftitle" onclick="changesort(\'ftitle\','+clickedId+')" title="Изменить порядок вывода">Название<i class="'+titleSortClass+'"></i></div></th>';
+                        html += '<th>Описание</th>';
+                        html += '<th class="text-left"><div class="ellipsis hand" id="x-size" onclick="changesort(\'size\','+clickedId+')" title="Изменить порядок вывода">Размер<i class="'+sizeSortClass+'"></i></div></th>';
+                        html += '<th>...</th>';
+                        html += '</tr></thead>';
+                        html += '<tbody>';
+
+                        for (var i = 0; i < data.list.length; i++) {
+                            const description = data.list[i].ftag === null ? "Нет описания" : data.list[i].ftag;
+
+                            html += '<tr class="localfile_name truncate-text" data-id="' + data.list[i].id + '" id="selectLocalFile">';
+                            html += '<td>' + data.list[i].datum + '</td>';
+                            html += '<td>' + truncateText(data.list[i].title, 50) + '</td>';
+                            html += '<td class="localfile_description truncate-text">' + truncateText(description, 100) + '</td>';
+                            html += '<td>' + data.list[i].size + ' kb</td>';
+                            // html += '<td><input  type="checkbox" id="checkboxLocalFile" value= "' + data.list[i].id + '"></td>';
+                            html += '<td><span style="visibility: visible" class="actions"><a href="javascript:void(0)" class="gray green mpr0 localfile--preview" data-id="' + data.list[i].id + '" data-type="task" title="Просмотр"><i class="icon-eye green"></i></a></span></td>'
+                            html += '</tr>';
+                        }
+
+                        html += '</tbody>';
+                        html += '</table>';
+                    }
+
+                    var pageall = data.pageall;
+                    var page = data.page;
+                    all = data.all;
+
+                    var pg = 'Стр. '+page+' из '+pageall;
+
+                    if(pageall > 1){
+
+                        var prev = page - 1;
+                        var next = page + 1;
+
+                        if(page === 1)
+                            pg = pg + '&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+','+next+')" title="Следующая"><i class="icon-angle-right"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+','+pageall+')" title="Последняя"><i class="icon-angle-double-right"></i></a>&nbsp;';
+
+                        else if(page === pageall)
+                            pg = pg + '&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+',1)" title="Начало"><i class="icon-angle-double-left"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+','+prev+')" title="Предыдущая"><i class="icon-angle-left"></i></a>&nbsp;';
+
+                        else
+                            pg = '&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+',1)" title="Начало"><i class="icon-angle-double-left"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+','+prev+')" title="Предыдущая"><i class="icon-angle-left"></i></a>&nbsp;'+ pg+ '&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+','+next+')" title="Следующая"><i class="icon-angle-right"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="fetchCategoryData('+clickedId+','+pageall+')" title="Последняя"><i class="icon-angle-double-right"></i></a>&nbsp;';
+
+                    }
+                    $('#pagediv-new').html(pg);
+
+                    // var selectedFile = $('#localFiles').val();
+                    //
+                    // if (selectedFile) {
+                    //     html += '<button type="submit" class="button">Прикрепить</button>';
+                    // } else {
+                    //     html += '<div class="button" onclick="getLocalFiles()">Вернуться назад</div>';
+                    // }
+
+                    // html += '<button type="submit" id="chooseLocalFileButton" class="chooseLocalFileButton hidden" ">Прикрепить файл</button>';
+
+                    $('#content-container').html(html);
+                    // updateCheckboxState();
+
+                    // Здесь открываем файл в новой вкладке
+                    $(document).on('click', '.gray.green.mpr0.localfile--preview', function(event) {
+                        event.preventDefault();
+                        let id = $(this).data('id');
+                        let type = $(this).data('type');
+                        let url = "/content/helpers/get.file.php?fid=" + id + "&file=download&disposition=&oname=" + type;
+                        window.open(url, '_blank');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+
 
 		$('#editItem').ajaxForm({
 			dataType:"json",

@@ -182,7 +182,7 @@ if($ext_allow != '')
 
 		}
 		else {
-
+            console.log("tesdsdsds");
 			doLoad('/modules/corpuniver/form.corpuniver.php?action=edit.item.dialog&type=' + tip + '&id=' + id + '&lec=' + lec + '&course=' + course);
 
 		}
@@ -358,6 +358,10 @@ if($ext_allow != '')
 		$('#place').html(title);
 		$('#page').val('');
 		$('#tag').val('');
+
+        if($(this).hasClass("local-file-item")){
+            return;
+        }
 
 		configpage();
 
@@ -582,6 +586,7 @@ if($ext_allow != '')
 				var id = ($current === 0) ? parseInt($content.find('table tr:first-child').data('id')) : $current;
 
 				console.log(id);
+                console.log("test1");
 
 				if (id > 0) {
 
@@ -986,6 +991,11 @@ if($ext_allow != '')
 
 	}
 
+    function getFileFromLocalLibrary() {
+        $("#yourPopupId").dialog("open");
+    }
+
+
 	function getFileMaterial() {
 
 		var a = '';
@@ -1151,6 +1161,104 @@ if($ext_allow != '')
 
 	}
 
+
+
+    function createHtmlTree(data) {
+        var html = '<div style="display:flex;"> <div class="contaner p5" style="width: 250px" id="pricecategory">';
+
+        html += '<div class="mb10">';
+        html += '<b class="shad"><i class="icon-menu blue"></i>&nbsp;ПАПКИ</b>';
+        html += '<div class="pull-aright inline">';
+        html += '</div>';
+        html += '</div>';
+
+        html += '<div class="nano has-scrollbar" style="height: 489.19px;">';
+        html += '<div class="ifolder nano-content" style="min-height: 200px; right: -10px;" tabindex="0">';
+
+        // Start processing the data to generate the folder structure
+        for (var i = 0; i < data.length; i++) {
+            html += createHtmlTreeNode(data[i], 0);
+        }
+
+        html += '</div>'; // Close #folder
+        html += '<div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 480px; transform: translate(0px, 0px);"></div></div>';
+        html += '</div>'; // Close .nano
+
+        // Add a container for loading the content dynamically
+        html += '</div>';
+        html += '<div class="contaner p5" style="flex-grow: 1;" id="content-container"></div>';
+        html += '<div class="pagecontainer">';
+        html += '<div class="page-modal pbottom mainbg" id="pagediv-new" style="bottom: 5px !important;">тест</div>'
+        html += '</div>';
+        html += '</div>';
+
+        return html;
+    }
+
+    function createHtmlTreeNode(node, level) {
+        var html = '';
+
+        var folderClass = 'icon-folder';
+        if (level === 0) {
+            folderClass += ' blue';
+        } else {
+            folderClass += ' gray2';
+        }
+
+        var paddingClass = level > 0 ? 'pl10' : '';
+
+        html += '<a href="javascript:void(0)" class="fol_it block text-left link-localFile-category mt5 mb5 local-file-item" data-id="' + node.idcategory + '" data-title="' + node.title + '" id="link-localFile-category-' + node.idcategory + '">';
+        html += '<div class="ellipsis ' + paddingClass + '">';
+        if (level > 0) {
+            html += '<div class="strelka w5 mr10"></div>';
+        }
+        html += '<i class="' + folderClass + '"></i>&nbsp;';
+        if (level > 1) {
+            html += '<i class="icon-users-1 sup green" title="Общая папка"></i>';
+        }
+        html += node.title + '</div></a>';
+
+        if (node.children && node.children.length > 0) {
+            for (var i = 0; i < node.children.length; i++) {
+                html += createHtmlTreeNode(node.children[i], level + 1);
+            }
+        }
+
+        return html;
+    }
+
+    function getLocalFiles() {
+        fetch('/content/ajax/file.system.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json()
+            })
+            .then(data => {
+                $('#addLocalFileButton').addClass('hidden')
+                const html = createHtmlTree(data);
+
+                document.getElementById('localFileFiller').innerHTML = html;
+
+            })
+            .then(() => {
+                fetchCategoryData()
+            })
+            .then(() => {
+                $('#dialog').css('height', $(window).height());
+                $('#dialog').css('width', $(window).width());
+                $('#resultdiv').css('height', $(window).height());
+                $('#pole').css('max-height', $(window).height() - 130);
+                $('#dialog').center();
+            })
+            .catch(error => {
+                Swal.showValidationMessage(
+                    'Ошибка:' + error
+                )
+            })
+    }
+
 	function delResMat() {
 
 		$('#addResbtn').removeClass('hidden');
@@ -1169,6 +1277,7 @@ if($ext_allow != '')
 			$('#addRes').addClass('hidden');
 			$('#cke_content').addClass('hidden');
 			$('#addText').addClass('hidden');
+            $('#addLocalFile').addClass('hidden');
 
 			$('#dialog').center();
 
@@ -1179,6 +1288,7 @@ if($ext_allow != '')
 			$('#addText').addClass('hidden');
 			$('#addRes').removeClass('hidden');
 			$('#cke_content').addClass('hidden');
+            $('#addLocalFile').addClass('hidden');
 
 			$('#dialog').center();
 
@@ -1189,10 +1299,19 @@ if($ext_allow != '')
 			$('#addRes').addClass('hidden');
 			$('#addText').removeClass('hidden');
 			$('#cke_content').removeClass('hidden');
+            $('#addLocalFile').addClass('hidden');
 
 			createEditorItem();
 
-		}
+		} else if (tip === 'localfile') {
+
+            $('#filesMat').addClass('hidden');
+            $('#addText').addClass('hidden');
+            $('#addRes').addClass('hidden');
+            $('#cke_content').addClass('hidden');
+            $('#addLocalFile').removeClass('hidden');
+
+        }
 
 		$('#dialog').center();
 

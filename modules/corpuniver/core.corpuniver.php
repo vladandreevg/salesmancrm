@@ -37,6 +37,9 @@ $mdcsettings = json_decode( $mdcset['content'], true );
 
 // Изменение курса/лекции/материала/задания
 if ( $action == 'edit.item' ) {
+   // echo 'asda';
+
+
 
 	$type    = $_REQUEST['type'];
 	$id      = (int)$_REQUEST['id'];
@@ -51,6 +54,7 @@ if ( $action == 'edit.item' ) {
 
 	//загружаем файлы
 	$upload = Upload ::upload();
+
 
 	//print_r($upload);
 
@@ -106,9 +110,17 @@ if ( $action == 'edit.item' ) {
 
 	}
 
+    if($_REQUEST['localFiles']){
+        $fid[] = $_REQUEST['localFiles'][0];
+    }
+
+    //var_dump($fid);
+
 	$fileo = ($_REQUEST['fid_old'] != '') ? yexplode( ",", $_REQUEST['fid_old'] ) : [];
 
 	$fidn = (!empty( $fid )) ? array_merge_recursive( $fileo, $fid ) : $fileo;
+
+    //var_dump($fidn);
 
 	$fidItem = yimplode( ",", $fidn );
 
@@ -151,6 +163,16 @@ if ( $action == 'edit.item' ) {
 		$params['source']   = $source;
 		$params['type']     = $_REQUEST['tip'];
 		$params['identity'] = $identity;
+
+        //var_dump($params);
+        //var_dump($_REQUEST['tip']);
+
+        if($_REQUEST['tip'] === 'localfile'){
+            $params['type'] = 'file';
+        }
+        //var_dump($id);
+        //exit;
+
 
 		$response = CorpUniver ::editMaterial( $id, $params );
 

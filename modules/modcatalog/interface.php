@@ -328,6 +328,10 @@ const moduleBDName = "modcatalog";
 		$('#tips').html(title);
 		$('#page').val('');
 
+        if($(this).hasClass("local-file-item")){
+            return;
+        }
+
 		preconfigpage();
 
 	});
@@ -747,6 +751,173 @@ const moduleBDName = "modcatalog";
 		doLoad(url + str).append('<div id="loader" class="loader">Загрузка данных...</div>');
 		return false;
 	}
+
+    function getLocalFiles() {
+        fetch('/content/ajax/file.system.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                console.log("dasd");
+                return response.json()
+            })
+            .then(data => {
+                //$('#addLocalFileButton').addClass('hidden')
+                const html = createHtmlTree(data);
+
+                document.getElementById('localFileFiller').innerHTML = html;
+
+            })
+            .then(() => {
+                fetchCategoryData()
+            })
+            .then(() => {
+                // $('#dialog').css('height', $(window).height());
+                // $('#dialog').css('width', $(window).width());
+                $('#dialog').css('height', '80vh');
+                $('#dialog').css('width', '70vw');
+                // $('#resultdiv').css('height', $(window).height());
+                $('#formtabs').css('height', 'calc(80vh - 130px)');
+                $('#tabse').css('height', '100%;');
+                $('#btn-add-lf').css('display', 'none');
+                $('#dialog').center();
+
+
+                // $('#resultdiv').css('height', '100%;');
+                // $('#pole').css('max-height: 100%;');
+                // $('#tabse').css('height', '100%;');
+                // $('#dialog').center();
+            })
+            .catch(error => {
+                Swal.showValidationMessage(
+                    'Ошибка:' + error
+                )
+            })
+    }
+    function createHtmlTree(data) {
+        var html = '<div style="display:flex;"> <div class="contaner p5" style="width: 250px" id="pricecategory">';
+
+        html += '<div class="mb10">';
+        html += '<b class="shad"><i class="icon-menu blue"></i>&nbsp;ПАПКИ</b>';
+        html += '<div class="pull-aright inline">';
+        html += '</div>';
+        html += '</div>';
+
+        html += '<div class="nano has-scrollbar" style="height: 489.19px;">';
+        html += '<div class="ifolder nano-content" style="min-height: 200px; right: -10px;" tabindex="0">';
+
+        // Start processing the data to generate the folder structure
+        for (var i = 0; i < data.length; i++) {
+            html += createHtmlTreeNode(data[i], 0);
+        }
+
+        html += '</div>'; // Close #folder
+        html += '<div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 480px; transform: translate(0px, 0px);"></div></div>';
+        html += '</div>'; // Close .nano
+
+        // Add a container for loading the content dynamically
+        html += '</div>';
+        html += '<div class="contaner p5" style="flex-grow: 1;padding-bottom: 35px !important" id="content-container"></div>';
+        html += '<div class="pagecontainer">';
+        html += '<div class="page-modal pbottom mainbg" id="pagediv-new" style="bottom: 10px !important;">тест</div>'
+        html += '</div>';
+        html += '</div>';
+
+        return html;
+    }
+    function createHtmlTreeNode(node, level) {
+        var html = '';
+
+        var folderClass = 'icon-folder';
+        if (level === 0) {
+            folderClass += ' blue';
+        } else {
+            folderClass += ' gray2';
+        }
+
+        var paddingClass = level > 0 ? 'pl10' : '';
+
+        html += '<a href="javascript:void(0)" class="fol_it block text-left link-localFile-category mt5 mb5 local-file-item" data-id="' + node.idcategory + '" data-title="' + node.title + '" id="link-localFile-category-' + node.idcategory + '">';
+        html += '<div class="ellipsis-files ' + paddingClass + '">';
+        if (level > 0) {
+            html += '<div class="strelka w5 mr10"></div>';
+        }
+        html += '<i class="' + folderClass + '"></i>&nbsp;';
+        if (level > 1) {
+            html += '<i class="icon-users-1 sup green" title="Общая папка"></i>';
+        }
+        html += node.title + '</div></a>';
+
+        if (node.children && node.children.length > 0) {
+            for (var i = 0; i < node.children.length; i++) {
+                html += createHtmlTreeNode(node.children[i], level + 1);
+            }
+        }
+
+        return html;
+    }
+
+    function fetchCategoryData(clickedId) {
+        var url;
+        if (!clickedId) {
+            url = "/modules/upload/list.upload.php?idcat&ord=fid&per_page=10";
+        } else {
+            url = "/modules/upload/list.upload.php?idcat=" + clickedId + '&ord=fid&per_page=10';
+        }
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                var data = JSON.parse(response);
+                var html = '';
+                console.log(data);
+
+                if (data.list === null) {
+                    html += '<div class="mb10"> Файлов в данной категории еще нет</div>';
+                } else {
+                    html += '<table>';
+                    html += '<thead><tr>';
+                    html += '<th>Дата</th>';
+                    html += '<th>Имя</th>';
+                    html += '<th>Размер</th>';
+                    // html += '<th>...</th>';
+                    html += '</tr></thead>';
+                    html += '<tbody>';
+
+                    for (var i = 0; i < data.list.length; i++) {
+                        html += '<tr style="text-align: left">';
+                        html += '<td>' + data.list[i].datum + '</td>';
+                        html += '<td class="localfile_name" data-id="' + data.list[i].id + '" data-name="' + с + '" id="selectLocalFile">' + data.list[i].title + '</td>';
+                        html += '<td>' + data.list[i].size + ' kb</td>';
+                        // html += '<td><input  type="checkbox" id="checkboxLocalFile" value= "' + data.list[i].id + '"></td>';
+                        // html += '<td><span style="visibility: visible" class="actions"><a href="javascript:void(0)" class="gray green mpr0 cu--preview" data-id="' + data.list[i].id + '" data-type="task" title="Просмотр"><i class="icon-eye green"></i></a></span></td>'
+                        html += '</tr>';
+                    }
+
+                    html += '</tbody>';
+                    html += '</table>';
+                }
+
+
+
+                // var selectedFile = $('#localFiles').val();
+                //
+                // if (selectedFile) {
+                //     html += '<button type="submit" class="button">Прикрепить</button>';
+                // } else {
+                //     html += '<div class="button" onclick="getLocalFiles()">Вернуться назад</div>';
+                // }
+
+                // html += '<button type="submit" id="chooseLocalFileButton" class="chooseLocalFileButton hidden" ">Прикрепить файл</button>';
+
+                $('#content-container').html(html);
+                updateCheckboxState();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
 
 	function delCat(id) {
 

@@ -961,7 +961,8 @@ if ($action == "filedelete") {
 	
 	$nfiles  = [];
 	$nxfiles = '';
-	
+
+
 	foreach ($files as $xfile) {
 		if ($xfile['file'] == $file) {
 			unlink($rootpath.'/files/'.$fpath.'modcatalog/'.$file);
@@ -994,17 +995,17 @@ if ($action == "filelist") {
 		."' and identity = '$identity'"
 	);
 	$files  = json_decode($result, true);
-	
-	foreach ($files as $file) {
-		print '
+
+    foreach ($files as $file) {
+        print '
 			<div class="tags">
 				<a href="/files/'.$fpath.'modcatalog/'.$file['file']
-			.'" target="blank" title="В новом окне">'.get_icon2($file['file'])
-			.'&nbsp;'.$file['name'].'</a>&nbsp;
+            .'" target="blank" title="В новом окне">'.get_icon2($file['file'])
+            .'&nbsp;'.$file['name'].'</a>&nbsp;
 				<a href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите Удалить файл?\\nФайл будет Удален из системы.\');if (cf)deleteFile(\''
-			.$id.'\',\''.$file['file'].'\');" title="Удалить"><i class="icon-cancel red"></i></a>
+            .$id.'\',\''.$file['file'].'\');" title="Удалить"><i class="icon-cancel red"></i></a>
 			</div>';
-	}
+    }
 	
 	exit();
 }
@@ -1175,10 +1176,11 @@ if ($action == "discard") {
  */
 if ($action == "edit_on") {
 	$params = $_REQUEST;
-	
 	$sklad  = new Storage();
+
 	$result = $sklad -> edit($params);
-	
+
+
 	$apx = (count($result['error']) > 0) ? "<br>Ошибки:<br>".implode(
 			"<br>",
 			$result['error']

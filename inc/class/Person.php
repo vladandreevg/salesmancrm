@@ -1869,8 +1869,6 @@ class Person {
 
 	public function card(array $params = []): array {
 
-		global $userSettings;
-
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
 		$identity = $this -> identity;
@@ -1880,8 +1878,6 @@ class Person {
 		$otherSettings = $this -> otherSettings;
 		$settingsUser  = $this -> settingsUser;
 		$iduser1       = $this -> iduser1;
-
-		//print_r($userSettings);
 
 		$valuta      = $GLOBALS['valuta'];
 		$fieldsNames = $GLOBALS['fieldsNames'];

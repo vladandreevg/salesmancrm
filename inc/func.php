@@ -1020,37 +1020,6 @@ function pre_format(string $string = NULL): float {
 }
 
 /**
- * Преобразование сложных форматов чисел, содержащих много мусора
- * 1,861.37р., 2,666.52 руб., 3´966.70руб, 2´586.04р., 3 850,25р.
- * @param string $string
- * @return float
- */
-function prepareSumma(string $string = ''): float {
-
-	if (!is_null($string)) {
-
-		// убираем мусор из строки
-		$string = str_replace(["`", "´", " ", " ", "р.", "руб.", "руб"], "", trim($string));
-
-		// если в строке есть и точка и запятая (3,147.71р.)
-		if(str_contains($string, ".") && str_contains($string, ","))  {
-			$string = str_replace(",", "", trim($string));
-		}
-
-		// если в строке есть только запятая (3147,71р.)
-		if(!str_contains($string, ".") && str_contains($string, ","))  {
-			$string = str_replace(",", ".", trim($string));
-		}
-
-		return (float)$string;
-
-	}
-
-	return 0.00;
-
-}
-
-/**
  * Склонение "год", "день"
  * year (default) - год, day - день
  *
@@ -7128,10 +7097,6 @@ function formatPhoneUrlIcon($phone, int $clid = NULL, int $pid = NULL) {
  */
 function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
 
-	global $userSettings, $isadmin;
-
-	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
-
 	$phone_list = [];
 	$phones     = yexplode(",", str_replace(";", ",", str_replace(" ", "", $xphone)));
 	foreach ($phones as $phone) {
@@ -7140,9 +7105,9 @@ function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
 		$isMobile = is_mobile($number);
 
 		$phone_list[] = [
-			"number"   => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? $number : hidePhone($number),
+			"number"   => $number,
 			"isMobile" => $isMobile,
-			"formated" => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? formatPhoneUrl($phone, $clid, $pid) : hidePhone($number)
+			"formated" => formatPhoneUrl($phone, $clid, $pid)
 		];
 
 	}
@@ -7163,10 +7128,7 @@ function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
  */
 function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL): array {
 
-	global $userSettings, $isadmin, $ymEnable;
-
-	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on';
-
+	global $ymEnable;
 	$list = [];
 
 	$emails = explode(",", str_replace(";", ",", (string)$xmail));
@@ -7174,10 +7136,10 @@ function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL): array {
 	foreach ($emails as $email) {
 
 		$list[] = [
-			"email"    => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? $email : hideEmail($email),
-			"link"     => ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? link_it($email) : hideEmail($email),
+			"email"    => $email,
+			"link"     => link_it($email),
 			"isMailer" => $ymEnable,
-			"appendix" => $ymEnable && ( $isAccess && $userSettings['hideAllContacts'] != 'yes' ) ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : ""
+			"appendix" => $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : ""
 		];
 
 	}

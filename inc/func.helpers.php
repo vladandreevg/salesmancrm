@@ -3788,35 +3788,28 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 			'mail_url',
 			'site_url'
 		];
-		$cdata = get_client_info( $clid, 'yes' );
+		$fields = [];
 
 		$res = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='client' AND fld_on='yes' AND identity = '$identity' ORDER BY fld_order" );
-		while ($da = $db -> fetch( $res )) {
+		while ($xdata = $db -> fetch( $res )) {
 
-			if ( in_array( $da['fld_name'], $includ ) || str_contains( $da['fld_name'], 'input' ) ) {
-
-				$tags[ "clientF".$da['fld_name'] ] = $cdata[ $da['fld_name'] ];
-
-				if($da['fld_temp'] == 'datum'){
-					$tags[ "clientF".$da['fld_name']."Format" ] = modifyDatetime($cdata[ $da['fld_name'] ], ["format" => "d.m.Y"]);
-				}
-				elseif($da['fld_temp'] == 'datetime'){
-					$tags[ "clientF".$da['fld_name']."Format" ] = modifyDatetime($cdata[ $da['fld_name'] ], ["format" => "d.m.Y H:i"]);
-				}
-
+			if ( in_array( $xdata['fld_name'], $includ ) || str_contains( $xdata['fld_name'], 'input' ) ) {
+				$fields[] = $xdata['fld_name'];
 			}
 
 		}
 
+		$data = get_client_info( $clid, 'yes' );
+
 		if ( (int)$pid == 0 ) {
-			$pid  = (int)$cdata['pid'];
+			$pid  = (int)$data['pid'];
 		}
 
-		/*foreach ( $fields as $field ) {
+		foreach ( $fields as $field ) {
 			$tags[ "clientF".$field ] = $data[ $field ];
-		}*/
+		}
 
-		$includ = [];
+		//$includ = [];
 
 	}
 
@@ -3834,26 +3827,20 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 		'mail',
 		'rol'
 	];
-	$pdata = get_person_info( $pid, 'yes' );
+	$fields  = [];
 
 	$res = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='person' AND fld_on='yes' AND identity = '$identity' ORDER BY fld_order" );
-	while ($da = $db -> fetch( $res )) {
+	while ($data = $db -> fetch( $res )) {
 
-		if ( in_array( $da['fld_name'], $pinclud, true ) || str_contains( $da['fld_name'], 'input' ) ) {
-
-			//$fields[] = $data['fld_name'];
-
-			$tags[ "personF".$da['fld_name'] ] = $pdata[ $da['fld_name'] ];
-
-			if($da['fld_temp'] == 'datum'){
-				$tags[ "personF".$da['fld_name']."Format" ] = modifyDatetime($pdata[ $da['fld_name'] ], ["format" => "d.m.Y"]);
-			}
-			elseif($da['fld_temp'] == 'datetime'){
-				$tags[ "personF".$da['fld_name']."Format" ] = modifyDatetime($pdata[ $da['fld_name'] ], ["format" => "d.m.Y H:i"]);
-			}
-
+		if ( in_array( $data['fld_name'], $pinclud, true ) || str_contains( $data['fld_name'], 'input' ) ) {
+			$fields[] = $data['fld_name'];
 		}
 
+	}
+
+	$data = get_person_info( $pid, 'yes' );
+	foreach ( $fields as $field ) {
+		$tags[ "personF".$field ] = $data[ $field ];
 	}
 
 	//}
@@ -3867,13 +3854,6 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 		while ($da = $db -> fetch( $res )) {
 
 			$tags[ "dogF".$da['fld_name'] ] = $data[ $da['fld_name'] ];
-
-			if($da['fld_temp'] == 'datum'){
-				$tags[ "dogF".$da['fld_name']."Format" ] = modifyDatetime($data[ $da['fld_name'] ], ["format" => "d.m.Y"]);
-			}
-			elseif($da['fld_temp'] == 'datetime'){
-				$tags[ "dogF".$da['fld_name']."Format" ] = modifyDatetime($data[ $da['fld_name'] ], ["format" => "d.m.Y H:i"]);
-			}
 
 		}
 

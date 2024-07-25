@@ -559,9 +559,52 @@ class Storage {
 
 		}
 
+
+        if($params['localFiles']){
+            $localFiles = json_decode($params['localFiles']);
+            if(is_array($localFiles)){
+
+                $files = $db->getAll("Select id,file_id from {$sqlname}price_files where price_id=?i",$params['prid']);
+
+                $localFilesIds =[];
+
+                $filesToDelete = [];
+
+                foreach($files as $file){
+                    $localFilesIds[] = (int)$file['file_id'];
+
+                    if(!in_array((int)$file['file_id'],$localFiles,true)){
+                        $filesToDelete[] = $file['file_id'];
+                    }
+                }
+
+
+                //$db->
+                foreach ($localFiles as $localFile){
+
+                    if(!in_array($localFile,$localFilesIds,true)){
+                        $db->query("Insert into {$sqlname}price_files SET ?u",[
+                            'price_id' => $params['prid'],
+                            "file_id" => $localFile,
+                            "datum"    => current_datum(),
+                            "identity" => $identity
+                        ]);
+                    }
+                }
+
+                if(count($filesToDelete)>0){
+                    $db->query("DELETE from {$sqlname}price_files where price_id = ?i and file_id in (?a) and identity = ?i",$params['prid'],$filesToDelete,$identity);
+                }
+            }
+        }
+
 		$fcount = count( $fileuploaded );
 
 		//---заполнение каталога---//
+
+        //тут я остановился
+
+        //if
 
 		//массив файлов, которые уже прикреплены
 		$files = json_decode( (string)$db -> getOne( "SELECT files FROM {$sqlname}modcatalog where id='$id' and identity = '$identity'" ), true );

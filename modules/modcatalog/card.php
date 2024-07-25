@@ -213,7 +213,7 @@ if ($action == "getInfo") {
 	</div>
 	<hr>
 	<div style="display:inline-block; width:100%;">
-		<DIV id="formtabs" style="border:0; background: none;">
+		<DIV id="formtabs" class="testt" style="border:0; background: none;">
 			<UL style="background: none;">
 				<LI><A href="#tab-form-1">Описание</A></LI>
 				<LI><A href="#tab-form-2">Доп.информация</A></LI>
