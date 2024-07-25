@@ -229,6 +229,9 @@ elseif( (int)$uri_parts[1] > 0 && stripos( $uri_parts[0], 'card' ) === false ){
 	}
 
 }
+elseif ($uri_parts[0]=== '_install' && $uri_parts[1] === 'localupdates'){
+    include_once $rootpath."/_install/localupdates.php";
+}
 
 // отсутствие пути, который не смогли обработать ранее
 elseif( !file_exists( realpath( __DIR__.'/' ).$_SERVER['REQUEST_URI']) ){
