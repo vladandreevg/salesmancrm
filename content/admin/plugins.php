@@ -13,6 +13,10 @@ ini_set('display_errors', 1);
 
 header( "Pragma: no-cache" );
 
+global $hooks;
+
+const SMPLUGIN = true;
+
 $rootpath = dirname( __DIR__, 2 );
 
 include $rootpath."/inc/config.php";
@@ -22,8 +26,6 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 
 $thisfile = basename( __FILE__ );
-
-const SMPLUGIN = true;
 
 $pluginList       = json_decode( str_replace( [
 	"  ",
@@ -48,11 +50,9 @@ if ( $action == "deactivate" ) {
 	$folder = $_REQUEST['name'];
 
 	// подключаем хук плагина
-	if ( isset( $_REQUEST['name'] ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $_REQUEST['name'] ).".php" ) ) {
-
-		require_once $rootpath."/plugins/$folder/".strtolower( $_REQUEST['name'] ).".php";
-
-	}
+	/*if ( !empty( $folder ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $folder ).".php" ) ) {
+		require_once $rootpath."/plugins/$folder/".strtolower( $folder ).".php";
+	}*/
 
 	$db -> query( "UPDATE ".$sqlname."plugins SET ?u WHERE id = '$id' and identity = '$identity'", [
 		'active' => 'off',
@@ -60,7 +60,7 @@ if ( $action == "deactivate" ) {
 	] );
 
 	// выполняем хук деактивации
-	$hooks -> do_action( 'plugin_deactivate', ["name" => $_REQUEST['name']] );
+	$hooks -> do_action( 'plugin_deactivate', ["name" => $folder] );
 
 	/**
 	 * массив подключенных плагинов
@@ -72,7 +72,7 @@ if ( $action == "deactivate" ) {
 	$plugin = $db -> query( "SELECT * FROM ".$sqlname."plugins WHERE active = 'on' and identity = '$identity' ORDER by name" );
 	while ($data = $db -> fetch( $plugin )) {
 
-		$pluginEnabled[] = $data['name'];
+		$pluginEnabled[] = $folder;
 
 	}
 
@@ -90,11 +90,9 @@ if ( $action == "activate" ) {
 	$name = strtolower($_REQUEST['name']);
 
 	// подключаем хук плагина
-	if ( isset( $_REQUEST['name'] ) && file_exists( $rootpath."/plugins/{$folder}/{$name}.php" ) ) {
-
+	/*if ( !empty( $folder ) && file_exists( $rootpath."/plugins/{$folder}/{$name}.php" ) ) {
 		require_once $rootpath."/plugins/{$folder}/{$name}.php";
-
-	}
+	}*/
 
 	$pluginAbout['version'] = '1.0';
 	if ( file_exists( $rootpath."/plugins/{$folder}/plugin.json" ) ) {
@@ -148,10 +146,8 @@ if ( $action == "uninstall" ) {
 	define( 'SM_UNINSTALL_PLUGIN', true );
 
 	// подключаем хук плагина
-	if ( isset( $_REQUEST['name'] ) && file_exists( $rootpath."/plugins/$folder/uninstall.php" ) ) {
-
-		require_once $rootpath."/plugins/".$_REQUEST['name']."/uninstall.php";
-
+	if ( !empty( $folder ) && file_exists( $rootpath."/plugins/$folder/uninstall.php" ) ) {
+		require_once $rootpath."/plugins/$folder/uninstall.php";
 	}
 
 	// выполняем хук деинсталляции
@@ -186,11 +182,10 @@ if ( $action == "update" ) {
 	$folder = $_REQUEST['name'];
 
 	// подключаем хук плагина
-	if ( isset( $data['name'] ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $folder ).".php" ) ) {
-
-		require_once $rootpath."/plugins/$folder/".strtolower( $data['name'] ).".php";
-
-	}
+	// отключено, т.к. они уже подключены
+	/*if ( !empty( $folder ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $folder ).".php" ) ) {
+		include_once $rootpath."/plugins/$folder/".strtolower( $folder ).".php";
+	}*/
 
 	if ( file_exists( $rootpath."/plugins/$folder/plugin.json" ) ) {
 
@@ -209,7 +204,7 @@ if ( $action == "update" ) {
 	] );
 
 	// выполняем хук активации
-	$hooks -> do_action( 'plugin_update', ["name" => $data['name']] );
+	$hooks -> do_action( 'plugin_update', ["name" => $folder] );
 
 	print "Плагин обновлен";
 
@@ -241,11 +236,9 @@ if ( $action == "install.do" ) {
 	$db -> query( "INSERT INTO ".$sqlname."plugins SET ?u", $data );
 
 	// подключаем хук плагина
-	if ( isset( $data['name'] ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $data['name'] ).".php" ) ) {
-
+	/*if ( isset( $data['name'] ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $data['name'] ).".php" ) ) {
 		require_once $rootpath."/plugins/$folder/".strtolower( $data['name'] ).".php";
-
-	}
+	}*/
 
 	// выполняем хук активации
 	$hooks -> do_action( 'plugin_activate', ["name" => $data['name']] );

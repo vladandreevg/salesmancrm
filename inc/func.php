@@ -604,6 +604,10 @@ if (!function_exists('mb_ucfirst') && extension_loaded('mbstring')) {
  */
 function highlighter($words, $source, string $format = 'red'): string {
 
+	if(empty($words))  {
+		return (string)$words;
+	}
+
 	// режем запрос на слова (можно использовать explode(' ', $searchq),
 	// но при появлении повторяющихся разделителей они не будут группироваться)
 	$words = preg_split('/ +/', str_replace("/", " ", $words));
@@ -613,7 +617,7 @@ function highlighter($words, $source, string $format = 'red'): string {
 	$pattern = '/'.implode('|', $quoted_words).'/ui';
 
 	// "подсвечиваем" каждое слово
-	return preg_replace($pattern, '<span class="'.$format.'">\\0</span>', $source);
+	return (string)preg_replace($pattern, '<span class="'.$format.'">\\0</span>', $source);
 
 }
 
@@ -1012,6 +1016,37 @@ function pre_format(string $string = NULL): float {
 			".",
 			""
 		], trim(untag($string)));
+
+	}
+
+	return 0.00;
+
+}
+
+/**
+ * Преобразование сложных форматов чисел, содержащих много мусора
+ * 1,861.37р., 2,666.52 руб., 3´966.70руб, 2´586.04р., 3 850,25р.
+ * @param string $string
+ * @return float
+ */
+function prepareSumma(string $string = ''): float {
+
+	if (!is_null($string)) {
+
+		// убираем мусор из строки
+		$string = str_replace(["`", "´", " ", " ", "р.", "руб.", "руб"], "", trim($string));
+
+		// если в строке есть и точка и запятая (3,147.71р.)
+		if(str_contains($string, ".") && str_contains($string, ","))  {
+			$string = str_replace(",", "", trim($string));
+		}
+
+		// если в строке есть только запятая (3147,71р.)
+		if(!str_contains($string, ".") && str_contains($string, ","))  {
+			$string = str_replace(",", ".", trim($string));
+		}
+
+		return (float)$string;
 
 	}
 
@@ -4684,6 +4719,22 @@ function mailto(array $params): string {
 
 	}
 
+	// передача файлов из других мест
+	// file должен содержать полный абсолютный путь до файла
+	if (!empty((array)$mailData['xfiles'])) {
+
+		foreach ($mailData['xfiles'] as $f) {
+
+			if ($charset != 'utf-8') {
+				$f['name'] = iconv("utf-8", $charset, $f['name']);
+			}
+
+			$mail -> AddAttachment($f['file'], $f['name']);
+
+		}
+
+	}
+
 
 	$mailsender_rez = ( !$mail -> Send() ) ? 'Ошибка: '.$mail -> ErrorInfo : '';
 
@@ -7093,9 +7144,14 @@ function formatPhoneUrlIcon($phone, int $clid = NULL, int $pid = NULL) {
  * @param $xphone
  * @param int|NULL $clid
  * @param int|NULL $pid
+ * @param bool $hide
  * @return array
  */
-function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
+function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL, bool $hide = false): array {
+
+	global $isadmin, $acs_prava;
+
+	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on' || $acs_prava == 'on';
 
 	$phone_list = [];
 	$phones     = yexplode(",", str_replace(";", ",", str_replace(" ", "", $xphone)));
@@ -7105,9 +7161,9 @@ function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
 		$isMobile = is_mobile($number);
 
 		$phone_list[] = [
-			"number"   => $number,
+			"number"   => ( $isAccess && !$hide ) ? $number : hidePhone($number),
 			"isMobile" => $isMobile,
-			"formated" => formatPhoneUrl($phone, $clid, $pid)
+			"formated" => ( $isAccess && !$hide ) ? formatPhoneUrl($phone, $clid, $pid) : hidePhone($number)
 		];
 
 	}
@@ -7124,11 +7180,15 @@ function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL): array {
  * @param $xmail
  * @param int|NULL $clid
  * @param int|NULL $pid
+ * @param bool $hide
  * @return array
  */
-function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL): array {
+function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL, bool $hide = false): array {
 
-	global $ymEnable;
+	global $isadmin, $ymEnable, $acs_prava;
+
+	$isAccess = get_accesse( $clid, $pid ) == "yes" || $isadmin == 'on' || $acs_prava == 'on';
+
 	$list = [];
 
 	$emails = explode(",", str_replace(";", ",", (string)$xmail));
@@ -7136,10 +7196,10 @@ function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL): array {
 	foreach ($emails as $email) {
 
 		$list[] = [
-			"email"    => $email,
-			"link"     => link_it($email),
+			"email"    => ( $isAccess && !$hide ) ? $email : hideEmail($email),
+			"link"     => ( $isAccess && !$hide ) ? link_it($email) : hideEmail($email),
 			"isMailer" => $ymEnable,
-			"appendix" => $ymEnable ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : ""
+			"appendix" => $ymEnable && ( $isAccess && !$hide ) ? '&nbsp;(<A href="javascript:void(0)" onclick="$mailer.composeCard(\''.$clid.'\',\''.$pid.'\',\''.trim($email).'\');" title="Написать сообщение"><i class="icon-mail blue"></i></A>)&nbsp;' : ""
 		];
 
 	}

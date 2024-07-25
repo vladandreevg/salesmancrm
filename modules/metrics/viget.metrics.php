@@ -205,7 +205,7 @@ if ( $string == '' )
 
 	$(document).ready(function () {
 
-		$.Mustache.load('/modules/metrics/tpl.metrics.html');
+		$.Mustache.load('/modules/metrics/tpl.metrics.mustache');
 
 	});
 

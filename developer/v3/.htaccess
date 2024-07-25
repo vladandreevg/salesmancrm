@@ -1,0 +1,16 @@
+AddDefaultCharset UTF-8
+
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !\.(css|js|png|jpg|ttf)$
+
+DirectoryIndex index.php
+RewriteRule ^(.*)$ index.php [L]
+
+</IfModule>

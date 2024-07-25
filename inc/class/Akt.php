@@ -940,6 +940,10 @@ class Akt {
 			$sort .= " dg.mcid = '$params[mc]' AND";
 		}
 
+		if ( (int)$params['clid'] > 0 ) {
+			$sort .= " (ct.clid = '$params[clid]' OR dg.clid = '$params[clid]') AND ";
+		}
+
 		$query = "
 		SELECT 
 			COUNT(*)
@@ -1024,6 +1028,7 @@ class Akt {
 			ct.identity = '$identity'
 		";
 
+		//print
 		$query = "$query ORDER BY $ordd $tuda LIMIT $lpos,$lines_per_page";
 
 		$result      = $db -> query($query);
@@ -1075,6 +1080,7 @@ class Akt {
 				"mc"          => $mycomps[$da['mc']],
 				"mcid"        => (int)$da['mc'],
 				"complect"    => !(bool)isServices((int)$da['did']) ? round($aktComplect + 0.1, 0) : 100,
+				"isServices"  => !(bool)isServices((int)$da['did']) ? NULL : true,
 			];
 
 		}
@@ -2080,7 +2086,7 @@ class Akt {
 					"bcc"      => $BCC
 				] );
 
-				file_put_contents($rootpath."/cash/akt.json", json_encode_cyr($x));
+				//file_put_contents($rootpath."/cash/akt.json", json_encode_cyr($x));
 
 				if ( $rez != '' ) {
 					$err = $rez;
@@ -2097,7 +2103,7 @@ class Akt {
 					$msg = yimplode( "; ", $mes );
 
 					$response['result']        = "Error";
-					$response['error']['code'] = '407';
+					$response['error']['code'] = 407;
 					$response['error']['text'] = "Не найдено получателей";
 
 					$response['data'] = $id;
@@ -2156,7 +2162,7 @@ class Akt {
 
 				$response['result']        = 'Error';
 				$response['error']['code'] = '406';
-				$response['error']['text'] = "Счет не найден";
+				$response['error']['text'] = "Акт не найден";
 
 			}
 

@@ -372,7 +372,7 @@ if ( $acs_analitics != 'on' ) {
 		$('#da1').val($('#period option:selected').data('da1'));
 		$('#da2').val($('#period option:selected').data('da2'));
 
-		configpage();
+		//configpage();
 
 	});
 	$('#report').on('change', function () {

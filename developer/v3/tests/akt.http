@@ -1,0 +1,125 @@
+GET http://{{baseurl}}/developer/v3/akt/statuses
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/akt/templates
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/akt/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 535
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/akt/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"clid": 1440
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/akt/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"date": "2024-06-25",
+	"template": "akt_full.tpl",
+	"description": "Это текст - описание к акту",
+	"status": 1,
+	"did": 954
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/akt/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 535,
+	"date": "2024-06-24",
+	"template": "akt_full.tpl",
+	"description": "Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона",
+	"status": 1
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/akt/status.change
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 535,
+	"description": "Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться",
+	"status": 3
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/akt/mail
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 535,
+	"status": 5
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/akt/html
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 535,
+	"nosignat": "yes"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/akt/pdf
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 535,
+	"nosignat": "yes"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/akt/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 535
+}
+
+###

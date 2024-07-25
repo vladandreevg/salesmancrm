@@ -451,56 +451,12 @@ if ( $action == "import.select" ) {
 	$file = $_COOKIE['url_catalog'];
 	$url  = $rootpath.'/files/'.$fpath.$file;
 
-	//require_once '../../opensource/class/FGetCSV.php';
-
-	$cur_ext = getExtention( $file );
-
-	if ( $cur_ext == 'xls' ) {
-
-		//require_once '../../opensource/excel_reader/excel_reader2.php';
-
-		$datas = new Spreadsheet_Excel_Reader();
-		$datas -> setOutputEncoding( 'UTF-8' );
-		$datas -> read( $url, false );
-		$data1 = $datas -> dumptoarray();//получили двумерный массив с данными
-
-		for ( $j = 0; $j < 2; $j++ ) {
-
-			for ( $g = 0, $gMax = count( $data1[ $j + 1 ] ); $g < $gMax; $g++ ) {
-
-				$data[ $j ][] = untag( $data1[ $j + 1 ][ $g + 1 ] );
-
-			}
-
-		}
-
-	}
-	if ( $cur_ext == 'csv' || $cur_ext == 'xlsx' ) {
-
-		//require_once '../../opensource/spreadsheet-reader-master/SpreadsheetReader.php';
-		//require_once '../../opensource/spreadsheet-reader-master/php-excel-reader/excel_reader2.php';
-
-		$datas = new SpreadsheetReader( $url );
-		$datas -> ChangeSheet( 0 );
-
-		foreach ( $datas as $k => $Row ) {
-
-			if ( $k < 3 ) {
-
-				foreach ( $Row as $key => $value ) {
-
-					$data[ $k ][] = ($cur_ext == 'csv') ? enc_detect( untag( $value ) ) : untag( $value );
-
-				}
-
-			}
-			else goto p;
-
-		}
-
-		p:
-		$data = array_values( $data );
-
+	$xdata = parceExcel( $url, 0);
+	$data = [];
+	$x = 0;
+	while ($x < 3){
+		$data[] = $xdata[ $x ];
+		$x++;
 	}
 
 	?>

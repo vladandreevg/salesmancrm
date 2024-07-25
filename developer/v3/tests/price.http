@@ -1,0 +1,117 @@
+GET http://{{baseurl}}/developer/v3/price/fields
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/price/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 2353,
+	"artikul": "7414"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/price/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"word": "bizfax"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/price/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"artikul" : "1258900",
+	"title": "Дополнительная лицензия MyPBX Client MyPBX U500/U510/U520",
+	"description": "MyPBX Client – это софтфон, предназначенный для целевого применения со следующими IР-АТС компании Yeаstar серии \"U\": Yeаstar МyРВХ U500, U510 и U520",
+	"price_in": 1320.50,
+	"price_1": 1456.20,
+	"price_2": 1390.40,
+	"edizm": "шт.",
+	"nds": 18,
+	"category": 0
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/price/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 4175,
+	"description": "MyPBX Client – это софтфон, предназначенный для целевого применения со следующими IР-АТС компании Yeаstar серии \"U\": Yeаstar МyРВХ U500, U510 и U520",
+	"price_in": 1320.50,
+	"edizm": "шт.",
+	"category": 180
+}
+
+###
+
+DELETE http://{{baseurl}}/developer/v3/price/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 4175
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/price/category
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+POST http://{{baseurl}}/developer/v3/price/category.add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"title": "TEST 6000",
+	"sub": 0
+}
+
+###
+
+PUT http://{{baseurl}}/developer/v3/price/category.update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 286,
+    "sub": 3,
+	"title": "TEST 6002"
+}
+
+###
+
+DELETE http://{{baseurl}}/developer/v3/price/category.delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 285
+}
+
+###

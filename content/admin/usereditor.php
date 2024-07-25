@@ -1617,9 +1617,9 @@ if ($action == "edit") {
 							$u = User ::userBoss($iduser);
 							foreach ($u as $user) {
 
-								if ($user['id'] != $iduser) {
+								//if ($user['id'] != $iduser) {
 									print '<option value="'.$user['id'].'" '.( $user['id'] == $usersettings['filterAllBy'] ? "selected" : "" ).'>'.$user['title'].': '.$user['tip'].'</OPTION>';
-								}
+								//}
 
 							}
 							?>
@@ -1637,7 +1637,8 @@ if ($action == "edit") {
 								<input name="hideAllContacts" type="checkbox" id="hideAllContacts" value="yes" <?php
 								print ( $usersettings['hideAllContacts'] == 'yes' ? "checked" : "" ); ?>>
 								<span class="custom-checkbox alert"><i class="icon-ok"></i></span>
-								<span class="title Bold red">Скрывать контактную информацию (телефоны/email, звездочками, кроме своих)</span>
+								<span class="title Bold red">Скрывать контактную информацию</span>
+								<div class="title fs-07 pl30">(телефоны/email, звездочками, кроме своих)</div>
 							</label>
 						</div>
 
@@ -1650,7 +1651,7 @@ if ($action == "edit") {
 							</label>
 						</div>
 
-						<div class="checkbox mt5">
+						<div class="checkbox mt5 hidden">
 							<label>
 								<input name="filterAllByPersonEdit" type="checkbox" id="filterAllByPersonEdit" value="yes" <?php
 								print ( $usersettings['filterAllByPersonEdit'] == 'yes' ? "checked" : "" ); ?>>
@@ -1668,7 +1669,7 @@ if ($action == "edit") {
 							</label>
 						</div>
 
-						<div class="checkbox mt5 hidden">
+						<div class="checkbox mt5">
 							<label>
 								<input name="filterAllByClientEdit" type="checkbox" id="filterAllByClientEdit" value="yes" <?php
 								print ( $usersettings['filterAllByClientEdit'] == 'yes' ? "checked" : "" ); ?>>
@@ -1771,6 +1772,7 @@ if ($action == "edit") {
 					<div class="flex-string wp60 flh-12 pl5">
 						<label for="acs_prava" class="wp100 tooltips" tooltip="Сможет заходить в карточки без права редактора" tooltip-position="top" tooltip-type="success"><b>Может просматривать чужие записи</b></label>
 						<div class="fs-09 blue">Сможет заходить в карточки без права редактора, также видеть номера телефонов и email из чужих записей в разделе Клиенты, Контакты, при поиске</div>
+						<div class="fs-09 red">Имеет приоритет перед настройкой <b>Скрывать контактную информацию</b></div>
 					</div>
 					<div class="flex-string wp40 flh-12">
 

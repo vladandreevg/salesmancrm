@@ -1,0 +1,169 @@
+GET http://{{baseurl}}/developer/v3/client/fields
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/client/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"order": "date_change",
+	"dateStart": "2021-01-01",
+	"dateEnd": "2023-01-31",
+	"fields": "clid,title,type,iduser,date_chage,date_create",
+	"bankinfo": true,
+	"uids": true,
+	"filter": {
+		"type": "client",
+		"territory": "Москва",
+		"idcategory": "Промышленность",
+		"trash": "no"
+	}
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/client/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"clid": 1781,
+	"contacts": true,
+	"bankinfo": true,
+	"uids": true
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/client/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"type": "client",
+	"uid": "123400092",
+	"title": "Пробный клиент 2024.1",
+	"phone": [
+		"+7(342)550-10-30",
+		"+7(342)550-10-31"
+	],
+	"mail_url": "testplus20241@isaler.ru",
+	"site_url": "testplus20241.ru",
+	"territory": "Пермь",
+	"clientpath": "100crm",
+	"tip_cmr": "Потенциальный клиент",
+	"idcategory": "Информационные технологии",
+	"recv": {
+		"castUrName": "ООО \"Пробный клиент 2024.1\"",
+		"castInn": "590456789008",
+		"castKpp": "590404218",
+		"castBank": "Филиал ОАО «УРАЛСИБ» в г. Уфа",
+		"castBankKs": "30101810600000000778",
+		"castBankRs": "40702810301220001998",
+		"castBankBik": "048073770",
+		"castOgrn": "1145958040268"
+	}
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/client/add.list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"client": [
+		{
+			"uid": "1234",
+			"user": "marand@omadaru.ru",
+			"type": "client",
+			"title": "Пробный клиент t1000",
+			"phone": "+7(343)260-10-10",
+			"mail_url": "info@test100001.ru",
+			"site_url": "test10001.ru",
+			"territory": "Пермь",
+			"clientpath": "Сайт",
+			"tip_cmr": "Потенциальный клиент",
+			"idcategory": "Торговля",
+			"date_create": "2015-05-30 23:05:30",
+			"recv": {
+				"castUrName": "ООО \"Пробный клиент 01\"",
+				"castInn": "590456789006",
+				"castKpp": "590404210",
+				"castBank": "Филиал ОАО \u00abУРАЛСИБ\u00bb в г. Уфа",
+				"castBankKs": "30101810600000000770",
+				"castBankRs": "40702810301220001991",
+				"castBankBik": "048073770",
+				"castOgrn": "1145958040260"
+			}
+		},
+		{
+			"uid": "1235",
+			"user": "marand@omadaru.ru",
+			"type": "client",
+			"title": "Пробный клиент t2000",
+			"phone": "+7(343)260-10-11",
+			"mail_url": "info@test200001.ru",
+			"site_url": "test200002.ru",
+			"territory": "Пермь",
+			"clientpath": "Сайт",
+			"tip_cmr": "Потенциальный клиент",
+			"idcategory": "Промышленность",
+			"date_create": "2015-05-30 23:05:30",
+			"recv": {
+				"castUrName": "ООО \"Пробный клиент 02\"",
+				"castInn": "590456789006",
+				"castKpp": "590404210",
+				"castBank": "Филиал ОАО \u00abУРАЛСИБ\u00bb в г. Уфа",
+				"castBankKs": "30101810600000000770",
+				"castBankRs": "40702810301220001991",
+				"castBankBik": "048073770",
+				"castOgrn": "1145958040260"
+			}
+		}
+	]
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/client/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "clid": 6274,
+    "uid": "123400192",
+	"title": "Пробный клиент 2024.10",
+	"phone": [
+		"+7(342)550-10-30",
+		"+7(342)550-10-31"
+	],
+	"mail_url": "testplus20241@testplus20241.ru",
+	"site_url": "testplus20241.ru",
+	"tip_cmr": "2 - Потенциальный клиент",
+	"recv": {
+		"castKpp": "5904042180"
+	}
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/client/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"clid": 6274
+}
+
+###

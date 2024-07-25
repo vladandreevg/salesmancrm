@@ -119,7 +119,7 @@ if ( $action == "deal.restore" ) {
 if ( $action == "deal.freeze" ) {
 
 	$deal   = new Deal();
-	$result = $deal -> changeFreeze( $did, $_REQUEST['date'] );
+	$result = $deal -> changeFreeze( $did, (string)$_REQUEST['date'] );
 
 	print json_encode_cyr( [
 		"result" => $result['result'],

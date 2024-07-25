@@ -1867,7 +1867,15 @@ class Person {
 
 	}
 
+	/**
+	 * Подготовка данных для вывода в карточке клиента
+	 * @param array $params
+	 * @return array
+	 * @throws Exception
+	 */
 	public function card(array $params = []): array {
+
+		global $userSettings, $acs_prava;
 
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
@@ -1878,6 +1886,8 @@ class Person {
 		$otherSettings = $this -> otherSettings;
 		$settingsUser  = $this -> settingsUser;
 		$iduser1       = $this -> iduser1;
+
+		//print_r($userSettings);
 
 		$valuta      = $GLOBALS['valuta'];
 		$fieldsNames = $GLOBALS['fieldsNames'];
@@ -2024,13 +2034,23 @@ class Person {
 					"isSimple"   => true
 				];
 
+				$hide = false;
+				if( $userSettings['hideAllContacts'] == 'yes' && (!$accesse && $acs_prava != 'on') ){
+					$hide = true;
+				}
+				elseif( !$accesse && $acs_prava !== 'on' ){
+					$hide = true;
+				}
+
+				//print $acs_prava;
+
 				if( in_array($field['field'], ['tel','mob']) ){
-					$x['format'] = preparePhoneData($row[ $field['field'] ], $clid, (int)$row['pid']);
+					$x['format'] = preparePhoneData($row[ $field['field'] ], $clid, (int)$row['pid'], $hide);
 					$x['isPhone'] = true;
 					$x['isSimple'] = NULL;
 				}
 				elseif($field['field'] == 'mail'){
-					$x['format'] = prepareEmailData($row[ $field['field'] ], $clid, (int)$row['pid']);
+					$x['format'] = prepareEmailData($row[ $field['field'] ], $clid, (int)$row['pid'], $hide);
 					$x['isEmail'] = true;
 					$x['isSimple'] = NULL;
 				}
@@ -2070,6 +2090,8 @@ class Person {
 				}
 
 				$r['inputs'][] = $x;
+				//$r['hideAllContacts'] = ( $iduser1 !== (int)$row['iduser'] && $userSettings['hideAllContacts'] == 'yes');
+				//$r['iduser'] = (int)$row['iduser'];
 
 			}
 

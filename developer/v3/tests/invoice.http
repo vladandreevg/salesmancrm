@@ -1,0 +1,147 @@
+GET http://{{baseurl}}/developer/v3/invoice/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"order": "date_create",
+	"offset": 1,
+	"datePlanStart": "2023-12-10",
+	"datePlanEnd": "2023-12-30"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/invoice/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"order": "date_create",
+	"offset": 1,
+	"did": 979
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/invoice/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 1018,
+	"dealinfo": true
+}
+
+###
+
+POST http://sm2020.crm/developer/v3/invoice/express
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 977,
+	"tip": "ispeka",
+	"invoice": "auto",
+	"newstep": "60"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/invoice/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 962,
+	"tip": "Счет-договор",
+	"invoice": "auto"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/invoice/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 812,
+	"tip": "ispeka",
+	"invoice": "auto",
+	"newstep": "60"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/invoice/do
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 1030,
+	"newstep": "80"
+}
+
+###
+
+GET http://sm2020.crm/developer/v3/invoice/mail
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 1026,
+	"iduser": 20
+}
+
+###
+
+GET http://sm2020.crm/developer/v3/invoice/mail
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"invoice": 259,
+    "did": 978,
+	"iduser": 20,
+	"theme": "Счет на оплату оборудования от {{mCompany}}"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/invoice/html
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"invoice": 277,
+    "did": 812
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/invoice/pdf
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"invoice": 277,
+	"did": 812,
+    "nosignat": true
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/invoice/templates
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru

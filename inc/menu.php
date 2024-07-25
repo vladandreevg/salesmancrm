@@ -214,7 +214,7 @@ $menu = [
 			],
 			[
 				"ismenu"  => true,
-				"accesse" => ($userRights['import'] && ($export_lock == '0' || $export_lock == '')) ? "yes" : "",
+				"accesse" => ($userRights['export'] && ($export_lock == '0' || $export_lock == '')) ? "yes" : "",
 				"title"   => $lang['all']['Export'].' '.$lang['face']['ClientsName'][1],
 				"icon"    => '<i class="icon-upload-1"><i class="sup icon-forward-1"></i></i>',
 				"url"     => '',

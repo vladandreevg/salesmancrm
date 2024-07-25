@@ -1,0 +1,259 @@
+GET http://{{baseurl}}/developer/v3/deal/funnel
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+  "did": 779
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/fields
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/steplist
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/direction
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/type
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/statusclose
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "filter": "win"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 779,
+    "speka": true
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/list
+Content-Type: application/json
+apikey: {{token}}
+login: manager
+
+{
+	"order": "date_create",
+	"dateStart": "2023-06-01",
+	"dateEnd": "2023-06-31",
+	"fields": "did,title,clid,kol,marga,datum",
+    "iduser": 2,
+	"active": true,
+	"uids": true
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"active": true,
+	"order": "datum_izm",
+	"dateChangeStart": "2019-09-01",
+	"dateChangeEnd": "2020-09-10"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/deal/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"active": false,
+    "client": "сейлз",
+	"fields": "did,title,clid,kol,marga,datum_close,iduser",
+	"order": "date_close",
+    "first": "old"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/deal/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"title": "Тестовая сделка 6465464",
+	"uid": "7989825655",
+	"clid": 1781,
+	"payer": 1781,
+	"step": "40",
+	"datum_plan": "2022-05-30",
+	"kol": 100000.00,
+	"marga": 20000.00,
+	"user": "vladislav@isaler.ru",
+	"content": "Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона, а также реальное распределение букв и пробелов в абзацах, которое не получается при простой дубликации \"Здесь ваш текст.. Здесь ваш текст.. Здесь ваш текст..\"",
+	"speka": [
+		{
+			"artikul": "7414",
+			"title": "BizFAX E100 факс-сервер, 1 FXO, 1 FXS, 1 RJ45",
+			"tip": 1,
+			"kol": 5,
+			"dop": 1,
+			"price": 18831.15,
+			"price_in": 13949.00,
+			"edizm": "шт.",
+			"nds": 18
+		},
+		{
+			"artikul": "7722",
+			"title": "SIP-T12P SIP-телефон, 2 линии, PoE",
+			"tip": 1,
+			"kol": 10,
+			"dop": 1,
+			"price": 3821.85,
+			"price_in": 2831.00,
+			"edizm": "шт.",
+			"nds": 18
+		}
+	]
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/deal/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 981,
+	"datum_plan": "2024-04-01",
+	"title": "Тестовая сделка 6465464-000"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/deal/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"title": "Тестовая сделка 999999",
+	"uid": "7989825657",
+	"clid": 1781,
+	"payer": 1781,
+	"direction": "Оборудование",
+	"tip": "Продажа услуг",
+	"step": 20,
+	"datum_plan": "2019-09-01",
+	"kol": 100000.00,
+	"marga": 20000.00,
+	"user": "admin",
+	"content": "Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона, а также реальное распределение букв и пробелов в абзацах, которое не получается при простой дубликации \"Здесь ваш текст.. Здесь ваш текст.. Здесь ваш текст..\"",
+	"speka": [
+		{
+			"artikul": "7414",
+			"title": "BizFAX E100 факс-сервер, 1 FXO, 1 FXS, 1 RJ45",
+			"tip": 1,
+			"kol": 5,
+			"dop": 1,
+			"price": 18831.15,
+			"price_in": 13949.00,
+			"edizm": "шт.",
+			"nds": 18
+		},
+		{
+			"artikul": "7722",
+			"title": "SIP-T12P SIP-телефон, 2 линии, PoE",
+			"tip": 1,
+			"kol": 10,
+			"dop": 1,
+			"price": 3821.85,
+			"price_in": 2831.00,
+			"edizm": "шт.",
+			"nds": 18
+		}
+	]
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/deal/change.step
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 981,
+    "step": 20,
+    "description": "Есть кое-какой интерес"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/deal/change.user
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 981,
+	"iduser": 1,
+	"client": false,
+	"person": false
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/deal/close
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 981,
+	"sid": 1,
+	"description": "Комментарий к закрытию сделки"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/deal/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"did": 981
+}

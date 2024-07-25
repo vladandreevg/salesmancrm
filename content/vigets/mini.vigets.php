@@ -40,7 +40,7 @@ if ( $mdwset['active'] == 'on' ) {
 
 	$leadsettings = json_decode( (string)$mdwset['content'], true );
 	$coordinator  = $leadsettings["leadСoordinator"];
-	$operators    = $leadsettings["leadOperator"];
+	$operators    = (array)$leadsettings["leadOperator"];
 
 	//заявки для координатора или для всех, при режиме "Свободная касса"
 	if ( $iduser1 == $coordinator || $leadsettings['leadMethod'] == 'free' ) {

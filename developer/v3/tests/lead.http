@@ -1,0 +1,58 @@
+GET http://{{baseurl}}/developer/v3/lead/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 1789
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/lead/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"order": "datum",
+	"dateStart": "2023-01-01",
+	"dateEnd": "2023-01-31"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/lead/stat
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"dateStart": "2012-01-01",
+	"dateEnd": "2023-01-31"
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/lead/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"title": "Иван Пермяков",
+	"email": "ivan.permyakov@perm.io",
+	"phone": "+75005007777",
+	"company": "Perm Production",
+	"description": "The best crm practice",
+	"country": "Russia",
+	"city": "Perm",
+	"path": "Заявка с сайта",
+	"partner": "https://yandex.ru",
+	"utm_source": "facebook",
+	"utm_medium": "cpc",
+	"utm_campaign": "First Campaign",
+	"utm_term": "crm для малого бизнеса",
+	"utm_content": "",
+	"utm_referrer": "yandex.ru"
+}

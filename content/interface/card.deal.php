@@ -618,7 +618,6 @@ $tabs = $hooks -> apply_filters("card_tab", $tabs, [
 	?>
 
 	<?php
-	//require "./inc/class/DealAnketa.php";
 	$anketa  = new DealAnketa();
 	$listall = $anketa -> anketalist();
 	if (!empty($listall)) {

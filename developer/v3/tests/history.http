@@ -1,0 +1,95 @@
+GET http://{{baseurl}}/developer/v3/history/fields
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/history/tips
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/history/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"order": "datum",
+	"dateStart": "2012-12-18",
+	"dateEnd": "2012-12-18"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/history/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"cid": 777
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/history/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"user": "marand@omadaru.ru",
+	"datum": "2024-06-25 14:25",
+	"tip": "Предложение",
+	"content": "Отправлено КП",
+	"clid": 1781,
+	"pid": "2475,2723",
+	"did": 784
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/history/add.list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"list": [
+		{
+			"user": "marand@omadaru.ru",
+			"datum": "2024-06-25 14:20",
+			"tip": "Исх.звонок",
+			"content": "Это описание 100",
+			"clid": 1781,
+			"pid": "2475,2723",
+			"did": 779
+		},
+		{
+			"user": "marand@omadaru.ru",
+			"datum": "2024-06-25 14:25",
+			"tip": "Отправка КП",
+			"content": "Это описание 101",
+			"clid": 1781,
+			"pid": "2475,2723",
+			"did": 779
+		}
+	]
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/history/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"cid": 25355
+}
+
+###

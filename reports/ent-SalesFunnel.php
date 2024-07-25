@@ -207,7 +207,9 @@ if ( $action == 'getstepdata' ) {
 
 	$list = $li = [];
 
-	$users = !empty($user_list) ? get_people( $iduser1, true ) : $user_list;
+	$users = !empty($user_list) ? get_people( $iduser1, "yes" ) : $user_list;
+
+	//print_r($user_list);
 
 	$step = (int)$_REQUEST['step'];
 	$i    = 0;
@@ -258,6 +260,7 @@ if ( $action == 'getstepdata' ) {
 		}
 
 		$da = $db -> getRow( $q );
+		//print $q;
 
 		[
 			$r,
@@ -536,7 +539,7 @@ if ( $action == '' ) {
 				},
 				events: {
 					click: {
-						block: (d) => {
+						block: (event, d) => {
 							console.log(d);
 							getStep(d.label.raw);
 						}

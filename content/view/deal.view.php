@@ -157,7 +157,7 @@ $dogcontent = $deal['step']['stepname'];
 			<?php if ( (float)$deal['kol'] > 0 ) { ?>
 				<div class="row wp100">
 
-					<div class="column12 grid-3 gray2 fs-12 text-right">:</div>
+					<div class="column12 grid-3 gray2 fs-12 text-right"><?= $fieldsNames['dogovor']['kol'] ?>:</div>
 					<div class="column12 grid-9 fs-12">
 
 						<b class="blue"><?= num_format( $deal['kol'] ) ?></b> <?= $valuta ?>&nbsp;

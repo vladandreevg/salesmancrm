@@ -571,7 +571,7 @@ class Invoice {
 
 			if ($nds_credit <= 0) {
 
-				$xnds_credit = getNalog($data['summa'], $nalogScheme['nalog'], $ndsRaschet);
+				$xnds_credit = getNalog((float)$data['summa'], (float)$nalogScheme['nalog'], $ndsRaschet);
 				$nds_credit  = $xnds_credit['nalog'];
 
 			}

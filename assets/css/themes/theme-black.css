@@ -50,6 +50,32 @@ body, html,
 	color: var(--white) !important;
 }
 
+.warning {
+	background-color: var(--liteblue);
+	border: 1px dashed var(--red-alfa10);
+	color: var(--red-alfa10) !important;
+}
+.attention {
+	background-color: var(--liteblue);
+	border: 1px dashed var(--orange-dark);
+	color: var(--orange-dark) !important;
+}
+.my3 {
+	background: transparent;
+}
+#rmenu .ymailer a.razdel i.sub {
+	background: transparent;
+}
+.lec,
+div.bluebg-sub {
+	background: var(--darkblue) !important;
+	color: var(--white) !important;
+}
+div.mat {
+	background: var(--liteblue) !important;
+	color: var(--white) !important;
+}
+
 ::-webkit-scrollbar { width: 3px; height: 3px;}
 ::-webkit-scrollbar-button {  background-color: var(--darkblue); }
 ::-webkit-scrollbar-track {  background-color: var(--white);}
@@ -57,6 +83,42 @@ body, html,
 ::-webkit-scrollbar-thumb { height: 50px; background-color: var(--white); border-radius: 3px;}
 ::-webkit-scrollbar-corner { background-color: var(--scrollbar);}
 ::-webkit-resizer { background-color: var(--liteblue);}
+
+.ui-layout-east textarea {
+	background: var(--liteblue) !important;
+	color: var(--white) !important;
+}
+.ui-layout-content .tags,
+.ui-layout-content .progressbarr,
+.rightcol .progressbarr,
+.leftcol .progressbarr{
+	border: 1px solid var(--darkblue) !important;
+	background: var(--darkblue) !important;
+	color: var(--white) !important;
+}
+.ha.redbg-sublite,
+.fcontainer .redbg-sublite{
+	background: var(--red-alfa02) !important;
+	border: 1px solid var(--red-alfa02) !important;
+}
+.rightcol .tags,
+.rightcol .graybg-sub {
+	background: var(--darkblue) !important;
+	color: var(--white) !important;
+	border: 1px solid var(--liteblue) !important;
+}
+.bullet.orangebg {
+	color: var(--darkblue);
+}
+.button.graybtn{
+	background: var(--darkblue) !important;
+	color: var(--gray) !important;
+	border: 1px solid var(--darkblue) !important;
+}
+a.fol_it{
+	background: transparent;
+	color: var(--biruza) !important;
+}
 
 #contentdiv .bluebg-sub,
 #lmenu .nano-content,
@@ -1873,7 +1935,7 @@ textarea[readonly], input[readonly] {
 	padding: 0;
 }
 #messagediv .viewdiv textarea{
-	color: var(--black) !important;
+	color: var(--black) /*!important*/;
 }
 #messagediv .viewdiv hr{
 	border-top: var(--liteblue) 1px dotted;

@@ -438,7 +438,12 @@ while ($da = $db -> fetch( $rest )) {
 			$tel = yexplode(",", str_replace(";", ",", str_replace(" ", "", $da['tel'])), 0);
 		}
 
-		$phone = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? formatPhoneUrl( $tel, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $tel ).'</span>';
+		if( $userSettings['hideAllContacts'] == 'yes' && ($isaccess != 'yes' && $acs_prava != 'on') ){
+			$phone = '<span class="gray">'.hidePhone( $tel ).'</span>';
+		}
+		else{
+			$phone = ($isaccess == 'yes' || $acs_prava == 'on') ? formatPhoneUrl( $tel, $da['clid'], $da['pid'] ) : '<span class="gray">'.hidePhone( $tel ).'</span>';
+		}
 
 	}
 
@@ -453,7 +458,12 @@ while ($da = $db -> fetch( $rest )) {
 			$mail = yexplode(",", str_replace(";", ",", str_replace(" ", "", $da['pemail'])), 0);
 		}
 
-		$email = ($isaccess == 'yes' || $acs_prava == 'on') && $userSettings['hideAllContacts'] != 'yes' ? link_it( $mail ) : '<span class="gray">'.hideEmail( $mail ).'</span>';
+		if( $userSettings['hideAllContacts'] == 'yes' && ($isaccess != 'yes' && $acs_prava != 'on') ){
+			$email = '<span class="gray">'.hideEmail( $mail ).'</span>';
+		}
+		else {
+			$email = ( $isaccess == 'yes' || $acs_prava == 'on' ) ? link_it($mail) : '<span class="gray">'.hideEmail($mail).'</span>';
+		}
 
 	}
 

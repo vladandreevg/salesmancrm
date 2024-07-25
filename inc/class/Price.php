@@ -103,9 +103,12 @@ class Price {
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
-		$prid = (int)$db -> getOne("SELECT n_id FROM {$sqlname}price WHERE n_id = '$id' AND identity = '$identity'");
+		$prid = 0;
 
-		if ($prid == 0 && $artikul != '') {
+		if ($id > 0) {
+			$prid = (int)$db -> getOne("SELECT n_id FROM {$sqlname}price WHERE n_id = '$id' AND identity = '$identity'");
+		}
+		elseif( !empty($artikul) ) {
 			$prid = (int)$db -> getOne("SELECT n_id FROM {$sqlname}price WHERE artikul = '$artikul' AND identity = '$identity'");
 		}
 
@@ -276,7 +279,12 @@ class Price {
 			'identity'
 		];
 
+		$params['pr_cat']   = (int)$params['idcategory'];
+
+		$params = data2dbtypes($params, "{$sqlname}price");
+
 		//обработаем данные
+		/*
 		$params['artikul']  = clean_all($params['artikul']);
 		$params['title']    = clean_all($params['title']);
 		$params['descr']    = clean($params['descr']);
@@ -287,7 +295,8 @@ class Price {
 		$params['price_4']  = pre_format($params['price_4']);
 		$params['price_5']  = pre_format($params['price_5']);
 		$params['nds']      = pre_format($params['nds']);
-		$params['pr_cat']   = (int)$params['idcategory'];
+		*/
+
 		$params['archive']  = ( $params['archive'] == 'yes' ) ? 'yes' : 'no';
 
 		$params['new_folder'] = untag($params['new_folder']);
@@ -335,6 +344,7 @@ class Price {
 				unset($params['identity']);
 
 				$db -> query("UPDATE {$sqlname}price SET ?u WHERE n_id = '$id' and identity = '$identity'", $params);
+				//print $db -> lastQuery();
 
 				$result = "Success";
 				$text   = "Позиция обновлена";
@@ -1073,6 +1083,7 @@ class Price {
 			$sort .= " and (prc.artikul LIKE '%$word%' or prc.title LIKE '%$word%' or prc.descr LIKE '%$word%')";
 		}
 
+		//print
 		$query = "
 			SELECT
 				prc.n_id as id,
@@ -1124,7 +1135,7 @@ class Price {
 		while ($da = $db -> fetch($result)) {
 
 			$list[] = [
-				"id"       => $da['id'],
+				"id"       => (int)$da['id'],
 				"artikul"  => $da['artikul'],
 				"title"    => $da['title'],
 				"content"  => $da['content'],

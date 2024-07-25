@@ -573,11 +573,11 @@ class Todo {
 		if ( $id > 0 ) {
 
 			//входные данные
-			$task['iduser']   = (int)$params['iduser'] + 0;
+			$task['iduser']   = (int)$params['iduser'];
 			$task['title']    = untag( $params['title'] );
 			$task['des']      = untag( $params['des'] );
-			$task['clid']     = (int)$params['clid'];
-			$task['did']      = (int)$params['did'];
+			$task['clid']     = (int)$params['clid'] > 0 ? $params['clid'] : NULL;
+			$task['did']      = (int)$params['did'] > 0 ? $params['did'] : NULL;
 			//$task['pid']      = yimplode( ";", $params["pid"] );
 			$task['pid']      = is_array( $params["pid"] ) ? yimplode( ";", $params["pid"] ) : $params["pid"];
 			$task['datum']    = untag( $params['datum'] );
@@ -591,17 +591,16 @@ class Todo {
 			$task['autor']    = (int)$params['autor'];
 			$task['day']      = untag( $params['day'] );
 
-			//print_r($task);
-
-			$users = $params['users'];
+			$users = (array)$params['users'];
 
 			$mess = $err = $mailpack = [];
 
-			if ( count( $users ) == 0 && $task['iduser'] > 0 )
+			if ( !empty($users) && $task['iduser'] > 0 ) {
 				$users[] = $task['iduser'];
-
-			if ( count( $users ) == 0 )
+			}
+			if ( empty($users) ) {
 				$users[] = $iduser1;
+			}
 
 			//При отсутствии контакта, устанавливаем контактом напоминания основной контакт клиента
 			$clinfo      = get_client_info( $task['clid'], "yes" );
@@ -612,11 +611,12 @@ class Todo {
 
 			$task['iduser'] = (count( $users ) == 1) ? $users[0] : $iduser1;
 
-			if ( $task['iduser'] == "" )
+			if ( $task['iduser'] == "" ) {
 				$task['iduser'] = $iduser1;
-
-			if ( $iduser1 != $task['iduser'] && $task['autor'] == 0 )
+			}
+			if ( $iduser1 != $task['iduser'] && $task['autor'] == 0 ) {
 				$task['autor'] = $iduser1;
+			}
 
 			//объединим 2 массива - 1 - те, у кого были напоминания, + те, 2 - которые есть в текущем запросе
 			$userf = array_unique( array_merge( $userexist, $users, [$iduser1] ) );
@@ -1598,7 +1598,6 @@ class Todo {
 		$identity = $this -> identity;
 		$iduser1  = $this -> iduser1;
 
-		$isCloud     = $GLOBALS['isCloud'];
 		$productInfo = $GLOBALS['productInfo'];
 		$tzone       = $GLOBALS['tzone'];
 
@@ -1706,7 +1705,9 @@ class Todo {
 			$avtor  = current_user( $author );
 			$author = '[Назначил: <b style="color:red">'.current_user( $author ).'</b>]';
 		}
-		else $author = '[Назначил: <b style="color:red">Я</b>]';
+		else {
+			$author = '[Назначил: <b style="color:red">Я</b>]';
+		}
 
 		$theme = $tip.': '.$title;
 
@@ -1730,10 +1731,12 @@ class Todo {
 		';
 
 		$txt = "Тема: ".$title."\nОписание: ".$des."\nТип: ".$tip;
-		if ( $crd )
+		if ( $crd ) {
 			$txt .= "\n-------------------------------------\n".$crd;
-		if ( $author )
+		}
+		if ( $author ) {
 			$txt .= "-------------------------------------\nАвтор: ".$avtor;
+		}
 
 		$dstart = getTimestamp( $datum." ".$time ) + $tzone * 3600;
 		$dend   = getTimestamp( $datum." ".$time ) + 600 + $tzone * 3600;
@@ -1745,21 +1748,9 @@ class Todo {
 		$ics = $cal -> render( false );
 
 		$filename = 'salesman'.time().'.ics';
-		$handle   = fopen( $rootpath."/files/".$fpath.$filename, 'wb' );
+		$handle   = fopen( $rootpath."/files/".$filename, 'wb' );
 		fwrite( $handle, "$ics\r" );
 		fclose( $handle );
-
-		//для облака отправку уведомлений делаем от имени сервиса
-		if ( $isCloud ) {
-
-			$file = $rootpath."/cash/".$fpath."cloudserver.json";
-
-			$cloudServer = json_decode( file_get_contents( $file ), true );
-
-			$from     = $cloudServer['fromname'];
-			$fromname = "Уведомления CRM";
-
-		}
 
 		if ( $sendo == 'on' ) {
 
@@ -1771,16 +1762,18 @@ class Todo {
 				$theme,
 				$agenda,
 				$ics,
-				$rootpath."/files/".$fpath.$filename
+				$rootpath."/files/".$filename
 			] );
 
 
 			if ( $printrez == "true" ) {
 
-				if ( $r == '' )
+				if ( $r == '' ) {
 					print 'Событие отправлено по Email';
-
-				else print $r;
+				}
+				else {
+					print $r;
+				}
 
 			}
 

@@ -77,7 +77,7 @@ class Cronman {
 	 */
 	public function __construct() {
 
-		$rootpath = realpath( __DIR__.'/../../../../' );
+		$rootpath = dirname(__DIR__, 4);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -86,7 +86,7 @@ class Cronman {
 		$params = $this -> params;
 
 		$this -> rootpath = $rootpath;
-		$this -> identity = $GLOBALS['identity'] ?? 1;
+		$this -> identity = $GLOBALS['identity'];
 		$this -> iduser1  = $GLOBALS['iduser1'];
 		$this -> sqlname  = $GLOBALS['sqlname'];
 		$this -> fpath    = $GLOBALS['fpath'];
@@ -194,9 +194,29 @@ class Cronman {
 	}
 
 	/**
+	 * Проверяет наличие задачи по скрипту
+	 * @param $script
+	 * @return int
+	 */
+	public function taskExist($script): int {
+
+		$cronlist = $this -> getTasklist();
+		foreach ($cronlist as $task){
+
+			if(str_contains($task['script'], $script)){
+				return (int)$task['id'];
+			}
+
+		}
+
+		return 0;
+
+	}
+
+	/**
 	 * Редактирование здания
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $params
 	 *                  - name - название задания
 	 *                  - parent - стандартная периодичность: см. $cron::PERIODS;
@@ -213,7 +233,7 @@ class Cronman {
 	 *
 	 * @return int
 	 */
-	public function setTask($id = 0, $params = []): int {
+	public function setTask(int $id = 0, array $params = []): int {
 
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
@@ -221,6 +241,11 @@ class Cronman {
 
 		if ( stripos( $params['script'], '{{DIR}}' ) !== false && stripos( $params['bin'], 'php' ) !== false ) {
 			$params['script'] = str_replace( "{{DIR}}", $this -> rootpath, $params['script'] );
+		}
+
+		$period = $params['period'];
+		if( is_array( $period)){
+			$period = json_encode( $params['period'], true );
 		}
 
 		$d = [
@@ -232,13 +257,13 @@ class Cronman {
 			"task"     => $params['task'],
 			"bin"      => $params['bin'],
 			"script"   => $params['script'],
-			"period"   => $params['parent'] != 'once' ? (is_array( $params['period'] ) ? json_encode( $params['period'], true ) : $params['period']) : NULL,
+			"period"   => $params['parent'] != 'once' ? $period : NULL,
 			"active"   => $params['active'] ?? 'off',
 			'identity' => $identity
 		];
 
 		if ( $id == 0 && $params['uid'] != '' ) {
-			$id = $db -> getOne( "SELECT id FROM {$sqlname}cronmanager WHERE uid = '$params[uid]'" ) + 0;
+			$id = (int)$db -> getOne( "SELECT id FROM {$sqlname}cronmanager WHERE uid = '$params[uid]'" );
 		}
 
 		if ( $id == 0 ) {
@@ -277,12 +302,29 @@ class Cronman {
 	}
 
 	/**
+	 * Активация задания
+	 *
+	 * @param $id
+	 * @return bool
+	 */
+	public function enableTask($id): bool {
+
+		$sqlname = $this -> sqlname;
+		$db      = $this -> db;
+
+		$db -> query( "UPDATE {$sqlname}cronmanager SET ?u WHERE id = '$id'", ["active" => "on"] );
+
+		return true;
+
+	}
+
+	/**
 	 * Удаление задания
 	 *
 	 * @param int $id
 	 * @return array
 	 */
-	public function deleteTask($id = 0): array {
+	public function deleteTask(int $id = 0): array {
 
 		$sqlname = $this -> sqlname;
 		$db      = $this -> db;
@@ -394,17 +436,17 @@ class Cronman {
 	 * @param string $time
 	 * @return string
 	 */
-	public function getNextTime($id, $time = ''): string {
+	public function getNextTime($id, string $time = ''): string {
 
 		$this -> compileTaskString( $id );
 
-		$time = $time != '' ? $time : current_datumtime();
+		$xtime = !empty($time) ? $time : current_datumtime();
 
 		$expression = $this -> response['period'];
 
 		$cron = Cron\CronExpression ::factory( $expression );
 
-		return $cron -> getNextRunDate( $time ) -> format( 'Y-m-d H:i:s' );
+		return $cron -> getNextRunDate( $xtime ) -> format( 'Y-m-d H:i:s' );
 
 	}
 
@@ -414,7 +456,7 @@ class Cronman {
 	 * @param array $params
 	 * @return bool
 	 */
-	public function logger($params = []): bool {
+	public function logger(array $params = []): bool {
 
 		$sqlname  = $this -> sqlname;
 		$identity = $this -> identity;

@@ -374,7 +374,17 @@ if ( $action == 'account' ) {
 			</div>
 			<div class="flex-string wp40 infodiv bgwhite">
 
-				<div class="Bold blue margbot10">Рекомендации по Gmail:</div>
+				<div class="attention mb10">
+					Как настроить свою почту? Почитай <a href="https://salesman.pro/docs/100" title="">справку</a>
+				</div>
+
+				<hr>
+
+				<div class="fs-12 Bold mt10 mb10">Рекомендации по различным почтовым серверам:</div>
+
+				<hr>
+
+				<div class="Bold blue margbot10">Почта на Gmail:</div>
 				<ol class="list">
 					<li>Для отправки используйте SMTP</li>
 					<li>Для отправленных выбирайте папку "[Gmail]/Отправленные"</li>
@@ -386,12 +396,12 @@ if ( $action == 'account' ) {
 					</li>
 				</ol>
 				<hr>
-				<div class="Bold blue margbot10">Рекомендации по Yandex:</div>
+				<div class="Bold blue margbot10">Почта на Yandex:</div>
 				<ul class="list">
 					<li><b class="green">Разрешите Портальный пароль</b> в Настройки / Почтовые программы</li>
 				</ul>
 				<hr>
-				<div class="Bold blue margbot10">Рекомендации по Mail.ru:</div>
+				<div class="Bold blue margbot10">Почта на Mail.ru:</div>
 				<ul class="list">
 					<li>
 						<b class="green">Получите пароль приложения</b> в Все настройки / Безопасность / Пароли для внешних приложений

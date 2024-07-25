@@ -138,7 +138,7 @@ $words = $w;
 
 if ( $strong != 'yes' ) {
 
-	if ( count( $words ) > 1 && in_array( "title", (array)$ifields ) ) {
+	if ( !empty( $words ) && in_array( "title", (array)$ifields ) ) {
 
 		$regexp = [];
 
@@ -152,11 +152,11 @@ if ( $strong != 'yes' ) {
 
 		}
 
-		$so[] = "LOWER(title) REGEXP '".implode( "(.*)?", $regexp )."'";
+		$so[] = "LOWER(cc.title) REGEXP '".implode( "(.*)?", $regexp )."'";
 
 		$regexp = [];
 
-		if ( count( $words ) > 1 ) {
+		if ( !empty( $words ) ) {
 
 			rsort( $words );
 
@@ -170,32 +170,32 @@ if ( $strong != 'yes' ) {
 
 		}
 
-		$so[] = "LOWER(title) REGEXP '".implode( "(.*)?", $regexp )."'";
+		$so[] = "LOWER(cc.title) REGEXP '".implode( "(.*)?", $regexp )."'";
 
 	}
 	elseif ( in_array( "title", (array)$ifields ) ) {
-		$so[] = "title LIKE '%".$words[0]."%'";
+		$so[] = "cc.title LIKE '%".$words[0]."%'";
 	}
 
 }
 else {
-	$so[] = "title LIKE '".$dword."%'";
+	$so[] = "cc.title LIKE '".$dword."%'";
 }
 
 if ( in_array( "content", (array)$ifields ) ) {
-	$so[] = "des LIKE '%".$dword."%'";
+	$so[] = "cc.des LIKE '%".$dword."%'";
 }
 if ( in_array( "recv", (array)$ifields ) ) {
-	$so[] = "recv LIKE '%".$dword."%'";
+	$so[] = "cc.recv LIKE '%".$dword."%'";
 }
 if ( in_array( "email", (array)$ifields ) ) {
-	$so[] = "mail_url LIKE '%".$dword."%'";
+	$so[] = "cc.mail_url LIKE '%".$dword."%'";
 }
 if ( in_array( "email", (array)$ifields ) ) {
-	$so[] = "site_url LIKE '%".$dword."%'";
+	$so[] = "cc.site_url LIKE '%".$dword."%'";
 }
 if ( in_array( "adress", (array)$ifields ) ) {
-	$so[] = "address LIKE '%".$dword."%'";
+	$so[] = "cc.address LIKE '%".$dword."%'";
 }
 /*
 if ( in_array( "phone", $ifields ) )
@@ -204,15 +204,26 @@ if ( in_array( "phone", $ifields ) )
 	$so[] = "regexp_replace(fax, '[ ()+-]', '') LIKE '%".$word."%'";
 */
 if ( in_array( "phone", (array)$ifields ) ) {
-	$so[] = "replace(replace(replace(replace(replace(phone, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
+	$so[] = "replace(replace(replace(replace(replace(cc.phone, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
 }
 if ( in_array( "phone", (array)$ifields ) ) {
-	$so[] = "replace(replace(replace(replace(replace(fax, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
+	$so[] = "replace(replace(replace(replace(replace(cc.fax, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
 }
 
 $sort = (!empty( $so )) ? "AND (".yimplode( " OR ", $so ).")" : "";
 
-$result = $db -> getAll( "SELECT * FROM {$sqlname}clientcat WHERE clid > 0 $sort AND identity = '$identity' ORDER by title" );
+$result = $db -> getAll( "
+	SELECT 
+	    cc.*,
+		user.title AS user
+	FROM {$sqlname}clientcat `cc`
+		LEFT JOIN {$sqlname}user `user` ON cc.iduser = user.iduser
+	WHERE 
+	    cc.clid > 0 
+	    $sort AND 
+	    cc.identity = '$identity' 
+	ORDER by cc.title
+" );
 
 //print $db -> lastQuery();
 //exit();
@@ -246,7 +257,7 @@ foreach ( $result as $data ) {
 		"uid"    => ($data['uid'] != '') ? $data['uid'] : NULL,
 		"trash"  => ($data['trash'] == 'yes') ? 1 : NULL,
 		"attach" => $dop,
-		"user"   => current_user( $data['iduser'] )
+		"user"   => $data['user']
 	];
 
 	$clids[] = $data['clid'];
@@ -265,7 +276,7 @@ $words = (array)yexplode( "%", $dword );
 
 if ( $strong != 'yes' ) {
 
-	if ( count( $words ) > 1 && in_array( "title", (array)$ifields ) ) {
+	if ( !empty( $words ) && in_array( "title", (array)$ifields ) ) {
 
 		$regexp = [];
 
@@ -278,11 +289,11 @@ if ( $strong != 'yes' ) {
 		}
 
 
-		$so[] = "LOWER(person) REGEXP '".implode( "(.*)?", $regexp )."'";
+		$so[] = "LOWER(pc.person) REGEXP '".implode( "(.*)?", $regexp )."'";
 
 		$regexp = [];
 
-		if ( count( $words ) > 1 ) {
+		if ( !empty( $words ) ) {
 
 			rsort( $words );
 
@@ -294,26 +305,26 @@ if ( $strong != 'yes' ) {
 
 		}
 
-		$so[] = "LOWER(person) REGEXP '".implode( "(.*)?", $regexp )."'";
+		$so[] = "LOWER(pc.person) REGEXP '".implode( "(.*)?", $regexp )."'";
 
 	}
 	elseif ( in_array( "title", $ifields ) ) {
-		$so[] = "person LIKE '%".$dword."%'";
+		$so[] = "pc.person LIKE '%".$dword."%'";
 	}
 
 }
 else {
-	$so[] = "person LIKE '".$dword."%'";
+	$so[] = "pc.person LIKE '".$dword."%'";
 }
 
 if ( in_array( "content", $ifields ) ) {
-	$so[] = "ptitle LIKE '%".$dword."%'";
+	$so[] = "pc.ptitle LIKE '%".$dword."%'";
 }
 if ( in_array( "recv", $ifields ) ) {
-	$so[] = "social LIKE '%".$dword."%'";
+	$so[] = "pc.social LIKE '%".$dword."%'";
 }
 if ( in_array( "email", $ifields ) ) {
-	$so[] = "mail LIKE '%".$dword."%'";
+	$so[] = "pc.mail LIKE '%".$dword."%'";
 }
 /*
 if ( in_array( "phone", $ifields ) )
@@ -324,13 +335,13 @@ if ( in_array( "phone", $ifields ) )
 	$so[] = "regexp_replace(mob, '[ ()+-]', '') LIKE '%".$word."%'";
 */
 if ( in_array( "phone", $ifields ) ) {
-	$so[] = "replace(replace(replace(replace(replace(tel, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
+	$so[] = "replace(replace(replace(replace(replace(pc.tel, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
 }
 if ( in_array( "phone", $ifields ) ) {
-	$so[] = "replace(replace(replace(replace(replace(fax, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
+	$so[] = "replace(replace(replace(replace(replace(pc.fax, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
 }
 if ( in_array( "phone", $ifields ) ) {
-	$so[] = "replace(replace(replace(replace(replace(mob, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
+	$so[] = "replace(replace(replace(replace(replace( pc.mob, '+', ''), '(', ''), ')', ''), ' ', ''), '-', '') LIKE '%".$word."%'";
 }
 
 $sort = (!empty( $so )) ? "AND (".yimplode( " OR ", $so ).")" : "";
@@ -339,7 +350,20 @@ $sort = (!empty( $so )) ? "AND (".yimplode( " OR ", $so ).")" : "";
 
 if ( $sort != '' ) {
 
-	$result   = $db -> getAll( "SELECT * FROM {$sqlname}personcat WHERE pid > 0 $sort AND identity = '$identity' ORDER by person" );
+	$result   = $db -> getAll( "
+		SELECT 
+		    pc.*,
+		    client.title AS client,
+		    user.title AS user
+		FROM {$sqlname}personcat `pc`
+			LEFT JOIN {$sqlname}clientcat `client` ON pc.clid = client.clid
+			LEFT JOIN {$sqlname}user `user` ON pc.iduser = user.iduser
+		WHERE 
+		    pc.pid > 0 
+		    $sort AND 
+		    pc.identity = '$identity' 
+		ORDER by pc.person
+	" );
 
 	//print $db -> lastQuery();
 
@@ -372,9 +396,9 @@ if ( $sort != '' ) {
 			"title"  => highlighter( $oword, $data['person'] ),
 			"trash"  => NULL,
 			"attach" => $dop,
-			"client" => highlighter( $word, current_client( $data['clid'] ) ),
+			"client" => highlighter( $word, $data['client'] ),
 			"clid"   => $data['clid'] > 0 ? $data['clid'] : NULL,
-			"user"   => current_user( $data['iduser'] )
+			"user"   => $data['user']
 		];
 
 		$pids[] = $data['pid'];
@@ -391,7 +415,7 @@ $words = (array)yexplode( "%", $dword );
 
 if ( $strong != 'yes' ) {
 
-	if ( count( $words ) > 1 && in_array( "title", $ifields ) ) {
+	if ( !empty( $words ) && in_array( "title", $ifields ) ) {
 
 		$regexp = [];
 
@@ -404,11 +428,11 @@ if ( $strong != 'yes' ) {
 		}
 
 
-		$so[] = "LOWER(title) REGEXP '".implode( "(.*)?", $regexp )."'";
+		$so[] = "LOWER(deal.title) REGEXP '".implode( "(.*)?", $regexp )."'";
 
 		$regexp = [];
 
-		if ( count( $words ) > 1 ) {
+		if ( !empty( $words ) ) {
 
 			rsort( $words );
 
@@ -420,12 +444,12 @@ if ( $strong != 'yes' ) {
 
 		}
 
-		$so[] = "LOWER(title) REGEXP '".implode( "(.*)?", $regexp )."'";
+		$so[] = "LOWER(deal.title) REGEXP '".implode( "(.*)?", $regexp )."'";
 
 	}
 	elseif ( in_array( "title", (array)$ifields ) ) {
 
-		$so[] = "title LIKE '%".$oword."%'";
+		$so[] = "deal.title LIKE '%".$oword."%'";
 
 	}
 
@@ -435,20 +459,20 @@ else {
 }
 
 if ( !empty( $clids ) ) {
-	$so[] = 'clid IN ('.implode( ", ", (array)$clids ).')';
+	$so[] = 'deal.clid IN ('.implode( ", ", (array)$clids ).')';
 }
 if ( !empty( $pids ) ) {
-	$so[] = 'pid IN ('.implode( ", ", (array)$pids ).')';
+	$so[] = 'deal.pid IN ('.implode( ", ", (array)$pids ).')';
 }
 if ( in_array( "content", (array)$ifields ) ) {
-	$so[] = "content LIKE '%".$dword."%'";
+	$so[] = "deal.content LIKE '%".$dword."%'";
 }
 if ( in_array( "adres", (array)$ifields ) ) {
-	$so[] = "adres LIKE '%".$dword."%'";
+	$so[] = "deal.adres LIKE '%".$dword."%'";
 }
 
 foreach ( $fieldDeal as $input => $name ) {
-	$so[] = "$input LIKE '%".$dword."%'";
+	$so[] = "deal.$input LIKE '%".$dword."%'";
 }
 
 $sort = (!empty( $so )) ? "AND (".yimplode( " OR ", $so ).")" : "";
@@ -458,22 +482,38 @@ $htmlDogs = '';
 
 if ( $sort != '' ) {
 
-	$result   = $db -> getAll( "SELECT * FROM {$sqlname}dogovor WHERE did > 0 $sort AND identity = '$identity' ORDER by field(close, 'no', 'yes'), title" );
+	$result   = $db -> getAll( "
+		SELECT 
+		    deal.*,
+		    client.title AS client,
+		    user.title AS user,
+		    person.person AS person,
+		    step.title AS step
+		FROM {$sqlname}dogovor `deal`
+			LEFT JOIN {$sqlname}clientcat `client` ON deal.clid = client.clid
+			LEFT JOIN {$sqlname}personcat `person` ON deal.pid = person.pid
+			LEFT JOIN {$sqlname}user `user` ON deal.iduser = user.iduser
+			LEFT JOIN {$sqlname}dogcategory `step` ON deal.idcategory = step.idcategory
+		WHERE 
+		    deal.did > 0 
+		    $sort AND 
+		    deal.identity = '$identity' 
+		ORDER by field(deal.close, 'no', 'yes'), deal.title
+	" );
 	$countRes += count( $result );
 
 	foreach ( $result as $data ) {
+
+		$client = '';
 
 		$close = ($data['close'] == 'yes') ? '<i class="icon-lock red"></i>&nbsp;' : '';
 		$uid   = ($data['uid'] != '') ? '<hr><div class="smalltxt">'.$data['uid'].'</div>' : '';
 
 		if ( $data['clid'] > 0 ) {
-			$client = '<div class="mt10 fs-11 text-wrap"><a href="javascript:void(0)" onclick="openClient(\''.$data['clid'].'\')" title="Открыть" class="inline blue"><i class="icon-building broun fs-09 flh-11"></i>'.highlighter( $oword, current_client( $data['clid'] ) ).'<i class="icon-popup broun smalltxt"></i></a></div>';
+			$client = '<div class="mt10 fs-11 text-wrap"><a href="javascript:void(0)" onclick="openClient(\''.$data['clid'].'\')" title="Открыть" class="inline blue"><i class="icon-building broun fs-09 flh-11"></i>'.highlighter( $oword, $data['client'] ).'<i class="icon-popup broun smalltxt"></i></a></div>';
 		}
 		elseif ( $data['pid'] > 0 ) {
-			$client = '<div class="mt10 fs-11 text-wrap"><a href="javascript:void(0)" onclick="openPerson(\''.$data['pid'].'\')" title="Открыть" class="inline">'.highlighter( $oword, current_person( $data['pid'] ) ).'&nbsp;<i class="icon-popup broun smalltxt"></i></a></div>';
-		}
-		else {
-			$client = '';
+			$client = '<div class="mt10 fs-11 text-wrap"><a href="javascript:void(0)" onclick="openPerson(\''.$data['pid'].'\')" title="Открыть" class="inline">'.highlighter( $oword, $data['person'] ).'&nbsp;<i class="icon-popup broun smalltxt"></i></a></div>';
 		}
 
 		$dop = '';
@@ -483,19 +523,25 @@ if ( $sort != '' ) {
 			}
 		}
 
+		$summa = num_format( $data['kol'] ).' '.$valuta;
+
+		if ( $acs_prava != 'on' && get_accesse( 0, 0, (int)$data['did'] ) != 'yes' ) {
+			$summa = "*** ".$valuta;
+		}
+
 		$rezults['deal'][] = [
 			"num"      => $i,
 			"did"      => $data['did'],
 			"title"    => highlighter( $oword, $data['title'] ),
 			"close"    => ($data['close'] == 'yes') ? 1 : NULL,
-			"step"     => current_dogstepname( $data['idcategory'] ),
+			"step"     => $data['step'],
 			"dateplan" => format_date_rus( $data['datum_plan'] ),
-			"summa"    => num_format( $data['kol'] ).' '.$valuta,
+			"summa"    => $summa,
 			"attach"   => $dop != '' ? $dop : NULL,
 			"clid"     => $data['clid'] > 0 ? $data['clid'] : NULL,
-			"client"   => highlighter( $oword, current_client( $data['clid'] ) ),
+			"client"   => highlighter( $oword, $data['client'] ),
 			"uid"      => ($data['uid'] != '') ? $data['uid'] : NULL,
-			"user"     => current_user( $data['iduser'] )
+			"user"     => $data['user']
 		];
 
 		$i++;

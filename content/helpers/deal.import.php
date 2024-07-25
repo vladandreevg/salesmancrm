@@ -8,9 +8,9 @@
 /*        ver. 2017.x           */
 /* ============================ */
 
-ini_set( 'memory_limit', '-1' );
+ini_set('memory_limit', '-1');
 
-error_reporting( E_ERROR );
+error_reporting(E_ERROR);
 
 $rootpath = dirname(__DIR__, 2);
 
@@ -22,21 +22,21 @@ require_once $rootpath."/inc/settings.php";
 require_once $rootpath."/developer/events.php";
 require_once $rootpath."/inc/language/".$language.".php";
 
-$thisfile = basename( __FILE__ );
+$thisfile = basename(__FILE__);
 
 
-$helper = json_decode( file_get_contents( $rootpath.'/cash/helper.json' ), true );
+$helper = json_decode(file_get_contents($rootpath.'/cash/helper.json'), true);
 
-$action = $_REQUEST[ 'action' ];
+$action = $_REQUEST['action'];
 
-if ( $action == "discard" ) {
+if ($action == "discard") {
 
-	$url = $rootpath.'/files/'.$fpath.$_COOKIE[ 'url' ];
-	setcookie( "url", '' );
-	unlink( $url );
+	$url = $rootpath.'/files/'.$fpath.$_COOKIE['url'];
+	setcookie("url", '');
+	unlink($url);
 
 }
-if ( $action == "import" ) {
+if ($action == "import") {
 	?>
 	<form action="/content/helpers/deal.import.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<input type="hidden" name="action" id="action" value="upload">
@@ -53,7 +53,7 @@ if ( $action == "import" ) {
 			<b>Импортируйте сделки из других систем</b> в CRM. Вы можете использовать файлы в формате XLSX, XLS, CSV.
 			<br/>Посмотреть
 			<a href="/developer/example/deals.xls" target="_blank" style="color:red">пример файла</a> или
-			<a href="<?= $productInfo[ 'site' ] ?>/docs/47" target="blank"><i class="icon-help-circled blue"></i><b class="blue">пошаговую инструкцию</b></a>.
+			<a href="<?= $productInfo['site'] ?>/docs/47" target="blank"><i class="icon-help-circled blue"></i><b class="blue">пошаговую инструкцию</b></a>.
 			<hr>
 			<iframe width="640" height="360" src="https://www.youtube.com/embed/quFtEe8Ihh8" frameborder="0" allowfullscreen></iframe>
 
@@ -68,110 +68,62 @@ if ( $action == "import" ) {
 	</FORM>
 	<?php
 }
-if ( $action == "upload" ) {
+if ($action == "upload") {
 
 	//проверяем расширение файла. Оно д.б. только csv
-	$cur_ext = texttosmall( getExtention( $_FILES[ 'file' ][ 'name' ] ) );
+	$cur_ext = texttosmall(getExtention($_FILES['file']['name']));
 
-	if ( !in_array( $cur_ext, [
-		'csv',
-		'xls',
-		'xlsx'
-	] ) ) {
-		print 'Ошибка при загрузке файла <b>"'.basename( $_FILES[ 'file' ][ 'name' ] ).'"</b>!<br />
+	if (
+		!in_array($cur_ext, [
+			'csv',
+			'xls',
+			'xlsx'
+		])
+	) {
+		print 'Ошибка при загрузке файла <b>"'.basename($_FILES['file']['name']).'"</b>!<br />
 		<b class="yelw">Ошибка:</b> Недопустимый формат файла. <br>Допускаются только файлы в формате <b>CSV</b> или <b>XLS</b>';
 		exit;
 	}
 	else {
 		$url = $rootpath.'/files/'.$fpath.'import'.$iduser1.time().".".$cur_ext;
 		//Сначала загрузим файл на сервер
-		if ( move_uploaded_file( $_FILES[ 'file' ][ 'tmp_name' ], $url ) ) {
-			setcookie( "durl", 'import'.$iduser1.time().".".$cur_ext, time() + 86400 );
+		if (move_uploaded_file($_FILES['file']['tmp_name'], $url)) {
+			setcookie("durl", 'import'.$iduser1.time().".".$cur_ext, time() + 86400);
 			print 'Файл загружен';
 			exit;
 		}
 		else {
-			print 'Ошибка при загрузке файла <b>"'.$_FILES[ 'file' ][ 'name' ].'"</b> - '.$_FILES[ 'file' ][ 'error' ].'<br />';
+			print 'Ошибка при загрузке файла <b>"'.$_FILES['file']['name'].'"</b> - '.$_FILES['file']['error'].'<br />';
 			exit;
 		}
 	}
 }
-if ( $action == "select" ) {
+if ($action == "select") {
 
-	$result = $db -> query( "select * from ".$sqlname."field where fld_tip='client' and fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
-	while ( $data = $db -> fetch( $result ) ) {
-		$fieldClient[ $data[ 'fld_name' ] ] = $data[ 'fld_title' ];
+	$result = $db -> query("select * from {$sqlname}field where fld_tip='client' and fld_on='yes' and identity = '$identity' ORDER BY fld_order");
+	while ($data = $db -> fetch($result)) {
+		$fieldClient[$data['fld_name']] = $data['fld_title'];
 	}
 
-	$url     = $rootpath.'/files/'.$fpath.$_COOKIE[ 'durl' ];
-	$cur_ext = texttosmall( getExtention( $_COOKIE[ 'durl' ]) );
+	$url = $rootpath.'/files/'.$fpath.$_COOKIE['durl'];
 
-	if ( $cur_ext == 'xls' ) {
+	$xdata = parceExcel($url, 0);
 
-		//require_once '../../opensource/excel_reader/excel_reader2.php';
-
-		$datas = new Spreadsheet_Excel_Reader();
-		$datas -> setOutputEncoding( 'UTF-8' );
-		$datas -> read( $url, false );
-		$data1 = $datas -> dumptoarray();//получили двумерный массив с данными
-
-		//print_r($data1);
-		//exit();
-
-		for ( $j = 0; $j < 2; $j++ ) {
-
-			for ( $g = 0, $gMax = count( $data1[ $j + 1 ] ); $g < $gMax; $g++ ) {
-
-				$data[ $j ][] = untag( $data1[ $j + 1 ][ $g + 1 ] );
-
-			}
-
-		}
-
+	$data = [];
+	$x    = 0;
+	while ($x < 3) {
+		$data[] = $xdata[$x];
+		$x++;
 	}
-	if ( $cur_ext == 'csv' || $cur_ext == 'xlsx' ) {
-
-		//require_once '../../opensource/spreadsheet-reader-master/SpreadsheetReader.php';
-		//require_once '../../opensource/spreadsheet-reader-master/php-excel-reader/excel_reader2.php';
-
-		$datas = new SpreadsheetReader( $url );
-		$datas -> ChangeSheet( 0 );
-
-		foreach ( $datas as $k => $Row ) {
-
-			if ( $k < 3 ) {
-
-				foreach ( $Row as $key => $value ) {
-
-					$data[ $k ][] = ( $cur_ext == 'csv' ) ? enc_detect( untag( $value ) ) : untag( $value );
-
-				}
-
-			}
-			else goto p;
-
-		}
-
-		p:
-		$data = array_values( $data );
-
-	}
-
-	//print_r($data);
 
 	//выводим поля для выбора и ассоциации с данными
-	if ( file_exists( $rootpath.'/cash/'.$fpath.'requisites.json' ) ) {
-
-		$file     = file_get_contents( $rootpath.'/cash/'.$fpath.'requisites.json' );
-		$recvName = json_decode( $file, true );
-
+	if (file_exists($rootpath.'/cash/'.$fpath.'requisites.json')) {
+		$file     = file_get_contents($rootpath.'/cash/'.$fpath.'requisites.json');
 	}
 	else {
-
-		$file     = file_get_contents( $rootpath.'/cash/requisites.json' );
-		$recvName = json_decode( $file, true );
-
+		$file     = file_get_contents($rootpath.'/cash/requisites.json');
 	}
+	$recvName = json_decode($file, true);
 	?>
 	<DIV class="zagolovok">Импорт сделок в базу. Шаг 2.</DIV>
 	<form action="/content/helpers/deal.import.php" method="post" enctype="multipart/form-data" name="Form2" id="Form2">
@@ -189,9 +141,9 @@ if ( $action == "select" ) {
 						<option value="0">В холодные организации</option>
 						<optgroup label="Сотруднику"></optgroup>
 						<?php
-						$result = $db -> query( "SELECT * FROM ".$sqlname."user WHERE identity = '$identity' ORDER by title ".$userlim );
-						while ( $data_array = $db -> fetch( $result ) ) {
-							print '<option value="'.$data_array[ 'iduser' ].'">'.$data_array[ 'title' ].'</option>';
+						$result = $db -> query("SELECT * FROM {$sqlname}user WHERE identity = '$identity' ORDER by title ".$userlim);
+						while ($data_array = $db -> fetch($result)) {
+							print '<option value="'.$data_array['iduser'].'">'.$data_array['title'].'</option>';
 						}
 						?>
 					</select>
@@ -201,8 +153,12 @@ if ( $action == "select" ) {
 
 					<div class="fs-07 gray uppercase Bold">Тип клиента (для новых):</div>
 					<SELECT name="ctype" id="ctype" style="width:100%;">
-						<OPTION value="client" <?php if ( !$otherSettings[ 'clientIsPerson'] ) print "selected" ?>>Клиент. Юр.лицо</OPTION>
-						<OPTION value="person" <?php if ( $otherSettings[ 'clientIsPerson'] ) print "selected" ?>>Клиент. Физ.лицо</OPTION>
+						<OPTION value="client" <?php
+						if (!$otherSettings['clientIsPerson']) print "selected" ?>>Клиент. Юр.лицо
+						</OPTION>
+						<OPTION value="person" <?php
+						if ($otherSettings['clientIsPerson']) print "selected" ?>>Клиент. Физ.лицо
+						</OPTION>
 					</SELECT>
 
 				</div>
@@ -226,43 +182,89 @@ if ( $action == "select" ) {
 
 			<table id="zebra">
 				<?php
-				foreach ( $data[ 0 ] as $i => $item ) {
+				foreach ($data[0] as $i => $item) {
 					?>
 					<tr class="ha">
 						<td width="200">
 							<select id="field[]" name="field[]" class="required" style="width:100%">
 								<option value="">--Выбор--</option>
 								<optgroup label="Клиент">
-									<option value="client:uid" <?php if ( $item == 'UID' ) print "selected"; ?>>Клиент: UID</option>
-									<option value="client:title" <?php if ( $item == $fieldClient[ 'title' ] ) print "selected"; ?>>Клиент: <?= $fieldClient[ 'title' ] ?></option>
-									<?php if ( $fieldClient[ 'phone' ] ) { ?>
-										<option value="client:phone" <?php if ( $item == $fieldClient[ 'phone' ] ) print "selected"; ?>>Клиент: <?= $fieldClient[ 'phone' ] ?></option>
-									<?php } ?>
-									<?php if ( $fieldClient[ 'fax' ] ) { ?>
-										<option value="client:fax" <?php if ( $item == $fieldClient[ 'fax' ] ) print "selected"; ?>>Клиент: <?= $fieldClient[ 'fax' ] ?></option>
-									<?php } ?>
-									<?php if ( $fieldClient[ 'mail_url' ] ) { ?>
-										<option value="client:mail_url" <?php if ( $item == $fieldClient[ 'mail_url' ] ) print "selected"; ?>>Клиент: <?= $fieldClient[ 'mail_url' ] ?></option>
-									<?php } ?>
+									<option value="client:uid" <?php
+									if ($item == 'UID') {
+										print "selected";
+									} ?>>Клиент: UID
+									</option>
+									<option value="client:title" <?php
+									if ($item == $fieldClient['title']) {
+										print "selected";
+									} ?>>Клиент: <?= $fieldClient['title'] ?></option>
+									<?php
+									if ($fieldClient['phone']) { ?>
+										<option value="client:phone" <?php
+										if ($item == $fieldClient['phone']) {
+											print "selected";
+										} ?>>Клиент: <?= $fieldClient['phone'] ?></option>
+									<?php
+									} ?>
+									<?php
+									if ($fieldClient['fax']) { ?>
+										<option value="client:fax" <?php
+										if ($item == $fieldClient['fax']) {
+											print "selected";
+										} ?>>Клиент: <?= $fieldClient['fax'] ?></option>
+									<?php
+									} ?>
+									<?php
+									if ($fieldClient['mail_url']) { ?>
+										<option value="client:mail_url" <?php
+										if ($item == $fieldClient['mail_url']) {
+											print "selected";
+										} ?>>Клиент: <?= $fieldClient['mail_url'] ?></option>
+									<?php
+									} ?>
 								</optgroup>
 								<optgroup label="Сделка">
-									<option value="deal:uid" <?php if ( $item == 'UID' ) print "selected"; ?>>Сделка: UID</option>
-									<option value="deal:title" <?php if ( $item == 'Название сделки' ) print "selected"; ?>>Сделка: Название сделки</option>
+									<option value="deal:uid" <?php
+									if ($item == 'UID') {
+										print "selected";
+									} ?>>Сделка: UID
+									</option>
+									<option value="deal:title" <?php
+									if ($item == 'Название сделки') {
+										print "selected";
+									} ?>>Сделка: Название сделки
+									</option>
 									<option value="dop:dateCreate">Сделка: Дата создания</option>
 									<option value="dop:datePlan">Сделка: Дата плановая</option>
-									<option value="dop:step" <?php if ( $item == 'Этап' ) print "selected"; ?>>Сделка: Этап</option>
-									<option value="dop:summa" <?php if ( $item == 'Сумма' ) print "selected"; ?>>Сделка: Сумма</option>
+									<option value="dop:step" <?php
+									if ($item == 'Этап') {
+										print "selected";
+									} ?>>Сделка: Этап
+									</option>
+									<option value="dop:summa" <?php
+									if ($item == 'Сумма') {
+										print "selected";
+									} ?>>Сделка: Сумма
+									</option>
 									<option value="dop:dateClose">Сделка: Дата закрытия</option>
 									<option value="dop:isClose">Сделка: Статус активна/закрыта</option>
-									<option value="dop:statusClose" <?php if ( $item == 'Статус закрытия' ) print "selected"; ?>>Сделка: Статус закрытия</option>
+									<option value="dop:statusClose" <?php
+									if ($item == 'Статус закрытия') {
+										print "selected";
+									} ?>>Сделка: Статус закрытия
+									</option>
 									<?php
-									$result = $db -> query( "select * from ".$sqlname."field where fld_on='yes' and fld_tip='dogovor' and fld_name NOT IN ('zayavka','ztitle','mcid','iduser','period','money','pid_list','payer','oborot','idcategory','kol','datum_plan') and identity = '$identity' order by fld_tip, fld_order" );
-									while ( $data_array = $db -> fetch( $result ) ) {
+									$result = $db -> query("select * from {$sqlname}field where fld_on='yes' and fld_tip='dogovor' and fld_name NOT IN ('zayavka','ztitle','mcid','iduser','period','money','pid_list','payer','oborot','idcategory','kol','datum_plan') and identity = '$identity' order by fld_tip, fld_order");
+									while ($data_array = $db -> fetch($result)) {
 
-										if ( $data[ 0 ][ $i ] == $data_array[ 'fld_title' ] ) $s3 = " selected";
-										else $s3 = '';
+										if ($data[0][$i] == $data_array['fld_title']) {
+											$s3 = " selected";
+										}
+										else {
+											$s3 = '';
+										}
 
-										print '<option value="deal:'.$data_array[ 'fld_name' ].'" '.$s3.'>Сделка: '.$data_array[ 'fld_title' ].'</option>';
+										print '<option value="deal:'.$data_array['fld_name'].'" '.$s3.'>Сделка: '.$data_array['fld_title'].'</option>';
 									}
 									?>
 								</optgroup>
@@ -273,12 +275,13 @@ if ( $action == "select" ) {
 								</optgroup>
 							</select>
 						</td>
-						<td width="250"><b><?= $data[ 0 ][ $i ] ?></b></td>
+						<td width="250"><b><?= $data[0][$i] ?></b></td>
 						<td>
-							<div class="ellipsis"><?= $data[ 1 ][ $i ] ?></div>
+							<div class="ellipsis"><?= $data[1][$i] ?></div>
 						</td>
 					</tr>
-				<?php } ?>
+				<?php
+				} ?>
 			</table>
 
 		</DIV>
@@ -289,9 +292,9 @@ if ( $action == "select" ) {
 
 	<div align="center" class="success pad5">
 		<p>Теперь Вам необходимо ассоциировать загруженные данные с БД системы. Подробнее в
-			<a href="http://isaler.ru/docs/index.php?id=47" target="blank">Документации</a></p>
+			<a href="https://isaler.ru/docs/index.php?id=47" target="blank">Документации</a></p>
 		<p>
-			<b>Важно:</b> Допускается импортировать не более 5000 записей за один раз. Привязка к существующим записям клиентов осуществляется по полям "UID" (при наличии) или "<?= $fieldClient[ 'title' ] ?>", затем, при наличии, по полям "<?= $fieldClient[ 'phone' ] ?>", "<?= $fieldClient[ 'fax' ] ?>", "Email"
+			<b>Важно:</b> Допускается импортировать не более 5000 записей за один раз. Привязка к существующим записям клиентов осуществляется по полям "UID" (при наличии) или "<?= $fieldClient['title'] ?>", затем, при наличии, по полям "<?= $fieldClient['phone'] ?>", "<?= $fieldClient['fax'] ?>", "Email"
 		</p>
 	</div>
 
@@ -305,14 +308,14 @@ if ( $action == "select" ) {
 	</DIV>
 	<?php
 }
-if ( $action == "import_on" ) {
+if ($action == "import_on") {
 
-	$url   = $rootpath.'/files/'.$fpath.$_COOKIE[ 'durl' ];//файл для расшифровки
-	$field = $_REQUEST[ 'field' ]; //порядок полей
+	$url   = $rootpath.'/files/'.$fpath.$_COOKIE['durl'];//файл для расшифровки
+	$fields = $_REQUEST['field'];                         //порядок полей
 
-	$new_user   = $_REQUEST[ 'new_user' ];
-	$clientpath = $_REQUEST[ 'clientpath' ];
-	$ctype      = $_REQUEST[ 'ctype' ];
+	$new_user   = $_REQUEST['new_user'];
+	$clientpath = $_REQUEST['clientpath'];
+	$ctype      = $_REQUEST['ctype'];
 
 	$trash = ( $new_user == '0' ) ? "yes" : "no";
 
@@ -333,158 +336,160 @@ if ( $action == "import_on" ) {
 	/*
 	 * Справочник этапов
 	 */
-	$result = $db -> query( "SELECT * FROM ".$sqlname."dogcategory WHERE identity = '$identity' ORDER BY title" );
-	while ( $data_array = $db -> fetch( $result ) ) {
+	$result = $db -> query("SELECT * FROM {$sqlname}dogcategory WHERE identity = '$identity' ORDER BY title");
+	while ($data_array = $db -> fetch($result)) {
 
-		$stepsID[]    = $data_array[ 'idcategory' ];
-		$stepsTitle[] = $data_array[ 'content' ];
+		$stepsID[]    = $data_array['idcategory'];
+		$stepsTitle[] = $data_array['content'];
 
 	}
 
 	/*
 	 * Справочник статусов закрытия
 	 */
-	$result = $db -> query( "SELECT * FROM ".$sqlname."dogstatus WHERE identity = '$identity' ORDER BY title" );
-	while ( $data_array = $db -> fetch( $result ) ) {
+	$result = $db -> query("SELECT * FROM {$sqlname}dogstatus WHERE identity = '$identity' ORDER BY title");
+	while ($data_array = $db -> fetch($result)) {
 
-		$statusID[]    = $data_array[ 'sid' ];
-		$statusTitle[] = $data_array[ 'title' ];
+		$statusID[]    = $data_array['sid'];
+		$statusTitle[] = $data_array['title'];
 
 	}
 
 	/*
 	 * Справочник типов сделок
 	 */
-	$result = $db -> query( "SELECT * FROM ".$sqlname."dogtips WHERE identity = '$identity' ORDER BY title" );
-	while ( $data_array = $db -> fetch( $result ) ) {
+	$result = $db -> query("SELECT * FROM {$sqlname}dogtips WHERE identity = '$identity' ORDER BY title");
+	while ($data_array = $db -> fetch($result)) {
 
-		$tipID[]    = $data_array[ 'tid' ];
-		$tipTitle[] = $data_array[ 'title' ];
+		$tipID[]    = $data_array['tid'];
+		$tipTitle[] = $data_array['title'];
 
 	}
 
 	/*
 	 * Справочник направлений
 	 */
-	$result = $db -> query( "SELECT * FROM ".$sqlname."direction WHERE identity = '$identity' ORDER BY title" );
-	while ( $data_array = $db -> fetch( $result ) ) {
+	$result = $db -> query("SELECT * FROM {$sqlname}direction WHERE identity = '$identity' ORDER BY title");
+	while ($data_array = $db -> fetch($result)) {
 
-		$dirID[]    = $data_array[ 'id' ];
-		$dirTitle[] = $data_array[ 'title' ];
+		$dirID[]    = $data_array['id'];
+		$dirTitle[] = $data_array['title'];
 
 	}
 
 	//составим массивы ассоциации данных по типам. $i - это номер колонки из таблицы.
-	for ( $i = 0, $iMax = count( $field ); $i < $iMax; $i++ ) {
+	foreach ($fields as $i => $field) {
 
-		if ( strpos( $field[ $i ], 'client' ) !== false ) {
+		if (strpos($field, 'client') !== false) {
 
-			$c = str_replace( "client:", "", $field[ $i ] );
+			$c = str_replace("client:", "", $field);
 
-			if ( $c == 'title' ) {
+			if ($c == 'title') {
 
 				$cc++; //индикатор наличия организации
 				$clx = $i;
 
 			}
-			if ( $c == 'uid' ) {
+			if ($c == 'uid') {
 
 				$cc++; //индикатор наличия организации
 				$clu = $i;
 
 			}
-			if ( $c == 'phone' ) {
+			if ($c == 'phone') {
 
 				$clt = $i;
 
 			}
-			if ( $c == 'fax' ) {
+			if ($c == 'fax') {
 
 				$clf = $i;
 
 			}
-			if ( $c == 'mail_url' ) {
+			if ($c == 'mail_url') {
 
 				$clm = $i;
 
 			}
 
 			//массив данных по клиенту
-			$indexs[ 'client' ][]    = $i;//массив ключ поля -> номер столбца
-			$names[ 'client' ][ $i ] = $c;//массив номер столбца -> индекс поля
+			$indexs['client'][]  = $i;//массив ключ поля -> номер столбца
+			$names['client'][$i] = $c;//массив номер столбца -> индекс поля
 
 		}
-		if ( strpos( $field[ $i ], 'deal' ) !== false ) {
+		if (strpos($field, 'deal') !== false) {
 
-			$c = str_replace( "deal:", "", $field[ $i ] );
-			if ( !in_array( $c, [
-				'tip',
-				'direction'
-			] ) ) {
+			$c = str_replace("deal:", "", $field);
+			if (
+				!in_array($c, [
+					'tip',
+					'direction'
+				])
+			) {
 
-				if ( $c == 'title' ) {
+				if ($c == 'title') {
 					$dd++; //индикатор наличия сделки
 					$dlx = $i;
 				}
-				if ( $c == 'uid' ) {
+				if ($c == 'uid') {
 					$dlu = $i;
 				}
 				//массив данных по сделке
-				$indexs[ 'deal' ][]    = $i;
-				$names[ 'deal' ][ $i ] = $c;//массив номер столбца -> индекс поля
+				$indexs['deal'][]  = $i;
+				$names['deal'][$i] = $c;//массив номер столбца -> индекс поля
 			}
 
 		}
-		if ( strpos( $field[ $i ], 'tip' ) !== false ) {
+		if (strpos($field, 'tip') !== false) {
 
-			$indexs[ 'dop' ][ 'tip' ] = $i;//массив ключ поля -> номер столбца
-
-		}
-		if ( strpos( $field[ $i ], 'direction' ) !== false ) {
-
-			$indexs[ 'dop' ][ 'direction' ] = $i;//массив ключ поля -> номер столбца
+			$indexs['dop']['tip'] = $i;//массив ключ поля -> номер столбца
 
 		}
-		if ( strpos( $field[ $i ], 'summa' ) !== false ) {
+		if (strpos($field, 'direction') !== false) {
 
-			$indexs[ 'dop' ][ 'summa' ] = $i;//массив ключ поля -> номер столбца
+			$indexs['dop']['direction'] = $i;//массив ключ поля -> номер столбца
 
 		}
-		if ( strpos( $field[ $i ], 'isClose' ) !== false ) {
+		if (strpos($field, 'summa') !== false) {
+
+			$indexs['dop']['summa'] = $i;//массив ключ поля -> номер столбца
+
+		}
+		if (strpos($field, 'isClose') !== false) {
 
 			//массив ключ поля -> номер столбца
-			$indexs[ 'dop' ][ 'isClose' ] = $i;
+			$indexs['dop']['isClose'] = $i;
 
 		}
-		if ( strpos( $field[ $i ], 'dateCreate' ) !== false ) {
+		if (strpos($field, 'dateCreate') !== false) {
 
-			$indexs[ 'dop' ][ 'date_create' ] = $i;//массив ключ поля -> номер столбца
-
-		}
-		if ( strpos( $field[ $i ], 'datePlan' ) !== false ) {
-
-			$indexs[ 'dop' ][ 'date_plan' ] = $i;//массив ключ поля -> номер столбца
+			$indexs['dop']['date_create'] = $i;//массив ключ поля -> номер столбца
 
 		}
-		if ( strpos( $field[ $i ], 'step' ) !== false ) {
+		if (strpos($field, 'datePlan') !== false) {
 
-			$indexs[ 'dop' ][ 'step' ] = $i;//массив ключ поля -> номер столбца
-
-		}
-		if ( strpos( $field[ $i ], 'dateClose' ) !== false ) {
-
-			$indexs[ 'dop' ][ 'date_close' ] = $i;//массив ключ поля -> номер столбца
+			$indexs['dop']['date_plan'] = $i;//массив ключ поля -> номер столбца
 
 		}
-		if ( strpos( $field[ $i ], 'statusClose' ) !== false ) {
+		if (strpos($field, 'step') !== false) {
 
-			$indexs[ 'dop' ][ 'status_close' ] = $i;//массив ключ поля -> номер столбца
+			$indexs['dop']['step'] = $i;//массив ключ поля -> номер столбца
 
 		}
-		if ( strpos( $field[ $i ], 'history' ) !== false ) {
+		if (strpos($field, 'dateClose') !== false) {
 
-			$c                         = str_replace( "history:", "", $field[ $i ] );
-			$indexs[ 'history' ][ $c ] = $i;//массив ключ поля -> номер столбца
+			$indexs['dop']['date_close'] = $i;//массив ключ поля -> номер столбца
+
+		}
+		if (strpos($field, 'statusClose') !== false) {
+
+			$indexs['dop']['status_close'] = $i;//массив ключ поля -> номер столбца
+
+		}
+		if (strpos($field, 'history') !== false) {
+
+			$c                     = str_replace("history:", "", $field);
+			$indexs['history'][$c] = $i;//массив ключ поля -> номер столбца
 
 		}
 
@@ -493,61 +498,15 @@ if ( $action == "import_on" ) {
 	$data = [];
 
 	//считываем данные из файла в массив
-	$cur_ext = texttosmall( getExtention( $_COOKIE[ 'durl' ] ) );
+	$cur_ext = texttosmall(getExtention($_COOKIE['durl']));
 
 	$maxImport = 5001;
 
-	if ( $cur_ext == 'csv' ) $maxImport = 5001;
-	if ( $cur_ext == 'xls' ) $maxImport = 5001;
-
-	if ( $cur_ext == 'xls' ) {
-
-		//require_once '../../opensource/excel_reader/excel_reader2.php';
-
-		$datas = new Spreadsheet_Excel_Reader();
-		$datas -> setOutputEncoding( 'UTF-8' );
-		$datas -> read( $url, false );
-		$data1 = $datas -> dumptoarray();//получили двумерный массив с данными
-
-		for ( $j = 0; $j < $maxImport; $j++ ) {
-
-			for ( $g = 0, $gMax = count( $data1[ $j + 1 ] ); $g < $gMax; $g++ ) {
-
-				$data[ $j ][] = untag( $data1[ $j + 1 ][ $g + 1 ] );
-
-			}
-
-		}
-
-	}
-	if ( $cur_ext == 'csv' || $cur_ext == 'xlsx' ) {
-
-		//require_once '../../opensource/spreadsheet-reader-master/SpreadsheetReader.php';
-		//require_once '../../opensource/spreadsheet-reader-master/php-excel-reader/excel_reader2.php';
-
-		$datas = new SpreadsheetReader( $url );
-		$datas -> ChangeSheet( 0 );
-
-		foreach ( $datas as $k => $Row ) {
-
-			if ( $k < $maxImport ) {
-
-				foreach ( $Row as $key => $value ) {
-
-					$data[ $k ][] = ( $cur_ext == 'csv' ) ? enc_detect( untag( $value ) ) : untag( $value );
-
-				}
-
-			}
-			else {
-				goto p1;
-			}
-
-		}
-
-		p1:
-		$data = array_values( $data );
-
+	$datas = [];
+	$x    = 0;
+	while ($x < $maxImport) {
+		$datas[] = $xdata[$x];
+		$x++;
 	}
 
 	$good  = 0;
@@ -561,7 +520,7 @@ if ( $action == "import_on" ) {
 	$dids  = [];
 
 	//импортируем данные из файла
-	for ( $i = 1, $iMax = count( $data ); $i < $iMax; $i++ ) {
+	foreach ($datas as $i => $data) {
 
 		$clid = 0;
 		$did  = 0;
@@ -580,28 +539,28 @@ if ( $action == "import_on" ) {
 		$dogovor = [];
 		$client  = [];
 
-		$castName = $data[ $i ][ $indexs[ 'client' ][ 'title' ] ];
+		$castName = $data[$indexs['client']['title']];
 
 		//обработаем сумму и установим статус Активна/Закрыта на основании этой суммы
-		if ( $data[ $i ][ $indexs[ 'dop' ][ 'summa' ] ] != '' ) {
+		if ($data[$indexs['dop']['summa']] != '') {
 
-			$summa = pre_format( $data[ $i ][ $indexs[ 'dop' ][ 'summa' ] ] );
+			$summa = pre_format($data[$indexs['dop']['summa']]);
 
 		}
 
 		//обработаем этапы
-		$st = $data[ $i ][ $indexs[ 'dop' ][ 'step' ] ];
-		if ( $st != '' ) {
+		$st = $data[$indexs['dop']['step']];
+		if ($st != '') {
 
 			//сопоставляем id этапа, если нет создаем.
-			if ( in_array( $st, $stepsTitle ) ) {
+			if (in_array($st, $stepsTitle)) {
 
-				$idstep = $stepsID[ array_search( $st, $stepsTitle ) ];
+				$idstep = $stepsID[array_search($st, $stepsTitle)];
 
 			}
 			else {
 
-				$db -> query( "insert into ".$sqlname."dogcategory (`idcategory`, `title`, `content`, `identity`) values(null, '0', '$st','$identity')" );
+				$db -> query("insert into {$sqlname}dogcategory (`idcategory`, `title`, `content`, `identity`) values(null, '0', '$st','$identity')");
 				$idstep = $db -> insertId();
 
 				$stepsID[]    = $idstep;
@@ -612,141 +571,133 @@ if ( $action == "import_on" ) {
 		}
 
 		//обработаем статусы закрытия
-		$sc = $data[ $i ][ $indexs[ 'dop' ][ 'status_close' ] ];
-		if ( $data[ $i ][ $indexs[ 'dop' ][ 'isClose' ] ] == 'yes' ) {
+		$sc = $data[$indexs['dop']['status_close']];
+		if ($data[$indexs['dop']['isClose']] == 'yes' && $sc != '') {
 
-			if ( $sc != '' ) {
+			$isClose   = 'yes';
+			$summaFact = $summa;
 
-				$isClose   = 'yes';
-				$summaFact = $summa;
+			//сопоставляем id статуса текущего, если нет создаем.
+			if (in_array($sc, $statusTitle)) {
 
-				//сопоставляем id статуса текущего, если нет создаем.
-				if ( in_array( $sc, $statusTitle ) ) {
+				//если такое название уже сужествует, то сопоставляем id
+				$idstatus = $statusID[array_search($sc, $statusTitle)];
 
-					//если такое название уже сужествует, то сопоставляем id
-					$idstatus = $statusID[ array_search( $sc, $statusTitle ) ];
+			}
+			else {
 
-				}
-				else {
+				$db -> query("insert into {$sqlname}dogstatus (sid, title, content, identity) values(null, '$sc', '$sc', '$identity')");
 
-					$db -> query( "insert into ".$sqlname."dogstatus (sid, title, content, identity) values(null, '$sc', '$sc', '$identity')" );
+				$idstatus = $db -> insertId();
 
-					$idstatus = $db -> insertId();
-
-					$statusID[]    = $idstatus;
-					$statusTitle[] = $sc;
-
-				}
+				$statusID[]    = $idstatus;
+				$statusTitle[] = $sc;
 
 			}
 
 		}
 
 		//обработаем типы сделок
-		$stip = $data[ $i ][ $indexs[ 'dop' ][ 'tip' ] ];
-		if ( $data[ $i ][ $indexs[ 'dop' ][ 'tip' ] ] != '' ) {
+		$stip = $data[$indexs['dop']['tip']];
+		if ($data[$indexs['dop']['tip']] != '' && $stip != '') {
 
-			if ( $stip != '' ) {
+			//сопоставляем id статуса текущего, если нет создаем.
+			if (in_array($stip, $tipTitle)) {
 
-				//сопоставляем id статуса текущего, если нет создаем.
-				if ( in_array( $stip, $tipTitle ) ) {
+				$idtip = $tipID[array_search($stip, $tipTitle)];
 
-					$idtip = $tipID[ array_search( $stip, $tipTitle ) ];
+			}
+			else {
 
-				}
-				else {
+				$db -> query("insert into {$sqlname}dogtips (tid, title, identity) values(null, '$stip', '$identity')");
 
-					$db -> query( "insert into ".$sqlname."dogtips (tid, title, identity) values(null, '$stip', '$identity')" );
+				$idtip = $db -> insertId();
 
-					$idtip = $db -> insertId();
-
-					$tipID[]    = $idtip[ $i ];
-					$tipTitle[] = $stip;
-
-				}
+				$tipID[]    = $idtip[$i];
+				$tipTitle[] = $stip;
 
 			}
 
 		}
 
 		//обработаем направления
-		$sdir = $data[ $i ][ $indexs[ 'dop' ][ 'direction' ] ];
-		if ( $data[ $i ][ $indexs[ 'dop' ][ 'direction' ] ] != '' ) {
+		$sdir = $data[$indexs['dop']['direction']];
+		if ( $data[$indexs['dop']['direction']] != '' && $sdir != '') {
 
-			if ( $sdir != '' ) {
+			//сопоставляем id статуса текущего, если нет создаем.
+			if (in_array($sdir, $dirTitle)) {
 
-				//сопоставляем id статуса текущего, если нет создаем.
-				if ( in_array( $sdir, $dirTitle ) ) {
+				$iddir = $dirID[array_search($sdir, $dirTitle)];
 
-					$iddir = $dirID[ array_search( $sdir, $dirTitle ) ];
+			}
+			else {
 
-				}
-				else {
+				$db -> query("insert into {$sqlname}direction (id, title, identity) values(null, '".$sdir."', '$identity')");
 
-					$db -> query( "insert into ".$sqlname."direction (id, title, identity) values(null, '".$sdir."', '$identity')" );
+				$iddir = $db -> insertId();
 
-					$iddir = $db -> insertId();
-
-					$dirID[]    = $iddir;
-					$dirTitle[] = $sdir;
-
-				}
+				$dirID[]    = $iddir;
+				$dirTitle[] = $sdir;
 
 			}
 
 		}
 
 		//обработаем дату создания
-		if ( $data[ $i ][ $indexs[ 'dop' ][ 'date_create' ] ] != '' ) {
-
-			$date_create = $data[ $i ][ $indexs[ 'dop' ][ 'date_create' ] ];
-
+		if ($data[$indexs['dop']['date_create']] != '') {
+			$date_create = $data[$indexs['dop']['date_create']];
 		}
 
 		//обработаем дату план
-		if ( $data[ $i ][ $indexs[ 'dop' ][ 'date_plan' ] ] != '' ) {
+		if ($data[$indexs['dop']['date_plan']] != '') {
 
-			$date_plan = $data[ $i ][ $indexs[ 'dop' ][ 'date_plan' ] ];
+			$date_plan = $data[$indexs['dop']['date_plan']];
 
 		}
 
 		//обработаем дату закрытия
-		if ( $data[ $i ][ $indexs[ 'dop' ][ 'date_close' ] ] != '' ) {
+		if ($data[$indexs['dop']['date_close']] != '') {
 
-			$date_close = $data[ $i ][ $indexs[ 'dop' ][ 'date_close' ] ];
+			$date_close = $data[$indexs['dop']['date_close']];
 
 		}
 
 		//если в данных есть клиент, то попробуем найти его clid или добавить нового
-		if ( $cc > 0 && ( $data[ $i ][ $clx ] != '' || $data[ $i ][ $clu ] != '' ) ) {
+		if ($cc > 0 && ( $data[$clx] != '' || $data[$clu] != '' )) {
 
 			//поищем клиента в базе
 			$qr = '';
 
 			//проверка на наличие по uid или названию
-			if ( $data[ $i ][ $clu ] == '' )
-				$qr .= " and title='".clientFormatTitle( untag( enc_detect( $data[ $i ][ $clx ] ) ) )."'";
-			else
-				$qr .= " and uid='".$data[ $i ][ $clu ]."'";
+			if ($data[$clu] == '') {
+				$qr .= " and title='".clientFormatTitle(untag(enc_detect($data[$clx])))."'";
+			}
+			else {
+				$qr .= " and uid='".$data[$clu]."'";
+			}
 
 			//проверка на наличие по email
-			if ( untag( $data[ $i ][ $clm ] ) != '' )
-				$qr .= "and mail_url LIKE '%".untag( enc_detect( $data[ $i ][ $clm ] ) )."%'";
+			if (untag($data[$clm]) != '') {
+				$qr .= "and mail_url LIKE '%".untag(enc_detect($data[$clm]))."%'";
+			}
 
 			//проверка на наличие по телефонам
-			if ( untag( $data[ $i ][ $clt ] ) != '' && untag( $data[ $i ][ $clf ] ) == '' )
-				$qr .= "and phone LIKE '%".untag( enc_detect( $data[ $i ][ $clt ] ) )."%'";
+			if (untag($data[$clt]) != '' && untag($data[$clf]) == '') {
+				$qr .= "and phone LIKE '%".untag(enc_detect($data[$clt]))."%'";
+			}
 
-			elseif ( untag( $data[ $i ][ $clt ] ) == '' && untag( $data[ $i ][ $clf ] ) != '' )
-				$qr .= "and fax LIKE '%".untag( enc_detect( $data[ $i ][ $clf ] ) )."%'";
+			elseif (untag($data[$clt]) == '' && untag($data[$clf]) != '') {
+				$qr .= "and fax LIKE '%".untag(enc_detect($data[$clf]))."%'";
+			}
 
-			elseif ( untag( $data[ $i ][ $clt ] ) != '' && untag( $data[ $i ][ $clf ] ) != '' )
-				$qr .= "and (phone LIKE '%".untag( enc_detect( $data[ $i ][ $clt ] ) )."%' or fax LIKE '%".untag( enc_detect( $data[ $i ][ $clf ] ) )."%')";
+			elseif (untag($data[$clt]) != '' && untag($data[$clf]) != '') {
+				$qr .= "and (phone LIKE '%".untag(enc_detect($data[$clt]))."%' or fax LIKE '%".untag(enc_detect($data[$clf]))."%')";
+			}
 
-			$clid = $db -> getOne( "select clid from ".$sqlname."clientcat where clid > 0 $qr and identity = '$identity'" ) + 0;
+			$clid = (int)$db -> getOne("select clid from {$sqlname}clientcat where clid > 0 $qr and identity = '$identity'");
 
 			//если клиент не найден, то добавим его
-			if ( $clid < 1 ) {
+			if ($clid < 1) {
 
 				$client = [
 					"iduser"      => $new_user,
@@ -758,22 +709,20 @@ if ( $action == "import_on" ) {
 					"identity"    => $identity
 				];
 
-				for ( $k = 0, $kMax = count( $indexs['client'] ); $k < $kMax; $k++ ) {
-
-					$client[ $names[ 'client' ][ $indexs[ 'client' ][ $k ] ] ] = ( $k == $clx ) ? clientFormatTitle( $data[ $i ][ $indexs[ 'client' ][ $k ] ] ) : $data[ $i ][ $indexs[ 'client' ][ $k ] ];
-
+				foreach ($indexs['client'] as $k => $v) {
+					$client[$names['client'][$v]] = ( $k == $clx ) ? clientFormatTitle($data[$v]) : $data[$v];
 				}
 
 				try {
 
-					$db -> query( "INSERT INTO ".$sqlname."clientcat SET ?u", arrayNullClean( $client ) );
+					$db -> query("INSERT INTO {$sqlname}clientcat SET ?u", arrayNullClean($client));
 					$good++;
 
 					$clid    = $db -> insertId();
 					$clids[] = $clid;
 
 				}
-				catch ( Exception $e ) {
+				catch (Exception $e) {
 
 					$err++;
 					$error[] = 'Ошибка'.$e -> getMessage().' в строке '.$e -> getCode().'<br>';
@@ -785,11 +734,11 @@ if ( $action == "import_on" ) {
 		}
 
 		//добавим сделку, если она есть в данных
-		if ( $clid > 0 && $dd > 0 && $data[ $i ][ $dlx ] != '' ) {
+		if ($clid > 0 && $dd > 0 && $data[$dlx] != '') {
 
-			$did = $db -> getOne( "select did from ".$sqlname."dogovor where uid = '".$data[ $i ][ $dlu ]."' and identity = '$identity'" ) + 0;
+			$did = $db -> getOne("select did from {$sqlname}dogovor where uid = '".$data[$dlu]."' and identity = '$identity'") + 0;
 
-			if ( $dlu > 0 && $did > 0 ){
+			if ($dlu > 0 && $did > 0) {
 				continue;
 			}
 
@@ -811,21 +760,21 @@ if ( $action == "import_on" ) {
 				"identity"    => $identity
 			];
 
-			for ( $k = 0, $kMax = count( $indexs['deal'] ); $k < $kMax; $k++ ) {
+			foreach ($indexs['deal'] as $k => $v) {
 
-				$dogovor[ $names[ 'deal' ][ $indexs[ 'deal' ][ $k ] ] ] = $data[ $i ][ $indexs[ 'deal' ][ $k ] ];
+				$dogovor[$names['deal'][$v]] = $data[$v];
 
 			}
 
 			try {
 
-				$db -> query( "INSERT INTO ".$sqlname."dogovor SET ?u", arrayNullClean( $dogovor ) );
+				$db -> query("INSERT INTO {$sqlname}dogovor SET ?u", arrayNullClean($dogovor));
 				$good2++;
 				$did    = $db -> insertId();
 				$dids[] = $did;
 
 			}
-			catch ( Exception $e ) {
+			catch (Exception $e) {
 
 				$err2++;
 
@@ -834,25 +783,25 @@ if ( $action == "import_on" ) {
 		}
 
 		//добавим запись в историю активности
-		if ( count( $indexs[ 'history' ] ) > 0 ) {
+		if (!empty($indexs['history'])) {
 
 			try {
 
-				addHistorty( [
+				addHistorty([
 					"clid"     => $clid,
 					"pid"      => $pid,
 					"did"      => $did,
-					"datum"    => ( $data[ $i ][ $indexs[ 'history' ][ 'datum' ] ] == '' ) ? current_datumtime() : $data[ $i ][ $indexs[ 'history' ][ 'datum' ] ]." 12:00:00",
-					"tip"      => $data[ $i ][ $indexs[ 'history' ][ 'tip' ] ],
-					"des"      => $data[ $i ][ $indexs[ 'history' ][ 'des' ] ],
+					"datum"    => $data[$indexs['history']['datum']] == '' ? current_datumtime() : $data[$indexs['history']['datum']]." 12:00:00",
+					"tip"      => $data[$indexs['history']['tip']],
+					"des"      => $data[$indexs['history']['des']],
 					"iduser"   => $iduser1,
 					"identity" => $identity
-				] );
+				]);
 
 				$good3++;
 
 			}
-			catch ( Exception $e ) {
+			catch (Exception $e) {
 
 				$err3++;
 
@@ -862,34 +811,40 @@ if ( $action == "import_on" ) {
 
 	}
 
-	unlink( $url );
+	unlink($url);
 
 	$mesg = '';
-	if ( $err == 0 )
+	if ($err == 0) {
 		$mesg .= "Список клиентов импортирован успешно.<br> Импортировано <strong>".$good."</strong> записей.<br> Ошибок: нет<br>";
-	else
+	}
+	else {
 		$mesg .= "Список клиентов импортирован с ошибками.<br> Импортировано <strong>".$good."</strong> позиций.<br> Ошибок: ".$err."<br>";
+	}
 
-	if ( $err2 == 0 )
+	if ($err2 == 0) {
 		$mesg .= "Список сделок импортирован успешно.<br> Импортировано <strong>".$good2."</strong> записей.<br> Ошибок: нет<br>";
-	else
+	}
+	else {
 		$mesg .= "Список сделок импортирован с ошибками.<br> Импортировано <strong>".$good2."</strong> позиций.<br> Ошибок: ".$err2;
+	}
 
-	if ( $err3 == 0 )
+	if ($err3 == 0) {
 		$mesg .= "Список активностей импортирован успешно.<br> Импортировано <strong>".$good3."</strong> записей.<br> Ошибок: нет<br>";
-	else
+	}
+	else {
 		$mesg .= "Список активностей импортирован с ошибками.<br> Импортировано <strong>".$good3."</strong> позиций.<br> Ошибок: ".$err3;
+	}
 
-	logger( '6', 'Импорт клиентов и сделок', $iduser1 );
+	logger('6', 'Импорт клиентов и сделок', $iduser1);
 
 	print $mesg;
 
-	event ::fire( 'deal.import', $args = [
+	event ::fire('deal.import', $args = [
 		"clids" => $clids,
 		"dids"  => $dids,
 		"autor" => $iduser1,
 		"user"  => $iduser
-	] );
+	]);
 
 	exit();
 

@@ -1,0 +1,96 @@
+GET http://{{baseurl}}/developer/v3/task/fields
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/task/tips
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/task/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 3492
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/task/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"dateStart": "2023-01-01",
+	"dateEnd": "2023-06-31",
+	"active": "yes",
+    "did": 975
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/task/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"datum": "2024-07-01",
+	"totime": "15:30",
+	"title": "Перезвонить клиенту с сайта",
+	"des": "Это описание",
+	"tip": "Задача",
+	"priority": 2,
+	"speed": 0,
+	"clid": 1781,
+	"pid": "2475,2723",
+	"did": 784
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/task/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+    "id": 3497,
+	"datum": "2024-07-02",
+	"totime": "15:30",
+	"priority": 2,
+	"speed": 2
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/task/doit
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 3497,
+	"description": "Я перезвонил клиенту. Круто-чо!",
+	"tip": "Исх.звонок",
+    "status": 1
+}
+
+###
+
+DELETE http://{{baseurl}}/developer/v3/task/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id": 3498
+}

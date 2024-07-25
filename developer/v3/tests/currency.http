@@ -1,0 +1,82 @@
+GET http://{{baseurl}}/developer/v3/currency
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+  "action": "list"
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/currency/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+###
+
+GET http://{{baseurl}}/developer/v3/currency
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+  "action": "info",
+  "id" : 1
+}
+
+###
+
+GET http://{{baseurl}}/developer/v3/currency/info
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+	"id" : 1
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/currency/add
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+  "name": "Тугрик",
+  "code": "&#8366;",
+  "symbol": "U+20AE",
+  "view": "тгр.",
+  "course": 0.523
+}
+
+###
+
+POST http://{{baseurl}}/developer/v3/currency/update
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+  "id" : 7,
+  "name": "Тугрик",
+  "code": "&#8366;",
+  "symbol": "₮",
+  "view": "тгр.",
+  "course": 0.482
+}
+
+###
+
+DELETE http://{{baseurl}}/developer/v3/currency/delete
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+  "id": 7
+}
+
+###

@@ -27,8 +27,9 @@ $did    = (int)$_REQUEST['did'];
 $action = $_REQUEST['action'];
 
 // перенаправляем на новую форму
-if ( $action == 'add' )
+if ( $action == 'add' ) {
 	$action = 'edit';
+}
 
 
 $dname  = [];
@@ -64,8 +65,9 @@ if ( $action == 'edit' ) {
 
 		$prid = (int)$speka['prid'];
 
-		if ( $speka['artikul'] == 'undefined' )
+		if ( $speka['artikul'] == 'undefined' ) {
 			$speka['artikul'] = '';
+		}
 
 	}
 	else {
@@ -472,14 +474,14 @@ if ( $action == 'get.poz' ) {
 	$artikul    = $result["artikul"];
 	$datum      = $result["datum"];
 	$descr      = $result["descr"];
-	$price_in   = $result["price_in"];
-	$price_1    = $result["price_1"];
-	$price_2    = $result["price_2"];
-	$price_3    = $result["price_3"];
-	$price_4    = $result["price_4"];
-	$price_5    = $result["price_5"];
+	$price_in   = (float)$result["price_in"];
+	$price_1    = (float)$result["price_1"];
+	$price_2    = (float)$result["price_2"];
+	$price_3    = (float)$result["price_3"];
+	$price_4    = (float)$result["price_4"];
+	$price_5    = (float)$result["price_5"];
 	$edizm      = $result["edizm"];
-	$nds        = $result["nds"];
+	$nds        = (float)["nds"];
 	$idcategory = (int)$result["pr_cat"];
 
 	$price = Price ::info( $prid )['data'];

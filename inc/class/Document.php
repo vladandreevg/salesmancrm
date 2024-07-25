@@ -229,9 +229,7 @@ class Document {
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
-		$id = (int)$id;
-
-		if ( (int)$id > 0 ) {
+		if ( $id > 0 ) {
 
 			$response = $db -> getRow( "select * from {$sqlname}contract WHERE deid = '$id' and identity = '$identity'" );
 
@@ -242,7 +240,6 @@ class Document {
 						unset( $response[ $k ] );
 					}
 				}
-
 
 				if ( $response['ftitle'] != '' ) {
 
@@ -259,51 +256,29 @@ class Document {
 
 					}
 
-					//unset($response['ftitle']);
-					//unset($response['fname']);
-					//unset($response['ftype']);
-
 				}
 
-				// не понятно откуда и зачем этот код
-				/*
-				$result = $db -> query("SELECT * FROM {$sqlname}contract_type where type != '' and identity = '$identity'");
-				while ($data = $db -> fetch($result)) {
-
-					if ($data['type'] == 'get_dogovor') $typeDogovor[] = $data['id'];
-					if ($data['type'] == 'get_aktper') $typeAktPeriod[] = $data['id'];
-					if ($data['type'] == 'get_akt') $typeAkt[] = $data['id'];
-
-				}
-				*/
-
-			}
-			else{
-
-				$response = [
-					'result' => 'Error',
-					'error' => [
-						'code' => '404',
-						'text' => "Документ не найден"
-					]
-				];
+				return $response;
 
 			}
 
-		}
-		else {
-
-			$response = [
+			return [
 				'result' => 'Error',
 				'error' => [
-					'code' => '405',
-					'text' => "Отсутствуют параметры - id документа"
+					'code' => 404,
+					'text' => "Документ не найден"
 				]
 			];
 
 		}
 
-		return $response;
+		return [
+			'result' => 'Error',
+			'error' => [
+				'code' => 405,
+				'text' => "Отсутствуют параметры - id документа"
+			]
+		];
 
 	}
 
@@ -2298,10 +2273,12 @@ class Document {
 			$path = ($disposition == '') ? str_replace( '/', "\\", $rootpath."\\files\\".str_replace( '/', "\\", $fpath ) ) : str_replace( '/', "\\", $rootpath."\\".$disposition."\\".str_replace( '/', "\\", $fpath ) );
 
 			//print $dumper.'\\OfficeToPdf\\OfficeToPDF.exe /print '.$path.$file.' '.$path.$newfile;
-
 			//exec( $dumper.'\\OfficeToPdf\\OfficeToPDF.exe /print '.$path.$file.' '.$path.$newfile, $output, $exit );
 
-			$cmd = 'soffice --headless --convert-to pdf '.$path.$file.' --outdir '.$path;
+			// LibreOffice не может обработать файлы
+			//$cmd = 'soffice --headless --convert-to pdf '.$path.$file.' --outdir '.$path;
+
+			$cmd = $dumper.'\\OfficeToPdf\\OfficeToPDF.exe /print '.$path.$file.' '.$path.$newfile;
 
 			//print $cmd;
 
@@ -2776,7 +2753,7 @@ class Document {
 							
 						}
 
-						$rez = mailto( [
+						$rez = mailto( $x = [
 							"to" => $toMail,
 							"toname"   => $toName,
 							"from"     => $mMail,
@@ -2846,6 +2823,7 @@ class Document {
 							$response['result'] = 'Успешно';
 							$response['data']   = $id;
 							$response['text']   = $msg;
+							$response['email']  = $x;
 
 						}
 

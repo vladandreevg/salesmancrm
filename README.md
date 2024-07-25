@@ -149,6 +149,7 @@ git clone https://github.com/vladandreevg/salesmancrm.git ./
 
 История изменений хранится в папке /_whatsnew/
 
+- [v2024.3](/_whatsnew/whatsnew-2024.3.md)
 - [v2024.2](/_whatsnew/whatsnew-2024.2.md)
 - [v2024.1](/_whatsnew/whatsnew-2024.1.md)
 - [v2023.1](/_whatsnew/whatsnew-2023.1.md)

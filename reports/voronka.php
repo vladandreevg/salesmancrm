@@ -292,8 +292,8 @@ $order = yimplode( ",", array_values( $step ), '"' );
 		$countTotal = $summaTotal = 0;
 		foreach ( $list as $id => $item ) {
 
-			$dogs_pec = round($item['count'] / $dogs_max * 100);
-			$kol_pec  = round($item['summa'] / $kol_max * 100);
+			$dogs_pec = $dogs_max > 0 ? round($item['count'] / $dogs_max * 100) : 0;
+			$kol_pec  = $kol_max > 0 ? round($item['summa'] / $kol_max * 100) : 0;
 
 			$countTotal += $item['count'];
 			$summaTotal += $item['summa'];
