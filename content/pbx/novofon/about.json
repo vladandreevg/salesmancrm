@@ -1,0 +1,9 @@
+{
+	"name": "Novofon (форк Zadarma)",
+	"type": "novofon",
+	"functions":["events","cdr","originate","play"],
+	"docs": "https://salesman.pro/docs/128",
+	"comment": "",
+	"author": "Vladislav Andreev",
+	"autor_email": "a.vladislav.g@gmail.com"
+}

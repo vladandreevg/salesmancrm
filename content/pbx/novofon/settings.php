@@ -27,10 +27,10 @@ $action = $_REQUEST['action'];
 if ($action == '') {
 
 	//проверим наличие буферной таблицы и создадим её, если нет
-	$da = $db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}zadarma_log'");
+	$da = $db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}novofon_log'");
 	if ($da == 0) {
 
-		$db -> query("CREATE TABLE `{$sqlname}zadarma_log` (
+		$db -> query("CREATE TABLE `{$sqlname}novofon_log` (
 			`id` INT(20) NOT NULL AUTO_INCREMENT,
 			`datum` timestamp  NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP, 
 			`extension` varchar(10) NOT NULL COMMENT 'Внутренний номер сотрудника', 
@@ -44,25 +44,25 @@ if ($action == '') {
 			UNIQUE INDEX `id` (`id`),
 			INDEX `extension` (`extension`)
 			) 
-			COMMENT='Лог отправленных уведомлений' COLLATE='utf8_general_ci'");
+			COMMENT='Лог отправленных уведомлений'");
 
 	}
 
-	$field = $db -> getRow("SHOW COLUMNS FROM {$sqlname}zadarma_log LIKE 'callid'");
+	$field = $db -> getRow("SHOW COLUMNS FROM {$sqlname}novofon_log LIKE 'callid'");
 	if ($field['Field'] == '') {
 
-		$db -> query("ALTER TABLE {$sqlname}zadarma_log ADD COLUMN `callid` VARCHAR(255) NULL DEFAULT NULL COMMENT 'uid звонка' AFTER `pid`");
+		$db -> query("ALTER TABLE {$sqlname}novofon_log ADD COLUMN `callid` VARCHAR(255) NULL DEFAULT NULL COMMENT 'uid звонка' AFTER `pid`");
 
 	}
 
-	$res       = $db -> getRow("SELECT * FROM {$sqlname}services WHERE folder = 'zadarma' and identity = '$identity'");
+	$res       = $db -> getRow("SELECT * FROM {$sqlname}services WHERE folder = 'novofon' and identity = '$identity'");
 	$apikey    = rij_decrypt($res["user_key"], $skey, $ivc);
 	$apisecret = rij_decrypt($res["user_id"], $skey, $ivc);
 
 	$api_key = $db -> getOne("SELECT api_key FROM {$sqlname}settings WHERE id = '$identity'");
 
 	print '
-		<h2 class="blue mt20 mb20 pl5">Настройки подключения к <b>Zadarma</b></h2>
+		<h2 class="blue mt20 mb20 pl5">Настройки подключения к <b>Novofon</b></h2>
 		
 		<div class="flex-container mt20 box--child">
 
@@ -91,7 +91,7 @@ if ($action == '') {
 
 			<div class="flex-string wp20 right-text fs-12 gray2 pt5">Ссылка для событий:</div>
 			<div class="flex-string wp80 pl10">
-				<pre class="marg0 graybg pad5 inline code hand" data-clipboard-text="'.$productInfo['crmurl'].'/content/pbx/zadarma/events.php?crmkey='.$api_key.'" style="width:auto">'.$productInfo['crmurl'].'/content/pbx/zadarma/events.php?crmkey='.$api_key.'</pre>
+				<pre class="marg0 graybg pad5 inline code hand" data-clipboard-text="'.$productInfo['crmurl'].'/content/pbx/novofon/events.php?crmkey='.$api_key.'" style="width:auto">'.$productInfo['crmurl'].'/content/pbx/novofon/events.php?crmkey='.$api_key.'</pre>
 				<div class="fs-09 gray em">Используйте этот адрес в личном кабинете (Настройки и инструменты / Подключение по API / Адрес внешней системы) для получения уведомлений о звонках и других событиях.</div>
 				<div class="fs-09 red em"><b class="">Важно:</b> этот адрес должен быть публичным, т.е. доступен из вне.</div>
 			</div>
