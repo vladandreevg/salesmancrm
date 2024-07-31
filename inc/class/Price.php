@@ -1034,11 +1034,11 @@ class Price {
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
-		$page       = (int)$params['page'];
+		$page       = (int)$params['page'] > 0 ? (int)$params['page'] : 1;
 		$idcategory = (int)$params['idcat'];
 		$oldonly    = $params['oldonly'];
 		$tuda       = $params['tuda'];
-		$ord        = $params['ord'];
+		$ord        = $params['ord'] ?? "title";
 		$fromcat    = $params['fromcat'];
 
 		$word = str_replace(" ", "%", $params['word']);
