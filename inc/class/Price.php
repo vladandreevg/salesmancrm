@@ -40,7 +40,7 @@ class Price {
 	/**
 	 * @var false|string
 	 */
-	private $rootpath;
+	//private $rootpath;
 
 	public const TYPES = [
 		0 => 'Товар',
@@ -59,7 +59,6 @@ class Price {
 		require_once $rootpath."/inc/dbconnector.php";
 		require_once $rootpath."/inc/func.php";
 
-		$this -> rootpath = $rootpath;
 		$this -> identity = $GLOBALS['identity'];
 		$this -> iduser1  = $GLOBALS['iduser1'];
 		$this -> sqlname  = $GLOBALS['sqlname'];
@@ -281,21 +280,8 @@ class Price {
 
 		$params['pr_cat']   = (int)$params['idcategory'];
 
-		$params = data2dbtypes($params, "{$sqlname}price");
-
-		//обработаем данные
-		/*
-		$params['artikul']  = clean_all($params['artikul']);
-		$params['title']    = clean_all($params['title']);
-		$params['descr']    = clean($params['descr']);
-		$params['price_in'] = pre_format($params['price_in']);
-		$params['price_1']  = pre_format($params['price_1']);
-		$params['price_2']  = pre_format($params['price_2']);
-		$params['price_3']  = pre_format($params['price_3']);
-		$params['price_4']  = pre_format($params['price_4']);
-		$params['price_5']  = pre_format($params['price_5']);
-		$params['nds']      = pre_format($params['nds']);
-		*/
+		$xparams = (array)data2dbtypes($params, "{$sqlname}price");
+		$params = $xparams;
 
 		$params['archive']  = ( $params['archive'] == 'yes' ) ? 'yes' : 'no';
 
@@ -336,7 +322,7 @@ class Price {
 		//обновление записи
 		else {
 
-			//проверим наличии записи по id
+			//проверим наличие записи по id
 			$prid = (int)$db -> getOne("SELECT * FROM {$sqlname}price WHERE n_id = '$id' AND identity = '$identity'");
 
 			if ($prid > 0) {
@@ -605,7 +591,7 @@ class Price {
 	 * @param $id - id категории
 	 *
 	 * @return string
-	 *          $mes = Запись удалена.Перемещено - ".$good." позиций
+	 *  $mes = Запись удалена. Перемещено - ".$good." позиций
 	 */
 	public static function deleteCategory($id): string {
 
@@ -769,8 +755,7 @@ class Price {
 				"count"    => $xcount
 			];
 
-			//если есть подкатегории
-			//то добавим их рекурсивно
+			//если есть подкатегории, то добавим их рекурсивно
 			if (!empty($subcat)) {
 				$category[$da["idcategory"]]["subcat"] = $subcat;
 			}
@@ -866,8 +851,7 @@ class Price {
 
 			$html .= strtr($template, $tags);
 
-			//если есть подкатегории
-			//то добавим их рекурсивно
+			//если есть подкатегории, то добавим их рекурсивно
 			$html = strtr($html, ["{{sub}}" => $subcat]);
 
 		}
@@ -905,7 +889,7 @@ class Price {
 
 		}
 
-		return self ::parentCatalog((int)$parent);
+		return self::parentCatalog($parent);
 
 	}
 
@@ -942,8 +926,7 @@ class Price {
 
 			$category[] = $da["idcategory"];
 
-			//если есть подкатегории
-			//то добавим их рекурсивно
+			//если есть подкатегории, то добавим их рекурсивно
 			if (!empty($subcat)) {
 
 				foreach ($subcat as $sub) {
@@ -1037,6 +1020,7 @@ class Price {
 		$page       = (int)$params['page'] > 0 ? (int)$params['page'] : 1;
 		$idcategory = (int)$params['idcat'];
 		$oldonly    = $params['oldonly'];
+		$old        = $params['old'];
 		$tuda       = $params['tuda'];
 		$ord        = $params['ord'] ?? "title";
 		$fromcat    = $params['fromcat'];
@@ -1050,7 +1034,7 @@ class Price {
 
 			$listcat = [];
 			$catalog = self ::getPriceCatalog($idcategory);
-			foreach ($catalog as $key => $value) {
+			foreach ($catalog as $value) {
 				$listcat[] = $value['id'];
 			}
 
@@ -1069,15 +1053,13 @@ class Price {
 			$sort .= " and prc.archive = 'yes'";
 		}
 		// все
-		elseif ($oldonly == 'yes' && $old == 'yes') {
+		elseif ($old == 'yes') {
 			$sort .= " and (prc.archive = 'yes' OR prc.archive != 'yes')";
 		}
 		// только активные
 		else {
 			$sort .= " and COALESCE(prc.archive, 'no') != 'yes'";
 		}
-
-		//$sort .= ( $oldonly == 'yes' ) ? " and {$sqlname}price.archive = 'yes'" : " and {$sqlname}price.archive != 'yes'";
 
 		if ($word != '') {
 			$sort .= " and (prc.artikul LIKE '%$word%' or prc.title LIKE '%$word%' or prc.descr LIKE '%$word%')";
@@ -1118,9 +1100,6 @@ class Price {
 		if (empty($page) || $page <= 0) {
 			$page = 1;
 		}
-		else {
-			$page = (int)$page;
-		}
 
 		$page_for_query = $page - 1;
 		$lpos           = $page_for_query * $lines_per_page;
@@ -1155,12 +1134,7 @@ class Price {
 			"page"      => $page,
 			"pageall"   => $count_pages,
 			"ord"       => $ord,
-			"desc"      => $tuda,
-			"nprice_in" => $price_in,
-			"nprice_1"  => $price_1,
-			"nprice_2"  => $price_2,
-			"nprice_3"  => $price_3,
-			"valuta"    => $valuta
+			"desc"      => $tuda
 		];
 
 	}
