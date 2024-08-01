@@ -662,7 +662,7 @@ class Deal {
 			$params['datum_start'] = ( $params['datum_start'] != '' ) ? untag($params['datum_start']) : NULL;
 			$params['datum_end']   = ( $params['datum_end'] != '' ) ? untag($params['datum_end']) : NULL;
 
-			$params['kol']   = ( isset($params['summa']) ) ? (float)pre_format($params['summa']) : pre_format($params['kol']);
+			$params['kol']   = ( isset($params['summa']) ) ? pre_format($params['summa']) : pre_format($params['kol']);
 			$params['marga'] = ( isset($params['marga']) ) ? pre_format($params['marga']) : pre_format($params['marg']);
 
 			$params['direction'] = ( $params['direction'] ?? $dirDefault );
@@ -680,8 +680,8 @@ class Deal {
 					$params['zayavka'] = $nzayavka;
 				}
 
-				$dparams['zayavka'] = untag($params['zayavka']);
-				$dparams['ztitle']  = untag($params['ztitle']);
+				//$dparams['zayavka'] = untag($params['zayavka']);
+				//$dparams['ztitle']  = untag($params['ztitle']);
 
 			}
 			else {
@@ -711,9 +711,9 @@ class Deal {
 							"edizm"    => untag($params['speca_ediz'][$i]),
 							"kol"      => (float)$params['speca_kol'][$i],
 							"dop"      => untag($params['speca_dop'][$i]),
-							"price"    => (float)pre_format($params['speca_summa'][$i]),
-							"price_in" => (float)pre_format($params['price_in'][$i]),
-							"nds"      => (float)pre_format($params['speca_nds'][$i]),
+							"price"    => pre_format($params['speca_summa'][$i]),
+							"price_in" => pre_format($params['price_in'][$i]),
+							"nds"      => pre_format($params['speca_nds'][$i]),
 							"comments" => $params['speca_comment'][$i],
 						];
 
@@ -742,7 +742,7 @@ class Deal {
 
 			foreach ($params as $key => $value) {
 
-				if (in_array($key, $fields) && $key != 'idcategory2') {
+				if (in_array($key, $fields) /*&& $key != 'idcategory2'*/) {
 
 					if (is_array($value)) {
 
@@ -797,7 +797,7 @@ class Deal {
 							break;
 						case 'kol':
 						case 'marga':
-							$value = $value == '' ? 0 : (float)pre_format($value);
+							$value = $value == '' ? 0 : pre_format($value);
 							break;
 						case 'direction':
 
@@ -834,7 +834,7 @@ class Deal {
 							// у этого поля может быть шаблон
 							// поэтому надо сравнить текст с шаблоном
 							// и если они равны, то поле игнорируем
-							if (self ::getFiledType($key) == 'textarea' && $value != NULL) {
+							if (!is_null($value) && self ::getFiledType($key) == 'textarea') {
 
 								// шаблон
 								$ftpl = $db -> getOne("SELECT fld_var FROM {$sqlname}field WHERE fld_tip='dogovor' AND fld_name = '$key' AND identity = '$identity'");
@@ -982,9 +982,9 @@ class Deal {
 								'title'    => !empty($speka['title']) ? $speka['title'] : $resp["title"],
 								'tip'      => $speka['tip'],
 								'edizm'    => !empty($speka['edizm']) ? $speka['edizm'] : $resp["edizm"],
-								'price'    => (float)pre_format($speka['price']) > 0 ? pre_format($speka['price']) : pre_format($resp["price_1"]),
-								'price_in' => (float)pre_format($speka["price_in"]) > 0 ? pre_format($speka["price_in"]) : pre_format($resp["price_in"]),
-								'nds'      => (float)pre_format($speka["nds"]) > 0 ? pre_format($speka["nds"]) : pre_format($resp["nds"]),
+								'price'    => pre_format($speka['price']) > 0 ? pre_format($speka['price']) : pre_format($resp["price_1"]),
+								'price_in' => pre_format($speka["price_in"]) > 0 ? pre_format($speka["price_in"]) : pre_format($resp["price_in"]),
+								'nds'      => pre_format($speka["nds"]) > 0 ? pre_format($speka["nds"]) : pre_format($resp["nds"]),
 								'kol'      => $speka["kol"],
 								'comments' => untag($speka["comments"]),
 								'dop'      => $speka["dop"]
@@ -1012,7 +1012,7 @@ class Deal {
 
 					//print $db -> lastQuery();
 
-					event ::fire('entry.status', $args = [
+					event ::fire('entry.status', [
 						"id"      => (int)$params['ide'],
 						"status"  => "1",
 						"autor"   => $iduser1,
@@ -1023,7 +1023,7 @@ class Deal {
 
 				}
 
-				sendNotify('new_dog', $paramss = [
+				sendNotify('new_dog', [
 					"did"        => $did,
 					"title"      => $deal['title'],
 					"kol"        => $deal['kol'],
@@ -1061,10 +1061,10 @@ class Deal {
 				/**
 				 * События
 				 */
-				event ::fire('deal.add', $args = [
+				event ::fire('deal.add', [
 					"did"      => $did,
 					"autor"    => $iduser1,
-					"userUID"  => (string)current_userUID((int)$iduser1),
+					"userUID"  => current_userUID((int)$iduser1),
 					"newparam" => $deal
 				]);
 
@@ -1163,8 +1163,6 @@ class Deal {
 
 		global $hooks;
 
-		$rootpath = $this -> rootpath;
-
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
 		$identity = $this -> identity;
@@ -1231,7 +1229,7 @@ class Deal {
 				$currentStep   = current_dogstepname($currentStepID);
 
 				//если этапа нет в новой цепочке
-				if (!in_array(current_dogstepid($did), (array)$steps)) {
+				if (!in_array(current_dogstepid($did), $steps)) {
 
 					$newStepID = array_shift($steps);
 
@@ -1279,7 +1277,7 @@ class Deal {
 			foreach ($params as $key => $value) {
 
 				if (
-					in_array($key, (array)$fields) && !in_array($key, [
+					in_array($key, $fields) && !in_array($key, [
 						'idcategory',
 						'step',
 						'close'
@@ -1370,7 +1368,7 @@ class Deal {
 							// у этого поля может быть шаблон
 							// поэтому надо сравнить текст с шаблоном
 							// и если они равны, то поле игнорируем
-							if (self ::getFiledType($key) == 'textarea' && !is_null($value)) {
+							if (!is_null($value) && self ::getFiledType($key) == 'textarea') {
 
 								// шаблон
 								$ftpl = $db -> getOne("SELECT fld_var FROM {$sqlname}field WHERE fld_tip='dogovor' AND fld_name = '$key' AND identity = '$identity'");
@@ -1704,8 +1702,6 @@ class Deal {
 
 		global $hooks;
 
-		$rootpath = $this -> rootpath;
-
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
 		$identity = $this -> identity;
@@ -1716,13 +1712,10 @@ class Deal {
 		$tipDefault = $GLOBALS['tipDefault'];
 
 		$post = $params;
-		$did  = (int)$did;
 
 		$params = $hooks -> apply_filters("deal_editfilter", $params);
 
 		$fields = dealFields();
-		$did    = (int)$did;
-		//$deal = $params;
 		$deal = $newParams = $oldParams = [];
 
 		$params['marga'] = ( isset($params['marg']) ) ? pre_format($params['marg']) : pre_format($params['marga']);
@@ -1815,7 +1808,7 @@ class Deal {
 				$currentStep   = current_dogstepname($currentStepID);
 
 				//если этапа нет в новой цепочке
-				if (!in_array(current_dogstepid($did), (array)$steps)) {
+				if (!in_array(current_dogstepid($did), $steps)) {
 
 					$newStepID = array_shift($steps);
 
@@ -1864,7 +1857,7 @@ class Deal {
 
 				//пропускаем все поля, относящиеся к Этапу, а также к закрытию сделки
 				if (
-					in_array($field, (array)$fields) && !in_array($field, [
+					in_array($field, $fields) && !in_array($field, [
 						'idcategory',
 						'category',
 						'step',
@@ -2152,7 +2145,7 @@ class Deal {
 
 					//разница в параметрах
 					$diff2 = array_diff_ext($oldParams, $newParams);
-					event ::fire('deal.edit', $args = [
+					event ::fire('deal.edit', [
 						"did"      => $did,
 						"autor"    => $iduser1,
 						"newparam" => $diff2
@@ -2267,7 +2260,7 @@ class Deal {
 			Notify ::fire("deal.delete", $iduser1, $arg);
 
 
-			event ::fire('deal.delete', $args = [
+			event ::fire('deal.delete', [
 				"did"   => $did,
 				"autor" => $iduser1
 			]);
@@ -2314,8 +2307,6 @@ class Deal {
 
 		$mes = [];
 
-		$did = (int)$did;
-
 		$count = $db -> getOne("SELECT COUNT(*) as count FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'");
 
 		if ($did > 0 && $count < 1) {
@@ -2355,7 +2346,7 @@ class Deal {
 					}
 					catch (Exception $e) {
 
-						$err[] = 'Ошибка'.$e -> getMessage().' в строке '.$e -> getCode();
+						$mes[] = 'Ошибка'.$e -> getMessage().' в строке '.$e -> getCode();
 
 					}
 
@@ -2387,7 +2378,7 @@ class Deal {
 						}
 						catch (Exception $e) {
 
-							$err[] = 'Ошибка'.$e -> getMessage().' в строке '.$e -> getCode();
+							$mes[] = 'Ошибка'.$e -> getMessage().' в строке '.$e -> getCode();
 
 						}
 
@@ -2434,7 +2425,7 @@ class Deal {
 				/**
 				 * Уведомления
 				 */
-				sendNotify('send_dog', $params = [
+				sendNotify('send_dog', [
 					"did"        => $did,
 					"title"      => $deal['title'],
 					"kol"        => $deal['kol'],
@@ -2474,7 +2465,7 @@ class Deal {
 				/**
 				 * Событие
 				 */
-				event ::fire('deal.change.user', $args = [
+				event ::fire('deal.change.user', [
 					"did"     => $did,
 					"autor"   => $iduser1,
 					"olduser" => $olduser,
@@ -2577,7 +2568,7 @@ class Deal {
 
 				$deal = get_dog_info($did, 'yes');
 
-				sendNotify('edit_dog', $params = [
+				sendNotify('edit_dog', [
 					"did"        => $did,
 					"title"      => $deal['title'],
 					"kol"        => $deal['kol'],
@@ -2592,7 +2583,7 @@ class Deal {
 					"comment"    => $reazon
 				]);
 
-				event ::fire('deal.change.datum_plan', $args = [
+				event ::fire('deal.change.datum_plan', [
 					"did"     => $did,
 					"autor"   => $iduser1,
 					"olddate" => $olddate,
@@ -2655,13 +2646,10 @@ class Deal {
 		$db       = $this -> db;
 		$identity = $this -> identity;
 		$iduser1  = $this -> iduser1;
-		$rootpath = $this -> rootpath;
 
 		$isCatalog = $GLOBALS['isCatalog'];
 
 		$mes = [];
-
-		$did = (int)$did;
 
 		$count = $db -> getOne("SELECT COUNT(*) as count FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'");
 
@@ -2711,19 +2699,16 @@ class Deal {
 					//добавляем смену этапа в лог
 					DealStepLog($did, $step);
 
-					if ((int)$newstep > (int)$oldstep) {//если новый этап больше старого
+					//если новый этап больше старого
+					//Отметим выполненной КТ
+					if (( (int)$newstep > (int)$oldstep ) && $cpid > 0) {
 
-						//Отметим выполненной КТ
-						if ($cpid > 0) {
+						$ctitle = $db -> getOne("SELECT title FROM {$sqlname}complect_cat WHERE ccid = (SELECT ccid FROM {$sqlname}complect WHERE id = '".$cpid."' and identity = '$identity') and identity = '$identity'");
 
-							$ctitle = $db -> getOne("SELECT title FROM {$sqlname}complect_cat WHERE ccid = (SELECT ccid FROM {$sqlname}complect WHERE id = '".$cpid."' and identity = '$identity') and identity = '$identity'");
+						//$cstep = current_dogstepname($dstep);//этап, связанный с КТ
 
-							//$cstep = current_dogstepname($dstep);//этап, связанный с КТ
-
-							$db -> query("update {$sqlname}complect set data_fact = '".current_datumtime()."', doit = 'yes' where id = '".$cpid."' and identity = '$identity'");
-							$mes[] = "Поставлена отметка о выполнении Контрольной точки - ".$ctitle.".";
-
-						}
+						$db -> query("update {$sqlname}complect set data_fact = '".current_datumtime()."', doit = 'yes' where id = '".$cpid."' and identity = '$identity'");
+						$mes[] = "Поставлена отметка о выполнении Контрольной точки - ".$ctitle.".";
 
 					}
 
@@ -2750,7 +2735,7 @@ class Deal {
 
 					$data = get_dog_info($did, 'yes');
 
-					sendNotify('step_dog', $params = [
+					sendNotify('step_dog', [
 						"did"          => $did,
 						"title"        => $data['title'],
 						"kol"          => $data['kol'],
@@ -2805,13 +2790,13 @@ class Deal {
 
 						if ($settings['mcAutoRezerv'] == 'yes' && $settings['mcStep'] == $newstep) {
 
-							( new Storage ) -> mcSyncReserv('no');
+							( new Storage ) -> mcSyncReserv();
 
 						}
 
 					}
 
-					event ::fire('deal.change.step', $args = [
+					event ::fire('deal.change.step', [
 						"did"     => $did,
 						"autor"   => $iduser1,
 						"stepOld" => $oldstep,
@@ -2889,8 +2874,6 @@ class Deal {
 		$iduser1  = $this -> iduser1;
 
 		$post = $params;
-
-		$did = (int)$did;
 
 		$mes = [];
 		$err = '';
@@ -2997,7 +2980,7 @@ class Deal {
 				]);
 
 				//отправим уведомление
-				sendNotify('close_dog', $param = [
+				sendNotify('close_dog', [
 					"did"         => $did,
 					"title"       => $data['title'],
 					"kol"         => $data['kol'],
@@ -3044,7 +3027,7 @@ class Deal {
 
 				//print_r($param);
 
-				event ::fire('deal.close', $args = [
+				event ::fire('deal.close', [
 					"did"      => $did,
 					"autor"    => $iduser1,
 					"summa"    => $deal['kol_fact'],
@@ -3220,9 +3203,7 @@ class Deal {
 
 		$post = $params;
 
-		$did = (int)$did;
-
-		$mes = $userlist = $subscribe = $list = [];
+		$mes = $list = [];
 
 		//массив, который передается из формы управления доступом
 		foreach ($params['user'] as $k => $user) {
@@ -3232,7 +3213,7 @@ class Deal {
 		}
 
 		//массив, который передается из других методов
-		foreach ($params['dostup'] as $i => $v) {
+		foreach ($params['dostup'] as $v) {
 
 			$list[(int)$v['iduser']] = $v['notify'] ?? 'off';
 
@@ -3306,16 +3287,16 @@ class Deal {
 
 				$response['result']        = 'Ok';
 				$response['data']          = $mes;
-				$response['error']['text'] = $err;
 
 			}
 			else {
 
 				$response['result']        = 'Error';
 				$response['error']['code'] = '500';
-				$response['error']['text'] = $err;
 
 			}
+
+			$response['error']['text'] = $err;
 
 		}
 		else {
@@ -3833,10 +3814,10 @@ class Deal {
 
 		//$sort .= get_people($iduser);
 
-		if ($params['active'] == 'no' || !$params['active']) {
+		if ($params['active'] == 'no' || !isset($params['active'])) {
 			$sort .= " and COALESCE(deal.close, 'no') = 'yes'";
 		}
-		elseif ($params['active'] == 'yes' || $params['active']) {
+		elseif ($params['active'] == 'yes') {
 			$sort .= " and COALESCE(deal.close, 'no') != 'yes'";
 		}
 
@@ -3901,7 +3882,7 @@ class Deal {
 		//todo: проверить работу доп.фильтров
 		foreach ($params['filter'] as $k => $v) {
 
-			if (!in_array($k, $fields) || empty($v) || $v == '') {
+			if (empty($v) || !in_array($k, $fields)) {
 				if ($k != 'phone') {
 					continue;
 				}
@@ -4102,7 +4083,7 @@ class Deal {
 
 				$bankinfo = get_client_recv($da['payer'], 'yes');
 
-				foreach (( new Client() ) -> bankInfoField as $key => $value) {
+				foreach (( new Client() ) -> bankInfoField as $value) {
 
 					$deal['bankinfo'][$value] = $bankinfo[$value];
 
