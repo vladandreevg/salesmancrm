@@ -27,7 +27,7 @@ $tuda       = untag( $_REQUEST['tuda'] );
 $page       = (int)$_REQUEST['page'];
 $iduser     = (int)$_REQUEST['iduser'];
 $idcategory = is_array( $_REQUEST['idcategory'] ) ? implode( ",", $_REQUEST['idcategory'] ) : [];
-$word       = untag( $_REQUEST['word'] );
+$word       = texttosmall(untag( $_REQUEST['word'] ));
 $alf        = untag( $_REQUEST['alf'] );
 $tbl_list   = untag( $_REQUEST['tbl_list'] );
 $filter     = $xfilter = $_REQUEST['list'];

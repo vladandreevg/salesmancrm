@@ -37,7 +37,7 @@ $haveHistory = $_REQUEST['haveHistory'];
 $haveTask    = $_REQUEST['haveTask'];
 $isFrozen    = $_REQUEST['isFrozen'];
 
-$ord  = $xord = $_REQUEST['ord'];
+$ord  = $xord = texttosmall($_REQUEST['ord']);
 $tuda = $_REQUEST['tuda'];
 
 //включим доп.поля

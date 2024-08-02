@@ -24,7 +24,7 @@ $thisfile = basename( __FILE__ );
 
 $page     = $_REQUEST['page'];
 $iduser   = $_REQUEST['iduser'];
-$word     = $_REQUEST['word'];
+$word     = texttosmall($_REQUEST['word']);
 $dword    = trim(untag($_REQUEST['word']));
 $alf      = $_REQUEST['alf'];
 $tbl_list = $_REQUEST['tbl_list'];
