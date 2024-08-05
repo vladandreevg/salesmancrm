@@ -17,6 +17,8 @@
  * @version     v.1.0 (06/09/2019)
  */
 
+require_once dirname(__DIR__).'/vendor/strip_tags_smart/strip_tags_smart.php';
+
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -28,13 +30,22 @@ use Shuchkin\SimpleXLS;
 use Shuchkin\SimpleXLSX;
 use voku\helper\Hooks;
 
-// инициируем хуки
-$hooks = Hooks ::getInstance();
+/**
+ * если переменная существует, то хуки подключаться не будут
+ * чтобы можно было подключить этот файл отдельно
+ */
+global $nokooks;
 
-loadIncludes();
+if( !isset($nokooks) ) {
 
-require_once dirname(__DIR__).'/vendor/strip_tags_smart/strip_tags_smart.php';
-require_once dirname(__DIR__)."/inc/func.helpers.php";
+	// инициируем хуки
+	$hooks = Hooks ::getInstance();
+
+	loadIncludes();
+
+	require_once dirname(__DIR__)."/inc/func.helpers.php";
+
+}
 
 /**
  * @package Func
@@ -8730,6 +8741,8 @@ function SendRequestCurl($url, $postdata = NULL, array $header = NULL, string $f
 
 	$result = new stdClass();
 
+	//$curl_log = fopen($GLOBALS['rootpath']."/curl.txt", 'wb+');
+
 	$headers = [];
 	$format  = strtoupper($format);
 
@@ -8759,9 +8772,12 @@ function SendRequestCurl($url, $postdata = NULL, array $header = NULL, string $f
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+	//curl_setopt($ch, CURLOPT_VERBOSE, true);
+	//curl_setopt($ch, CURLOPT_STDERR, $curl_log);
+
 	if ($method == 'POST') {
 
-		$POST = ( is_array($postdata) ) ? ( $format == 'JSON' ? json_encode_cyr($postdata) : http_build_query($postdata) ) : $postdata;
+		$POST = is_array($postdata) ? ( $format == 'JSON' ? json_encode_cyr($postdata) : http_build_query($postdata) ) : $postdata;
 
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $POST);
@@ -8795,6 +8811,33 @@ function SendRequestCurl($url, $postdata = NULL, array $header = NULL, string $f
 
 	curl_setopt($ch, CURLOPT_TIMEOUT, 100);
 	curl_setopt($ch, CURLOPT_URL, $url);
+
+	$result -> response = curl_exec($ch);
+	$result -> info     = curl_getinfo($ch);
+	$result -> error    = curl_error($ch);
+	$result -> headers  = $headers;
+
+	//fclose($curl_log);
+
+	return $result;
+
+}
+
+/**
+ * Скачивание файла через cURL
+ * @param $url
+ * @param array|null $headers
+ * @return stdClass
+ */
+function GetFileCurl($url, array $headers): stdClass {
+
+	$result = new stdClass();
+
+	$ch = curl_init($url);
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
 	$result -> response = curl_exec($ch);
 	$result -> info     = curl_getinfo($ch);
