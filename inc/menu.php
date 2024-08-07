@@ -55,6 +55,8 @@ if ($userSettings['dostup']['concurent'] == 'on') {
 
 $acs = $GLOBALS['acs'];
 
+//var_dump($userRights);
+
 //Формируем структуру меню
 $menu = [
 	//раздел "Клиенты"
@@ -214,7 +216,7 @@ $menu = [
 			],
 			[
 				"ismenu"  => true,
-				"accesse" => ($userRights['export'] && ($export_lock == '0' || $export_lock == '')) ? "yes" : "",
+				"accesse" => $userRights['export'] && empty($export_lock) ? "yes" : "",
 				"title"   => $lang['all']['Export'].' '.$lang['face']['ClientsName'][1],
 				"icon"    => '<i class="icon-upload-1"><i class="sup icon-forward-1"></i></i>',
 				"url"     => '',
@@ -224,7 +226,7 @@ $menu = [
 			],
 			[
 				"ismenu"  => true,
-				"accesse" => ($userRights['export'] && ($export_lock == '0' || $export_lock == '')) ? "yes" : "",
+				"accesse" => $userRights['export'] && empty($export_lock) ? "yes" : "",
 				"title"   => $lang['all']['Export'].' '.$lang['face']['ContactsName'][1],
 				"icon"    => '<i class="icon-upload-1"><i class="sup icon-forward-1"></i></i>',
 				"url"     => '',
@@ -234,7 +236,7 @@ $menu = [
 			],
 			[
 				"ismenu"  => true,
-				"accesse" => ($userRights['export'] && ($export_lock == '0' || $export_lock == '')) ? "" : "yes",
+				"accesse" => $userRights['export'] && !empty($export_lock) ? "yes" : "",
 				"title"   => $lang['all']['Export'].' '.$lang['face']['ClientsName'][1],
 				"icon"    => '<i class="icon-upload-1"><i class="sup icon-forward-1"></i></i>',
 				"url"     => '',
@@ -244,7 +246,7 @@ $menu = [
 			],
 			[
 				"ismenu"  => true,
-				"accesse" => ($userRights['export'] && ($export_lock == '0' || $export_lock == '')) ? "" : "yes",
+				"accesse" => $userRights['export'] && !empty($export_lock) ? "yes" : "",
 				"title"   => $lang['all']['Export'].' '.$lang['face']['ContactsName'][1],
 				"icon"    => '<i class="icon-upload-1"><i class="sup icon-forward-1"></i></i>',
 				"url"     => '',
