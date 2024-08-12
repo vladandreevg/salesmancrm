@@ -522,7 +522,7 @@ if ( $action == "edit" ) {
 									<input type="hidden" name="fcount" id="fcount" value="1">
 									<div id="file-1" class="filebox flex-string wp50 m0">
 
-										<input name="file[]" type="file" class="file wp100" id="file[]" onchange="addfile();">
+										<input name="file[]" type="file" class="file wp100" id="file[]" onchange="addfile();" accept=".jpg, .jpeg, .gif, .png, .webp">
 										<div class="delfilebox hand" onclick="deleteFilebox('file-1')" title="Очистить">
 											<i class="icon-cancel-circled red"></i></div>
 
@@ -531,7 +531,9 @@ if ( $action == "edit" ) {
 								</DIV>
 								<?php
 							}
-							else print '<div class="warning" style="margin-left:0; margin-right:10px" align="center"><b class="red">Превышен лимит использования диска. Текущее использование - <b>'.$diskUsage['current'].'</b> Mb ('.$diskUsage['current'].'%)</b></div>';
+							else {
+								print '<div class="warning" style="margin-left:0; margin-right:10px" align="center"><b class="red">Превышен лимит использования диска. Текущее использование - <b>'.$diskUsage['current'].'</b> Mb ('.$diskUsage['current'].'%)</b></div>';
+							}
 							?>
 							<hr>
 							<?php
@@ -540,11 +542,12 @@ if ( $action == "edit" ) {
 								print '<b>Ипользование диска:</b> Лимит: <b>'.$diskUsage['total'].'</b> Мб, Занято: <b class="red">'.$diskUsage['current'].'</b> Mb ( <b>'.$diskUsage['percent'].'</b> % ). ';
 
 							}
-							if ( $maxupload == '' )
-								$maxupload = str_replace( [
+							if ( $maxupload == '' ) {
+								$maxupload = str_replace([
 									'M',
 									'm'
-								], '', @ini_get( 'upload_max_filesize' ) );
+								], '', @ini_get('upload_max_filesize'));
+							}
 							?>
 							<b class="red">Максимальный размер файла</b> = <b><?= $maxupload ?></b> Mb
 						</div>
@@ -562,7 +565,7 @@ if ( $action == "edit" ) {
 		<div class="pull-aright button--pane">
 
 			<A href="javascript:void(0)" onclick="saveForm()" class="button">Сохранить</A>&nbsp;
-			<A href="javascript:void(0)" onclick="DClose()" class="button">Отмена</A>
+			<A href="javascript:void(0)" onclick="DClose2()" class="button">Отмена</A>
 
 		</div>
 	</FORM>

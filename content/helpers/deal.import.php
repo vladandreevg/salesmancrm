@@ -45,7 +45,7 @@ if ($action == "import") {
 		<TABLE>
 			<TR>
 				<TD width="150" align="right"><B>Из файла:</B></TD>
-				<TD><input name="file" type="file" class="file wp100" id="file"></TD>
+				<TD><input name="file" type="file" class="file wp100" id="file" accept=".csv, .xls, .xlsx"></TD>
 			</TR>
 		</TABLE>
 		<div class="infodiv div-center">

@@ -254,7 +254,7 @@ const moduleBDName = "modcatalog";
 	</DIV>
 
 	<form name="cform" id="cform">
-		<div class="nano relativ" id="clientlist">
+		<div class="nano1 relativ noscroll" id="clientlist" style="height: 100%;">
 
 			<div class="nano-content">
 				<div class="ui-layout-content" id="contentdiv"></div>

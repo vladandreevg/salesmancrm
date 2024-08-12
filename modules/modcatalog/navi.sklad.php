@@ -9,7 +9,8 @@
 /* ============================ */
 
 ?>
-<DIV class="bgray nano" id="lmenu">
+<DIV class="bgray nano1 noscroll" id="lmenu">
+
 	<div class="nano-content mt5">
 
 		<form id="pageform" name="pageform" method="post" enctype="multipart/form-data">

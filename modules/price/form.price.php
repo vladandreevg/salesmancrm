@@ -391,7 +391,7 @@ if ( $action == "import" ) {
 			<div class="flex-container">
 				<div class="flex-string">Из файла</div>
 				<div class="flex-string">
-					<input name="file" type="file" class="file wp100" id="file">
+					<input name="file" type="file" class="file wp100" id="file" accept=".csv, .xls, .xlsx">
 				</div>
 			</div>
 
