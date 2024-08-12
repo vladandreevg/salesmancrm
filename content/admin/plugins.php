@@ -72,7 +72,7 @@ if ( $action == "deactivate" ) {
 	$plugin = $db -> query( "SELECT * FROM ".$sqlname."plugins WHERE active = 'on' and identity = '$identity' ORDER by name" );
 	while ($data = $db -> fetch( $plugin )) {
 
-		$pluginEnabled[] = $folder;
+		$pluginEnabled[] = $data['name'];
 
 	}
 

@@ -125,7 +125,7 @@ if ( $action == "add" ) {
 					<?php if ( $diskLimit == 0 || $diskUsage['percent'] < 100 ) { ?>
 
 						<div id="file-1" class="filebox wp99">
-							<input name="file[]" type="file" class="file wp100" id="file[]" onchange="addfile();" multiple>
+							<input name="file[]" type="file" class="file wp100" id="file[]" onchange="addfile();" multiple accept=".<?=yimplode(",.", yexplode(",", $ext_allow))?>">
 							<div class="delfilebox hand" onclick="deleteFilebox('file-1')" title="Очистить">
 								<i class="icon-cancel-circled red"></i>
 							</div>
@@ -133,7 +133,9 @@ if ( $action == "add" ) {
 
 						<?php
 					}
-					else print '<div class="warning wp97 text-center"><b class="red">Превышен лимит использования диска</b></div>';
+					else {
+						print '<div class="warning wp97 text-center"><b class="red">Превышен лимит использования диска</b></div>';
+					}
 					?>
 
 				</DIV>

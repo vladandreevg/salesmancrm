@@ -7062,6 +7062,9 @@ img {
 .noscroll:hover {
 	overflow-y : auto;
 }
+.noscrolls {
+	overflow : hidden;
+}
 
 .vigetdiv {
 	padding-left    : 5px;

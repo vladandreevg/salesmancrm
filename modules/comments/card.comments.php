@@ -640,14 +640,14 @@ if ( $action == "commentlist.view" ) {
 				</div>
 				<div class="filebox wp100 hidden">
 					<div class="eupload relativ">
-						<input name="file[]" id="file[]" type="file" onchange="addefile();" class="file wp100" multiple>
+						<input name="file[]" id="file[]" type="file" onchange="addefile();" class="file wp100" multiple  multiple accept=".'.yimplode(",.", yexplode(",", $ext_allow)).'">
 						<div class="idel hand delbox" title="Очистить"><i class="icon-cancel-circled red"></i></div>
 					</div>
 				</div>
 				<hr>
 				<div class="text-right">
 					<a href="javascript:void(0)" onclick="$(\'.filebox\').toggleClass(\'hidden\')" class="gray pull-left" title="Прикрепить файлы"><i class="icon-attach-1 blue"></i></a>
-					<A href="javascript:void(0)" onclick="$(\'#eForm\').submit()" class="button greenbtn marg0">Ответить</A>&nbsp;
+					<A href="javascript:void(0)" onclick="$(\'#eForm\').trigger(\'submit\')" class="button greenbtn marg0">Ответить</A>&nbsp;
 				</div>
 			</div>
 		';

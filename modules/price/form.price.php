@@ -20,6 +20,12 @@ require_once $rootpath."/inc/func.php";
 require_once $rootpath."/inc/settings.php";
 require_once $rootpath."/inc/language/".$language.".php";
 
+global $maxPriceFolderLevel;
+
+if(empty($maxPriceFolderLevel)) {
+	$maxPriceFolderLevel = 3;
+}
+
 $id   = (int)$_REQUEST['id'];
 $action = $_REQUEST['action'];
 
@@ -804,7 +810,7 @@ if ( $action == "cat.edit" ) {
 							$catalog = Price::getPriceCatalog( 0 );
 							foreach ( $catalog as $key => $value ) {
 
-								if ( $value['level'] < 3 ) {
+								if ( $value['level'] < $maxPriceFolderLevel ) {
 
 									print '<option value="'.$value['id'].'" '.($value['id'] == $info['sub'] ? "selected" : '').'>'.($value['level'] > 0 ? str_repeat( '&nbsp;&nbsp;', $value['level'] ).'&rarr;&nbsp;' : '').$value['title'].'</option>';
 								}
