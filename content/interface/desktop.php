@@ -139,7 +139,7 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Виджеты-->
-	<div class="tab vigets nano hidden" data-tab="vigets">
+	<div class="tab vigets nano1 noscroll hidden" data-tab="vigets">
 
 		<div class="nano-content">
 			<div class="ui-layout-content" id="vigets"></div>
@@ -159,14 +159,15 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 			<div class="ui-layout-content" id="pipeline"></div>
 
 			<div class="fixReloadButton" onclick="$desktop.pipeline();" title="<?= $lang[ 'all' ][ 'Refresh' ] ?>">
-				<i class="icon-arrows-cw"></i></div>
+				<i class="icon-arrows-cw"></i>
+			</div>
 
 		</div>
 
 	</div>
 
 	<!--Календарь-->
-	<div class="tab bigcal nano relative  hidden" data-tab="bigcal">
+	<div class="tab bigcal nano1 noscroll relative  hidden" data-tab="bigcal">
 
 		<div class="nano-content">
 			<div class="ui-layout-content bgwhite modules" id="bigcal">
@@ -180,7 +181,7 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Календарь недельный-->
-	<div class="tab weekcal nano relative  hidden" data-tab="weekcal">
+	<div class="tab weekcal nano1 noscroll relative  hidden" data-tab="weekcal">
 
 		<div class="nano-content">
 			<div class="ui-layout-content bgwhite modules" id="weekcal">
@@ -194,7 +195,7 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Список дел-->
-	<div class="tab todo nano relative  hidden" data-tab="todo">
+	<div class="tab todo nano1 noscroll relative  hidden" data-tab="todo">
 
 		<div class="nano-content">
 			<div class="ui-layout-content bgwhite modules" id="todo">
@@ -322,7 +323,7 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--список дел сотрудников-->
-	<div class="tab todoUsers nano relative  hidden" data-tab="todoUsers">
+	<div class="tab todoUsers nano1 noscroll relative  hidden" data-tab="todoUsers">
 
 		<div class="nano-content">
 			<div class="ui-layout-content bgwhite modules" id="todoUsers">
@@ -338,10 +339,10 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Клиенты-->
-	<div class="tab clients nano relative hidden" data-tab="clients">
+	<div class="tab clients nano1 relative hidden" data-tab="clients">
 
 		<div class="nano-content">
-			<div class="ui-layout-content bgwhite" id="clients">
+			<div class="ui-layout-content scroll bgwhite" id="clients" style="height: 100%">
 
 				<div id="clientlist"></div>
 				<div class="space-10"></div>
@@ -355,10 +356,10 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Контакты-->
-	<div class="tab contacts nano relative  hidden" data-tab="contacts">
+	<div class="tab contacts nano1 relative  hidden" data-tab="contacts">
 
 		<div class="nano-content">
-			<div class="ui-layout-content bgwhite" id="contacts">
+			<div class="ui-layout-content scroll bgwhite" id="contacts" style="height: 100%">
 
 				<div id="contactlist"></div>
 				<div class="space-10"></div>
@@ -372,10 +373,10 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Сделки-->
-	<div class="tab deals nano relative  hidden" data-tab="deals">
+	<div class="tab deals nano1 relative  hidden" data-tab="deals">
 
 		<div class="nano-content">
-			<div class="ui-layout-content bgwhite" id="deals">
+			<div class="ui-layout-content scroll bgwhite" id="deals" style="height: 100%">
 
 				<div id="deallist" class="datas"></div>
 				<div class="space-10"></div>
@@ -389,7 +390,7 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Здоровье сделок-->
-	<div class="tab health nano relative  hidden" data-tab="health">
+	<div class="tab health nano1 scroll relative  hidden" data-tab="health">
 
 		<div class="nano-content">
 			<div class="ui-layout-content bgwhite" id="health"></div>
@@ -402,7 +403,7 @@ $firstTab = ( $userSettings[ 'startTab' ] != '' ) ? $userSettings[ 'startTab' ] 
 	</div>
 
 	<!--Каталог-склад-->
-	<div class="tab catalog nano relative  hidden" data-tab="catalog">
+	<div class="tab catalog nano relative hidden" data-tab="catalog">
 
 		<div class="nano-content">
 			<div class="ui-layout-content bgwhite" id="catalog"></div>

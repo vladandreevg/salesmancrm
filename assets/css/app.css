@@ -9484,8 +9484,9 @@ td > .fnameCold {
 	display  : none;
 	position : fixed;
 	top      : 60px;
-	left     : 0;
+	/*left     : 0;*/
 	z-index  : 10;
+	width: 97%;
 }
 
 .sheader.graybg {

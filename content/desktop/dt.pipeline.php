@@ -486,7 +486,7 @@ $tipAll    = json_encode_cyr( array_unique( $tipAll ) );
 		});
 
 		/*Для старого интерфейса*/
-		$('.pipeline').on('scroll', function () {
+		/*$('.pipeline').on('scroll', function () {
 
 			var ntop = $('#salesteps').offset().top;
 
@@ -498,7 +498,7 @@ $tipAll    = json_encode_cyr( array_unique( $tipAll ) );
 				$('#pipelineSteps').hide();
 			}
 
-		});
+		});*/
 
 	});
 
