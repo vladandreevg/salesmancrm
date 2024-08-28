@@ -14,7 +14,7 @@
 
 error_reporting( E_ERROR );
 
-$ypath = realpath( __DIR__.'/../' );
+$ypath = dirname(__DIR__);
 
 include $ypath."/inc/config.php";
 include $ypath."/inc/dbconnector.php";
@@ -93,7 +93,7 @@ $template = file_get_contents( $ypath."/cron/taskToday.tpl" );
 
 function getPersPhone($id, $identity): array {
 
-	$ypath = realpath( __DIR__.'/../' );
+	global $ypath;
 
 	include_once $ypath."/inc/config.php";
 	include_once $ypath."/inc/dbconnector.php";
@@ -106,7 +106,7 @@ function getPersPhone($id, $identity): array {
 
 	if ( $id ) {
 
-		$resultp = $db -> getRow( "SELECT tel, mob FROM ".$sqlname."personcat WHERE pid = '$id' and identity = '$identity'" );
+		$resultp = $db -> getRow( "SELECT tel, mob FROM {$sqlname}personcat WHERE pid = '$id' and identity = '$identity'" );
 
 		if ( !empty( $resultp ) ) {
 
@@ -134,7 +134,7 @@ function getPersPhone($id, $identity): array {
 
 function getPersEmail($id, $identity): array {
 
-	$ypath = realpath( __DIR__.'/../' );
+	global $ypath;
 
 	include_once $ypath."/inc/config.php";
 	include_once $ypath."/inc/dbconnector.php";
@@ -147,7 +147,7 @@ function getPersEmail($id, $identity): array {
 
 	if ( $id ) {
 
-		$mail = $db -> getOne( "SELECT mail FROM ".$sqlname."personcat WHERE pid = '$id' and identity = '$identity'" );
+		$mail = $db -> getOne( "SELECT mail FROM {$sqlname}personcat WHERE pid = '$id' and identity = '$identity'" );
 		if ( $mail != '' ) {
 
 			$mails = yexplode( ",", str_replace( ";", ",", $mail ) );
@@ -201,7 +201,7 @@ $today = date( "Y-m-d", mktime( 0, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) )
 $count = 0;
 
 //переберем всех активных сотрудников
-$result = $db -> getAll( "SELECT iduser, email, title, identity FROM ".$sqlname."user where secrty = 'yes' ORDER BY iduser" );
+$result = $db -> getAll( "SELECT iduser, email, title, identity FROM {$sqlname}user where secrty = 'yes' ORDER BY iduser" );
 foreach ( $result as $data ) {
 
 	$html  = [];
@@ -209,7 +209,7 @@ foreach ( $result as $data ) {
 
 	//для текущего сотрудника составим список дел на завтра
 	//отправляем только тем, у кого есть напоминания
-	$resultt = $db -> query( "SELECT * FROM ".$sqlname."tasks where iduser = '".$data['iduser']."' and datum = '$today' and active = 'yes' and identity = '".$data['identity']."' ORDER BY totime" );
+	$resultt = $db -> query( "SELECT * FROM {$sqlname}tasks WHERE iduser = '".$data['iduser']."' AND datum = '$today' AND active = 'yes' AND identity = '".$data['identity']."' ORDER BY totime" );
 
 	//print $db -> lastQuery();
 
@@ -221,10 +221,10 @@ foreach ( $result as $data ) {
 		$agenda = '';
 		$border = 'border-blue';
 		$person = [];
+		$deal   = [];
 
 		$persons = yexplode( ";", $tdata['pid'] );
 		$tipa    = getActivTip( $tdata['tip'] );
-
 
 		foreach ( $persons as $pid ) {
 
@@ -249,7 +249,6 @@ foreach ( $result as $data ) {
 				"title" => current_client( (int)$tdata['clid'] )
 			];
 		}
-
 
 		if ( (int)$tdata['did'] > 0 ) {
 			$deal = [
