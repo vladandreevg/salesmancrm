@@ -22,9 +22,13 @@ ini_set( 'error_log', $root.'/cash/salesman_error.log' );
 
 require_once $root."/inc/licloader.php";
 require_once $root."/inc/config.php";
+
+$database   = "bob";
+$sqlname    = "salesman_";
+
 require_once $root."/inc/dbconnector.php";
 
-$db -> query("SET sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'");
+$db -> query("SET sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES'");
 
 $da = $db -> getCol( "SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}modules'" );
 if ( $da[0] == 0 ) {
@@ -1176,7 +1180,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		$db -> query("
 		ALTER TABLE `{$sqlname}entry`
-			CHANGE COLUMN `datum` `datum` DATETIME NULL DEFAULT (CURRENT_TIMESTAMP) COMMENT 'дата создания' AFTER `did`,
+			CHANGE COLUMN `datum` `datum` DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'дата создания' AFTER `did`,
 			CHANGE COLUMN `datum_do` `datum_do` DATETIME NULL DEFAULT NULL COMMENT 'дата обработки обращения' AFTER `datum`
 		");
 
