@@ -4,7 +4,7 @@
 		<thead class="sticked--top">
 		<TR class="header_contaner">
 			<TH width="15" class="hidden-netbook"><input type="checkbox" name="che" id="che" onclick="checkb()"/></TH>
-			<TH class="yw80 text-left">
+			<TH class="yw120 text-left">
 				<div class="ellipsis hand" id="x-artikul" onclick="changesort('artikul')" title="Изменить порядок вывода">Артикул</div>
 			</TH>
 			<TH class="min100 text-left">
@@ -38,7 +38,7 @@
 		{{#list}}
 			<tr class="ha {{#archive}}graybg-sub{{/archive}} th60" id="price{{id}}">
 				<td class="hidden-netbook"><input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/></td>
-				<td><span class="ellipsis">{{artikul}}</span></td>
+				<td><span class="ellipsis" title="{{artikul}}">{{artikul}}</span></td>
 				<td class="min100">
 					<span class="name-ellipsis Bold hand fs-11 mfh-10" title="{{title}}" onclick="editPrice('{{id}}','view');">
 						{{title}}

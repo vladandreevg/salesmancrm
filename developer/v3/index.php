@@ -7,7 +7,7 @@
 /*        www.isaler.ru         */
 /*          ver. 2024.1         */
 /* ============================ */
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 
 $url_path  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri_parts = explode('/', trim($url_path, ' /'));
