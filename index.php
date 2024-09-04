@@ -7,7 +7,7 @@
 /*        www.isaler.ru         */
 /*        ver. 2020.x           */
 /* ============================ */
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 
 $rootpath = realpath( __DIR__ );
 
@@ -198,7 +198,7 @@ if($uri_parts[0] != "files" && empty($uri_parts[1])) {
 }
 
 // поддержка пути /card.deal/ID
-elseif( (int)$uri_parts[1] > 0 && stripos( $uri_parts[0], 'card' ) === false ){
+elseif( (int)$uri_parts[1] > 0 && str_contains( $uri_parts[0], 'card' ) ){
 
 	$script = $uri_parts[0];
 	$id = (int)$uri_parts[1];

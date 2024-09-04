@@ -311,10 +311,10 @@ class Notify {
 			$params['content'] = htmlspecialchars( $params['content'] );
 		}
 		
-		$params = data2dbtypes( $params, "{$sqlname}notify" );
+		$xparams = data2dbtypes( $params, "{$sqlname}notify" );
 
 		//очищаем от мусора
-		$nparams = $db -> filterArray( $params, $allowed );
+		$nparams = $db -> filterArray( $xparams, $allowed );
 
 		//print_r($nparams);
 

@@ -504,7 +504,7 @@ if ( $action == "edit.new" ) {
 				<div class="flex-string wp80 pl10">
 					<div id="org" class="relativ">
 						<INPUT type="hidden" id="payer" name="payer" value="<?= $deal['payer'] ?>" onchange="$('#payer').trigger('change')">
-						<INPUT id="lst_payer" type="text" class="wp95 <?= $fieldsRequire['dogovor']['payer'] ?>" value="<?= current_client( $deal['payer'] ) ?>" readonly onclick="get_orgspisok('lst_payer','org','content/helpers/client.helpers.php?action=get_orgselector','payer')" placeholder="Нажмите для выбора">
+						<INPUT id="lst_payer" type="text" class="wp95 <?= $fieldsRequire['dogovor']['payer'] ?>" value="<?= current_client( $deal['payer'] ) ?>" readonly onclick="get_orgspisok('lst_payer','org','/content/helpers/client.helpers.php?action=get_orgselector','payer')" placeholder="Нажмите для выбора">
 						<div class="idel pr20 mr20">
 							<i title="Очистить" onclick="$('input#payer').val(0); $('#lst_payer').val('');" class="icon-block red hand mr10"></i>
 						</div>
@@ -1437,7 +1437,7 @@ if ( $action == "close" ) {
 
 	<script>
 
-		$.get('content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&step=close', function (data) {
+		$.get('/content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&step=close', function (data) {
 
 			if (!data)
 				$('#stepfields').addClass('hidden');
@@ -3142,7 +3142,7 @@ if ( $action == "credit.edit" ) {
 
 			if ($('#stepfields').is('div')) {
 
-				$.get('content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + $('option:selected', this).val(), function (data) {
+				$.get('/content/helpers/deal.helpers.php?action=getStepFields&did=' + $('#did').val() + '&idcategory=' + $('option:selected', this).val(), function (data) {
 
 					$('#stepfields').html(data);
 
@@ -4231,7 +4231,7 @@ if ( $action == "credit.doit" ) {
 
 			if ($('#stepfields').is('div')) {
 
-				$.get('content/helpers/deal.helpers.php?action=getStepFields&did=' + $did + '&idcategory=' + $newStepID, function (data) {
+				$.get('/content/helpers/deal.helpers.php?action=getStepFields&did=' + $did + '&idcategory=' + $newStepID, function (data) {
 
 					$('#stepfields').html(data);
 
@@ -4323,7 +4323,7 @@ if ( $action == "credit.doit" ) {
 
 			var $idtype = $('option:selected', this).val();
 
-			$.get('modules/contract/form.contract.php?action=contract.add.extended&did=' + $did + '&idtype=' + $idtype, function (content) {
+			$.get('/modules/contract/form.contract.php?action=contract.add.extended&did=' + $did + '&idtype=' + $idtype, function (content) {
 
 				if (content !== '') {
 
@@ -4422,7 +4422,7 @@ if ( $action == "invoice.print" ) {
 		<?php
 		if ( file_exists( $file ) ) {
 
-			$link = "content/helpers/get.file.php?file=invoice_".$invoice.".pdf";
+			$link = "/content/helpers/get.file.php?file=invoice_".$invoice.".pdf";
 
 			?>
 			<div class="text-center viewdiv">

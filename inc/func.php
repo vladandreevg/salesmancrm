@@ -3834,7 +3834,7 @@ function sendNotify($tip, $params): string {
 					Расчетный счет: <b>".$rs."</b><br>
 				";
 
-				$description .= '<br>Сделка: <b><A href="'.$scheme.$server.'/card.deal?did='.$params['did'].'" target="_blank" title="Открыть в новом окне">'.$client.'</a></b><br>';
+				$description .= '<br>Сделка: <b><A href="'.$scheme.$server.'/card.deal?did='.$params['did'].'" target="_blank" title="Открыть в новом окне">'.$deal['title'].'</a></b><br>';
 				$description .= "Ответственный: <b>".current_user($params['iduser'])."</b><br><br>";
 
 				if ($clid > 0) {
