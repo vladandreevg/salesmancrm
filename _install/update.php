@@ -22,10 +22,6 @@ ini_set( 'error_log', $root.'/cash/salesman_error.log' );
 
 require_once $root."/inc/licloader.php";
 require_once $root."/inc/config.php";
-
-$database   = "bob";
-$sqlname    = "salesman_";
-
 require_once $root."/inc/dbconnector.php";
 
 $db -> query("SET sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES'");
