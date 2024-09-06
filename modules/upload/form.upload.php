@@ -1,15 +1,17 @@
 <?php
 /* ============================ */
-/* (C) 2016 Vladislav Andreev   */
+/* (C) 2024 Vladislav Andreev   */
 /*       SalesMan Project       */
 /*        www.isaler.ru         */
-/*        ver. 2017.x           */
+/*        ver. 2024.x           */
 /* ============================ */
+
+use Salesman\Upload;
 
 error_reporting(E_ERROR);
 header("Pragma: no-cache");
 
-$rootpath = dirname( __DIR__, 2 );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -18,13 +20,23 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
+$clid   = (int)$_REQUEST['clid'];
+$pid    = (int)$_REQUEST['pid'];
+$did    = (int)$_REQUEST['did'];
+$folder = (int)$_REQUEST['folder'];
+$action = $_REQUEST['action'];
 
-$clid    = (int)$_REQUEST['clid'];
-$pid     = (int)$_REQUEST['pid'];
-$did     = (int)$_REQUEST['did'];
-$action  = $_REQUEST['action'];
-$folder  = $_REQUEST['folder'];
+global $maxFileFolderLevel;
 
+if(empty($maxFileFolderLevel)) {
+	$maxFileFolderLevel = 3;
+}
+
+if ($action == "add") {
+	$action = 'edit';
+}
+
+/*
 if ($action == "add") {
 
 	?>
@@ -90,16 +102,26 @@ if ($action == "add") {
 							$result = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '0' and identity = '$identity' ORDER BY title");
 							while ($datas = $db -> fetch($result)) {
 
-								if ($datas['shared'] == 'yes') $shared = ' - Общая';
+								if ($datas['shared'] == 'yes') {
+									$shared = ' - Общая';
+								}
 								?>
-								<OPTION <?php if ($datas['idcategory'] == $folder) print "selected"; ?> value="<?= $datas['idcategory'] ?>"><?= $datas['title'] ?><?= $shared ?></OPTION>
+								<OPTION <?php
+								if ($datas['idcategory'] == $folder) {
+									print "selected";
+								} ?> value="<?= $datas['idcategory'] ?>"><?= $datas['title'] ?><?= $shared ?></OPTION>
 								<?php
 								$shared  = '';
 								$result2 = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '".$datas['idcategory']."' and identity = '$identity'");
 								while ($data = $db -> fetch($result2)) {
-									if ($data['shared'] == 'yes') $shared = ' - Общая';
+									if ($data['shared'] == 'yes') {
+										$shared = ' - Общая';
+									}
 									?>
-									<OPTION <?php if ($data['idcategory'] == $folder) print "selected"; ?> value="<?= $data['idcategory'] ?>">&nbsp;&nbsp;&rarr;&nbsp;<?= $data['title'] ?><?= $shared ?></OPTION>
+									<OPTION <?php
+									if ($data['idcategory'] == $folder) {
+										print "selected";
+									} ?> value="<?= $data['idcategory'] ?>">&nbsp;&nbsp;&rarr;&nbsp;<?= $data['title'] ?><?= $shared ?></OPTION>
 									<?php
 									$shared = '';
 								}
@@ -127,10 +149,12 @@ if ($action == "add") {
 					Максимальный размер файла не должен превышать:
 					<span>
 						<?php
-						if ($maxupload == '') $maxupload = str_replace(array(
-							'M',
-							'm'
-						), '', @ini_get('upload_max_filesize'));
+						if ($maxupload == '') {
+							$maxupload = str_replace([
+								'M',
+								'm'
+							], '', @ini_get('upload_max_filesize'));
+						}
 						print "<b>".$maxupload." Mb</b>";
 						?>
 					</span>
@@ -139,7 +163,8 @@ if ($action == "add") {
 
 				</div>
 
-			<?php } ?>
+			<?php
+			} ?>
 
 		</DIV>
 
@@ -154,11 +179,21 @@ if ($action == "add") {
 	</FORM>
 	<?php
 }
+*/
+
 if ($action == "edit") {
 
-	$fid = $_REQUEST['id'];
+	$fid = (int)$_REQUEST['id'];
 
-	$result1 = $db -> getRow("select * from ".$sqlname."file where fid='".$fid."' and identity = '$identity'");
+	$info = $fid > 0 ? Upload ::info($fid) : [
+		"clid"       => $clid,
+		"pid"        => $pid,
+		"did"        => $did,
+		"idcategory" => $folder,
+		"iduser"     => $iduser1,
+	];
+
+	/*$result1 = $db -> getRow("select * from ".$sqlname."file where fid='".$fid."' and identity = '$identity'");
 	$ftag    = $result1["ftag"];
 	$fver    = $result1["fver"];
 	$ftitle  = $result1["ftitle"];
@@ -169,18 +204,18 @@ if ($action == "edit") {
 	$did     = $result1["did"];
 	$tskid   = $result1["tskid"];
 	$coid    = $result1["coid"];
-	$folder  = $result1["folder"];
+	$folder  = $result1["folder"];*/
 
 	?>
 	<DIV class="zagolovok">Редактирование описания файла</DIV>
 
 	<FORM action="/modules/upload/core.upload.php" method="post" enctype="multipart/form-data" name="uploadForm" id="uploadForm">
 		<INPUT type="hidden" name="action" id="action" value="edit">
-		<INPUT name="clid" type="hidden" id="clid" value="<?= $clid ?>">
-		<INPUT name="pid" type="hidden" id="pid" value="<?= $pid ?>">
+		<INPUT name="clid" type="hidden" id="clid" value="<?= $info['clid'] ?>">
+		<INPUT name="pid" type="hidden" id="pid" value="<?= $info['pid'] ?>">
 		<INPUT name="fid" type="hidden" id="fid" value="<?= $fid ?>">
-		<INPUT name="fver" type="hidden" id="fver" value="<?= $fver ?>">
-		<INPUT name="oldfile" type="hidden" id="oldfile" value="<?= $oldfile ?>">
+		<INPUT name="fver" type="hidden" id="fver" value="<?= $info['fver'] ?>">
+		<INPUT name="oldfile" type="hidden" id="oldfile" value="<?= $info['fname'] ?>">
 
 		<DIV id="formtabs" class="box--child" style="max-height:80vh; overflow-x: hidden; overflow-y:auto">
 
@@ -204,12 +239,33 @@ if ($action == "edit") {
 
 				<div class="flex-container box--child mb10">
 
-					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Новая версия:</div>
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Файл:</div>
 					<div class="flex-string wp80 pl10">
 
-						<input name="file[]" type="file" class="files wp97" id="file[]" multiple>
+						<input name="file[]" type="file" class="files wp97" id="file[]" multiple accept=".<?=yimplode(",.", yexplode(",", $ext_allow))?>">
 
-						<div class="fs-07 gray2">Оригинальный файл: <b class="red"><?= $ftitle ?></b></div>
+						<?php if($fid > 0){?>
+						<div class="fs-07 gray2">Оригинальный файл: <b class="red"><?= $info['ftitle'] ?></b></div>
+						<?php } ?>
+
+						<div class="viewdiv mt10 text-wrap">
+
+							Максимальный размер файла не должен превышать:
+							<span>
+								<?php
+								if ($maxupload == '') {
+									$maxupload = str_replace([
+										'M',
+										'm'
+									], '', @ini_get('upload_max_filesize'));
+								}
+								print "<b>".$maxupload." Mb</b>";
+								?>
+							</span>
+							<BR>
+							<span>Разрешенные типы файлов: <?= $ext_allow ?></span>
+
+						</div>
 
 					</div>
 
@@ -219,7 +275,7 @@ if ($action == "edit") {
 					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Описание:</div>
 					<div class="flex-string wp80 pl10">
 
-						<TEXTAREA name="ftag" rows="2" class="des wp97" id="ftag"><?= $ftag ?></TEXTAREA>
+						<TEXTAREA name="ftag" rows="2" class="des wp97" id="ftag"><?= $info['ftag'] ?></TEXTAREA>
 
 					</div>
 
@@ -235,7 +291,10 @@ if ($action == "edit") {
 							$result = $db -> query("SELECT * FROM ".$sqlname."user WHERE identity = '$identity'");
 							while ($datas = $db -> fetch($result)) {
 								?>
-								<OPTION <?php if ($datas['iduser'] == $iduser) print "selected"; ?> value="<?= $datas['iduser'] ?>"><?= $datas['title'] ?></OPTION>
+								<OPTION <?php
+								if ($datas['iduser'] == $info['iduser']) {
+									print "selected";
+								} ?> value="<?= $datas['iduser'] ?>"><?= $datas['title'] ?></OPTION>
 								<?php
 							}
 							?>
@@ -252,21 +311,18 @@ if ($action == "edit") {
 						<select name="idcategory" id="idcategory" class="wp97">
 							<OPTION value="">--Выбор--</OPTION>
 							<?php
-							$result = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '0' and identity = '$identity'");
-							while ($datas = $db -> fetch($result)) {
-								?>
-								<OPTION <?php if ($datas['idcategory'] == $folder) print "selected"; ?> value="<?= $datas['idcategory'] ?>"><?= $datas['title'] ?></OPTION>
-								<?php
-								$shared  = '';
-								$result2 = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '".$datas['idcategory']."' and identity = '$identity'");
-								while ($data = $db -> fetch($result2)) {
-									if ($data['shared'] == 'yes') $shared = ' - Общая';
-									?>
-									<OPTION <?php if ($data['idcategory'] == $folder) print "selected"; ?> value="<?= $data['idcategory'] ?>">&nbsp;&nbsp;&rarr;&nbsp;<?= $data['title'] ?><?= $shared ?></OPTION>
-									<?php
-									$shared = '';
+							$catalog = Upload ::getCatalogLine(0);
+							foreach ($catalog as $key => $value) {
+
+								if ($value['level'] <= 3) {
+
+									$xshared = ( $datas['shared'] == 'yes' ) ? ' - Общая' : "";
+
+									print '<option value="'.$value['id'].'" '.( $value['id'] == $info['idcategory'] ? "selected" : '' ).'>'.( $value['level'] > 0 ? str_repeat('&nbsp;&nbsp;', $value['level']).'&rarr;&nbsp;' : '' ).$value['title'].' '.$xshared.'</option>';
 								}
+
 							}
+
 							?>
 						</select>
 
@@ -278,14 +334,16 @@ if ($action == "edit") {
 
 					<span class="flex-string wp5 pt10 hidden-iphone"><i class="icon-briefcase-1 blue"></i></span>
 					<span class="flex-string wp95 relativ cleared1">
-					<INPUT name="did" type="hidden" id="did" value="<?= $did ?>">
-					<INPUT name="dtitle" id="dtitle" type="text" placeholder="Выбор <?= $lang['face']['DealName']['1'] ?>" value="<?= current_dogovor($did) ?>" class="wp95">
-					<span class="idel clearinputs" title="Очистить"><i class="icon-block-1 red"></i></span>
-				</span>
+						<INPUT name="did" type="hidden" id="did" value="<?= $info['did'] ?>">
+						<INPUT name="dtitle" id="dtitle" type="text" placeholder="Выбор <?= $lang['face']['DealName']['1'] ?>" value="<?= current_dogovor($info['did']) ?>" class="wp95">
+						<span class="idel clearinputs" title="Очистить"><i class="icon-block-1 red"></i></span>
+					</span>
 
 				</div>
 
-			<?php } ?>
+				<?php
+			}
+			?>
 
 		</DIV>
 
@@ -316,15 +374,20 @@ if ($action == "mass") {
 				<tr>
 					<td width="160"><b>Выполнить для записей:</b></td>
 					<td>
-						<label><input name="isSelect" id="isSelect" value="doSelected" type="radio" <?php if ($kol > 0) print "checked"; ?>>&nbsp;Выбранное (<b class="blue"><?= $kol ?></b>)</label>
-						<label><input name="isSelect" id="isSelect" value="doAll" type="radio" <?php if ($kol == 0) print "checked"; ?>>&nbsp;Со всех страниц (<b class="blue"><span id="alls"><?= $all ?></span></b>)</label>
+						<label><input name="isSelect" id="isSelect" value="doSelected" type="radio" <?php
+							if ($kol > 0) {
+								print "checked";
+							} ?>>&nbsp;Выбранное (<b class="blue"><?= $kol ?></b>)</label>
+						<label><input name="isSelect" id="isSelect" value="doAll" type="radio" <?php
+							if ($kol == 0) {
+								print "checked";
+							} ?>>&nbsp;Со всех страниц (<b class="blue"><span id="alls"><?= $all ?></span></b>)</label>
 					</td>
 				</tr>
 			</table>
 		</div>
 		<div class="text-right button--pane">
-			<a href="javascript:void(0)" onclick="massSubmit()" class="button">Выполнить</a>&nbsp;
-			<a href="javascript:void(0)" onclick="DClose()" class="button">Отмена</a>
+			<a href="javascript:void(0)" onclick="massSubmit()" class="button">Выполнить</a>&nbsp; <a href="javascript:void(0)" onclick="DClose()" class="button">Отмена</a>
 		</div>
 	</form>
 	<?php
@@ -340,11 +403,42 @@ if ($action == "cat.list") {
 			<thead class="header_contaner sticked--top">
 			<TR class="">
 				<th><b>Название папки</b></th>
-				<th class="w60"></th>
+				<th class="w100"></th>
 			</TR>
 			</thead>
 			<tbody>
 			<?php
+			$catalog = Upload ::getCatalogLine();
+			foreach ($catalog as $key => $value) {
+
+				$padding = 'mt5 Bold';
+
+				if ((int)$value['level'] == 1) {
+					$padding = 'pl20';
+				}
+				elseif ((int)$value['level'] > 1) {
+					$x       = 20 + (int)$value['level'] * 10;
+					$padding = "pl{$x} ml15 fs-09";
+				}
+
+				$folder = ( $value['level'] == 0 ? 'icon-folder-open deepblue' : ( $value['level'] == 1 ? 'icon-folder-open blue' : 'icon-folder broun' ) );
+
+				print '
+				<TR class="ha th40">
+					<TD class="text-left '.$padding.'">
+						<div class="strelka w10 ml10 mr10"></div><div class="pl5 Bold fs-11 inline"><i class="'.$folder.'"></i>'.$value['title'].'</div>
+						[ <b class="gray2" title="Число файлов в папке">'.$value['count'].'</b> ]&nbsp;'.( $value['shared'] == 'yes' ? '&nbsp;<i class="icon-users-1 sup green" title="Общая папка"></i> ' : '' ).'
+					</TD>
+					<TD class="text-center">
+						<A href="javascript:void(0)" onclick="editUpload(\''.$value['id'].'\',\'cat.edit\')" class="button bluebtn dotted m0 p3"><i class="icon-pencil" title="Редактировать"></i></A>
+						<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить папку?\');if (cf)editUpload(\''.$value['id'].'\',\'cat.delete\')" class="button redbtn dotted m0 p3"><i class="icon-cancel-circled" title="Удалить"></i></A>
+					</TD>
+				</TR>
+				';
+
+			}
+			?><?php
+			/*
 			$result = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '0' and identity = '$identity' ORDER BY title");
 			while ($datas = $db -> fetch($result)) {
 
@@ -384,7 +478,7 @@ if ($action == "cat.list") {
 
 				}
 
-			}
+			}*/
 			?>
 			</tbody>
 		</TABLE>
@@ -392,65 +486,10 @@ if ($action == "cat.list") {
 	</div>
 	<hr>
 	<div class="text-right button--pane">
-		<A href="javascript:void(0)" onclick="editUpload('','cat.add')" class="button">+ Создать</A>
+		<A href="javascript:void(0)" onclick="editUpload(0,'cat.edit')" class="button">+ Создать</A>
 	</div>
 	<?php
 
-}
-if ($action == "cat.add") {
-	?>
-	<div class="zagolovok">Создание папки</div>
-	<FORM action="/modules/upload/core.upload.php" method="post" enctype="multipart/form-data" name="uploadForm" id="uploadForm">
-		<INPUT type="hidden" name="action" id="action" value="cat.add">
-
-		<DIV id="formtabs" class="box--child flex-vertical p10" style="max-height:80vh; overflow-x: hidden; overflow-y:auto !important">
-
-			<div class="flex-container mb10">
-				<div class="flex-string">Название</div>
-				<div class="flex-string">
-					<INPUT name="title" type="text" class="wp100" id="title">
-				</div>
-			</div>
-
-			<div class="flex-container mb10">
-				<div class="flex-string">Главная папка</div>
-				<div class="flex-string">
-					<select name="subid" id="subid" class="wp100">
-						<OPTION value="">--Выбор--</OPTION>
-						<?php
-						$result = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid='0' and idcategory!='".$subid."' and identity = '$identity' ORDER BY title");
-						while ($datas = $db -> fetch($result)) {
-
-							$shared = ($datas['shared'] == 'yes') ? ' - Общая' : "";
-
-							?>
-							<OPTION <?php if ($datas['idcategory'] == $subid) print "selected"; ?> value="<?= $datas['idcategory'] ?>"><?= $datas['title'] ?><?= $shared ?></OPTION>
-							<?php
-							$shared = '';
-						} ?>
-					</select>
-				</div>
-			</div>
-
-			<div class="flex-container mb10">
-				<div class="flex-string"></div>
-				<div class="flex-string">
-					<label>
-						<input type="checkbox" name="shared" id="shared" value="yes" <?php if ($shared == 'yes') print "checked"; ?> /> Общая папка
-					</label>
-				</div>
-			</div>
-
-		</DIV>
-
-		<hr>
-
-		<div class="text-right button--pane">
-			<A href="javascript:void(0)" onclick="$('#uploadForm').trigger('submit')" class="button">Сохранить</A>&nbsp;
-			<A href="javascript:void(0)" onclick="editUpload('','cat.list')" class="button">Отменить</A>
-		</div>
-	</FORM>
-	<?php
 }
 if ($action == "cat.edit") {
 
@@ -479,36 +518,37 @@ if ($action == "cat.edit") {
 				</div>
 			</div>
 
-			<?php
-			if ($issub == 0) {
-			?>
 			<div class="flex-container mb10">
 				<div class="flex-string">Главная папка</div>
 				<div class="flex-string">
 					<select name="subid" id="subid" class="wp100">
 						<OPTION value="">--Выбор--</OPTION>
 						<?php
-						$result = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '0' and idcategory != '$idcategory' and identity = '$identity' ORDER BY title");
-						while ($datas = $db -> fetch($result)) {
+						$catalog = Upload ::getCatalogLine(0);
+						foreach ($catalog as $key => $value) {
 
-							$xshared = ($datas['shared'] == 'yes') ? ' - Общая' : "";
+							if ($value['level'] < $maxFileFolderLevel) {
 
-							?>
-							<OPTION <?=((int)$datas['idcategory'] == $subid ? "selected" : "")?> value="<?= $datas['idcategory'] ?>">
-								<?= $datas['title'] ?><?= $xshared ?>
-							</OPTION>
-							<?php
-						} ?>
+								$xshared = ( $datas['shared'] == 'yes' ) ? ' - Общая' : "";
+
+								print '<option value="'.$value['id'].'" '.( $value['id'] == $subid ? "selected" : '' ).'>'.( $value['level'] > 0 ? str_repeat('&nbsp;&nbsp;', $value['level']).'&rarr;&nbsp;' : '' ).$value['title'].' '.$xshared.'</option>';
+							}
+
+						}
+
+						?>
 					</select>
 				</div>
 			</div>
-			<?php } ?>
 
 			<div class="flex-container mb10">
 				<div class="flex-string"></div>
 				<div class="flex-string">
 					<label>
-						<input type="checkbox" name="shared" id="shared" value="yes" <?php if ($shared == 'yes') print "checked"; ?> /> Общая папка
+						<input type="checkbox" name="shared" id="shared" value="yes" <?php
+						if ($shared == 'yes') {
+							print "checked";
+						} ?> /> Общая папка
 					</label>
 				</div>
 			</div>
@@ -604,7 +644,10 @@ if ($action == "info") {
 
 			<div class="flex-string wp20 gray2 fs-12 right-text">Папка:</div>
 			<div class="flex-string wp80 pl10 Bold fs-12">
-				<i class="icon-folder blue"></i><?= $folder ?><?php if ($shared == 'yes') print " - Общая папка"; ?>
+				<i class="icon-folder blue"></i><?= $folder ?><?php
+				if ($shared == 'yes') {
+					print " - Общая папка";
+				} ?>
 			</div>
 
 		</div>
@@ -613,12 +656,13 @@ if ($action == "info") {
 
 			<div class="flex-string wp20 gray2 fs-12 right-text">Описание:</div>
 			<div class="flex-string wp80 pl10 fs-12 flh-14">
-				<span><?= ($ftag != '' ? nl2br($ftag) : '--') ?></span>
+				<span><?= ( $ftag != '' ? nl2br($ftag) : '--' ) ?></span>
 			</div>
 
 		</div>
 
-		<?php if ($roditel != '') { ?>
+		<?php
+		if ($roditel != '') { ?>
 			<div class="flex-container mt10 mb15">
 
 				<div class="flex-string wp20 gray2 fs-12 right-text">К записи:</div>
@@ -631,7 +675,8 @@ if ($action == "info") {
 				</div>
 
 			</div>
-		<?php } ?>
+		<?php
+		} ?>
 
 	</DIV>
 
@@ -655,7 +700,7 @@ if ($action == "info") {
 
 		$('#dialog').css('width', '700px');
 
-		if(["cat.add","cat.edit"].includes(action)){
+		if (["cat.add", "cat.edit"].includes(action)) {
 			$('#dialog').css('width', '500px');
 		}
 
@@ -692,12 +737,12 @@ if ($action == "info") {
 
 				var id = $('#lmenu #idcat').val();
 
-				if (['cat.edit','cat.add'].includes(action)) {
+				if (['cat.edit', 'cat.add'].includes(action)) {
 
 					doLoad('/modules/upload/form.upload.php?action=cat.list');
 
-					$('.ifolder').load('/modules/upload/core.upload.php?action=catlist&id=' + id, function () {
-						$('.ifolder a [data-id=' + id + ']').addClass('fol_it');
+					$('#zfolder').load('/modules/upload/core.upload.php?action=catlist&id=' + id, function () {
+						$('.ifolder [data-id=' + id + ']').addClass('fol_it');
 					});
 					configpage();
 

@@ -1,10 +1,12 @@
 <?php
 /* ============================ */
-/* (C) 2016 Vladislav Andreev   */
+/* (C) 2024 Vladislav Andreev   */
 /*       SalesMan Project       */
 /*        www.isaler.ru         */
-/*        ver. 2017.x           */
+/*        ver. 2024.x           */
 /* ============================ */
+
+use Salesman\Upload;
 
 if (!$userRights['budjet']) {
 
@@ -15,7 +17,7 @@ if (!$userRights['budjet']) {
 ?>
 <form id="pageform" name="pageform">
 	<input id="page" name="page" type="hidden" value="1">
-	<input id="idcat" name="idcat" type="hidden" value="">
+	<input id="idcategory" name="idcategory" type="hidden" value="">
 	<input id="fcount" name="fcount" type="hidden" value="">
 	<input id="ord" name="ord" type="hidden" value="fid">
 	<input id="tuda" name="tuda" type="hidden" value="">
@@ -26,7 +28,7 @@ if (!$userRights['budjet']) {
 		
 		<div class="nano-content mt5">
 
-			<div class="contaner p5" id="pricecategory">
+			<div class="contaner" id="category">
 
 				<div class="mb10">
 					<B class="shad"><i class="icon-menu blue"></i>&nbsp;ПАПКИ</B>
@@ -35,30 +37,47 @@ if (!$userRights['budjet']) {
 					</div>
 				</div>
 
-				<div class="nano" style="height: 70vh;">
+				<div class="nano1 noscroll" style="height: 70vh;">
 
-					<div id="folder" class="ifolder nano-content" style="min-height: 200px;">
+					<div id="zfolder" class="ifolder nano-content" style="min-height: 200px;">
 						<?php
+						$folder_ex = 0;
 						if (!$userRights['budjet']) {
 
-							$folder_ex = $db -> getOne("SELECT idcategory FROM ".$sqlname."file_cat WHERE title='Бюджет' and identity = '$identity'");
+							$folder_ex = (int)$db -> getOne("SELECT idcategory FROM ".$sqlname."file_cat WHERE title='Бюджет' and identity = '$identity'");
 							$fff       = " and idcategory != '".$folder_ex."'";
 
 						}
+						print '<div data-id="" data-title="" class="xfolder fol_it block hand Bold"><i class="icon-folder blue"></i>&nbsp;[все]</div>';
+						?>
 
-						print '<a href="javascript:void(0)" data-id="" data-title="" class="fol_it block"><i class="icon-folder blue"></i>&nbsp;[все]</a>';
+						<?php
+						$catalog = Upload::getCatalogLine();
+						foreach ($catalog as $key => $value) {
 
-						$result = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '0' and idcategory>0 ".$fff." and identity = '$identity' ORDER by title");
-						while ($data = $db -> fetch($result)) {
-
-							print '<a href="javascript:void(0)" data-id="'.$data['idcategory'].'" data-title="'.$data['title'].'" class="fol block mt5 mb5"><div class="ellipsis"><i class="icon-folder-open blue"></i>'.($data['shared'] == 'yes' ? '&nbsp;<i class="icon-users-1 sup green" title="Общая папка"></i> ' : '').$data['title'].'</div></a>';
-
-							$res = $db -> query("SELECT * FROM ".$sqlname."file_cat WHERE subid = '".$data['idcategory']."' and idcategory > 0 ".$fff." and identity = '$identity' ORDER by title");
-							while ($da = $db -> fetch($res)) {
-
-								print '<a href="javascript:void(0)" class="fol block" data-id="'.$da['idcategory'].'" data-title="'.$da['title'].'"><span class="ellipsis pl10"><div class="strelka w5 mr10"></div><i class="icon-folder gray2"></i>'.($da['shared'] == 'yes' ? '&nbsp;<i class="icon-users-1 sup green" title="Общая папка"></i> ' : '').'&nbsp;'.$da['title'].'</span></a>';
-
+							if($folder_ex > 0 && $value['id']== $folder_ex){
+								continue;
 							}
+
+							$padding = 'mt5 Bold';
+
+							if((int)$value['level'] == 1){
+								$padding = 'pl20';
+							}
+							elseif((int)$value['level'] > 1){
+								$x = 20 + (int)$value['level'] * 10;
+								$padding = "pl{$x} ml15 fs-09";
+							}
+
+							$folder  = ($value['level'] == 0 ? 'icon-folder-open deepblue' : ($value['level'] == 1 ? 'icon-folder-open blue' : 'icon-folder broun'));
+
+							print '
+							<div class="pt5">
+								<div class="xfolder fol block ellipsis hand '.$padding.'" data-id="'.$value['id'].'" data-title="'.$value['title'].'">
+									<div class="strelka w5 ml10 mr10"></div><i class="'.$folder.'"></i>'.($value['shared'] == 'yes' ? '&nbsp;<i class="icon-users-1 sup green" title="Общая папка"></i> ' : '').'&nbsp;'.$value['title'].'
+								</div>
+							</div>
+							';
 
 						}
 						?>
