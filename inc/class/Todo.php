@@ -92,6 +92,7 @@ class Todo {
 		$this -> tmzone   = $GLOBALS['tmzone'];
 
 		$this -> db = new SafeMySQL( $this -> opts );
+		//$this -> db = $GLOBALS['db'];
 
 		if ( file_exists( $rootpath."/cash/".$this -> fpath."otherSettings.json" ) ) {
 
@@ -197,12 +198,12 @@ class Todo {
 
 		if ( $id != '' ) {
 
-			$response           = $db -> getRow( "SELECT * FROM ".$sqlname."tasks WHERE tid = '$id' and identity = '$identity'" );
+			$response           = $db -> getRow( "SELECT * FROM {$sqlname}tasks WHERE tid = '$id' and identity = '$identity'" );
 			$response['totime'] = getTime( (string)$response['totime'] );
 			$response['pid']    = yexplode( ";", (string)$response['pid'] );
 
 			$users = $tids = [];
-			$res   = $db -> getAll( "SELECT iduser, tid FROM ".$sqlname."tasks WHERE maintid = '$id' and identity = '$identity'" );
+			$res   = $db -> getAll( "SELECT iduser, tid FROM {$sqlname}tasks WHERE maintid = '$id' and identity = '$identity'" );
 			foreach ( $res as $data ) {
 
 				$users[] = $data['iduser'];//выбранные сотрудники
@@ -331,7 +332,7 @@ class Todo {
 			$tid      = 0;
 
 			//включена ли отправка уведомлений
-			$mailme = $db -> getOne( "select mailme from ".$sqlname."settings WHERE id = '$identity'" );
+			$mailme = $db -> getOne( "select mailme from {$sqlname}settings WHERE id = '$identity'" );
 
 			//если пользователь делает напоминание только себе
 			if ( empty( $users ) ) {
@@ -346,7 +347,7 @@ class Todo {
 
 					$task1 = $task;
 
-					$db -> query( "INSERT INTO ".$sqlname."tasks SET ?u", arrayNullClean( $task ) );
+					$db -> query( "INSERT INTO {$sqlname}tasks SET ?u", arrayNullClean( $task ) );
 					$tid = $db -> insertId();
 
 					$mess[] = "Добавлено напоминание";
@@ -374,7 +375,7 @@ class Todo {
 					$task['identity'] = $identity;
 					$task['iduser']   = $iduser;
 
-					$db -> query( "INSERT INTO ".$sqlname."tasks SET ?u", arrayNullClean( $task ) );
+					$db -> query( "INSERT INTO {$sqlname}tasks SET ?u", arrayNullClean( $task ) );
 					$tid = $db -> insertId();
 
 					$mess[] = "Добавлено напоминание";
@@ -399,7 +400,7 @@ class Todo {
 					$task['identity'] = $identity;
 					$task['iduser']   = $iduser;
 
-					$db -> query( "INSERT INTO ".$sqlname."tasks SET ?u", arrayNullClean( $task ) );
+					$db -> query( "INSERT INTO {$sqlname}tasks SET ?u", arrayNullClean( $task ) );
 					$maintid = $db -> insertId();
 
 					$mess[] = "Добавлено напоминание";
@@ -417,7 +418,7 @@ class Todo {
 
 							try {
 
-								$db -> query( "INSERT INTO ".$sqlname."tasks SET ?u", arrayNullClean( $task ) );
+								$db -> query( "INSERT INTO {$sqlname}tasks SET ?u", arrayNullClean( $task ) );
 								$subtid = $db -> insertId();
 
 								$mess[] = "Запись для сотрудника ".current_user( $user )." успешно внесена";
@@ -568,7 +569,7 @@ class Todo {
 		$oldTask = self ::info( $id );
 
 		//Проверяем, включены ли уведомления во всей системе
-		$mailme = $db -> getOne( "SELECT mailme FROM ".$sqlname."settings WHERE id = '$identity'" );
+		$mailme = $db -> getOne( "SELECT mailme FROM {$sqlname}settings WHERE id = '$identity'" );
 
 		if ( $id > 0 ) {
 
@@ -607,7 +608,7 @@ class Todo {
 			$task['pid'] = ($task["pid"] != '') ? $task["pid"] : $clinfo['pid'];
 
 			//список дочерних напоминаний, т.е. пользователям
-			$userexist = $db -> getCol( "SELECT iduser FROM ".$sqlname."tasks WHERE maintid = '$id' OR (maintid = '0' AND tid = '$id') AND identity = '$identity'" );
+			$userexist = $db -> getCol( "SELECT iduser FROM {$sqlname}tasks WHERE maintid = '$id' OR (maintid = '0' AND tid = '$id') AND identity = '$identity'" );
 
 			$task['iduser'] = (count( $users ) == 1) ? $users[0] : $iduser1;
 
@@ -622,7 +623,7 @@ class Todo {
 			$userf = array_unique( array_merge( $userexist, $users, [$iduser1] ) );
 			sort( $userf );
 
-			//print_r($userf);
+			$users = array_unique($users);
 
 			//массив пользоватлей, которым отправлено, для измежания дублей
 			$sended = [];
@@ -632,31 +633,40 @@ class Todo {
 			$prm['des'] = $task['des'];
 			$prm['day'] = $task['day'];
 
+			//file_put_contents( $rootpath."/cash/task.json", json_encode_cyr( $prm ) );
+			//print count($users);
+			//print_r($users);
+
 			//обновим напоминание для выбранного пользователя
 			if ( count( $users ) == 1 ) {
 
 				try {
 
-					if ( $task['iduser'] == $task['autor'] )
+					if ( $task['iduser'] == $task['autor'] ) {
 						$task['autor'] = 0;
+					}
 
-					$db -> query( "UPDATE ".$sqlname."tasks SET ?u WHERE tid = '$id' and identity = '$identity'", $prm );
+					$db -> query( "UPDATE {$sqlname}tasks SET ?u WHERE tid = '$id' AND identity = '$identity'", $prm );
+					//file_put_contents( $rootpath."/cash/task.sql", $db -> lastQuery() );
 
 					//удаляем напоминания всех остальных
-					$db -> query( "delete from ".$sqlname."tasks where maintid = '$id' and iduser != '$task[iduser]'" );
+					$db -> query( "DELETE FROM {$sqlname}tasks WHERE maintid = '$id' AND iduser != '$task[iduser]'" );
 
 					$mess[] = "Напоминание обновлено";
 
-					if ( !in_array( $task['iduser'], $sended ) )
-						if ( $mailme == 'yes' )
-							$mailpack[] = $this -> taskTemplate( $id, 'edit' );
+					if (!in_array($task['iduser'], $sended) && $mailme == 'yes') {
+						$mailpack[] = $this -> taskTemplate($id, 'edit');
+					}
 
 				}
 				catch ( Exception $e ) {
 
 					$err[] = 'Ошибка'.$e -> getMessage().' в строке '.$e -> getCode();
+					//file_put_contents( $rootpath."/cash/task.error", $e -> getMessage() );
 
 				}
+
+				//print $db -> lastQuery();
 
 			}
 
@@ -671,7 +681,7 @@ class Todo {
 
 						$task['iduser'] = $user;
 
-						$subtid = $db -> getOne( "SELECT tid FROM ".$sqlname."tasks WHERE maintid = '$id' and iduser = '$user' and identity = '$identity'" );
+						$subtid = $db -> getOne( "SELECT tid FROM {$sqlname}tasks WHERE maintid = '$id' and iduser = '$user' and identity = '$identity'" );
 
 						if ( $subtid > 0 && in_array( $user, $userexist ) ) {
 
@@ -681,7 +691,7 @@ class Todo {
 								//обновляем напоминание
 								try {
 
-									$db -> query( "UPDATE ".$sqlname."tasks SET ?u WHERE tid = '$subtid' and identity = '$identity'", arrayNullClean( $task ) );
+									$db -> query( "UPDATE {$sqlname}tasks SET ?u WHERE tid = '$subtid' and identity = '$identity'", arrayNullClean( $task ) );
 
 									$mess[] = current_user( $user ).": Напоминание обновлено";
 
@@ -704,7 +714,7 @@ class Todo {
 								//удаляем напоминание
 								try {
 
-									$db -> query( "DELETE FROM ".$sqlname."tasks WHERE tid = '$subtid'" );
+									$db -> query( "DELETE FROM {$sqlname}tasks WHERE tid = '$subtid'" );
 									$mess[] = current_user( $user ).": Напоминание удалено";
 
 								}
@@ -728,7 +738,7 @@ class Todo {
 							//добавляем напоминание
 							try {
 
-								$db -> query( "INSERT INTO ".$sqlname."tasks SET ?u", arrayNullClean( $task ) );
+								$db -> query( "INSERT INTO {$sqlname}tasks SET ?u", arrayNullClean( $task ) );
 								$subtid = $db -> insertId();
 
 								$mess[] = current_user( $user ).": Напоминание добавлено";
@@ -751,7 +761,7 @@ class Todo {
 						//обновляем напоминание
 						try {
 
-							$db -> query( "UPDATE ".$sqlname."tasks SET ?u WHERE tid = '$id' and identity = '$identity'", $task );
+							$db -> query( "UPDATE {$sqlname}tasks SET ?u WHERE tid = '$id' and identity = '$identity'", $task );
 							//print $db -> lastQuery();
 
 							$mess[] = current_user( $user ).": Напоминание обновлено";
@@ -862,7 +872,7 @@ class Todo {
 		$task = $oldTask = self ::info( $id );
 
 		//Проверяем, включены ли уведомления во всей системе
-		$mailme = $db -> getOne( "SELECT mailme FROM ".$sqlname."settings WHERE id = '$identity'" );
+		$mailme = $db -> getOne( "SELECT mailme FROM {$sqlname}settings WHERE id = '$identity'" );
 
 		if ( $id > 0 && $newdate != '' ) {
 
@@ -874,7 +884,7 @@ class Todo {
 			$users[] = $task['iduser'];
 
 			//список дочерних напоминаний, т.е. пользователям
-			$userexist = $db -> getCol( "SELECT iduser FROM ".$sqlname."tasks WHERE maintid = '$id' OR (maintid = '0' AND tid = '$id') AND identity = '$identity'" );
+			$userexist = $db -> getCol( "SELECT iduser FROM {$sqlname}tasks WHERE maintid = '$id' OR (maintid = '0' AND tid = '$id') AND identity = '$identity'" );
 
 			//объединим 2 массива - 1 - те, у кого были напоминания, + те, 2 - которые есть в текущем запросе
 			$userf = array_unique( array_merge( $userexist, $users ) );
@@ -902,7 +912,7 @@ class Todo {
 
 					$prm = $db -> filterArray( $prm, array_keys( self::KEYS ) );
 
-					$db -> query( "UPDATE ".$sqlname."tasks SET ?u WHERE tid = '$id' and identity = '$identity'", $prm );
+					$db -> query( "UPDATE {$sqlname}tasks SET ?u WHERE tid = '$id' and identity = '$identity'", $prm );
 
 					//print $db -> lastQuery();
 
@@ -934,7 +944,7 @@ class Todo {
 
 						$task['iduser'] = $user;
 
-						$subtid = $db -> getOne( "SELECT tid FROM ".$sqlname."tasks WHERE maintid = '$id' and iduser = '$user' and identity = '$identity'" );
+						$subtid = $db -> getOne( "SELECT tid FROM {$sqlname}tasks WHERE maintid = '$id' and iduser = '$user' and identity = '$identity'" );
 
 						if ( $subtid > 0 && in_array( $user, $userexist ) ) {
 
@@ -945,7 +955,7 @@ class Todo {
 								try {
 
 									$task = $db -> filterArray( $task, array_keys( self::KEYS ) );
-									$db -> query( "UPDATE ".$sqlname."tasks SET ?u WHERE tid = '$subtid' and identity = '$identity'", arrayNullClean( $task ) );
+									$db -> query( "UPDATE {$sqlname}tasks SET ?u WHERE tid = '$subtid' and identity = '$identity'", arrayNullClean( $task ) );
 
 									$mess[] = current_user( $user ).": Напоминание обновлено";
 
@@ -968,7 +978,7 @@ class Todo {
 								//удаляем напоминание
 								try {
 
-									$db -> query( "DELETE FROM ".$sqlname."tasks WHERE tid = '$subtid'" );
+									$db -> query( "DELETE FROM {$sqlname}tasks WHERE tid = '$subtid'" );
 									$mess[] = current_user( $user ).": Напоминание удалено";
 
 								}
@@ -993,7 +1003,7 @@ class Todo {
 							try {
 
 								$task = $db -> filterArray( $task, array_keys( self::KEYS ) );
-								$db -> query( "INSERT INTO ".$sqlname."tasks SET ?u", arrayNullClean( $task ) );
+								$db -> query( "INSERT INTO {$sqlname}tasks SET ?u", arrayNullClean( $task ) );
 								$subtid = $db -> insertId();
 
 								$mess[] = current_user( $user ).": Напоминание добавлено";
@@ -1016,7 +1026,7 @@ class Todo {
 						//обновляем напоминание
 						try {
 
-							$db -> query( "UPDATE ".$sqlname."tasks SET ?u WHERE tid = '$id' and identity = '$identity'", arrayNullClean( $task ) );
+							$db -> query( "UPDATE {$sqlname}tasks SET ?u WHERE tid = '$id' and identity = '$identity'", arrayNullClean( $task ) );
 
 							$mess[] = current_user( $user ).": Напоминание обновлено";
 							if ( $mailme == 'yes' && !in_array( $user, $sended ) )
@@ -1139,12 +1149,12 @@ class Todo {
 
 		if ( $id > 0 ) {
 
-			$task = $db -> getOne( "SELECT tid FROM ".$sqlname."tasks WHERE tid = '$id' and identity = '$identity'" );
+			$task = $db -> getOne( "SELECT tid FROM {$sqlname}tasks WHERE tid = '$id' and identity = '$identity'" );
 
 			if ( $task > 0 ) {
 
-				$db -> query( "delete from ".$sqlname."tasks where tid = '$task' and identity = '$identity'" );
-				$db -> query( "delete from ".$sqlname."tasks where maintid = '$task' and identity = '$identity'" );
+				$db -> query( "delete from {$sqlname}tasks where tid = '$task' and identity = '$identity'" );
+				$db -> query( "delete from {$sqlname}tasks where maintid = '$task' and identity = '$identity'" );
 
 				$mess[] = 'Запись удалена';
 
@@ -1224,7 +1234,7 @@ class Todo {
 
 		if ( $id > 0 ) {
 
-			$task = $db -> getOne( "SELECT tid FROM ".$sqlname."tasks WHERE tid = '$id' and identity = '$identity'" );
+			$task = $db -> getOne( "SELECT tid FROM {$sqlname}tasks WHERE tid = '$id' and identity = '$identity'" );
 
 			if ( $task > 0 ) {
 
@@ -1240,7 +1250,7 @@ class Todo {
 				$hid  = 0;
 
 				//Проверяем, включены ли уведомления во всей системе
-				$mailme = $db -> getOne( "SELECT mailme FROM ".$sqlname."settings WHERE id = '$identity'" );
+				$mailme = $db -> getOne( "SELECT mailme FROM {$sqlname}settings WHERE id = '$identity'" );
 
 				try {
 
@@ -1257,7 +1267,7 @@ class Todo {
 						'identity' => $identity
 					] );
 
-					$db -> query( "UPDATE ".$sqlname."tasks SET ?u WHERE tid = '$id' AND identity = '$identity'", [
+					$db -> query( "UPDATE {$sqlname}tasks SET ?u WHERE tid = '$id' AND identity = '$identity'", [
 						'active' => 'no',
 						'status' => $status,
 						'cid'    => $hid
@@ -1265,7 +1275,7 @@ class Todo {
 
 					//сделаем отметку в карточке клиента
 					if ( $taskInfo['clid'] > 0 )
-						$db -> query( "UPDATE ".$sqlname."clientcat SET ?u WHERE clid = '".$taskInfo['clid']."' AND identity = '$identity'", ['last_hist' => $datum] );
+						$db -> query( "UPDATE {$sqlname}clientcat SET ?u WHERE clid = '".$taskInfo['clid']."' AND identity = '$identity'", ['last_hist' => $datum] );
 
 					if ( $mailme == 'yes' )
 						$mailpack[] = $this -> taskTemplate( $id, 'doit', $rezultat );
@@ -1391,7 +1401,7 @@ class Todo {
 
 		$productInfo = $GLOBALS['productInfo'];
 
-		$task = $db -> getRow( "SELECT * FROM ".$sqlname."tasks WHERE tid = '$id' AND identity = '$identity'" );
+		$task = $db -> getRow( "SELECT * FROM {$sqlname}tasks WHERE tid = '$id' AND identity = '$identity'" );
 		//$task['des'] = nl2br( $task['des'] );
 		$pids = yexplode( ";", $task['pid'] );
 
@@ -1417,10 +1427,10 @@ class Todo {
 
 				//отправитель
 				//отправку письма делаем от текущего пользователя
-				$from = $db -> getRow( "SELECT title, email FROM ".$sqlname."user WHERE iduser = '$task[autor]' AND identity = '$identity'" );
+				$from = $db -> getRow( "SELECT title, email FROM {$sqlname}user WHERE iduser = '$task[autor]' AND identity = '$identity'" );
 
 				//получатель (ответственный за напоминание)
-				$to = $db -> getRow( "SELECT title, email, secrty, subscription FROM ".$sqlname."user WHERE iduser = '$task[iduser]' AND identity = '$identity'" );
+				$to = $db -> getRow( "SELECT title, email, secrty, subscription FROM {$sqlname}user WHERE iduser = '$task[iduser]' AND identity = '$identity'" );
 
 				$to['subscription'] = explode( ";", $to['subscription'] );
 				$sendcal            = $to['subscription'][8];
@@ -1433,10 +1443,10 @@ class Todo {
 
 				//отправитель
 				//отправку письма делаем от текущего пользователя
-				$from = $db -> getRow( "SELECT title, email FROM ".$sqlname."user WHERE iduser='".$task['autor']."' AND identity = '".$identity."'" );
+				$from = $db -> getRow( "SELECT title, email FROM {$sqlname}user WHERE iduser='".$task['autor']."' AND identity = '".$identity."'" );
 
 				//получатель (ответственный за напоминание)
-				$to = $db -> getRow( "SELECT title, email, secrty, subscription FROM ".$sqlname."user WHERE iduser='".$task['iduser']."' AND identity = '".$identity."'" );
+				$to = $db -> getRow( "SELECT title, email, secrty, subscription FROM {$sqlname}user WHERE iduser='".$task['iduser']."' AND identity = '".$identity."'" );
 
 				$to['subscription'] = explode( ";", $to['subscription'] );
 				$sendcal            = $to['subscription'][8];
@@ -1458,10 +1468,10 @@ class Todo {
 
 				//отправитель
 				//отправку письма делаем от текущего пользователя
-				$from = $db -> getRow( "SELECT title, email FROM ".$sqlname."user WHERE iduser='".$task['iduser']."' AND identity = '".$identity."'" );
+				$from = $db -> getRow( "SELECT title, email FROM {$sqlname}user WHERE iduser='".$task['iduser']."' AND identity = '".$identity."'" );
 
 				//получатель (ответственный за напоминание)
-				$to = $db -> getRow( "SELECT title, email, secrty, subscription FROM ".$sqlname."user WHERE iduser='".$task['autor']."' AND identity = '".$identity."'" );
+				$to = $db -> getRow( "SELECT title, email, secrty, subscription FROM {$sqlname}user WHERE iduser='".$task['autor']."' AND identity = '".$identity."'" );
 
 				$to['subscription'] = explode( ";", $to['subscription'] );
 				$subscribe          = $to['subscription'][10];
@@ -1622,17 +1632,17 @@ class Todo {
 		$time    = $task["totime"];
 		$persons = $task["pid"];
 
-		$subscription = $db -> getOne( "SELECT subscription FROM ".$sqlname."user WHERE iduser='$iduser' AND identity = '$identity'" );
+		$subscription = $db -> getOne( "SELECT subscription FROM {$sqlname}user WHERE iduser='$iduser' AND identity = '$identity'" );
 		$subscribe    = explode( ";", $subscription );
 		$sendo        = $subscribe[8];
 
 		//отправку письма делаем от текущего пользователя
-		$re       = $db -> getRow( "SELECT * FROM ".$sqlname."user WHERE iduser='$iduser1' AND identity = '$identity'" );
+		$re       = $db -> getRow( "SELECT * FROM {$sqlname}user WHERE iduser='$iduser1' AND identity = '$identity'" );
 		$fromname = $re["title"];
 		$from     = $re["email"];
 
 		//находим имя ответственного
-		$re     = $db -> getRow( "SELECT * FROM ".$sqlname."user WHERE iduser='$iduser' AND identity = '$identity'" );
+		$re     = $db -> getRow( "SELECT * FROM {$sqlname}user WHERE iduser='$iduser' AND identity = '$identity'" );
 		$toname = $re["title"];
 		$to     = $re["email"];
 
