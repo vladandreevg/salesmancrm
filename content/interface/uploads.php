@@ -94,7 +94,7 @@ if ($acs_files != 'on') {
 	</DIV>
 
 	<form name="cform" id="cform">
-	<div class="nano relativ" id="clientlist">
+	<div class="nano1 relativ noscroll" id="clientlist" style="height: 100%;">
 
 		<div class="nano-content">
 			<div class="ui-layout-content" id="contentdiv"></div>
@@ -134,23 +134,25 @@ $( function() {
 	clear();
 	configpage();
 
-	$(".nano").nanoScroller();
+	//$(".nano").nanoScroller();
 
 	changeMounth();
 
 });
 
-$(document).on('click', '.ifolder a', function(){
+$(document).on('click', '.xfolder', function(){
 
 	var id = $(this).data('id');
 	var title = $(this).data('title');
 
+	console.log(id)
+
 	$folder = parseInt(id);
 
-	$('.ifolder a').removeClass('fol_it');
+	$('.xfolder').removeClass('fol_it');
 	$(this).addClass('fol_it');
 
-	$('#idcat').val(id);
+	$('.ui-layout-west').find('#idcategory').val(id);
 	$('#tips').html(title);
 	$('#page').val('');
 
@@ -173,13 +175,13 @@ $('#folder').on('change', function(){
 function changeCategoryHeight(){
 
 	var hsub  = $('#folder').height();
-	var hmain = $('#pricecategory .nano').height();
+	var hmain = $('#category .nano1').height();
 	var hwin  = $(document).height();
 
-	if(hsub > 0.5 * hwin && hsub > hmain) $('#pricecategory .nano').height( 0.8 * hwin + 'px');
-	else $('#pricecategory .nano').height( 0.53 * hwin + 'px');
+	if(hsub > 0.5 * hwin && hsub > hmain) $('#category .nano').height( 0.8 * hwin + 'px');
+	else $('#category .nano1').height( 0.53 * hwin + 'px');
 
-	$("#pricecategory").find('.nano').nanoScroller();
+	//$("#category").find('.nano').nanoScroller();
 
 }
 
@@ -189,18 +191,18 @@ function constructSpace(){
 	$('.contaner[data-id="filter"]').css({"height": hf + "px", "max-height": hf + "px"});
 
 	var hsub  = $('#folder').height();
-	var hmain = $('#pricecategory .nano').height();
+	var hmain = $('#category .nano1').height();
 	var hwin  = $(document).height();
 
-	if(hsub > 0.5 * hwin && hsub > hmain)
-		$('#pricecategory .nano').height( 0.8 * hwin + 'px');
+	if(hsub > 0.5 * hwin && hsub > hmain) {
+		$('#category .nano1').height(0.8 * hwin + 'px');
+	}
+	else {
+		$('#category .nano1').height(0.53 * hwin + 'px');
+	}
 
-	else
-		$('#pricecategory .nano').height( 0.53 * hwin + 'px');
-
-	$("#pricecategory").find('.nano').nanoScroller();
-
-	$('.nano').nanoScroller();
+	//$("#category").find('.nano').nanoScroller();
+	//$('.nano').nanoScroller();
 
 }
 
