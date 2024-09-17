@@ -339,8 +339,9 @@ class Todo {
 
 				try {
 
-					if ( $iduser == $task['autor'] )
+					if ( $iduser == $task['autor'] ) {
 						$task['autor'] = 0;
+					}
 
 					$task['identity'] = $identity;
 					$task['iduser']   = $iduser;
@@ -610,7 +611,7 @@ class Todo {
 			//список дочерних напоминаний, т.е. пользователям
 			$userexist = $db -> getCol( "SELECT iduser FROM {$sqlname}tasks WHERE maintid = '$id' OR (maintid = '0' AND tid = '$id') AND identity = '$identity'" );
 
-			$task['iduser'] = (count( $users ) == 1) ? $users[0] : $iduser1;
+			$task['iduser'] = count( $users ) == 1 ? $users[0] : $iduser1;
 
 			if ( $task['iduser'] == "" ) {
 				$task['iduser'] = $iduser1;
@@ -633,7 +634,7 @@ class Todo {
 			$prm['des'] = $task['des'];
 			$prm['day'] = $task['day'];
 
-			//file_put_contents( $rootpath."/cash/task.json", json_encode_cyr( $prm ) );
+			//file_put_contents( $rootpath."/cash/task.json", json_encode_cyr( ["params" => $params, "task" => $prm] ) );
 			//print count($users);
 			//print_r($users);
 
@@ -641,6 +642,8 @@ class Todo {
 			if ( count( $users ) == 1 ) {
 
 				try {
+
+					$prm['iduser'] = $users[0];
 
 					if ( $task['iduser'] == $task['autor'] ) {
 						$task['autor'] = 0;
@@ -695,8 +698,9 @@ class Todo {
 
 									$mess[] = current_user( $user ).": Напоминание обновлено";
 
-									if ( $mailme == 'yes' && !in_array( $user, $sended ) )
-										$mailpack[] = $this -> taskTemplate( $subtid, 'edit' );
+									if ( $mailme == 'yes' && !in_array( $user, $sended ) ) {
+										$mailpack[] = $this -> taskTemplate($subtid, 'edit');
+									}
 
 
 								}
@@ -743,8 +747,9 @@ class Todo {
 
 								$mess[] = current_user( $user ).": Напоминание добавлено";
 
-								if ( $mailme == 'yes' && !in_array( $user, $sended ) )
-									$mailpack[] = $this -> taskTemplate( $subtid, 'add' );
+								if ( $mailme == 'yes' && !in_array( $user, $sended ) ) {
+									$mailpack[] = $this -> taskTemplate($subtid, 'add');
+								}
 
 							}
 							catch ( Exception $e ) {
@@ -756,7 +761,7 @@ class Todo {
 						}
 
 					}
-					elseif ( $user == $iduser1 ) {
+					else {
 
 						//обновляем напоминание
 						try {
@@ -765,8 +770,9 @@ class Todo {
 							//print $db -> lastQuery();
 
 							$mess[] = current_user( $user ).": Напоминание обновлено";
-							if ( $mailme == 'yes' && !in_array( $user, $sended ) )
-								$mailpack[] = $this -> taskTemplate( $id, 'edit' );
+							if ( $mailme == 'yes' && !in_array( $user, $sended ) ) {
+								$mailpack[] = $this -> taskTemplate($id, 'edit');
+							}
 
 						}
 						catch ( Exception $e ) {

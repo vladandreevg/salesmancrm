@@ -4983,14 +4983,14 @@ function getNalogScheme($rs, int $mcid = 0): array {
 
 	$snalog = 0;
 
-	if ( $mcid > 0 && $rs < 1 ) {
+	if ( $mcid > 0 && (int)$rs == 0 ) {
 
 		$result = $db -> getRow( "SELECT * FROM {$sqlname}mycomps_recv WHERE cid = '$mcid' and isDefault = 'yes' and identity = '$identity'" );
 		$rs     = $result["id"];
 		$snalog = $result["ndsDefault"];
 
 	}
-	elseif ( $rs > 0 ) {
+	elseif ( (int)$rs > 0 ) {
 
 		$result = $db -> getRow( "SELECT * FROM {$sqlname}mycomps_recv WHERE id = '$rs' and identity = '$identity'" );
 		$mcid   = $result["cid"];
