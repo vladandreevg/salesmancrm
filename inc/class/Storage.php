@@ -177,9 +177,12 @@ class Storage {
 
 		// доп.поля
 		$fields = self ::getFields();
+
+		//print_r($fields);
+
 		foreach ( $fields as $fieldid => $field ) {
 
-			if( $xdata['tip'] == 'divider' ){
+			if( $field['tip'] == 'divider' ){
 				continue;
 			}
 
@@ -187,9 +190,9 @@ class Storage {
 
 			if(!empty($value)) {
 			
-				$data['sklad']['fields'][$xdata['pole']] = [
-					"field" => $xdata['pole'],
-					"name"  => $xdata['name'],
+				$data['sklad']['fields'][$field['field']] = [
+					"field" => $field['field'],
+					"name"  => $field['name'],
 					"value" => $value,
 				];
 			

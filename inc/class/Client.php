@@ -1586,7 +1586,7 @@ class Client {
 
 			$db -> query("DELETE FROM {$sqlname}clientcat WHERE clid = '$clid' and identity = '$identity'");
 
-			logger('12', 'Удален клиент: '.$title.' со всеми связанными записями', $iduser1);
+			logger('12', 'Удален клиент: '.$title.' со всеми связанными записями', (int)$iduser1);
 
 			sendNotify('delete_client', [
 				"clid"   => $clid,

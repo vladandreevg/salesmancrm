@@ -8,6 +8,8 @@
 /*        ver. 2019.x           */
 /* ============================ */
 
+global $rootpath, $hooks;
+
 // If this file is called directly, abort.
 //use Chats\Chats;
 
@@ -233,20 +235,29 @@ if ( defined( 'SMPLUGIN' ) ) {
 	 */
 	function update_socialchats(array $argv = []) {
 
-		$sqlname  = $GLOBALS['sqlname'];
-		$db       = $GLOBALS['db'];
+		global $database, $sqlname, $db;
 
-		$db -> query("
-		ALTER TABLE `{$sqlname}chats_dialogs`
-			ADD INDEX `chat_id` (`chat_id`),
-			ADD INDEX `direction` (`direction`),
-			ADD INDEX `status` (`status`),
-			ADD INDEX `iduser` (`iduser`),
-			ADD INDEX `datum` (`datum`),
-			ADD INDEX `content` (`content`(100))
-		");
+		$count = $db -> getOne( "SELECT DISTINCT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = '$database' and TABLE_NAME = '{$sqlname}chats_logs' and INDEX_NAME = 'chat_id'" );
+		if ( $count == 0 ) {
 
-		$db -> query("ALTER TABLE `{$sqlname}chats_logs` ADD INDEX `chat_id` (`chat_id`)");
+			$db -> query("
+			ALTER TABLE `{$sqlname}chats_dialogs`
+				ADD INDEX `chat_id` (`chat_id`),
+				ADD INDEX `direction` (`direction`),
+				ADD INDEX `status` (`status`),
+				ADD INDEX `iduser` (`iduser`),
+				ADD INDEX `datum` (`datum`),
+				ADD INDEX `content` (`content`(100))
+			");
+
+		}
+
+		$count = $db -> getOne( "SELECT DISTINCT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = '$database' and TABLE_NAME = '{$sqlname}chats_logs' and INDEX_NAME = 'chat_id'" );
+		if ( $count == 0 ) {
+
+			$db -> query("ALTER TABLE `{$sqlname}chats_logs` ADD INDEX `chat_id` (`chat_id`)");
+
+		}
 
 	}
 
