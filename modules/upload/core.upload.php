@@ -128,6 +128,10 @@ if ($action == 'edit') {
 	$did        = (int)$_REQUEST['did'];
 	$folder     = (int)$_REQUEST['idcategory'];
 	$new_folder = untag($_REQUEST['new_folder']);
+	$clid       = (int)$_REQUEST['clid'];
+	$pid        = (int)$_REQUEST['pid'];
+	$did        = (int)$_REQUEST['did'];
+	$tskid      = (int)$_REQUEST['tskid'];
 
 	if ($new_folder != '') {
 
@@ -150,7 +154,7 @@ if ($action == 'edit') {
 
 	$message = $upload['message'];
 
-	if (count($upload['data']) > 0) {
+	if (!empty($upload['data'])) {
 
 		$fver = settype($fver, "integer") + 1;
 
@@ -167,7 +171,10 @@ if ($action == 'edit') {
 				'ftag'   => $ftag,
 				'iduser' => $iduser,
 				'folder' => $folder,
-				'did'    => $did
+				'did'    => $did,
+				'clid'   => $clid,
+				'pid'    => $pid,
+				'tskid'  => $tskid,
 			];
 
 			//$db -> query("UPDATE {$sqlname}file SET ?u WHERE fid = '$fid' and identity = '$identity'", arrayNullClean($arg));
@@ -408,7 +415,7 @@ if ($action == "cat.edit") {
 	$title      = $_REQUEST['title'];
 	$shared     = $_REQUEST['shared'];
 
-	if($idcategory > 0) {
+	if ($idcategory > 0) {
 
 		$db -> query("UPDATE {$sqlname}file_cat SET ?u where idcategory = '$idcategory' and identity = '$identity'", [
 			"title"  => $title,
@@ -417,7 +424,7 @@ if ($action == "cat.edit") {
 		]);
 
 	}
-	else{
+	else {
 
 		$db -> query("INSERT INTO {$sqlname}file_cat SET ?u", [
 			"subid"    => $subid,
@@ -441,7 +448,7 @@ if ($action == "cat.edit") {
 
 if ($action == "catlist") {
 
-	$id = (int)$_REQUEST['id'];
+	$id        = (int)$_REQUEST['id'];
 	$folder_ex = 0;
 
 	if (!$userRights['budjet']) {
@@ -453,29 +460,29 @@ if ($action == "catlist") {
 
 	print '<div data-id="" data-title="" class="xfolder fol_it block hand Bold"><i class="icon-folder blue"></i>&nbsp;[все]</div>';
 
-	$catalog = Upload::getCatalogLine();
+	$catalog = Upload ::getCatalogLine();
 	foreach ($catalog as $key => $value) {
 
-		if($folder_ex > 0 && $value['id']== $folder_ex){
+		if ($folder_ex > 0 && $value['id'] == $folder_ex) {
 			continue;
 		}
 
 		$padding = 'mt5 Bold';
 
-		if((int)$value['level'] == 1){
+		if ((int)$value['level'] == 1) {
 			$padding = 'pl20';
 		}
-		elseif((int)$value['level'] > 1){
-			$x = 20 + (int)$value['level'] * 10;
+		elseif ((int)$value['level'] > 1) {
+			$x       = 20 + (int)$value['level'] * 10;
 			$padding = "pl{$x} ml15 fs-09";
 		}
 
-		$folder  = ($value['level'] == 0 ? 'icon-folder-open deepblue' : ($value['level'] == 1 ? 'icon-folder-open blue' : 'icon-folder broun'));
+		$folder = ( $value['level'] == 0 ? 'icon-folder-open deepblue' : ( $value['level'] == 1 ? 'icon-folder-open blue' : 'icon-folder broun' ) );
 
 		print '
 		<div class="pt5">
-			<div class="xfolder fol '.($value['id'] == $id ? 'fol_it' : '').' block ellipsis hand '.$padding.'" data-id="'.$value['id'].'" data-title="'.$value['title'].'">
-				<div class="strelka w5 ml10 mr10"></div><i class="'.$folder.'"></i>'.($value['shared'] == 'yes' ? '&nbsp;<i class="icon-users-1 sup green" title="Общая папка"></i> ' : '').'&nbsp;'.$value['title'].'
+			<div class="xfolder fol '.( $value['id'] == $id ? 'fol_it' : '' ).' block ellipsis hand '.$padding.'" data-id="'.$value['id'].'" data-title="'.$value['title'].'">
+				<div class="strelka w5 ml10 mr10"></div><i class="'.$folder.'"></i>'.( $value['shared'] == 'yes' ? '&nbsp;<i class="icon-users-1 sup green" title="Общая папка"></i> ' : '' ).'&nbsp;'.$value['title'].'
 			</div>
 		</div>
 		';
