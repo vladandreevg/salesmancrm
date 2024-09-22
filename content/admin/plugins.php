@@ -89,10 +89,12 @@ if ( $action == "activate" ) {
 	$folder = $_REQUEST['name'];
 	$name = strtolower($_REQUEST['name']);
 
+	//print $rootpath."/plugins/{$folder}/{$name}.php";
+
 	// подключаем хук плагина
-	/*if ( !empty( $folder ) && file_exists( $rootpath."/plugins/{$folder}/{$name}.php" ) ) {
+	if ( !empty( $folder ) && file_exists( $rootpath."/plugins/{$folder}/{$name}.php" ) ) {
 		require_once $rootpath."/plugins/{$folder}/{$name}.php";
-	}*/
+	}
 
 	$pluginAbout['version'] = '1.0';
 	if ( file_exists( $rootpath."/plugins/{$folder}/plugin.json" ) ) {
@@ -236,9 +238,9 @@ if ( $action == "install.do" ) {
 	$db -> query( "INSERT INTO ".$sqlname."plugins SET ?u", $data );
 
 	// подключаем хук плагина
-	/*if ( isset( $data['name'] ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $data['name'] ).".php" ) ) {
+	if ( isset( $data['name'] ) && file_exists( $rootpath."/plugins/$folder/".strtolower( $data['name'] ).".php" ) ) {
 		require_once $rootpath."/plugins/$folder/".strtolower( $data['name'] ).".php";
-	}*/
+	}
 
 	// выполняем хук активации
 	$hooks -> do_action( 'plugin_activate', ["name" => $data['name']] );
