@@ -93,6 +93,95 @@ class ChatapiProvider {
 	}
 
 	/**
+	 * Форма настроек для Провайдера
+	 *
+	 * @param int $id - id записи канала
+	 */
+	public static function settingsForm( $id = 0 ) {
+
+		$channel = Chats ::channelsInfo( $id );
+
+		//print_r($channel);
+
+		if ( $channel[ 'name' ] == '' )
+			$channel[ 'name' ] = 'Whatsapp Chat API';
+
+		if ( $channel[ 'settings' ][ 'link' ] == '' )
+			$channel[ 'settings' ][ 'link' ] = 'https://wa.me/ваш_номер';
+
+		?>
+		<div class="column grid-10 relative">
+
+			<span class="label">API URL:</span>
+			<input type="text" name="url" id="url" class="wp100 required" value="<?= $channel[ 'settings' ][ 'url' ] ?>">
+			<div class="fs-09 blue text-left">Укажите Api URL</div>
+
+		</div>
+
+		<div class="column grid-10 relative">
+
+			<span class="label">Token:</span>
+			<input type="text" name="token" id="token" class="wp100 required" value="<?= $channel[ 'token' ] ?>">
+			<div class="fs-09 blue text-left">Укажите токен и нажмите "QR - Авторизация"</div>
+
+		</div>
+
+		<div class="column grid-10 relative">
+			<span class="label">ID канала:</span>
+			<input type="text" name="channel_id" id="channel_id" class="wp100" value="<?= $channel[ 'channel_id' ] ?>">
+		</div>
+
+		<div class="column grid-10 text-center">
+			<a href="javascript:void(0)" onclick="checkConnection()" title="Проверить" class="button greenbtn fs-09 ptb5lr15"><i class="icon-ok"></i>QR - Авторизация</a>
+		</div>
+
+		<div class="rezult pad10 div-center"></div>
+
+		<div class="divider">Данные, заполняемые после проверки</div>
+
+		<div class="column grid-10 relative">
+			<span class="label">Имя канала:</span>
+			<input type="text" name="name" id="name" class="wp100" value="<?= $channel[ 'name' ] ?>">
+		</div>
+
+		<div class="column grid-10 relative">
+			<span class="label">Ссылка:</span>
+			<input type="text" name="link" id="link" class="wp100" value="<?= $channel[ 'settings' ][ 'link' ] ?>">
+		</div>
+
+		<script>
+
+			function checkConnection() {
+
+				$('.rezult').append('<div id="loader"><img src="/assets/images/loading.svg"></div>');
+
+				var str = 'action=channel.check&type=' + $('#type').val() + '&token=' + $('#token').val() + '&url=' + $('#url').val();
+				var url = $('#Form').attr("action");
+
+				$.post(url, str, function (data) {
+
+					if (data.ok === true) {
+
+						$('.rezult').html('<img src="' + data.qr + '">').prepend('<div class="Bold green">Дождитесь загрузки QR-кода.<br>Затем откройте Whatsapp на телефоне -> три точки -> WhatsApp Web и отсканируйте код</div>');
+
+					}
+					else $('.rezult').html('Ответ: <b>' + data.message + '</b>');
+
+				}, 'json')
+					.complete(function () {
+
+						$('#dialog').center();
+
+					});
+
+			}
+
+		</script>
+		<?php
+
+	}
+
+	/**
 	 * Проверка подключения. Запрос QR-кода
 	 *
 	 * @param array $params

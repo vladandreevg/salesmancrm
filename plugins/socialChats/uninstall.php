@@ -1,4 +1,6 @@
 <?php
+global $rootpath, $hooks;
+
 // If uninstall not called from SM, then exit.
 if (!defined('SM_UNINSTALL_PLUGIN')) {
 	die;
@@ -24,9 +26,10 @@ function socialchats_uninstall(array $argv = []) {
 
 	$ypath .= "/settings";
 
-	$db -> query("DROP TABLE {$sqlname}chats_chat");
-	$db -> query("DROP TABLE {$sqlname}chats_dialogs");
-	$db -> query("DROP TABLE {$sqlname}chats_channels");
+	$db -> query("DROP TABLE IF EXISTS {$sqlname}chats_chat");
+	$db -> query("DROP TABLE IF EXISTS {$sqlname}chats_dialogs");
+	$db -> query("DROP TABLE IF EXISTS {$sqlname}chats_logs");
+	$db -> query("DROP TABLE IF EXISTS {$sqlname}chats_channels");
 
 	unlink($ypath."/access.json");
 	unlink($ypath."/settings.json");

@@ -237,15 +237,19 @@ class Comet {
 
 		}
 
-		$result = $cmt -> getAll( "SELECT * FROM users_time WHERE id IN (".implode( ",", $users ).")" );
+		if($cmt !== NULL) {
 
-		foreach ( $result as $item ) {
+			$result = $cmt -> getAll("SELECT * FROM users_time WHERE id IN (".implode(",", $users).")");
 
-			$list[ $item['id'] ] = $item['time'] == 0;
+			foreach ($result as $item) {
+				$list[$item['id']] = $item['time'] == 0;
+			}
+
+			return $list;
 
 		}
 
-		return $list;
+		return [];
 
 	}
 

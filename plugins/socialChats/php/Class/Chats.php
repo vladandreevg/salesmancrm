@@ -1235,7 +1235,7 @@ class Chats {
 	 * @param int $user
 	 * @return int
 	 */
-	public function chatSetUser(int $chat_id = 0, int $user = 0): int {
+	public function chatSetUser(string $chat_id, int $user = 0): int {
 
 		$settings = $this -> settings;
 

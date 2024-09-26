@@ -6,9 +6,10 @@
 /*       SalesMan Project       */
 /*        www.isaler.ru         */
 /*        ver. 2019.x           */
-
 /* ============================ */
 
+error_reporting( E_ERROR );
+ini_set( 'display_errors', 1 );
 
 use Chats\Chats;
 use Chats\Comet;
@@ -18,9 +19,6 @@ use Salesman\Person;
 
 $rootpath = dirname( __DIR__, 3 );
 $ypath    = $rootpath."/plugins/socialChats";
-
-error_reporting( E_ERROR );
-ini_set( 'display_errors', 1 );
 
 require_once $rootpath."/inc/config.php";
 require_once $rootpath."/inc/dbconnector.php";

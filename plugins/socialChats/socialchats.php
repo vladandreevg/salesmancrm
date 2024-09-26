@@ -8,7 +8,7 @@
 /*        ver. 2019.x           */
 /* ============================ */
 
-global $rootpath, $hooks;
+//global $rootpath, $hooks;
 
 // If this file is called directly, abort.
 //use Chats\Chats;
@@ -26,7 +26,6 @@ if ( defined( 'SMPLUGIN' ) ) {
 	 */
 	function activate_socialchats(array $argv = []) {
 
-		$isCloud  = $GLOBALS['isCloud'];
 		$identity = $GLOBALS['identity'];
 		$database = $GLOBALS['database'];
 		$sqlname  = $GLOBALS['sqlname'];
@@ -211,6 +210,7 @@ if ( defined( 'SMPLUGIN' ) ) {
 
 		$argv = array_merge( $mes, $argv );
 
+		file_put_contents( $rootpath."/cash/socialChats.log", json_encode_cyr( $mes ) );
 		file_put_contents( $rootpath."/cash/actions.log", json_encode_cyr( $argv ) );
 
 	}
@@ -265,7 +265,7 @@ if ( defined( 'SMPLUGIN' ) ) {
 
 require_once $rootpath."/plugins/socialChats/php/Class/Chats.php";
 
-$chatUsers = (new Chats\Chats) -> getOperators();
+$chatUsers = ( new Chats\Chats() ) -> getOperators();
 
 global $iduser1;
 
