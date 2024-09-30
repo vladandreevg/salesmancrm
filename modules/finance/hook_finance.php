@@ -8,8 +8,10 @@
 /*        ver. 2019.x           */
 /* ============================ */
 
-// добавляем собственное событие к системе уведомлений по email
-$hooks -> add_filter( 'add_custom_subscription', 'finance_subscription' );
+global $hooks;
+
+// добавляем собственное событие к системе уведомлений по email. Отключено, т.к. не реализовано
+// $hooks -> add_filter( 'add_custom_subscription', 'finance_subscription' );
 
 // добавляем собственное событие к системе уведомлений Notify
 $hooks -> add_filter( 'add_custom_notify', 'finance_notify' );

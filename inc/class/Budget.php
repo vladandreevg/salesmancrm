@@ -95,7 +95,7 @@ class Budget {
 
 		$oldParams = [];
 
-		$recal  = isset($params['recal']) ? (int)$params['recal'] : 1;
+		$recal = isset($params['recal']) ? (int)$params['recal'] : 1;
 
 		$params['bmon']  = !empty($params['date_plan']) ? getMonth($params['date_plan']) : date('m');
 		$params['byear'] = !empty($params['date_plan']) ? get_year($params['date_plan']) : date('Y');
@@ -136,7 +136,8 @@ class Budget {
 		//$other = $db -> getOne("SELECT other FROM {$sqlname}settings WHERE id = '$identity'");
 		//$other = explode(";", $other);
 
-		$budget['summa']        = /*(float)pre_format($oldParams['summa']) > 0 ? pre_format($oldParams['summa']) : */ pre_format($params['summa']);
+		$budget['summa']        = /*(float)pre_format($oldParams['summa']) > 0 ? pre_format($oldParams['summa']) : */
+			pre_format($params['summa']);
 		$budget['title']        = $params['title'] == '' ? $oldParams['title'] : $params['title'];
 		$budget['des']          = $params['des'] == '' ? $oldParams['des'] : $params['des'];
 		$budget['date_plan']    = empty($params['date_plan']) ? $oldParams['date_plan'] : $params['date_plan'];
@@ -228,11 +229,19 @@ class Budget {
 		// Обновление записи
 		if ($id > 0) {
 
-			$budget['fid']    = $fida;
+			$budget['fid'] = $fida;
 			//$budget['iduser'] = (int)$iduser1;
 
 			// Проверка на существование в БД
 			$bid = (int)$db -> getOne("SELECT count(*) FROM {$sqlname}budjet WHERE id='$id' and identity = '$identity'");
+
+			$diffData = self ::getDiff($oldParams, $budget);
+
+			/*file_put_contents(dirname(__DIR__, 2)."/cash/budjet-edit-{$bid}.json", json_encode_cyr([
+				"old"  => $oldParams,
+				"new"  => $budget,
+				"diff" => $diffData
+			]));*/
 
 			//если это существующий расход
 			if ($bid > 0) {
@@ -243,16 +252,20 @@ class Budget {
 				$db -> query("UPDATE {$sqlname}budjet SET ?u WHERE id = '$id' and identity = '$identity'", arrayNullClean($budget));
 				$budget['bid'] = $id;
 
-				// лог статуса
-				self ::logStatus($id, 'edit', sprintf('Изменен расход на сумму %s. Предыдущая сумма: %s', $budget['summa'], $summaPlan));
+				// лог, если есть изменения
+				if(!empty($diffData)) {
+					self ::logStatus($id, 'edit', yimplode("\n", $diffData));
+				}
 
 				// уведомление
-				self ::sendNotify("budjet.edit", [
+				self ::sendNotify("budjet.edit", $xp = [
 					"id"      => $id,
 					"title"   => $budget['title'],
-					"content" => $budget['des'],
+					"content" => yimplode("\n", $diffData),
 					"iduser"  => $iduser1
 				]);
+
+				//file_put_contents($rootpath."/cash/notify-x.json", json_encode_cyr($xp));
 
 				if ($hooks) {
 					$hooks -> do_action("budjet_edit", $post, $budget);
@@ -294,7 +307,8 @@ class Budget {
 						"did"          => (int)$budget['did'],
 						"conid"        => (int)$budget['conid'],
 						"partid"       => (int)$budget['partid'],
-						"iduser"       => $iduser1,//(int)$budget['iduser'],
+						"iduser"       => $iduser1,
+						//(int)$budget['iduser'],
 						"date_plan"    => $budget['date_plan'],
 						"invoice"      => $budget['invoice'],
 						"invoice_date" => $budget['invoice_date'],
@@ -321,7 +335,7 @@ class Budget {
 				];
 
 				//свяжем с таблицей dogsprovider
-				if ( $dogproviderid > 0 && $contragent > 0 ) {
+				if ($dogproviderid > 0 && $contragent > 0) {
 
 					//if ($arg['conid'] > 0) $s = "and conid = '".$arg['conid']."'";
 					//elseif ($arg['partid'] > 0) $s = "and partid = '".$arg['partid']."'";
@@ -501,7 +515,7 @@ class Budget {
 				$do = $db -> getOne("SELECT `do` FROM {$sqlname}budjet WHERE id = '$id' and identity = '$identity'");
 
 				// удаление статусов
-				self::logStatusDelete($id);
+				self ::logStatusDelete($id);
 
 				if ($do != 'on') {
 
@@ -515,7 +529,7 @@ class Budget {
 						if ($settingsMore['budjetProviderPlus'] == 'yes') {
 							$db -> query("DELETE FROM {$sqlname}dogprovider WHERE id = '$dp'");
 						}
-						else{
+						else {
 							$db -> query("UPDATE {$sqlname}dogprovider SET bid = '0' WHERE id='$dp' AND identity = '$identity'");
 						}
 
@@ -849,22 +863,22 @@ class Budget {
 			if ($count > 0) {
 
 				$budget = $db -> getRow("SELECT * FROM {$sqlname}budjet WHERE id='$id' and identity = '$identity'");
-				$razdel = $db -> getOne( "SELECT title FROM {$sqlname}budjet_cat WHERE id = '".$budget['cat']."' and identity = '$identity'" );
-				$bank   = $db -> getOne( "SELECT title FROM {$sqlname}mycomps_recv WHERE id = '".$budget['rs']."' and identity = '$identity'" );
-				$bank2  = $db -> getOne( "SELECT title FROM {$sqlname}mycomps_recv WHERE id = '".$budget['rs2']."' and identity = '$identity'" );
+				$razdel = $db -> getOne("SELECT title FROM {$sqlname}budjet_cat WHERE id = '".$budget['cat']."' and identity = '$identity'");
+				$bank   = $db -> getOne("SELECT title FROM {$sqlname}mycomps_recv WHERE id = '".$budget['rs']."' and identity = '$identity'");
+				$bank2  = $db -> getOne("SELECT title FROM {$sqlname}mycomps_recv WHERE id = '".$budget['rs2']."' and identity = '$identity'");
 
-				$files = [];
-				$xfiles = yexplode( ";", $budget['fid'] );
-				foreach ( $xfiles as $file ) {
+				$files  = [];
+				$xfiles = yexplode(";", $budget['fid']);
+				foreach ($xfiles as $file) {
 
-					$fi = $db -> getRow( "SELECT * FROM {$sqlname}file WHERE fid = '$file' and identity = '$identity'" );
-					if ( $fi['ftitle'] != '' ) {
+					$fi = $db -> getRow("SELECT * FROM {$sqlname}file WHERE fid = '$file' and identity = '$identity'");
+					if ($fi['ftitle'] != '') {
 
 						$files[] = [
-							"id" => $file,
+							"id"   => $file,
 							"name" => $fi['ftitle'],
 							"file" => $fi['fname'],
-							"icon" => get_icon2( $fi['ftitle'] )
+							"icon" => get_icon2($fi['ftitle'])
 						];
 
 					}
@@ -934,23 +948,26 @@ class Budget {
 	public static function fields(): array {
 
 		$response['fields'] = [
-
-			"id"     => 'Идентификатор записи расхода/дохода',
-			"cat"    => "Категория расхода дохода из таблицы budjet_cat",
-			"title"  => "Название расхода/дохода",
-			"des"    => "Описание",
-			"year"   => "Год",
-			"mon"    => "Месяц",
-			"summa"  => "Сумма",
-			"datum"  => "Дата изменения записи",
-			"iduser" => "id пользователя",
-			"do"     => "Отметка о проведении",
-			"rs"     => "id расч. счета",
-			"rs2"    => "id расч. счета для перемещения средств между счетами",
-			"fid"    => "id файла",
-			"did"    => "id сделки",
-			"conid"  => "clid для поставщиков",
-			"partid" => "clid для партнеров"
+			"id"              => 'Идентификатор записи расхода/дохода',
+			"cat"             => "Категория расхода/дохода",
+			"title"           => "Название расхода/дохода",
+			"des"             => "Описание",
+			"year"            => "Год",
+			"mon"             => "Месяц",
+			"summa"           => "Сумма",
+			"datum"           => "Дата изменения",
+			"iduser"          => "id пользователя",
+			"do"              => "Отметка о проведении",
+			"rs"              => "id расч. счета",
+			"rs2"             => "id расч. счета для перемещения средств между счетами",
+			"fid"             => "id файла",
+			"did"             => "id сделки",
+			"conid"           => "clid для поставщиков",
+			"partid"          => "clid для партнеров",
+			"date_plan"       => "Дата план",
+			"invoice"         => "Номер счета",
+			"invoice_date"    => "Дата счета",
+			"invoice_paydate" => "Дата оплаты счета",
 		];
 
 		return $response;
@@ -1669,7 +1686,7 @@ class Budget {
 			$sort .= " bdj.rs IN (".implode(",", $rs).") AND";
 		}
 
-		if( $userSettings['dostup']['budjet']['chart'] != 'yes' ){
+		if ($userSettings['dostup']['budjet']['chart'] != 'yes') {
 			$sort .= "bdj.iduser = '$iduser1' AND";
 		}
 
@@ -1767,7 +1784,7 @@ class Budget {
 		}
 
 		$csort = '';
-		if( $userSettings['dostup']['budjet']['chart'] != 'yes' ){
+		if ($userSettings['dostup']['budjet']['chart'] != 'yes') {
 			$csort .= "cr.iduser = '$iduser1' AND";
 		}
 
@@ -1908,13 +1925,13 @@ class Budget {
 			$sort .= " bdj.cat IN (".implode(",", $category).") and ";
 		}
 
-		if ( (int)$params['did'] > 0 ) {
+		if ((int)$params['did'] > 0) {
 			$sort .= " bdj.did = '$params[did]' and ";
 		}
 
-		if( $userSettings['dostup']['budjet']['onlyself'] == 'yes' ){
+		if ($userSettings['dostup']['budjet']['onlyself'] == 'yes') {
 			//$sort .= "bdj.iduser IN (".yimplode(",", get_people( $iduser1, 'yes' )).") and";
-			if($tipuser != 'Поддержка продаж') {
+			if ($tipuser != 'Поддержка продаж') {
 				$sort .= "bdj.iduser IN (".yimplode(",", get_people($iduser1, 'yes')).") AND";
 			}
 			else {
@@ -2146,8 +2163,8 @@ class Budget {
 			$sort .= " bj.iduser = '$user' AND ";
 		}
 
-		if( $userSettings['dostup']['budjet']['onlyself'] == 'yes' ){
-			if($tipuser != 'Поддержка продаж') {
+		if ($userSettings['dostup']['budjet']['onlyself'] == 'yes') {
+			if ($tipuser != 'Поддержка продаж') {
 				$sort .= "bj.iduser IN (".yimplode(",", get_people($iduser1, 'yes')).") AND";
 			}
 			else {
@@ -2155,7 +2172,7 @@ class Budget {
 			}
 		}
 
-		if(!empty($word)){
+		if (!empty($word)) {
 			$sort .= " (SELECT COUNT(clid) FROM {$sqlname}clientcat WHERE title LIKE '%$word%' and type IN ('partner','contractor') AND (clid = dp.conid OR clid = dp.partid)) > 0 AND";
 		}
 
@@ -2244,14 +2261,14 @@ class Budget {
 			$conid  = (int)$da['conid'] > 0 ? (int)$da['conid'] : (int)$da['xconid'];
 			$partid = (int)$da['partid'] > 0 ? (int)$da['partid'] : (int)$da['xpartid'];
 
-			if ( $conid > 0 ) {
+			if ($conid > 0) {
 				$contragent = current_client($conid);
 				$tip        = 'contractor';
 				$tipname    = 'Поставщик';
 				$provid     = $conid;
 				$s          = "and conid = '$conid'";
 			}
-			elseif ( $partid > 0 ) {
+			elseif ($partid > 0) {
 				$contragent = current_client($partid);
 				$tip        = 'partner';
 				$tipname    = 'Партнер';
@@ -2259,11 +2276,11 @@ class Budget {
 				$s          = "and partid = '$partid'";
 			}
 
-			if ( (int)$da['did'] == 0 && empty($da['date_plan'])) {
+			if ((int)$da['did'] == 0 && empty($da['date_plan'])) {
 				$da['dplan'] = $da['year'].'-'.$da['mon'].'-01';
 			}
 
-			$dplan = !empty($da['date_plan']) ? $da['date_plan'] : $da['dplan'];
+			$dplan   = !empty($da['date_plan']) ? $da['date_plan'] : $da['dplan'];
 			$bgcolor = ( $da['do'] == 'on' ) ? 'bgwhite' : 'graybg-sub gray2';
 
 			$changelog = self ::logStatusGet((int)$da['bjid']);
@@ -2342,12 +2359,10 @@ class Budget {
 			//найдем сумму, имеющуюся на р/счете
 			$ostatok1 = $db -> getOne("SELECT ostatok FROM {$sqlname}mycomps_recv WHERE id = '$rs' AND identity = '$identity'");
 
-			if (
-				in_array($operacia, [
-					'plus',
-					'minus'
-				])
-			) {
+			if (in_array($operacia, [
+				'plus',
+				'minus'
+			])) {
 
 				//добавим платеж на р/счет
 				$new_summ = ( $operacia == 'plus' ) ? ( (float)pre_format($ostatok1) + (float)pre_format($summa) ) : ( pre_format($ostatok1) - pre_format($summa) );
@@ -2458,9 +2473,7 @@ class Budget {
 			$usersettings = json_decode($resultu["usersettings"], true);
 
 			// отправляем только если пользователь подписан
-			if (
-				( ( $event == '' || $event == 'new' ) && $usersettings['subscribs']['comments.new'] == 'on' ) || ( $event == 'answer' && $usersettings['subscribs']['comments.answer'] == 'on' )
-			) {
+			if (( ( $event == '' || $event == 'new' ) && $usersettings['subscribs']['comments.new'] == 'on' ) || ( $event == 'answer' && $usersettings['subscribs']['comments.answer'] == 'on' )) {
 
 				$cc[] = [
 					"email" => $umail,
@@ -2521,6 +2534,11 @@ class Budget {
 		require_once $rootpath."/class/Notify.php";
 
 		global $iduser1, $valuta;
+
+		/*file_put_contents(dirname(__DIR__, 2)."/cash/notify-z.json", json_encode_cyr([
+			"event"  => $event,
+			"params" => $params
+		]));*/
 
 		$tag   = $r = [];
 		$title = '';
@@ -2587,8 +2605,14 @@ class Budget {
 
 			$tag['users'] = array_unique($tag['users']);
 
+			/*file_put_contents(dirname(__DIR__, 2)."/cash/notify.json", json_encode_cyr([
+				"autor" => $iduser1,
+				"event" => $event,
+				"tags"  => $tag
+			]));*/
+
 			if (!empty($tag['users'])) {
-				$r = Notify ::fire("self", $iduser1, $tag);
+				$r = Notify ::fire($event, $iduser1, $tag);
 			}
 
 		}
@@ -2617,7 +2641,7 @@ class Budget {
 				"status"   => $status,
 				"bjid"     => (int)$id,
 				"iduser"   => (int)$iduser1,
-				"comment"  => cleanTotal($comment),
+				"comment"  => untag3($comment),
 				"identity" => $identity
 			]);
 
@@ -2669,7 +2693,7 @@ class Budget {
 				"statusName" => $statuses[$item['status']],
 				"iduser"     => toShort($item['iduser']),
 				"user"       => $item['user'],
-				"comment"    => $item['comment']
+				"comment"    => nl2br($item['comment'])
 			];
 
 		}
@@ -2688,6 +2712,74 @@ class Budget {
 		global $identity, $sqlname, $db;
 
 		$db -> query("DELETE FROM {$sqlname}budjetlog WHERE bjid = '$id' and identity = '$identity'");
+
+	}
+
+	/**
+	 * Получаем расшифровку измененных значений
+	 * @param array $old
+	 * @param array $new
+	 * @return array
+	 */
+	public static function getDiff(array $old = [], array $new = []): array {
+
+		global $valuta;
+
+		$fields           = self ::fields()['fields'];
+		$fields['iduser'] = "Автор";
+		$fields['did']    = "Сделка";
+		$fields['clid']   = "Клиент";
+		$fields['conid']  = "Поставщик";
+		$fields['partid'] = "Партнер";
+		$fields['do']     = "Проведен";
+
+		$ignore = ["datum", "iduser"];
+
+		$log = [];
+
+		$diffs = array_diff_ext($old, $new);
+
+		foreach ($diffs as $field => $value) {
+
+			if(in_array($field, $ignore)) {
+				continue;
+			}
+
+			switch ($field) {
+
+				case 'clid':
+				case 'conid':
+				case 'partid':
+
+					$log[] = $fields[$field].": ".current_client($value)." (было - ".current_client($old[$field]).")";
+
+					break;
+				case 'iduser':
+
+					$log[] = $fields[$field].": ".current_user($value)." (было - ".current_user($old[$field]).")";
+
+					break;
+				case 'did':
+
+					$log[] = $fields[$field].": ".current_dogovor($value)." (было - ".current_dogovor($old[$field]).")";
+
+					break;
+				case 'summa':
+
+					$log[] = $fields[$field].": ".num_format($value)." ".$valuta." (было - ".num_format($old[$field])." ".$valuta.")";
+
+					break;
+				default:
+
+					$log[] = $fields[$field].": ".$value." (было - ".$old[$field].")";
+
+					break;
+
+			}
+
+		}
+
+		return $log;
 
 	}
 

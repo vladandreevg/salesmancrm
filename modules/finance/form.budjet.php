@@ -812,14 +812,16 @@ if ( $action == 'view' ) {
 
 		<hr>
 
-		<div class="flex-container not--mob box--child">
-
-		</div>
-
 		<div class="flex-container box--child mt10 mb10">
 
 			<div class="flex-string wp20 gray2 fs-12 right-text">Раздел:</div>
 			<div class="flex-string wp80 pl10 fs-12"><?= $item['razdel'] ?></div>
+
+		</div>
+		<div class="flex-container box--child mt10 mb10">
+
+			<div class="flex-string wp20 gray2 fs-12 right-text">Автор:</div>
+			<div class="flex-string wp80 pl10 fs-12"><?= current_user($item['iduser']) ?></div>
 
 		</div>
 		<?php if ( !empty($item['date_plan']) ) { ?>

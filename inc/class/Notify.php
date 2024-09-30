@@ -380,7 +380,7 @@ class Notify {
 		//делаем отправку каждому пользователю
 		foreach ( $users as $user ) {
 
-			if ( $user > 0 ) {
+			if ( (int)$user > 0 ) {
 
 				//подписки пользователя
 				$subscription = self ::userSubscription( $user );
@@ -393,7 +393,10 @@ class Notify {
 				print "<br>==============<br>";
 				*/
 
+				//file_put_contents(dirname(__DIR__, 2)."/cash/notify-{$user}.json", json_encode_cyr(["event" => $event, "events" => $subscription]));
+
 				if ( $autor != $user && in_array( $event, $subscription ) ) {
+
 					$notifys[] = self ::edit( 0, [
 						"autor"   => $autor,
 						"iduser"  => $user,
@@ -403,6 +406,7 @@ class Notify {
 						"tip"     => $notifyText['tip'],
 						"uid"     => $notifyText['uid']
 					] );
+
 				}
 
 			}
@@ -1196,6 +1200,8 @@ class Notify {
 
 			case 'self':
 			case 'sklad':
+			// если событие не входит в перечень указанных (кастомное)
+			default:
 
 				$event          = $params['event'];
 				$tag['url']     = $params['url'];

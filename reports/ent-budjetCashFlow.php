@@ -142,6 +142,10 @@ while ($da = $db -> fetch($rs)) {
 
 $xtotalsaldo = $sumSaldo = $totalsaldo;
 
+if( $mc == 0 ){
+	$xtotalsaldo = $sumSaldo = $fullsaldo;
+}
+
 // остаток средств на счете с учетом расходов и приходов
 $total = [];
 
