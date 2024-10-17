@@ -587,16 +587,17 @@ class Deal {
 		$params['title']     = ( !$params['title'] ) ? untag($params['title_dog']) : untag($params['title']);
 
 		//Если clid или pid не указан,но включено создание Клиента/Контакта, то сначала добавим его
-		if ((int)$params['clid'] < 1 && (int)$params['pid'] < 1 && $otherSettings['addClientWDeal']) {
+		if ((int)$params['clid'] == 0 && (int)$params['pid'] == 0 && $otherSettings['addClientWDeal']) {
 
 			$cld = untag($params['cild']);
 
 			//зависимость от настроек
 			$ctype = ( $otherSettings['clientIsPerson'] ) ? 'person' : 'client';
 
-			if ($params['client'] != '') {
+			if (!empty($params['client'])) {
 
-				if ($cld == 'org') {//добавим клиента (только название)
+				//добавим клиента (только название)
+				if ($ctype == 'client') {
 
 					$Client = new Client();
 					$rez    = $Client -> add([
@@ -609,11 +610,12 @@ class Deal {
 					]);
 
 					$params['clid'] = (int)$rez['data'];
+					$params['payer'] = (int)$rez['data'];
 
 					$message[] = "Добавлен клиент";
 
 				}
-				elseif ($cld == 'psn') {
+				else {
 
 					$Client = new Person();
 					$rez    = $Client -> edit(0, [

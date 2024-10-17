@@ -24,12 +24,12 @@ header( "Pragma: no-cache" );
 
 $rootpath = dirname( __DIR__, 2 );
 
-include $rootpath."/inc/config.php";
-include $rootpath."/inc/dbconnector.php";
-include $rootpath."/inc/auth.php";
-include $rootpath."/inc/settings.php";
-include $rootpath."/inc/func.php";
-include $rootpath."/developer/events.php";
+require_once $rootpath."/inc/config.php";
+require_once $rootpath."/inc/dbconnector.php";
+require_once $rootpath."/inc/auth.php";
+require_once $rootpath."/inc/settings.php";
+require_once $rootpath."/inc/func.php";
+require_once $rootpath."/developer/events.php";
 
 
 $clid   = (int)$_REQUEST['clid'];
@@ -73,8 +73,8 @@ if ( $action == "deal.edit" ) {
 
 		$mes = $result['result'];
 
-		if ( $result['error']['text'] ) {
-			$mes .= "<br>".implode( "<br>", $result['error']['text'] );
+		if ( !empty($result['error']['text']) ) {
+			$mes .= "<br>".implode( "<br>", (array)$result['error']['text'] );
 		}
 
 		print json_encode_cyr( [

@@ -686,6 +686,11 @@ function untag($string): string {
 		""
 	], $string);
 
+	// найдем непечатные символы
+	//$x = array_unique(yexplode(" ", preg_replace('/[^\r\n[:print:]]/', '', $string)));
+	// удалим непечатные символы
+	//return str_replace($x, "", $string);
+
 }
 
 /**
@@ -722,6 +727,11 @@ function untag3($string): string {
 		"”",
 		"”"
 	], $string);
+
+	// найдем непечатные символы
+	//$x = array_unique(yexplode(" ", preg_replace('/[^\r\n[:print:]]/', '', $string)));
+	// удалим непечатные символы
+	//$string = str_replace($x, "", $string);
 
 	return strip_tags_smart($string);
 
@@ -1496,17 +1506,23 @@ function format_date_rus($date_orig): string {
  *
  * @param $date_orig
  *
- * @return string
+ * @return string|null
  * @category Core
  * @package  Func
  */
-function format_date_rus_name($date_orig): string {
+function format_date_rus_name($date_orig): ?string {
 
 	$date_new = '';
 
+	if( !validateDate($date_orig) ){
+		return $date_orig;
+	}
+
 	if ($date_orig != NULL && $date_orig != '0000-00-00') {
+
 		$date_new = explode("-", $date_orig);
 		$date_new = $date_new[2]." ".ru_mon2($date_new[1])." ".$date_new[0];
+
 	}
 
 	return $date_new;
@@ -1729,6 +1745,21 @@ function modifyDatetime(string $date = NULL, array $params = NULL): string {
 	}
 
 	return $a -> format($params['format']);
+
+}
+
+/**
+ * Проверка даты на валидность
+ * @see https://stackoverflow.com/questions/19271381/correctly-determine-if-date-string-is-a-valid-date-in-that-format
+ * @param $date
+ * @param string $format
+ * @return bool
+ */
+function validateDate($date, string $format = 'Y-m-d'): bool {
+
+	$d = DateTime::createFromFormat($format, $date);
+	// The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
+	return $d && strtolower($d->format($format)) === strtolower($date);
 
 }
 
