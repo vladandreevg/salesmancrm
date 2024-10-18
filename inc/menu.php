@@ -909,7 +909,7 @@ $menu = [
 				"accesse" => "yes",
 				"title"   => $lang['face']['FileList'],
 				"icon"    => '<i class="icon-floppy"></i>',
-				"url"     => 'uploads',
+				"url"     => 'upload',
 				"onclick" => "",
 				"class"   => '',
 				"type"    => 'services'
