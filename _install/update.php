@@ -165,7 +165,8 @@ $seria = [
 	'2023.1',
 	'2024.1',
 	'2024.2',
-	'2024.3'
+	'2024.3',
+	'2024.4'
 ];
 
 //printf("Step: %s; Sapi: %s; Ver: %s; LastVer: %s; IsLast: %s\n", $step, PHP_SAPI, getVersion(), $lastVer, getVersion() == $lastVer);
@@ -1189,6 +1190,39 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 		 * Обновим версию
 		 */
 		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2024.3']);
+
+		$currentVer = getVersion();
+
+		if ( $currentVer == $lastVer ) {
+
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+
+		}
+
+		if (PHP_SAPI != 'cli') {
+
+			$message = 'Обновление до версии '.$currentVer.' установлено.<br>
+			<div class="main_div div-center">
+				<A href="update.php?step=1" class="button"><b>Продолжить</b> установку</A>
+			</div>
+			';
+
+		}
+
+		if ( PHP_SAPI === 'cli' ) {
+
+			print $message."\n";
+
+		}
+
+	}
+
+	if ( getVersion() == '2024.3' && in_array( '2024.4', $seria)) {
+
+		/**
+		 * Обновим версию
+		 */
+		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2024.4']);
 
 		$currentVer = getVersion();
 
