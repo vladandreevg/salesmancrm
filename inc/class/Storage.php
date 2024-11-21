@@ -125,6 +125,22 @@ class Storage {
 		$db       = $GLOBALS['db'];
 		$fpath    = $GLOBALS['fpath'];
 
+		$fields = [];
+		$result = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
+		while ($data = $db -> fetch( $result )) {
+
+			if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+				$fields[] = [
+					"field" => $data['fld_name'],
+					"title" => $data['fld_title'],
+					"value" => $data['fld_var'],
+				];
+
+			}
+
+		}
+
 		$data = [];
 
 		$settings = self ::settings( $identity );
@@ -140,11 +156,18 @@ class Storage {
 		$data['price']['descr']        = $res["descr"];
 		$data['price']['datum']        = $res["datum"];
 		$data['price']['price_in']     = (float)$res["price_in"];
-		$data['price']['price_1']      = (float)$res["price_1"];
-		$data['price']['price_2']      = (float)$res["price_2"];
-		$data['price']['price_3']      = (float)$res["price_3"];
-		$data['price']['price_4']      = (float)$res["price_4"];
-		$data['price']['price_5']      = (float)$res["price_5"];
+		//$data['price']['price_1']      = (float)$res["price_1"];
+		//$data['price']['price_2']      = (float)$res["price_2"];
+		//$data['price']['price_3']      = (float)$res["price_3"];
+		//$data['price']['price_4']      = (float)$res["price_4"];
+		//$data['price']['price_5']      = (float)$res["price_5"];
+
+		foreach ($fields as $field) {
+
+			$data['price'][$field['field']] = (float)$res[$field['field']];
+
+		}
+
 		$data['price']['edizm']        = $res["edizm"];
 		$data['price']['folder']       = (int)$res["pr_cat"];
 		$data['price']['categoryID']   = (int)$res["pr_cat"];

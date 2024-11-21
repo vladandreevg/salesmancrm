@@ -50,7 +50,7 @@ $colors = [
 	'4' => 'red'
 ];
 
-$result   = $db -> getRow( "SELECT * FROM ".$sqlname."price WHERE n_id='".$n_id."' and identity = '$identity'" );
+/*$result   = $db -> getRow( "SELECT * FROM ".$sqlname."price WHERE n_id='".$n_id."' and identity = '$identity'" );
 $artikul  = $result[ "artikul" ];
 $title    = $result[ "title" ];
 $descr    = $result[ "descr" ];
@@ -62,9 +62,9 @@ $price_3  = $result[ "price_3" ];
 $price_4  = $result[ "price_4" ];
 $price_5  = $result[ "price_5" ];
 $nds      = $result[ "nds" ];
-$edizm    = $result[ "edizm" ];
+$edizm    = $result[ "edizm" ];*/
 
-$result  = $db -> getRow( "select * from ".$sqlname."modcatalog where prid='".$n_id."' and identity = '$identity'" );
+/*$result  = $db -> getRow( "select * from ".$sqlname."modcatalog where prid='".$n_id."' and identity = '$identity'" );
 $content = htmlspecialchars_decode( $result[ "content" ] );
 $status  = $result[ "status" ];
 $kol     = $result[ "kol" ];
@@ -72,7 +72,9 @@ $id      = $result[ "id" ];
 $file    = $result[ "files" ];
 $sklad   = $result[ "sklad" ];
 
-if ( $kol == '' ) $kol = '?';
+if ( $kol == '' ) {
+	$kol = '?';
+}*/
 
 ?>
 <div class="fixx">
@@ -247,8 +249,8 @@ if ( $kol == '' ) $kol = '?';
 
 	configpage();
 	logs();
-	resizeImages();
 	sklad();
+	resizeImages();
 	drive();
 
 	$('#pages div').click(function () {
@@ -274,7 +276,7 @@ if ( $kol == '' ) $kol = '?';
 		$("#sklad").load("/modules/modcatalog/card.php?n_id=<?=$n_id?>&action=getSklad").append('<img src="/assets/images/loading.svg">');
 	}
 
-	<?php if($setEntry[ 'enShowButtonLeft' ] == 'yes' and $isEntry == 'on'){ ?>
+	<?php if($setEntry[ 'enShowButtonLeft' ] == 'yes' && $isEntry == 'on'){ ?>
 	function entrys() {
 		$("#entry").load("/modules/modcatalog/card.entry.php?n_id=<?=$n_id?>").append('<img src="/assets/images/loading.svg">');
 	}
@@ -298,7 +300,9 @@ if ( $kol == '' ) $kol = '?';
 		$("#info").load("/modules/modcatalog/card.php?n_id=<?=$n_id?>&action=getInfo").append('<img src="/assets/images/loading.svg">');
 		dogs();
 		$("#dopzat").load("/modules/modcatalog/card.php?n_id=<?=$n_id?>&action=getDopz").append('<img src="/assets/images/loading.svg">');
+		<?php if($setEntry[ 'enShowButtonLeft' ] == 'yes' && $isEntry == 'on'){ ?>
 		entrys();
+		<?php } ?>
 		$('#formtabs').tabs();
 	}
 

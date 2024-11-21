@@ -10,6 +10,7 @@
 
 namespace Salesman;
 
+use phpDocumentor\Reflection\Types\This;
 use SafeMySQL;
 
 /**
@@ -115,6 +116,22 @@ class Price {
 
 		if ($prid > 0) {
 
+			$fields = [];
+			$result = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
+			while ($data = $db -> fetch( $result )) {
+
+				if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+					$fields[] = [
+						"field" => $data['fld_name'],
+						"title" => $data['fld_title'],
+						"value" => $data['fld_var'],
+					];
+
+				}
+
+			}
+
 			//Если склад активен, то выдаем информацию из него
 			$isSklad = $db -> getOne("SELECT active FROM {$sqlname}modules WHERE mpath = 'modcatalog' AND identity = '$identity'");
 			if ($isSklad == 'on') {
@@ -135,19 +152,21 @@ class Price {
 				$res                = $db -> getRow("SELECT * FROM {$sqlname}price WHERE n_id = '$prid' AND identity = '$identity'");
 				$price['prid']      = (int)$res["n_id"];
 				$price['artikul']   = $res["artikul"];
+				$price['datum']   = $res["datum"];
 				$price['title']     = clean($res["title"]);
 				$price['descr']     = $res["descr"];
 				$price['price_in']  = (float)$res["price_in"];
-				$price['price_1']   = (float)$res["price_1"];
-				$price['price_2']   = (float)$res["price_2"];
-				$price['price_3']   = (float)$res["price_3"];
-				$price['price_4']   = (float)$res["price_4"];
-				$price['price_5']   = (float)$res["price_5"];
 				$price['edizm']     = $res["edizm"];
 				$price['folder']    = (int)$res["pr_cat"];
 				$price['nds']       = (float)$res["nds"];
 				$price['archive']   = $res["archive"];
 				$price['isArchive'] = $res["archive"] == 'yes';
+
+				foreach ($fields as $field) {
+
+					$price[$field['field']] = (float)$res[$field['field']];
+
+				}
 
 				// берем признак типа у нулевого каталога
 				$pcat = self ::parentCatalog($res['pr_cat']);
@@ -217,6 +236,16 @@ class Price {
 				"required" => $data['fld_required']
 			];
 
+			if($data['fld_name'] != 'price_in') {
+
+				$field['fields'][$data['fld_name']] = [
+					"field" => $data['fld_name'],
+					"title" => $data['fld_title'],
+					"value" => $data['fld_var'],
+				];
+
+			}
+
 		}
 
 		return $field;
@@ -256,9 +285,13 @@ class Price {
 	 */
 	public function edit($id, array $params = []): array {
 
+		global $hooks;
+
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
 		$identity = $this -> identity;
+
+		$post = $params;
 
 		//поля, которые есть в таблице
 		$allowed = [
@@ -300,10 +333,16 @@ class Price {
 		//новая запись
 		if ($id == 0) {
 
+			$params = $hooks -> apply_filters("price_addfilter", $params);
+
 			$params['identity'] = $identity;
 
 			$db -> query("INSERT INTO {$sqlname}price SET ?u", arrayNullClean($params));
 			$id = $db -> insertId();
+
+			if ($hooks) {
+				$hooks -> do_action("price_add", $post, $params);
+			}
 
 			if ($id > 0) {
 
@@ -329,8 +368,14 @@ class Price {
 
 				unset($params['identity']);
 
+				$params = $hooks -> apply_filters("price_editfilter", $params);
+
 				$db -> query("UPDATE {$sqlname}price SET ?u WHERE n_id = '$id' and identity = '$identity'", $params);
 				//print $db -> lastQuery();
+
+				if ($hooks) {
+					$hooks -> do_action("price_edit", $post, $params);
+				}
 
 				$result = "Success";
 				$text   = "Позиция обновлена";
@@ -375,6 +420,8 @@ class Price {
 	 */
 	public static function delete($id): array {
 
+		global $hooks;
+
 		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
@@ -388,6 +435,10 @@ class Price {
 		$n_id = (int)$db -> getOne("SELECT n_id FROM {$sqlname}price WHERE n_id = '$id' AND identity = '$identity'");
 
 		if ($n_id > 0) {
+
+			if ($hooks) {
+				$hooks -> do_action("price_delete", $did);
+			}
 
 			$db -> query("DELETE FROM {$sqlname}price WHERE n_id = '$id' AND identity = '$identity'");
 
@@ -1017,6 +1068,8 @@ class Price {
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
+		$fields = self::fields()['fields'];
+
 		$page       = (int)$params['page'] > 0 ? (int)$params['page'] : 1;
 		$idcategory = (int)$params['idcat'];
 		$oldonly    = $params['oldonly'];
@@ -1065,28 +1118,31 @@ class Price {
 			$sort .= " and (prc.artikul LIKE '%$word%' or prc.title LIKE '%$word%' or prc.descr LIKE '%$word%')";
 		}
 
+		$qfields = [];
+		foreach ($fields as $field ) {
+			$qfields[] = "prc.".$field['field']." as ".$field['field'];
+		}
+
 		//print
 		$query = "
-			SELECT
-				prc.n_id as id,
-				prc.datum as datum,
-				prc.pr_cat as idcat,
-				prc.title as title,
-				prc.descr as content,
-				prc.artikul as artikul,
-				prc.edizm as edizm,
-				prc.price_in as price_in,
-				prc.price_1 as price_1,
-				prc.price_2 as price_2,
-				prc.price_3 as price_3,
-				prc.archive as archive,
-				{$sqlname}price_cat.title as category
-			FROM {$sqlname}price `prc`
-				LEFT JOIN {$sqlname}price_cat ON prc.pr_cat = {$sqlname}price_cat.idcategory
-			WHERE
-				prc.n_id > 0
-				$sort and
-				prc.identity = '$identity'
+		SELECT
+			prc.n_id as id,
+			prc.datum as datum,
+			prc.pr_cat as idcat,
+			prc.title as title,
+			SUBSTRING(prc.descr, 1, 100) as content,
+			prc.artikul as artikul,
+			prc.edizm as edizm,
+			prc.price_in as price_in,
+			".yimplode(",", $qfields).",
+			prc.archive as archive,
+			{$sqlname}price_cat.title as category
+		FROM {$sqlname}price `prc`
+			LEFT JOIN {$sqlname}price_cat ON prc.pr_cat = {$sqlname}price_cat.idcategory
+		WHERE
+			prc.n_id > 0
+			$sort and
+			prc.identity = '$identity'
 		";
 
 		$result      = $db -> query($query);
@@ -1113,6 +1169,16 @@ class Price {
 
 		while ($da = $db -> fetch($result)) {
 
+			$pfields = [];
+			foreach ($fields as $field ) {
+
+				$pfields[] = [
+					"name" => $field['title'],
+					"value" => num_format($da[$field['field']])
+				];
+
+			}
+
 			$list[] = [
 				"id"       => (int)$da['id'],
 				"artikul"  => $da['artikul'],
@@ -1121,6 +1187,7 @@ class Price {
 				"edizm"    => $da['edizm'],
 				"category" => $da['category'],
 				"price_in" => num_format($da['price_in']),
+				"fields" => $pfields,
 				"price_1"  => num_format($da['price_1']),
 				"price_2"  => num_format($da['price_2']),
 				"price_3"  => num_format($da['price_3']),

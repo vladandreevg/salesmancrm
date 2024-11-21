@@ -2290,8 +2290,7 @@ class Document {
 			$cmd = 'export HOME='.$path.' && libreoffice --headless --convert-to pdf '.$path.$file.' --outdir '.$path;
 
 			//print $cmd;
-
-			//if(!empty($output)) print_r($output);
+			//print_r($output);
 			//if($exit) print $exit;
 
 		}

@@ -70,8 +70,8 @@ foreach ( $fields as $i => $field ) {
 $nd      = current_datum();
 $nd_unix = date_to_unix( $nd );
 
-$first_step = $db -> getOne( "SELECT idcategory FROM ".$sqlname."dogcategory WHERE title = '0' and identity = '$identity'" );
-$end_step   = $db -> getOne( "SELECT idcategory FROM ".$sqlname."dogcategory WHERE title = '100' and identity = '$identity'" );
+$first_step = $db -> getOne( "SELECT idcategory FROM {$sqlname}dogcategory WHERE title = '0' and identity = '$identity'" );
+$end_step   = $db -> getOne( "SELECT idcategory FROM {$sqlname}dogcategory WHERE title = '100' and identity = '$identity'" );
 
 $i = 0;
 
@@ -97,12 +97,12 @@ $q = "
 		dc.content as steptitle,
 		dt.title as tips,
 		ds.title as dstatus
-	FROM ".$sqlname."dogovor  `deal`
-		LEFT JOIN ".$sqlname."user `us` ON deal.iduser = us.iduser
-		LEFT JOIN ".$sqlname."clientcat `cc` ON deal.clid = cc.clid
-		LEFT JOIN ".$sqlname."dogcategory `dc` ON deal.idcategory = dc.idcategory
-		LEFT JOIN ".$sqlname."dogtips `dt` ON deal.tip = dt.tid
-		LEFT JOIN ".$sqlname."dogstatus `ds` ON deal.sid = ds.sid
+	FROM {$sqlname}dogovor  `deal`
+		LEFT JOIN {$sqlname}user `us` ON deal.iduser = us.iduser
+		LEFT JOIN {$sqlname}clientcat `cc` ON deal.clid = cc.clid
+		LEFT JOIN {$sqlname}dogcategory `dc` ON deal.idcategory = dc.idcategory
+		LEFT JOIN {$sqlname}dogtips `dt` ON deal.tip = dt.tid
+		LEFT JOIN {$sqlname}dogstatus `ds` ON deal.sid = ds.sid
 	WHERE 
 		deal.datum_plan BETWEEN '$da1 00:00:00' and '$da2 23:59:59' and 
 		deal.idcategory != '$first_step' and 
@@ -125,14 +125,14 @@ foreach ( $da as $data ) {
 
 	if ( $complect_on == 'yes' && $tarif != ' Base' ) {
 
-		$dmin = $db -> getOne( "SELECT MIN(data_plan) as min FROM ".$sqlname."complect WHERE did = '".$data['did']."' and doit != 'yes' and identity = '$identity'" );
+		$dmin = $db -> getOne( "SELECT MIN(data_plan) as min FROM {$sqlname}complect WHERE did = '".$data['did']."' and doit != 'yes' and identity = '$identity'" );
 		if ( date_to_unix( $datum_min ) > date_to_unix( $dmin ) )
 			$datum_min = $dmin;
 
 	}
 
 	//Сформируем сумму оплаченных счетов
-	$resultc = $db -> query( "SELECT * FROM ".$sqlname."credit WHERE did = '".$data['did']."' and identity = '$identity'" );
+	$resultc = $db -> query( "SELECT * FROM {$sqlname}credit WHERE did = '".$data['did']."' and identity = '$identity'" );
 	while ($datac = $db -> fetch( $resultc )) {
 
 		if ( $datac['do'] == 'on' )
@@ -159,7 +159,7 @@ foreach ( $da as $data ) {
 
 		$j = $k + 1;
 
-		$rh    = $db -> getRow( "select * from ".$sqlname."history WHERE did='".$data['did']."' and tip != 'СобытиеCRM' and (datum between '".$da1." 00:00:00' and '".$da2." 23:59:59') and identity = '$identity' ORDER BY cid DESC LIMIT ".$k.", ".$j );
+		$rh    = $db -> getRow( "select * from {$sqlname}history WHERE did='".$data['did']."' and tip != 'СобытиеCRM' and (datum between '".$da1." 00:00:00' and '".$da2." 23:59:59') and identity = '$identity' ORDER BY cid DESC LIMIT ".$k.", ".$j );
 		$datum = format_date_rus( cut_date_short( $rh["datum"] ) );
 		$tip   = $rh["tip"];
 		$hdes  = $rh["des"];
@@ -195,10 +195,11 @@ foreach ( $da as $data ) {
 }
 
 //print_r($dogs);
+//exit();
 
 if ( $action == "export" ) {
 
-	$otchet = [
+	$otchet[] = [
 		'#',
 		'Дата создан.',
 		'Дата план.',

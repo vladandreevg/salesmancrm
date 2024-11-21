@@ -13,7 +13,7 @@ use Salesman\Storage;
 error_reporting( E_ERROR );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../../' );
+$rootpath = dirname(__DIR__, 2);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -45,11 +45,11 @@ if ( $action == "getReserv" ) {
 
 	print '
 	<DIV class="batton-edit pull-aright">
-		<a href="javascript:void(0)" onClick="getCatalog()" title="Обновить"><i class="icon-arrows-ccw blue"></i> Обновить</a>
+		<a href="javascript:void(0)" onclick="getCatalog()" title="Обновить"><i class="icon-arrows-ccw blue"></i> Обновить</a>
 	</DIV>
 	';
 
-	print '<div class="pad10 fs-12 blue">Комплектность сделки: <a href="javascript:void(0)" onclick="doLoad(\'modules/modcatalog/form.modcatalog.php?action=editzayavkacomplete&did='.$did.'\')" class="red" title="Подробнее"><b>'.$Complete.'%</b></a></div>';
+	print '<div class="pad10 fs-12 blue">Комплектность сделки: <a href="javascript:void(0)" onclick="doLoad(\'/modules/modcatalog/form.modcatalog.php?action=editzayavkacomplete&did='.$did.'\')" class="red" title="Подробнее"><b>'.$Complete.'%</b></a></div>';
 
 	?>
 	<fieldset>
@@ -85,7 +85,7 @@ if ( $action == "getReserv" ) {
 				<TR height="45" class="ha">
 					<TD align="left"><?= get_sfdate2( $data['datum'] ) ?></TD>
 					<TD>
-						<span class="ellipsis"><b><A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=view&n_id=<?= $data['prid'] ?>');"><i class="icon-archive broun"></i><?= $title ?></a></b></span>
+						<span class="ellipsis"><b><A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=view&n_id=<?= $data['prid'] ?>');"><i class="icon-archive broun"></i><?= $title ?></a></b></span>
 						<br><span class="ellipsis fs-09 gray2">Склад: <b><?= $sklad ?></b></span>
 					</TD>
 					<TD align="center"><?= $zayavkaNumber ?></TD>
@@ -93,7 +93,7 @@ if ( $action == "getReserv" ) {
 					<TD align="right"><?= $data['kol'] ?></TD>
 					<TD align="center" nowrap>
 						<?php if ( in_array( $iduser1, $settings['mcCoordinator'] ) ) { ?>
-							<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить из Резерва?');if (cf)removeReserve('<?= $data['id'] ?>');" title="Удалить"><i class="icon-cancel-circled red"></i></A>&nbsp;&nbsp;
+							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить из Резерва?');if (cf)removeReserve('<?= $data['id'] ?>');" title="Удалить"><i class="icon-cancel-circled red"></i></A>&nbsp;&nbsp;
 						<?php } ?>
 					</TD>
 				</TR>
@@ -215,9 +215,9 @@ if ( $action == "getZayavka" ) {
 					<TD align="right" class="tooltips" tooltip="<blue>Статус</blue><hr><?= $des ?>" tooltip-position="top">
 						<b><?= $srok ?></b><?= $de ?></TD>
 					<TD>
-						<span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('<?= $data['iduser'] ?>');"><i class="icon-user-1 blue"></i><?= current_user( $data['iduser'] ) ?></a></span>
+						<span class="ellipsis"><a href="javascript:void(0)" onclick="viewUser('<?= $data['iduser'] ?>');"><i class="icon-user-1 blue"></i><?= current_user( $data['iduser'] ) ?></a></span>
 						<?php if ( $data['sotrudnik'] ) { ?><br>
-							<span class="ellipsis"><a href="javascript:void(0)" onClick="viewUser('<?= $data['sotrudnik'] ?>');"><i class="icon-user-1 broun"></i><span class="broun"><?= current_user( $data['sotrudnik'] ) ?></span></a></span>
+							<span class="ellipsis"><a href="javascript:void(0)" onclick="viewUser('<?= $data['sotrudnik'] ?>');"><i class="icon-user-1 broun"></i><span class="broun"><?= current_user( $data['sotrudnik'] ) ?></span></a></span>
 						<?php } else { ?>
 							<br><span class="ellipsis gray"><i class="icon-user-1"></i>Не назначено</span>
 						<?php } ?>
@@ -232,7 +232,7 @@ if ( $action == "getZayavka" ) {
 								1
 							] ) ) {
 								?>
-								<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editzayavkastatus');" title="Изменить" class="gray"><i class="icon-ok smalltxt"></i></a>&nbsp;&nbsp;
+								<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editzayavkastatus');" title="Изменить" class="gray"><i class="icon-ok smalltxt"></i></a>&nbsp;&nbsp;
 								<?php
 							}
 							else print '<i class="icon-ok-circled green smalltxt"></i>&nbsp;&nbsp;';
@@ -240,9 +240,9 @@ if ( $action == "getZayavka" ) {
 						?>
 					</TD>
 					<TD align="left" nowrap>
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=viewzayavka');" title="Просмотр"><i class="icon-eye blue"></i></A>&nbsp;&nbsp;
+						<A href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=viewzayavka');" title="Просмотр"><i class="icon-eye blue"></i></A>&nbsp;&nbsp;
 						<?php if ( $data['status'] != '2' and $data['status'] != '1' and ($data['iduser'] == $iduser1 or in_array( $iduser1, $settings['mcCoordinator'] )) ) { ?>
-							<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editzayavka');" class="gray" title="Изменить"><i class="icon-pencil"></i></A>&nbsp;&nbsp;
+							<A href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editzayavka');" class="gray" title="Изменить"><i class="icon-pencil"></i></A>&nbsp;&nbsp;
 						<?php } ?>
 					</TD>
 				</TR>
@@ -299,11 +299,11 @@ if ( $action == "getOrder" ) {
 				<?php
 				if ( $acsept == 'yes' ) {
 					?>
-					<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=editakt&tip=income&did=<?= $did ?>')" title="Приходный ордер" class="green"><i class="icon-plus-circled blue"></i> Приходный ордер</a>
+					<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editakt&tip=income&did=<?= $did ?>')" title="Приходный ордер" class="green"><i class="icon-plus-circled blue"></i> Приходный ордер</a>
 					<?php
 				}
 				?>
-				<a href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?action=editakt&tip=outcome&odid=<?= $did ?>')" title="Расходный ордер" class="red"><i class="icon-plus-circled red"></i> Расходный ордер</a>
+				<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?action=editakt&tip=outcome&odid=<?= $did ?>')" title="Расходный ордер" class="red"><i class="icon-plus-circled red"></i> Расходный ордер</a>
 			</DIV>
 
 			<br>
@@ -358,12 +358,12 @@ if ( $action == "getOrder" ) {
 					</TD>
 					<TD nowrap>
 
-						<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=viewakt');" title="Просмотр"><i class="icon-eye blue"></i></A>&nbsp;&nbsp;
+						<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=viewakt');" title="Просмотр"><i class="icon-eye blue"></i></A>&nbsp;&nbsp;
 						<A href="/modules/modcatalog/printorder.php?id=<?= $data['id'] ?>&tip=order" title="Печать" target="blank"><i class="icon-print green"></i></A>&nbsp;&nbsp;
 
 						<?php if ( $data['isdo'] != 'yes' ) { ?>
-							<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editakt');" class="gray" title="Изменить"><i class="icon-pencil green"></i></A>&nbsp;&nbsp;
-							<A href="javascript:void(0)" onClick="cf=confirm('Вы действительно хотите удалить?');if (cf)deleteOrder('<?= $data['id'] ?>');" class="gray" title="Удалить"><i class="icon-cancel-circled red"></i></A>&nbsp;&nbsp;
+							<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editakt');" class="gray" title="Изменить"><i class="icon-pencil green"></i></A>&nbsp;&nbsp;
+							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить?');if (cf)deleteOrder('<?= $data['id'] ?>');" class="gray" title="Удалить"><i class="icon-cancel-circled red"></i></A>&nbsp;&nbsp;
 						<?php } ?>
 
 						<?php if ( $data['isdo'] == 'yes' ) { ?>
@@ -371,13 +371,13 @@ if ( $action == "getOrder" ) {
 							<i class="icon-ok blue" title="Проведен"></i>&nbsp;&nbsp;
 
 							<?php if ( $settings['mcSkladPoz'] == 'yes' ) { ?>
-								<A href="javascript:void(0)" onClick="doLoad('modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editaktperpoz');" title="Установить серийники"><i class="icon-list broun"></i></A>&nbsp;&nbsp;
+								<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?id=<?= $data['id'] ?>&action=editaktperpoz');" title="Установить серийники"><i class="icon-list broun"></i></A>&nbsp;&nbsp;
 							<?php } ?>
 
 							<?php
 							if ( $settings['mcSkladPoz'] != 'yes' ){
 
-								print '<A href="javascript:void(0)" onClick="cf=confirm(\'Вы действительно хотите удалить проведенный ордер?\');if (cf)deleteOrder(\''.$data['id'].'\');" title="Удалить"><i class="icon-block-1 red"></i></A>&nbsp;&nbsp;';
+								print '<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить проведенный ордер?\');if (cf)deleteOrder(\''.$data['id'].'\');" title="Удалить"><i class="icon-block-1 red"></i></A>&nbsp;&nbsp;';
 
 							}
 							?>
@@ -387,7 +387,7 @@ if ( $action == "getOrder" ) {
 				</TR>
 				<?php
 			}
-			if ( count( $result ) < 1 ) {
+			if ( count( $result ) == 0 ) {
 				print '<TR class="th45 ha"><td colspan="4">Нет ордеров</td></TR>';
 			}
 			?>
@@ -400,7 +400,7 @@ if ( $action == "getOrder" ) {
 
 		function deleteOrder(id) {
 
-			var url = 'modules/modcatalog/core.modcatalog.php?id=' + id + '&action=removeorder';
+			var url = '/modules/modcatalog/core.modcatalog.php?id=' + id + '&action=removeorder';
 			$('#message').css('display', 'block').append('<div id=loader><img src=/assets/images/loading.svg> Загрузка данных. Пожалуйста подождите...</div>');
 			$.get(url, function (data) {
 

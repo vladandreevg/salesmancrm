@@ -28,12 +28,13 @@ $thisfile = basename( __FILE__ );
 //require_once "mcfunc.php";
 
 //настройки модуля
-$msettings            = $db -> getOne( "SELECT settings FROM ".$sqlname."modcatalog_set WHERE identity = '$identity'" );
+$msettings            = $db -> getOne( "SELECT settings FROM {$sqlname}modcatalog_set WHERE identity = '$identity'" );
 $msettings            = json_decode( (string)$msettings, true );
 $msettings['mcSklad'] = 'yes';
 
-if ( $msettings['mcSkladPoz'] != "yes" )
+if ( $msettings['mcSkladPoz'] != "yes" ) {
 	$pozzi = " and status != 'out'";
+}
 //
 //prid в таблице modcatalog - это ссылка на id в прайсе (n_id)
 //prid в остальных таблицах - это id записи в таблице modcatalog
@@ -46,17 +47,28 @@ $tabsOn = 'no';
 
 //---названия полей прайса. start---//
 $dname  = $dvar = $don = [];
-$result = $db -> getAll( "SELECT * FROM ".$sqlname."field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
+$fields = [];
+$result = $db -> getAll( "SELECT * FROM {$sqlname}field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
 foreach ( $result as $data ) {
 
 	$dname[ $data['fld_name'] ] = $data['fld_title'];
 	$dvar[ $data['fld_name'] ]  = $data['fld_var'];
 	$don[]                      = $data['fld_name'];
 
+	if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+		$fields[] = [
+			"field" => $data['fld_name'],
+			"title" => $data['fld_title'],
+			"value" => $data['fld_var'],
+		];
+
+	}
+
 }
 //---названия полей прайса. end---//
 
-$sk = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_sklad WHERE identity = '$identity'" );
+$sk = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_sklad WHERE identity = '$identity'" );
 foreach ( $sk as $da ) {
 	$skladlist[ $da['id'] ] = $da['title'];
 }
@@ -136,26 +148,9 @@ if ( $action == "edit" ) {
 
 	if ( $n_id > 0 ) {
 
-		$res = $db -> getRow( "select * from ".$sqlname."price where n_id='".$n_id."' and identity = '$identity'" );
+		$price = Price ::info( $n_id )['data'];
 
-		foreach ( $res as $key => $val ) {
-			$par[ $key ] = $val;
-		}
-
-		$artikul  = $res["artikul"];
-		$title    = clean( $res["title"] );
-		$descr    = $res["descr"];
-		$price_in = $res["price_in"];
-		$price_1  = $res["price_1"];
-		$price_2  = $res["price_2"];
-		$price_3  = $res["price_3"];
-		$price_4  = $res["price_4"];
-		$price_5  = $res["price_5"];
-		$edizm    = $res["edizm"];
-		$folder   = $res["pr_cat"];
-		$nds      = $res["nds"];
-
-		$res      = $db -> getRow( "select * from ".$sqlname."modcatalog where prid='".$n_id."' and identity = '$identity'" );
+		$res      = $db -> getRow( "select * from {$sqlname}modcatalog where prid='".$n_id."' and identity = '$identity'" );
 		$contentt = htmlspecialchars_decode( $res["content"] );
 		$status   = $res["status"];
 		$kol      = $res["kol"];
@@ -167,7 +162,7 @@ if ( $action == "edit" ) {
 
 	if ( $idz > 0 ) {
 
-		$res = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_zayavka WHERE id = '$idz' and identity = '$identity'" );
+		$res = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_zayavka WHERE id = '$idz' and identity = '$identity'" );
 
 		$zstatus = $res['status'];
 		$des     = $res['des'];
@@ -204,7 +199,7 @@ if ( $action == "edit" ) {
 	}
 	if ( $ido > 0 ) {
 
-		$res     = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_offer WHERE id = '$ido' and identity = '$identity'" );
+		$res     = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_offer WHERE id = '$ido' and identity = '$identity'" );
 		$des     = $res['des'];
 		$content = $res['content'];
 
@@ -266,8 +261,7 @@ if ( $action == "edit" ) {
 									<option value="none">--Выбор--</option>
 									<option disabled value="0">Создана</option>
 									<option disabled value="1">В работе</option>
-									<option <?php if ( $zstatus == '2' )
-										print "selected"; ?> value="2">Выполнена
+									<option <?php if ( $zstatus == '2' ) print "selected"; ?> value="2">Выполнена
 									</option>
 								</select>
 								<div class="em gray2 fs-09">Текущий статус заявки: <?= $oldstatus ?></div>
@@ -281,18 +275,18 @@ if ( $action == "edit" ) {
 						<?php if ( $msettings['mcArtikul'] == 'yes' ) { ?>
 							<div class="column12 grid-3 fs-12 pt10 right-text gray2">Артикул:</div>
 							<div class="column12 grid-9">
-								<input type="text" name="artikul" id="artikul" value="<?= $artikul ?>" class="w200">
+								<input type="text" name="artikul" id="artikul" value="<?= $price['artikul'] ?>" class="w200">
 							</div>
 						<?php } ?>
 
 						<div class="column12 grid-3 fs-12 pt10 right-text gray2">Название:</div>
 						<div class="column12 grid-9">
-							<INPUT name="title" type="text" id="title" class="required wp97" value="<?= $title ?>">
+							<INPUT name="title" type="text" id="title" class="required wp97" value="<?= $price['title'] ?>">
 						</div>
 
 						<div class="column12 grid-3 fs-12 pt10 right-text gray2">Ед. измерения:</div>
 						<div class="column12 grid-9">
-							<input name="edizm" type="text" id="edizm" class="required w200" value="<?= $edizm ?>">
+							<input name="edizm" type="text" id="edizm" class="required w200" value="<?= $price['edizm'] ?>">
 						</div>
 
 						<div class="column12 grid-3 fs-12 pt10 right-text gray2">Категория:</div>
@@ -306,7 +300,7 @@ if ( $action == "edit" ) {
 									if(in_array($value['id'], $msettings['mcPriceCat']) || in_array($value['sub'], $msettings['mcPriceCat']) || empty($msettings['mcPriceCat'])) {
 
 										$s = ( $value['level'] > 0 ) ? str_repeat( '&nbsp;&nbsp;', $value['level'] ).'&rarr;&nbsp;' : '';
-										$a = ( $value['id'] == $folder ) ? "selected" : '';
+										$a = ( $value['id'] == $price['folder'] ) ? "selected" : '';
 
 										print '<option value="'.$value['id'].'" '.$a.'>'.$s.$value['title'].'</option>';
 
@@ -323,11 +317,10 @@ if ( $action == "edit" ) {
 								<select name="sklad" id="sklad" class="wp97">
 									<OPTION value="">--Выбор--</OPTION>
 									<?php
-									$result = $db -> getAll( "SELECT id, title FROM ".$sqlname."modcatalog_sklad WHERE identity = '$identity'" );
+									$result = $db -> getAll( "SELECT id, title FROM {$sqlname}modcatalog_sklad WHERE identity = '$identity'" );
 									foreach ( $result as $data ) {
-										if ( $data['id'] == $sklad )
-											$ss = "selected";
-										else $ss = '';
+
+										$ss = ( $data['id'] == $sklad ) ? "selected" : '';
 
 										print '<option value="'.$data['id'].'" '.$ss.'>'.$data['title'].'</option>';
 
@@ -341,7 +334,7 @@ if ( $action == "edit" ) {
 
 						<div class="column12 grid-3 fs-12 pt10 right-text gray2">Краткое описание:</div>
 						<div class="column12 grid-9">
-							<TEXTAREA name="descr" rows="3" class="wp97" id="descr"><?= $descr ?></TEXTAREA>
+							<TEXTAREA name="descr" rows="3" class="wp97" id="descr"><?= $price['descr'] ?></TEXTAREA>
 						</div>
 
 						<div class="column12 grid-3 fs-12 pt10 right-text gray2">Подробное описание:</div>
@@ -356,7 +349,7 @@ if ( $action == "edit" ) {
 
 					<?php
 					$i      = 0;
-					$result = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_fieldcat WHERE identity = '$identity' ORDER by ord" );
+					$result = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_fieldcat WHERE identity = '$identity' ORDER by ord" );
 					foreach ( $result as $data ) {
 
 						//это варианты из шаблона профиля
@@ -365,7 +358,7 @@ if ( $action == "edit" ) {
 						$pole = '';
 
 						//это ввыбранные варианты в профиле конкретного клиента
-						$value = $db -> getOne( "SELECT value FROM ".$sqlname."modcatalog_field WHERE n_id = '".$n_id."' and pfid = '".$data['id']."' and identity = '$identity'" );
+						$value = $db -> getOne( "SELECT value FROM {$sqlname}modcatalog_field WHERE n_id = '".$n_id."' and pfid = '".$data['id']."' and identity = '$identity'" );
 
 						if ( $data['tip'] == 'input' ) {
 							$pole = '<INPUT name="field['.$data['pole'].']" id="field['.$data['pole'].']" value="'.$value.'" type="text" class="wp97">';
@@ -448,54 +441,43 @@ if ( $action == "edit" ) {
 					<div class="row">
 
 						<div class="column12 grid-12">
-							<div id="divider" align="center"><b>Уровни цен</b></div>
+							<div id="divider"><b>Уровни цен</b></div>
 						</div>
 
 						<div class="column12 grid-2 fs-12 pt10 right-text gray2"><?= $dname['price_in'] ?>:</div>
 						<div class="column12 grid-4">
-							<label for="price_in"></label><input name="price_in" id="price_in" class="required w160" type="text" value="<?= num_format( $price_in ) ?>">&nbsp;<?= $valuta ?>
+							<label for="price_in"></label><input name="price_in" id="price_in" class="required w160" type="text" value="<?= num_format( $price['price_in'] ) ?>">&nbsp;<?= $valuta ?>
 						</div>
 						<div class="column12 grid-2 fs-12 pt10 right-text gray2">НДС:</div>
 						<div class="column12 grid-4">
-							<input type="text" name="nds" id="nds" value="<?= num_format( $nds ) ?>" class="w60">&nbsp;%
+							<input type="text" name="nds" id="nds" value="<?= num_format( $price['nds'] ) ?>" class="w60">&nbsp;%
 						</div>
-
-						<hr>
 
 						<?php if ( in_array( 'price_1', $don ) ) { ?>
 							<div class="column12 grid-2 fs-12 pt10 right-text gray2"><?= $dname['price_1'] ?>:</div>
 							<div class="column12 grid-10">
-								<input name="price_1" type="text" id="price_1" autocomplete="off" value="<?= num_format( $price_1 ) ?>" class="w160">&nbsp;<?= $valuta ?>
+								<input name="price_1" type="text" id="price_1" autocomplete="off" value="<?= num_format( $price['price_1'] ) ?>" class="w160">&nbsp;<?= $valuta ?>
 							</div>
 						<?php } ?>
 
-						<?php if ( in_array( 'price_2', $don ) ) { ?>
-							<div class="column12 grid-2 fs-12 pt10 right-text gray2"><?= $dname['price_2'] ?>:</div>
-							<div class="column12 grid-4">
-								<input name="price_2" type="text" id="price_2" autocomplete="off" value="<?= num_format( $price_2 ) ?>" class="w160">&nbsp;<?= $valuta ?>
-							</div>
-						<?php } ?>
+						<hr>
 
-						<?php if ( in_array( 'price_3', $don ) ) { ?>
-							<div class="column12 grid-2 fs-12 pt10 right-text gray2"><?= $dname['price_3'] ?>:</div>
-							<div class="column12 grid-4">
-								<input name="price_3" type="text" id="price_3" autocomplete="off" value="<?= num_format( $price_3 ) ?>" class="w160">&nbsp;<?= $valuta ?>
-							</div>
-						<?php } ?>
+						<?php
+						foreach ($fields as $field) {
 
-						<?php if ( in_array( 'price_4', $don ) ) { ?>
-							<div class="column12 grid-2 fs-12 pt10 right-text gray2"><?= $dname['price_4'] ?>:</div>
-							<div class="column12 grid-4">
-								<input name="price_4" type="text" id="price_4" autocomplete="off" value="<?= num_format( $price_4 ) ?>" class="w160">&nbsp;<?= $valuta ?>
-							</div>
-						<?php } ?>
+							if($field['field'] !== 'price_1'){
 
-						<?php if ( in_array( 'price_5', $don ) ) { ?>
-							<div class="column12 grid-2 fs-12 pt10 right-text gray2"><?= $dname['price_5'] ?>:</div>
-							<div class="column12 grid-4">
-								<input name="price_5" type="text" id="price_5" autocomplete="off" value="<?= num_format( $price_5 ) ?>" class="w160">&nbsp;<?= $valuta ?>
-							</div>
-						<?php } ?>
+								print '
+								<div class="column12 grid-2 fs-12 pt10 right-text gray2">'.$field['title'].':</div>
+								<div class="column12 grid-4">
+									<input name="'.$field['field'].'" type="text" id="'.$field['field'].'" autocomplete="off" value="'.num_format( $price[$field['field']] ).'" class="w160">&nbsp;'.$valuta.'
+								</div>
+								';
+
+							}
+
+						}
+						?>
 
 					</div>
 
@@ -711,8 +693,8 @@ if ( $action == "edit" ) {
  */
 if ( $action == "editone" ) {
 
-	$id      = (int)$db -> getOne( "select id from ".$sqlname."modcatalog where prid='".$n_id."' and identity = '$identity'" );
-	$price_1 = $db -> getOne( "select price_1 from ".$sqlname."price where n_id='".$n_id."' and identity = '$identity'" );
+	$id      = (int)$db -> getOne( "select id from {$sqlname}modcatalog where prid='".$n_id."' and identity = '$identity'" );
+	$price_1 = $db -> getOne( "select price_1 from {$sqlname}price where n_id='".$n_id."' and identity = '$identity'" );
 
 	?>
 	<DIV class="zagolovok">Изменить</DIV>
@@ -923,82 +905,57 @@ if ( $action == "import_select" ) {
 	<DIV class="zagolovok">Импорт в базу. Шаг 2.</DIV>
 	<FORM action="/modules/modcatalog/core.modcatalog.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
 		<INPUT type="hidden" name="action" id="action" value="import_on">
-		<table width="100%" border="0" align="center" cellpadding="5" cellspacing="1" id="zebra">
-			<thead>
-			<tr class="noDrag">
-				<TH width="200" height="35" align="center" class="nodrop">Название поля в БД</TH>
-				<TH width="250" height="35" align="center" class="nodrop">Название поля из файла</TH>
-				<TH align="center" class="nodrop">Образец из файла</TH>
-			</tr>
-			</thead>
-		</table>
-		<DIV style="height:350px; overflow:auto">
+		<DIV style="height:350px; overflow-y:auto">
+
 			<INPUT type="hidden" name="action" id="action" value="import_on">
+
 			<table id="zebra">
+				<thead>
+				<tr class="noDrag">
+					<TH class="w200 nodrop">Название поля в БД</TH>
+					<TH height="35" class="w250 nodrop">Название поля из файла</TH>
+					<TH class="nodrop">Образец из файла</TH>
+				</tr>
+				</thead>
 				<?php foreach ($data[0] as $item) { ?>
 					<tr class="ha">
-						<td width="200">
+						<td class="w200">
 							<select id="field[]" name="field[]" style="width:100%">
 								<option value="">--Выбор--</option>
 								<optgroup label="Общие">
-									<option value="price:artikul" <?php if ( enc_detect( $item ) == 'Артикул' ) print "selected"; ?>>Артикул</option>
-									<option value="category:title" <?php if ( enc_detect( $item ) == 'Категория' ) print "selected"; ?>>Категория</option>
-									<option value="price:title" <?php if ( enc_detect( $item ) == 'Наименование' ) print "selected"; ?>>Наименование</option>
-									<option value="status:title" <?php if ( enc_detect( $item ) == 'Статус' ) print "selected"; ?>>Статус</option>
-									<option value="catalog:kol" <?php if ( enc_detect( $item ) == 'Количество' ) print "selected"; ?>>Количество</option>
-									<option value="price:edizm" <?php if ( enc_detect( $item ) == 'Ед.изм.' ) print "selected"; ?>>Ед.измерения</option>
-									<option value="price:descr" <?php if ( enc_detect( $item ) == 'Описание краткое' ) print "selected"; ?>>Описание краткое</option>
-									<option value="catalog:content" <?php if ( enc_detect( $item ) == 'Описание полное' ) print "selected"; ?>>Описание полное</option>
+									<option value="price:artikul" <?php print ( enc_detect( $item ) == 'Артикул' ) ? "selected" : ""; ?>>Артикул</option>
+									<option value="category:title" <?php print ( enc_detect( $item ) == 'Категория' ) ? "selected" : ""; ?>>Категория</option>
+									<option value="price:title" <?php print ( enc_detect( $item ) == 'Наименование' ) ? "selected" : ""; ?>>Наименование</option>
+									<option value="status:title" <?php print ( enc_detect( $item ) == 'Статус' ) ? "selected" : ""; ?>>Статус</option>
+									<option value="catalog:kol" <?php print ( enc_detect( $item ) == 'Количество' ) ? "selected" : ""; ?>>Количество</option>
+									<option value="price:edizm" <?php print ( enc_detect( $item ) == 'Ед.изм.' ) ? "selected" : ""; ?>>Ед.измерения</option>
+									<option value="price:descr" <?php print ( enc_detect( $item ) == 'Описание краткое' ) ? "selected" : ""; ?>>Описание краткое</option>
+									<option value="catalog:content" <?php print ( enc_detect( $item ) == 'Описание полное' ) ? "selected" : ""; ?>>Описание полное</option>
 								</optgroup>
 								<optgroup label="Цены">
-									<option value="price:price_in" <?php if ( enc_detect( $item ) == $dname['price_in'] )
-										print "selected"; ?>><?= $dname['price_in'] ?></option>
-									<?php if ( in_array( 'price_1', $don ) ) { ?>
-										<option value="price:price_1" <?php if ( enc_detect( $item ) == $dname['price_1'] )
-											print "selected"; ?>><?= $dname['price_1'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_2', $don ) ) { ?>
-										<option value="price:price_2" <?php if ( enc_detect( $item ) == $dname['price_2'] )
-											print "selected"; ?>><?= $dname['price_2'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_3', $don ) ) { ?>
-										<option value="price:price_3" <?php if ( enc_detect( $item ) == $dname['price_3'] )
-											print "selected"; ?>><?= $dname['price_3'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_4', $don ) ) { ?>
-										<option value="price:price_4" <?php if ( enc_detect( $item ) == $dname['price_4'] )
-											print "selected"; ?>><?= $dname['price_4'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_5', $don ) ) { ?>
-										<option value="price:price_5" <?php if ( enc_detect( $item ) == $dname['price_5'] )
-											print "selected"; ?>><?= $dname['price_5'] ?></option><?php } ?>
-									<option value="price:nds" <?php if ( enc_detect( $item ) == 'НДС' )
-										print "selected"; ?>>НДС
-									</option>
+									<option value="price:price_in" <?php print ( str_contains($dname['price_in'], $item) ) ? "selected" : ""; ?>><?= $dname['price_in'] ?></option>
+									<?php
+									foreach ($fields as $field) {
+
+										print '<option value="price:'.$field['field'].'" '.( enc_detect( $item ) == $field['field'] ? "selected" : "").'>'.$field['title'].'</option>';
+
+									}
+									?>
+									<option value="price:nds" <?php print ( enc_detect( $item ) == 'НДС' ) ? "selected" : ""; ?>>НДС</option>
 								</optgroup>
 								<optgroup label="Изображения">
-									<option value="catalog:files_1" <?php if ( enc_detect( $item ) == 'Изображение 1' )
-										print "selected"; ?>>Изображение 1
-									</option>
-									<option value="catalog:files_2" <?php if ( enc_detect( $item ) == 'Изображение 2' )
-										print "selected"; ?>>Изображение 2
-									</option>
-									<option value="catalog:files_3" <?php if ( enc_detect( $item ) == 'Изображение 3' )
-										print "selected"; ?>>Изображение 3
-									</option>
-									<option value="catalog:files_4" <?php if ( enc_detect( $item ) == 'Изображение 4' )
-										print "selected"; ?>>Изображение 4
-									</option>
-									<option value="catalog:files_5" <?php if ( enc_detect( $item ) == 'Изображение 5' )
-										print "selected"; ?>>Изображение 5
-									</option>
+									<option value="catalog:files_1" <?php print ( enc_detect( $item ) == 'Изображение 1' ) ? "selected" : ""; ?>>Изображение 1</option>
+									<option value="catalog:files_2" <?php print ( enc_detect( $item ) == 'Изображение 2' ) ? "selected" : ""; ?>>Изображение 2</option>
+									<option value="catalog:files_3" <?php print ( enc_detect( $item ) == 'Изображение 3' ) ? "selected" : ""; ?>>Изображение 3</option>
+									<option value="catalog:files_4" <?php print ( enc_detect( $item ) == 'Изображение 4' ) ? "selected" : ""; ?>>Изображение 4</option>
+									<option value="catalog:files_5" <?php print ( enc_detect( $item ) == 'Изображение 5' ) ? "selected" : ""; ?>>Изображение 5</option>
 								</optgroup>
 								<optgroup label="Характеристики">
 									<?php
-									$result = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_fieldcat WHERE identity = '$identity' ORDER by ord" );
+									$result = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_fieldcat WHERE identity = '$identity' ORDER by ord" );
 									foreach ( $result as $datar ) {
 
-										$s = '';
-
-										if ( enc_detect( $item ) == $datar['name'] ) {
-											$s = " selected";
-										}
+										$s = ( enc_detect( $item ) == $datar['name'] ) ? " selected" : "";
 
 										print '<option value="profile:'.$datar['pole'].'"'.$s.'>'.$datar['name'].'</option>';
 									}
@@ -1006,9 +963,9 @@ if ( $action == "import_select" ) {
 								</optgroup>
 							</select>
 						</td>
-						<td width="250"><b><?= enc_detect( $item ) ?></b></td>
+						<td class="w250"><b><?= enc_detect( $item ) ?></b></td>
 						<td>
-							<div class="ellipsis"><?= enc_detect( $item ) ?></div>
+							<div class=""><?= enc_detect( $item ) ?></div>
 						</td>
 					</tr>
 				<?php } ?>
@@ -1110,25 +1067,11 @@ if ( $action == "view" ) {
 		'4' => 'red'
 	];
 
-	$res = $db -> getRow( "select * from ".$sqlname."price where n_id='".$n_id."' and identity = '$identity'" );
+	$price = Price ::info( $n_id )['data'];
 
-	$artikul  = $res["artikul"];
-	$title    = clean( $res["title"] );
-	$descr    = $res["descr"];
-	$datum    = $res["datum"];
-	$price_in = $res["price_in"];
-	$price_1  = $res["price_1"];
-	$price_2  = $res["price_2"];
-	$price_3  = $res["price_3"];
-	$price_4  = $res["price_4"];
-	$price_5  = $res["price_5"];
-	$edizm    = $res["edizm"];
-	$folder   = $res["pr_cat"];
-	$nds      = $res["nds"];
+	$cat = $db -> getOne( "SELECT title FROM {$sqlname}price_cat WHERE idcategory = '".$folder."' and identity = '$identity'" );
 
-	$cat = $db -> getOne( "SELECT title FROM ".$sqlname."price_cat WHERE idcategory = '".$folder."' and identity = '$identity'" );
-
-	$res     = $db -> getRow( "select * from ".$sqlname."modcatalog where prid='".$n_id."' and identity = '$identity'" );
+	$res     = $db -> getRow( "select * from {$sqlname}modcatalog where prid='".$n_id."' and identity = '$identity'" );
 	$content = htmlspecialchars_decode( $res["content"] );
 	$status  = $res["status"];
 	//$kol      = $res["kol"];
@@ -1136,16 +1079,16 @@ if ( $action == "view" ) {
 	$file = $res["files"];
 	//$sklad    = $res["sklad"];
 
-	$kol = $db -> getOne( "select SUM(kol) as kol from ".$sqlname."modcatalog_skladpoz where status != 'out' and prid='".$n_id."' $pozzi and identity = '$identity'" );
+	$kol = $db -> getOne( "select SUM(kol) as kol from {$sqlname}modcatalog_skladpoz where status != 'out' and prid='".$n_id."' $pozzi and identity = '$identity'" );
 
-	//$sklad = $db -> getOne("SELECT title FROM ".$sqlname."modcatalog_sklad WHERE identity = '$identity'");
+	//$sklad = $db -> getOne("SELECT title FROM {$sqlname}modcatalog_sklad WHERE identity = '$identity'");
 
-	$kol_res = $db -> getOne( "select SUM(kol) as kol from ".$sqlname."modcatalog_reserv where prid='".$n_id."' and identity = '$identity'" ) + 0;
+	$kol_res = $db -> getOne( "select SUM(kol) as kol from {$sqlname}modcatalog_reserv where prid='".$n_id."' and identity = '$identity'" ) + 0;
 
-	$kol_zay = $db -> getOne( "select SUM(kol) as kol from ".$sqlname."modcatalog_zayavkapoz where prid='".$n_id."' and idz NOT IN (select idz from ".$sqlname."modcatalog_zayavka where status IN (2, 3) and identity = '$identity') and identity = '$identity'" );
+	$kol_zay = $db -> getOne( "select SUM(kol) as kol from {$sqlname}modcatalog_zayavkapoz where prid='".$n_id."' and idz NOT IN (select idz from {$sqlname}modcatalog_zayavka where status IN (2, 3) and identity = '$identity') and identity = '$identity'" );
 
 	$reserv = '';
-	$res    = $db -> getAll( "select * from ".$sqlname."modcatalog_reserv where prid='".$n_id."' and identity = '$identity'" );
+	$res    = $db -> getAll( "select * from {$sqlname}modcatalog_reserv where prid='".$n_id."' and identity = '$identity'" );
 	foreach ( $res as $datar ) {
 
 		$user   = explode( " ", current_user( get_userid( 'did', $datar['did'] ) ) );
@@ -1153,10 +1096,11 @@ if ( $action == "view" ) {
 
 	}
 
-	if ( $kol == '' )
+	if ( $kol == '' ) {
 		$kol = '?';
+	}
 	?>
-	<div class="zagolovok"><?= $title ?></div>
+	<div class="zagolovok"><?= $price['title'] ?></div>
 
 	<div class="flex-container wp100" style="overflow: hidden">
 
@@ -1165,17 +1109,19 @@ if ( $action == "view" ) {
 			<div style="height: 485px;" id="pozition">
 
 				<table width="100%" border="0" cellpadding="0" cellspacing="5" id="noborder">
+					<tr>
+						<td width="100" height="25" align="right">Обновлен:</td>
+						<td><?=modifyDatetime($price['datum'], ["format" => "d.m.Y H:i"])?></td>
+					</tr>
 					<?php if ( $msettings['mcArtikul'] == 'yes' ) { ?>
 						<tr>
 							<td width="100" height="25" align="right">Артикул:</td>
-							<td><?php if ( $artikul != '' ) { ?>
-									<b><?= $artikul ?></b>&nbsp;[Обновлен: <?= $datum ?>]<?php } else print "--//--" ?>
-							</td>
+							<td><?php print ( !empty($price['artikul']) ) ? '<b>'.$price['artikul'].'</b>' : "--//--" ?></td>
 						</tr>
 					<?php } ?>
 					<tr>
 						<td width="100" height="25" align="right">Категория:</td>
-						<td><b><?= $cat ?></b></td>
+						<td><b><?= $price['category'] ?></b></td>
 					</tr>
 					<?php if ( $msettings['mcSklad'] == 'yes' ) { ?>
 						<tr class="hidden">
@@ -1186,9 +1132,15 @@ if ( $action == "view" ) {
 					<tr>
 						<td height="25" align="right">Количество:</td>
 						<td>
-							<b><?= $kol ?></b>&nbsp;<?php if ( $kol_res > 0 )
-								print '&nbsp;( <span class="green">В резерве <b><a href="javascript:void(0)" onclick="doLoad(\'modcatalog/editor.php?action=viewzrezerv&prid='.$n_id.'\')">'.$kol_res.'</a></b> '.$edizm.'</span> )'; ?>&nbsp;<?php if ( $kol_zay > 0 )
-								print '&nbsp;( <span class="red">В заявках <b>'.$kol_zay.'</b> '.$edizm.'</span> )'; ?>
+							<b><?= $kol ?></b>&nbsp;
+							<?php
+							if ( $kol_res > 0 ) {
+								print '&nbsp;( <span class="green">В резерве <b><a href="javascript:void(0)" onclick="doLoad(\'modcatalog/editor.php?action=viewzrezerv&prid='.$n_id.'\')">'.$kol_res.'</a></b> '.$edizm.'</span> )&nbsp;';
+							}
+							if ( $kol_zay > 0 ) {
+								print '&nbsp;( <span class="red">В заявках <b>'.$kol_zay.'</b> '.$edizm.'</span> )';
+							}
+							?>
 						</td>
 					</tr>
 					<?php if ( $reserv ) { ?>
@@ -1204,14 +1156,14 @@ if ( $action == "view" ) {
 					<?php if ( $show_marga == 'yes' && $otherSettings['marga'] ) { ?>
 						<tr>
 							<td height="25" align="right"><?= $dname['price_in'] ?>:</td>
-							<td><b class=""><?= num_format( $price_in ) ?></b> <?= $valuta ?>/<?= $edizm ?></td>
+							<td><b class=""><?= num_format( $price['price_in'] ) ?></b> <?= $valuta ?>/<?= $price['edizm'] ?></td>
 						</tr>
 					<?php } ?>
 					<tr>
 						<td height="25" align="right"><?= $dname['price_1'] ?>:</td>
 						<td>
-							<b class="red miditxt"><?= num_format( $price_1 ) ?></b> <?= $valuta ?>/<?= $edizm ?>&nbsp;, в т.ч.
-							<b>НДС </b><?= num_format( $nds ) ?>&nbsp;%
+							<b class="red miditxt"><?= num_format( $price['price_1'] ) ?></b> <?= $valuta ?>/<?= $price['edizm'] ?>&nbsp;, в т.ч.
+							<b>НДС </b><?= num_format( $price['nds'] ) ?>&nbsp;%
 						</td>
 					</tr>
 					<tr>
@@ -1223,26 +1175,19 @@ if ( $action == "view" ) {
 						<td align="right" valign="top">Уровни цен:</td>
 						<td>
 							<div id="tagbox">
-								<?php if ( in_array( 'price_2', $don ) ) { ?>
-									<div class="tags">
-										<?= $dname['price_2'] ?>:&nbsp;<b class="red"><?= num_format( $price_2 ) ?></b> <?= $valuta ?>
-									</div>
-								<?php } ?>
-								<?php if ( in_array( 'price_3', $don ) ) { ?>
-									<div class="tags">
-										<?= $dname['price_3'] ?>:&nbsp;<b class="red"><?= num_format( $price_3 ) ?></b> <?= $valuta ?>
-									</div>
-								<?php } ?>
-								<?php if ( in_array( 'price_4', $don ) ) { ?>
-									<div class="tags">
-										<?= $dname['price_4'] ?>:&nbsp;<b class="red"><?= num_format( $price_4 ) ?></b> <?= $valuta ?>
-									</div>
-								<?php } ?>
-								<?php if ( in_array( 'price_5', $don ) ) { ?>
-									<div class="tags">
-										<?= $dname['price_5'] ?>:&nbsp;<b class="red"><?= num_format( $price_5 ) ?></b> <?= $valuta ?>
-									</div>
-								<?php } ?>
+								<?php
+								foreach ($fields as $field) {
+
+									if ($field['field'] !== 'price_1') {
+										print '
+										<div class="tags">
+											'.$field['title'].':&nbsp;<b class="red">'.num_format( $price[$field['field']] ).'</b> '.$valuta.'
+										</div>
+										';
+									}
+
+								}
+								?>
 							</div>
 						</td>
 					</tr>
@@ -1306,10 +1251,10 @@ if ( $action == "view" ) {
 								<td></td>
 							</tr>
 							<?php
-							$result = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_fieldcat WHERE identity = '$identity' ORDER by ord" );
+							$result = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_fieldcat WHERE identity = '$identity' ORDER by ord" );
 							foreach ( $result as $data ) {
 
-								$value = $db -> getOne( "SELECT value FROM ".$sqlname."modcatalog_field WHERE n_id = '".$n_id."' and pfid = '".$data['id']."' and identity = '$identity'" );
+								$value = $db -> getOne( "SELECT value FROM {$sqlname}modcatalog_field WHERE n_id = '".$n_id."' and pfid = '".$data['id']."' and identity = '$identity'" );
 
 								$value = ($value != '') ? (array)explode( ";", $value ) : [];
 
@@ -1422,7 +1367,7 @@ if ( $action == "editdop" ) {
 	$id = $_REQUEST['id'];
 
 	if ( $id > 0 ) {
-		$result  = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_dop WHERE id = '".$id."' and identity = '$identity'" );
+		$result  = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_dop WHERE id = '".$id."' and identity = '$identity'" );
 		$clid    = $result["clid"];
 		$content = $result["content"];
 		$summa   = num_format( $result["summa"] );
@@ -1448,7 +1393,7 @@ if ( $action == "editdop" ) {
 					<select name="clid" id="clid" class="required" style="width:90%">
 						<option value="">--Выбор--</option>
 						<?php
-						$res = $db -> getAll( "SELECT clid, title FROM ".$sqlname."clientcat WHERE type = 'contractor' and identity = '$identity'" );
+						$res = $db -> getAll( "SELECT clid, title FROM {$sqlname}clientcat WHERE type = 'contractor' and identity = '$identity'" );
 						foreach ( $res as $data ) {
 							?>
 							<option value="<?= $data['clid'] ?>" <?php if ( $data['clid'] == $clid )
@@ -1533,7 +1478,7 @@ if ( $action == "viewakt" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$res   = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_akt WHERE id = '$id' and identity = '$identity'" );
+	$res   = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_akt WHERE id = '$id' and identity = '$identity'" );
 	$clid  = (int)$res['clid'];
 	$posid = (int)$res['posid'];
 	$man1  = $res['man1'];
@@ -1627,10 +1572,10 @@ if ( $action == "viewakt" ) {
 				</thead>
 				<?php
 
-				$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_aktpoz WHERE ida = '$id' and identity = '$identity'" );
+				$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_aktpoz WHERE ida = '$id' and identity = '$identity'" );
 				foreach ( $res as $data ) {
 
-					$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+					$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
 
 					print '
 			<tr height="40">
@@ -1710,7 +1655,7 @@ if ( $action == "editakt" ) {
 
 	if ( $id ) {
 
-		$res      = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_akt WHERE id = '$id' and identity = '$identity'" );
+		$res      = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_akt WHERE id = '$id' and identity = '$identity'" );
 		$clid     = $res['clid'];
 		$posid    = $res['posid'];
 		$man1     = $res['man1'];
@@ -1732,7 +1677,7 @@ if ( $action == "editakt" ) {
 
 		$idz = $_REQUEST['idz'];
 
-		$res        = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_zayavka WHERE id = '$idz' and identity = '$identity'" );
+		$res        = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_zayavka WHERE id = '$idz' and identity = '$identity'" );
 		$did        = $res['did'];
 		$posid      = $res['conid'];
 		$providerid = $res['providerid'];
@@ -1822,7 +1767,7 @@ if ( $action == "editakt" ) {
 
 							$apx = ($did > 0) ? " and did = '".$did."'" : "";
 
-							$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_zayavka WHERE status = '2' $apx and identity = '$identity'" );
+							$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_zayavka WHERE status = '2' $apx and identity = '$identity'" );
 							foreach ( $res as $data ) {
 
 								if ( $data['did'] > 0 )
@@ -1832,12 +1777,12 @@ if ( $action == "editakt" ) {
 								$ss = ($data['id'] == $idz || $data['did'] == $did) ? 'selected' : '';
 
 								//количество, в приходных ордерах по текущей заявке
-								$kol_do = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_aktpoz WHERE ida IN (SELECT id FROM ".$sqlname."modcatalog_akt WHERE idz = '".$data['id']."' and identity = '$identity') and identity = '$identity'" );
+								$kol_do = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_aktpoz WHERE ida IN (SELECT id FROM {$sqlname}modcatalog_akt WHERE idz = '".$data['id']."' and identity = '$identity') and identity = '$identity'" );
 
-								//print "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_aktpoz WHERE ida IN (SELECT id FROM ".$sqlname."modcatalog_akt WHERE idz = '".$data['id']."' and identity = '$identity') and identity = '$identity'\n";
+								//print "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_aktpoz WHERE ida IN (SELECT id FROM {$sqlname}modcatalog_akt WHERE idz = '".$data['id']."' and identity = '$identity') and identity = '$identity'\n";
 
 								//количество в заявке
-								$kol_zay = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_zayavkapoz WHERE idz = '".$data['id']."' and identity = '$identity'" );
+								$kol_zay = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_zayavkapoz WHERE idz = '".$data['id']."' and identity = '$identity'" );
 
 								//вычисляем количество, которое еще не находится в расходниках
 								$delta_z = $kol_zay - $kol_do;
@@ -1868,12 +1813,12 @@ if ( $action == "editakt" ) {
 						<select name="sklad" id="sklad" class="required" style="width: 97%;">
 							<OPTION value="">--Выбор--</OPTION>
 							<?php
-							$result = $db -> getAll( "SELECT id, name_shot FROM ".$sqlname."mycomps WHERE identity = '$identity'" );
+							$result = $db -> getAll( "SELECT id, name_shot FROM {$sqlname}mycomps WHERE identity = '$identity'" );
 							foreach ( $result as $data ) {
 
 								print '<optgroup label="'.$data['name_shot'].'" data-mcid="'.$data['id'].'">';
 
-								$res = $db -> getAll( "SELECT id, title, isDefault FROM ".$sqlname."modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
+								$res = $db -> getAll( "SELECT id, title, isDefault FROM {$sqlname}modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
 								foreach ( $res as $da ) {
 
 									$ss = ($da['id'] == $sklad) ? "selected" : '';
@@ -1897,7 +1842,7 @@ if ( $action == "editakt" ) {
 						<select name="posid" id="posid" disabled1 style="width:97%">
 							<option value="">--Выбор--</option>
 							<?php
-							$res = $db -> getAll( "SELECT clid, title FROM ".$sqlname."clientcat WHERE type = 'contractor' and identity = '$identity'" );
+							$res = $db -> getAll( "SELECT clid, title FROM {$sqlname}clientcat WHERE type = 'contractor' and identity = '$identity'" );
 							foreach ( $res as $data ) {
 								?>
 								<option value="<?= $data['clid'] ?>" <?php if ( $data['clid'] == $posid )
@@ -1918,12 +1863,12 @@ if ( $action == "editakt" ) {
 						<select name="sklad" id="sklad" class="required" style="width: 97%;" onchange="specaLoad2()">
 							<OPTION value="">--Выбор--</OPTION>
 							<?php
-							$result = $db -> getAll( "SELECT id, name_shot FROM ".$sqlname."mycomps WHERE identity = '$identity'" );
+							$result = $db -> getAll( "SELECT id, name_shot FROM {$sqlname}mycomps WHERE identity = '$identity'" );
 							foreach ( $result as $data ) {
 
 								print '<optgroup label="'.$data['name_shot'].'" data-mcid="'.$data['id'].'">';
 
-								$res = $db -> getAll( "SELECT id, title FROM ".$sqlname."modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
+								$res = $db -> getAll( "SELECT id, title FROM {$sqlname}modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
 								foreach ( $res as $da ) {
 									if ( $da['id'] == $sklad )
 										$ss = "selected";
@@ -1971,14 +1916,14 @@ if ( $action == "editakt" ) {
 				else {
 
 					$i      = 0;
-					$result = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_aktpoz WHERE ida = '$id' and identity = '$identity'" );
+					$result = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_aktpoz WHERE ida = '$id' and identity = '$identity'" );
 					foreach ( $result as $data ) {
 
 						$apdx = '';
 
-						$title   = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
-						$kol_in  = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_skladpoz WHERE sklad = '$sklad' and prid = '".$data['prid']."' and identity = '$identity'" ) + 0;
-						$kol_res = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_reserv WHERE sklad = '$sklad' and prid = '".$data['prid']."' and did = '$did' and identity = '$identity'" ) + 0;
+						$title   = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+						$kol_in  = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_skladpoz WHERE sklad = '$sklad' and prid = '".$data['prid']."' and identity = '$identity'" ) + 0;
+						$kol_res = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE sklad = '$sklad' and prid = '".$data['prid']."' and did = '$did' and identity = '$identity'" ) + 0;
 
 						//$kol_in = $kol_in + $kol_res;
 
@@ -2003,7 +1948,7 @@ if ( $action == "editakt" ) {
 							<div class="infodiv">
 								<select id="serial['.$data['prid'].'][]" name="serial['.$data['prid'].'][]" multiple="multiple" class="multiselect" data-id="i'.$i.'">';
 
-							$re = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_skladpoz WHERE sklad = '$sklad' and prid = '".$data['prid']."' and (did = '$did' or did < 1) and identity = '$identity'" );
+							$re = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_skladpoz WHERE sklad = '$sklad' and prid = '".$data['prid']."' and (did = '$did' or did < 1) and identity = '$identity'" );
 							foreach ( $re as $da ) {
 
 								$ss           = ($da['did'] == $did || $da['idorder_out'] == $id) ? "selected" : "";
@@ -2664,11 +2609,11 @@ if ( $action == "editaktperpoz" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$order    = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_akt WHERE id = '$id' and identity = '$identity'" );
+	$order    = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_akt WHERE id = '$id' and identity = '$identity'" );
 	$orderNum = $order['number'];
 	$tip      = $order['tip'];
 
-	$sklad = $db -> getOne( "SELECT title FROM ".$sqlname."modcatalog_sklad WHERE id = '".$order['sklad']."' and identity = '$identity'" );
+	$sklad = $db -> getOne( "SELECT title FROM {$sqlname}modcatalog_sklad WHERE id = '".$order['sklad']."' and identity = '$identity'" );
 
 	if ( $id > 0 ) {
 
@@ -2676,10 +2621,10 @@ if ( $action == "editaktperpoz" ) {
 
 		$ord = ($tip == 'income') ? "idorder_in = '$id'" : "idorder_out = '$id'";
 
-		$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_skladpoz WHERE $ord and identity = '$identity'" );
+		$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_skladpoz WHERE $ord and identity = '$identity'" );
 		foreach ( $res as $da ) {
 
-			$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$da['prid']."' and identity = '$identity'" );
+			$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$da['prid']."' and identity = '$identity'" );
 
 			$list[] = [
 				"id"          => $da['id'],
@@ -2883,7 +2828,7 @@ if ( $action == "editzayavka" ) {
 
 	if ( $id ) {
 
-		$res            = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
+		$res            = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
 		$did            = $res['did'];
 		$status         = $res['status'];
 		$iduser         = $res['iduser'];
@@ -2900,9 +2845,9 @@ if ( $action == "editzayavka" ) {
 		$conid      = $res['conid'];
 		$providerid = $res['providerid'];
 
-		$clid = $db -> getOne( "SELECT clid FROM ".$sqlname."dogovor WHERE did = '$did' and identity = '$identity'" );
+		$clid = $db -> getOne( "SELECT clid FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'" );
 		if ( $providerid > 0 )
-			$cSumma = $db -> getOne( "SELECT summa FROM ".$sqlname."dogprovider WHERE id = '$dogprovider' and identity = '$identity'" );
+			$cSumma = $db -> getOne( "SELECT summa FROM {$sqlname}dogprovider WHERE id = '$dogprovider' and identity = '$identity'" );
 
 		$zayavka = json_decode( $des, true );
 		if ( $zayavka['zTitle'] )
@@ -2918,7 +2863,7 @@ if ( $action == "editzayavka" ) {
 	if ( $datum_priority == '0000-00-00' )
 		$datum_priority = '';
 
-	//$pridExists = $db -> getCol("SELECT id FROM ".$sqlname."modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity' ORDER BY prid");
+	//$pridExists = $db -> getCol("SELECT id FROM {$sqlname}modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity' ORDER BY prid");
 	//print_r($pridExists);
 	?>
 	<DIV class="zagolovok">Создать/Редактировать Заявку</DIV>
@@ -2935,7 +2880,7 @@ if ( $action == "editzayavka" ) {
 					<select name="iduser" id="iduser" class="required">
 						<option value="none">--Выбор--</option>
 						<?php
-						$result = $db -> getAll( "SELECT * FROM ".$sqlname."user where secrty='yes' and identity = '$identity' ORDER by title ".$userlim );
+						$result = $db -> getAll( "SELECT * FROM {$sqlname}user where secrty='yes' and identity = '$identity' ORDER by title ".$userlim );
 						foreach ( $result as $data ) {
 							?>
 							<option <?php if ( $data['iduser'] == $iduser )
@@ -3053,7 +2998,7 @@ if ( $action == "editzayavka" ) {
 					</div>
 
 					<?php
-					//print "SELECT ".$sqlname."dogovor.did, ".$sqlname."dogovor.title, ".$sqlname."dogovor.clid, ".$sqlname."dogcategory.title as step FROM ".$sqlname."dogovor LEFT JOIN ".$sqlname."dogcategory ON ".$sqlname."dogcategory.idcategory = ".$sqlname."dogovor.idcategory WHERE ".$sqlname."dogovor.did > 0 and ".$sqlname."dogovor.close != 'yes' and ".$sqlname."dogcategory.title >= ".$msettings['mcStepPers']." and ".$sqlname."dogovor.identity = '$identity' GROUP BY ".$sqlname."dogovor.did";
+					//print "SELECT {$sqlname}dogovor.did, {$sqlname}dogovor.title, {$sqlname}dogovor.clid, {$sqlname}dogcategory.title as step FROM {$sqlname}dogovor LEFT JOIN {$sqlname}dogcategory ON {$sqlname}dogcategory.idcategory = {$sqlname}dogovor.idcategory WHERE {$sqlname}dogovor.did > 0 and {$sqlname}dogovor.close != 'yes' and {$sqlname}dogcategory.title >= ".$msettings['mcStepPers']." and {$sqlname}dogovor.identity = '$identity' GROUP BY {$sqlname}dogovor.did";
 					?>
 
 					<div class="column12 grid-2 fs-12 pt10 right-text">Сделка:</div>
@@ -3064,29 +3009,29 @@ if ( $action == "editzayavka" ) {
 							<?php
 							if ( $did > 0 ) {
 
-								$data = $db -> getRow( "SELECT * FROM ".$sqlname."dogovor WHERE did = '$did' and identity = '$identity'" );
+								$data = $db -> getRow( "SELECT * FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'" );
 								print '<option value="'.$data['did'].'" selected>'.$data['title'].' - '.$data['kol'].'</option>';
 
 							}
 							else {
 
 								//только активные сделки с этапом более mcStepPers
-								$q = "SELECT ".$sqlname."dogovor.did, ".$sqlname."dogovor.title, ".$sqlname."dogovor.clid, ".$sqlname."dogcategory.title as step FROM ".$sqlname."dogovor LEFT JOIN ".$sqlname."dogcategory ON ".$sqlname."dogcategory.idcategory = ".$sqlname."dogovor.idcategory WHERE ".$sqlname."dogovor.did > 0 and ".$sqlname."dogovor.close != 'yes' and ".$sqlname."dogcategory.title >= ".$msettings['mcStepPers']." and ".$sqlname."dogovor.identity = '$identity' GROUP BY ".$sqlname."dogovor.did ORDER BY ".$sqlname."dogcategory.title";
+								$q = "SELECT {$sqlname}dogovor.did, {$sqlname}dogovor.title, {$sqlname}dogovor.clid, {$sqlname}dogcategory.title as step FROM {$sqlname}dogovor LEFT JOIN {$sqlname}dogcategory ON {$sqlname}dogcategory.idcategory = {$sqlname}dogovor.idcategory WHERE {$sqlname}dogovor.did > 0 and {$sqlname}dogovor.close != 'yes' and {$sqlname}dogcategory.title >= ".$msettings['mcStepPers']." and {$sqlname}dogovor.identity = '$identity' GROUP BY {$sqlname}dogovor.did ORDER BY {$sqlname}dogcategory.title";
 
 								$data = $db -> getAll( $q );
 								foreach ( $data as $da ) {
 
 									//только позиции из прайса
-									$countSpeca = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."speca WHERE did = '".$da['did']."' and prid > 0 and identity = '$identity'" );
+									$countSpeca = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}speca WHERE did = '".$da['did']."' and prid > 0 and identity = '$identity'" );
 
 									//количество позиций уже размещенных в заявках
-									$countZayavka = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_zayavkapoz WHERE idz IN (SELECT id FROM ".$sqlname."modcatalog_zayavka WHERE did = '".$da['did']."' and status NOT IN (2,3) and identity = '$identity') and identity = '$identity'" );
+									$countZayavka = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_zayavkapoz WHERE idz IN (SELECT id FROM {$sqlname}modcatalog_zayavka WHERE did = '".$da['did']."' and status NOT IN (2,3) and identity = '$identity') and identity = '$identity'" );
 
 									//количество позиций уже размещенных в заявках
-									$countOrder = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_aktpoz WHERE ida IN (SELECT id FROM ".$sqlname."modcatalog_akt WHERE did = '$da[did]' and tip = 'outcome' and identity = '$identity') and identity = '$identity'" );
+									$countOrder = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_aktpoz WHERE ida IN (SELECT id FROM {$sqlname}modcatalog_akt WHERE did = '$da[did]' and tip = 'outcome' and identity = '$identity') and identity = '$identity'" );
 
 									//кол-во позиций в резерве под сделку
-									$countReserve = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_reserv WHERE did = '$da[did]' and identity = '$identity'" );
+									$countReserve = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE did = '$da[did]' and identity = '$identity'" );
 
 									//число позиций, не в заявках и не в ордерах
 									$co = $countSpeca - $countOrder - $countZayavka - $countReserve;
@@ -3128,10 +3073,10 @@ if ( $action == "editzayavka" ) {
 								<tbody>
 								<?php
 								$i   = 0;
-								$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity'" );
+								$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity'" );
 								foreach ( $res as $data ) {
 
-									$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+									$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
 
 									print '
 									<tr id="pr_'.$i.'">
@@ -3199,7 +3144,7 @@ if ( $action == "editzayavka" ) {
 						<select name="zCoordinator" id="zCoordinator" class="required">
 							<option value="none">--Выбор--</option>
 							<?php
-							$res = $db -> getAll( "SELECT iduser, title FROM ".$sqlname."user where secrty='yes' and identity = '$identity' ORDER by title ".$userlim );
+							$res = $db -> getAll( "SELECT iduser, title FROM {$sqlname}user where secrty='yes' and identity = '$identity' ORDER by title ".$userlim );
 							foreach ( $res as $data ) {
 								?>
 								<option <?php if ( $data['iduser'] == $iduser1 or $data['iduser'] == $zayavka['zCoordinator'] )
@@ -3610,7 +3555,7 @@ if ( $action == "editzayavkastatus" ) {
 
 	if ( $id > 0 ) {
 
-		$res       = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
+		$res       = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
 		$status    = $res['status'];
 		$sotrudnik = $res['sotrudnik'];
 		$number    = $res['number'];
@@ -3628,9 +3573,9 @@ if ( $action == "editzayavkastatus" ) {
 		$cSummaP = 0;
 
 
-		$clid = $db -> getOne( "SELECT clid FROM ".$sqlname."dogovor WHERE did = '$did' and identity = '$identity'" );
+		$clid = $db -> getOne( "SELECT clid FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'" );
 		if ( $providerid > 0 )
-			$cSummaP = $db -> getOne( "SELECT summa FROM ".$sqlname."dogprovider WHERE id = '$dogprovider' and identity = '$identity'" ) + 0;
+			$cSummaP = $db -> getOne( "SELECT summa FROM {$sqlname}dogprovider WHERE id = '$dogprovider' and identity = '$identity'" ) + 0;
 
 		//print "c=".$cSummaP;
 
@@ -3678,7 +3623,7 @@ if ( $action == "editzayavkastatus" ) {
 					<select name="sotrudnik" id="sotrudnik" class="required">
 						<option value="none">--Выбор--</option>
 						<?php
-						$res = $db -> getAll( "SELECT * FROM ".$sqlname."user where secrty='yes' and iduser IN (".$usr.") and identity = '$identity' ORDER by title ".$userlim );
+						$res = $db -> getAll( "SELECT * FROM {$sqlname}user where secrty='yes' and iduser IN (".$usr.") and identity = '$identity' ORDER by title ".$userlim );
 						foreach ( $res as $data ) {
 							?>
 							<option <?php if ( $data['iduser'] == $sotrudnik )
@@ -3918,25 +3863,25 @@ if ( $action == "editzayavkacomplete" ) {
 	if ( $did > 0 ) {
 
 		$result = Storage::totalSpeka($did, $filter = '');
-		//$result = $db -> getAll( "SELECT * FROM ".$sqlname."speca WHERE did = '$did' and prid > 0 and identity = '$identity'" );
+		//$result = $db -> getAll( "SELECT * FROM {$sqlname}speca WHERE did = '$did' and prid > 0 and identity = '$identity'" );
 		foreach ( $result as $data ) {
 
 			//Зарезервировано под сделку
-			$kolRes = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_reserv WHERE prid = '$data[prid]' and did = '$did' and identity = '$identity'" );
+			$kolRes = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE prid = '$data[prid]' and did = '$did' and identity = '$identity'" );
 
 			//В ордерах под сделку
-			$kolOrder = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_aktpoz WHERE ida IN (SELECT id FROM ".$sqlname."modcatalog_akt WHERE did = '$did' and tip = 'outcome' and identity = '$identity') and prid = '$data[prid]' and identity = '$identity'" );
+			$kolOrder = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_aktpoz WHERE ida IN (SELECT id FROM {$sqlname}modcatalog_akt WHERE did = '$did' and tip = 'outcome' and identity = '$identity') and prid = '$data[prid]' and identity = '$identity'" );
 
 			//смотрим, сколько уже заказано под эту сделку
 			$q      = "
 			SELECT 
-				SUM(".$sqlname."modcatalog_zayavkapoz.kol) as kol
-			FROM ".$sqlname."modcatalog_zayavkapoz 
-				LEFT JOIN ".$sqlname."modcatalog_zayavka ON ".$sqlname."modcatalog_zayavka.id = ".$sqlname."modcatalog_zayavkapoz.idz
+				SUM({$sqlname}modcatalog_zayavkapoz.kol) as kol
+			FROM {$sqlname}modcatalog_zayavkapoz 
+				LEFT JOIN {$sqlname}modcatalog_zayavka ON {$sqlname}modcatalog_zayavka.id = {$sqlname}modcatalog_zayavkapoz.idz
 			WHERE 
-				".$sqlname."modcatalog_zayavkapoz.prid = '".$data['prid']."' and 
-				".$sqlname."modcatalog_zayavka.did = '$did' and 
-				".$sqlname."modcatalog_zayavkapoz.identity = '$identity'
+				{$sqlname}modcatalog_zayavkapoz.prid = '".$data['prid']."' and 
+				{$sqlname}modcatalog_zayavka.did = '$did' and 
+				{$sqlname}modcatalog_zayavkapoz.identity = '$identity'
 			";
 			$kolZak = $db -> getOne( $q );
 
@@ -4045,12 +3990,12 @@ if ( $action == "movetoskald" ) {
 					<select name="skladfrom" id="skladfrom" class="required" onchange="getSklad()" style="width: 97%;">
 						<OPTION value="">--Выбор--</OPTION>
 						<?php
-						$result = $db -> getAll( "SELECT id, name_shot FROM ".$sqlname."mycomps WHERE identity = '$identity'" );
+						$result = $db -> getAll( "SELECT id, name_shot FROM {$sqlname}mycomps WHERE identity = '$identity'" );
 						foreach ( $result as $data ) {
 
 							print '<optgroup label="'.$data['name_shot'].'" data-mcid="'.$data['id'].'">';
 
-							$res = $db -> getAll( "SELECT id, title FROM ".$sqlname."modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
+							$res = $db -> getAll( "SELECT id, title FROM {$sqlname}modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
 							foreach ( $res as $da ) {
 
 								if ( $da['id'] == $skladfrom )
@@ -4077,12 +4022,12 @@ if ( $action == "movetoskald" ) {
 					<select name="skladto" id="skladto" class="required" style="width: 97%;">
 						<OPTION value="">--Выбор--</OPTION>
 						<?php
-						$result = $db -> getAll( "SELECT id, name_shot FROM ".$sqlname."mycomps WHERE identity = '$identity'" );
+						$result = $db -> getAll( "SELECT id, name_shot FROM {$sqlname}mycomps WHERE identity = '$identity'" );
 						foreach ( $result as $data ) {
 
 							print '<optgroup label="'.$data['name_shot'].'" data-mcid="'.$data['id'].'">';
 
-							$res = $db -> getAll( "SELECT id, title FROM ".$sqlname."modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
+							$res = $db -> getAll( "SELECT id, title FROM {$sqlname}modcatalog_sklad WHERE mcid = '".$data['id']."' and identity = '$identity'" );
 							foreach ( $res as $da ) {
 
 								if ( $da['id'] == $skladto )
@@ -4127,11 +4072,11 @@ if ( $action == "movetoskald" ) {
 
 						foreach ( $list as $k => $idp ) {
 
-							$poz = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_skladpoz WHERE id = '".$idp."' and identity = '$identity'" );
+							$poz = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_skladpoz WHERE id = '".$idp."' and identity = '$identity'" );
 
-							$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$poz['prid']."' and identity = '$identity'" );
+							$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$poz['prid']."' and identity = '$identity'" );
 
-							$sklad = $db -> getOne( "SELECT title FROM ".$sqlname."modcatalog_sklad WHERE id = '".$poz['sklad']."' and identity = '$identity'" );
+							$sklad = $db -> getOne( "SELECT title FROM {$sqlname}modcatalog_sklad WHERE id = '".$poz['sklad']."' and identity = '$identity'" );
 
 							if ( $msettings['mcSkladPoz'] == "yes" )
 								$ss = 'disabled';
@@ -4157,12 +4102,12 @@ if ( $action == "movetoskald" ) {
 					//для редактирования перемещения
 					//на перспективу, не используется, т.к. сразу проводим
 					else {
-						$result = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_moveskladpoz WHERE idm = '$id' and identity = '$identity'" );
+						$result = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_moveskladpoz WHERE idm = '$id' and identity = '$identity'" );
 						foreach ( $result as $data ) {
 
-							$poz = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_skladpoz WHERE sklad = '$sklad' and prid = '".$data['prid']."' and identity = '$identity'" );
+							$poz = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_skladpoz WHERE sklad = '$sklad' and prid = '".$data['prid']."' and identity = '$identity'" );
 
-							$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$poz['prid']."' and identity = '$identity'" );
+							$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$poz['prid']."' and identity = '$identity'" );
 
 							print '
 			<tr>
@@ -4286,7 +4231,7 @@ if ( $action == "movetoskaldview" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$res       = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_skladmove WHERE id = '$id' and identity = '$identity'" );
+	$res       = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_skladmove WHERE id = '$id' and identity = '$identity'" );
 	$iduser    = $res['iduser'];
 	$datum     = $res['datum'];
 	$skladfrom = $res['skladfrom'];
@@ -4331,10 +4276,10 @@ if ( $action == "movetoskaldview" ) {
 				</thead>
 				<tbody>
 				<?php
-				$res = $db -> getALL( "SELECT * FROM ".$sqlname."modcatalog_skladmovepoz WHERE idm = '$id' and identity = '$identity'" );
+				$res = $db -> getALL( "SELECT * FROM {$sqlname}modcatalog_skladmovepoz WHERE idm = '$id' and identity = '$identity'" );
 				foreach ( $res as $da ) {
 
-					$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$da['prid']."' and identity = '$identity'" );
+					$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$da['prid']."' and identity = '$identity'" );
 
 					print '
 					<tr class="ha th40">
@@ -4399,9 +4344,9 @@ if ( $action == "editskladpozone" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$data = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_skladpoz WHERE id = '".$id."' and identity = '$identity'" );
+	$data = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_skladpoz WHERE id = '".$id."' and identity = '$identity'" );
 
-	$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+	$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
 
 	?>
 	<DIV class="zagolovok">Редактирование позиции</DIV>
@@ -4589,9 +4534,9 @@ if ( $action == "editskladpoz" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$data = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_skladpoz WHERE id = '".$id."' and identity = '$identity'" );
+	$data = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_skladpoz WHERE id = '".$id."' and identity = '$identity'" );
 
-	$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+	$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
 
 	?>
 	<DIV class="zagolovok">Редактирование позиции</DIV>
@@ -4742,7 +4687,7 @@ if ( $action == "viewzayavka" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$res            = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
+	$res            = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
 	$did            = $res['did'];
 	$iduser         = $res['iduser'];
 	$sotrudnik      = $res['sotrudnik'];
@@ -4762,7 +4707,7 @@ if ( $action == "viewzayavka" ) {
 
 	//print_r($res);
 
-	$clid = $db -> getOne( "SELECT clid FROM ".$sqlname."dogovor WHERE did = '$did' and identity = '$identity'" );
+	$clid = $db -> getOne( "SELECT clid FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'" );
 
 	$zayavka = json_decode( $des, true );
 	if ( $zayavka['zTitle'] )
@@ -4907,14 +4852,14 @@ if ( $action == "viewzayavka" ) {
 				</tr>
 				</thead>
 				<?php
-				$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity'" );
+				$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity'" );
 				foreach ( $res as $data ) {
 
-					$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+					$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
 
-					$countOrder = $db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_aktpoz WHERE ida IN (SELECT id FROM ".$sqlname."modcatalog_akt WHERE idz = '".$id."' and idz > 0 and identity = '$identity') and prid = '".$data['prid']."' and identity = '$identity'" );
+					$countOrder = $db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_aktpoz WHERE ida IN (SELECT id FROM {$sqlname}modcatalog_akt WHERE idz = '".$id."' and idz > 0 and identity = '$identity') and prid = '".$data['prid']."' and identity = '$identity'" );
 
-					//print "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_aktpoz WHERE ida IN (SELECT id FROM ".$sqlname."modcatalog_akt WHERE idz = '".$id."' and idz > 0 and identity = '$identity') and prid = '".$data['prid']."' and identity = '$identity'";
+					//print "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_aktpoz WHERE ida IN (SELECT id FROM {$sqlname}modcatalog_akt WHERE idz = '".$id."' and idz > 0 and identity = '$identity') and prid = '".$data['prid']."' and identity = '$identity'";
 
 					print '
 					<tr height="40">
@@ -4991,7 +4936,7 @@ if ( $action == "viewzayavkashot" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$res            = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
+	$res            = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_zayavka WHERE id = '$id' and identity = '$identity'" );
 	$did            = $res['did'];
 	$iduser         = $res['iduser'];
 	$sotrudnik      = $res['sotrudnik'];
@@ -5002,7 +4947,7 @@ if ( $action == "viewzayavkashot" ) {
 	$datum_start    = $res['datum_start'];
 	$datum_priority = $res['datum_priority'];
 
-	$clid = $db -> getOne( "SELECT clid FROM ".$sqlname."dogovor WHERE did = '$did' and identity = '$identity'" );
+	$clid = $db -> getOne( "SELECT clid FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'" );
 
 	$zayavka = json_decode( (string)$des, true );
 	if ( $zayavka['zTitle'] )
@@ -5077,10 +5022,10 @@ if ( $action == "viewzayavkashot" ) {
 							</thead>
 							<?php
 
-							$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity'" );
+							$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_zayavkapoz WHERE idz = '$id' and identity = '$identity'" );
 							foreach ( $res as $data ) {
 
-								$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+								$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
 
 								print '
 <tr height="30">
@@ -5104,7 +5049,7 @@ if ( $action == "viewzayavkapoz" ) {
 
 	$prid = (int)$_REQUEST['prid'];
 
-	$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '$prid' and identity = '$identity'" );
+	$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '$prid' and identity = '$identity'" );
 
 	?>
 	<DIV class="zagolovok">Просмотр заявок с позицией</DIV>
@@ -5125,15 +5070,15 @@ if ( $action == "viewzayavkapoz" ) {
 			</tr>
 			</thead>
 			<?php
-			$ids = $db -> getCol( "SELECT id FROM ".$sqlname."modcatalog_zayavka where status NOT IN (2, 3) and identity = '$identity'" );
+			$ids = $db -> getCol( "SELECT id FROM {$sqlname}modcatalog_zayavka where status NOT IN (2, 3) and identity = '$identity'" );
 
 			if ( !empty( $ids ) )
 				$ids = "and idz IN (".implode( ",", $ids ).")";
 
-			$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_zayavkapoz WHERE prid = '$prid' ".$ids." and identity = '$identity'" );
+			$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_zayavkapoz WHERE prid = '$prid' ".$ids." and identity = '$identity'" );
 			foreach ( $res as $data ) {
 
-				$di = $db -> getRow( "SELECT did, number FROM ".$sqlname."modcatalog_zayavka WHERE id = '".$data['idz']."' and identity = '$identity'" );
+				$di = $db -> getRow( "SELECT did, number FROM {$sqlname}modcatalog_zayavka WHERE id = '".$data['idz']."' and identity = '$identity'" );
 
 				print '
 <tr height="40" class="ha">
@@ -5162,7 +5107,7 @@ if ( $action == "viewzayavkapoz" ) {
 if ( $action == "viewzrezerv" ) {
 
 	$prid  = (int)$_REQUEST['prid'];
-	$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '$prid' and identity = '$identity'" );
+	$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '$prid' and identity = '$identity'" );
 
 	?>
 	<DIV class="zagolovok">Просмотр резерва</DIV>
@@ -5177,7 +5122,7 @@ if ( $action == "viewzrezerv" ) {
 			</tr>
 			</thead>
 			<?php
-			$res = $db -> getAll( "SELECT * FROM ".$sqlname."modcatalog_reserv WHERE prid = '$prid' and identity = '$identity'" );
+			$res = $db -> getAll( "SELECT * FROM {$sqlname}modcatalog_reserv WHERE prid = '$prid' and identity = '$identity'" );
 			foreach ( $res as $data ) {
 
 				print '
@@ -5213,9 +5158,9 @@ if ( $action == "viewskladpozone" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$data = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_skladpoz WHERE id = '".$id."' and identity = '$identity'" );
+	$data = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_skladpoz WHERE id = '".$id."' and identity = '$identity'" );
 
-	$title = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
+	$title = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '".$data['prid']."' and identity = '$identity'" );
 
 	?>
 	<DIV class="zagolovok">Просмотр позиции</DIV>
@@ -5292,7 +5237,7 @@ if ( $action == "editoffer" ) {
 
 	if ( $id ) {
 
-		$res     = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_offer WHERE id = '$id' and identity = '$identity'" );
+		$res     = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_offer WHERE id = '$id' and identity = '$identity'" );
 		$did     = (int)$res['did'];
 		$status  = $res['status'];
 		$iduser  = $res['iduser'];
@@ -5339,7 +5284,7 @@ if ( $action == "editoffer" ) {
 						<select name="iduser" id="iduser" class="required">
 							<option value="none">--Выбор--</option>
 							<?php
-							$res = $db -> getAll( "SELECT iduser, title FROM ".$sqlname."user where secrty='yes' and identity = '$identity' ORDER by title ".$userlim );
+							$res = $db -> getAll( "SELECT iduser, title FROM {$sqlname}user where secrty='yes' and identity = '$identity' ORDER by title ".$userlim );
 							foreach ( $res as $data ) {
 								?>
 								<option <?php if ( $data['iduser'] == $iduser )
@@ -5452,7 +5397,7 @@ if ( $action == "viewoffer" ) {
 
 	$id = (int)$_REQUEST['id'];
 
-	$res       = $db -> getRow( "SELECT * FROM ".$sqlname."modcatalog_offer WHERE id = '$id' and identity = '$identity'" );
+	$res       = $db -> getRow( "SELECT * FROM {$sqlname}modcatalog_offer WHERE id = '$id' and identity = '$identity'" );
 	$iduser    = $res['iduser'];
 	$datum     = $res['datum'];
 	$datum_end = $res['datum_end'];
@@ -5463,7 +5408,7 @@ if ( $action == "viewoffer" ) {
 
 	if ( $prid > 0 ) {
 
-		$prtitle = $db -> getOne( "SELECT title FROM ".$sqlname."price WHERE n_id = '$prid' and identity = '$identity'" );
+		$prtitle = $db -> getOne( "SELECT title FROM {$sqlname}price WHERE n_id = '$prid' and identity = '$identity'" );
 
 	}
 
@@ -5598,7 +5543,7 @@ if ( $action == "mass" ) {
 
 		//список подпапок текущей
 		$sort = '';
-		$sub  = (array)$db -> getCol( "SELECT idcategory FROM ".$sqlname."price_cat WHERE sub='$idcategory' and identity = '$identity' ORDER BY title" );
+		$sub  = (array)$db -> getCol( "SELECT idcategory FROM {$sqlname}price_cat WHERE sub='$idcategory' and identity = '$identity' ORDER BY title" );
 
 		$sub  = (!empty( $sub ) ) ? ' or pr_cat IN ('.implode( ',', $sub ).')' : '';
 		$sort .= " and (pr_cat='".$idcategory."' ".$sub.")";
@@ -5609,7 +5554,7 @@ if ( $action == "mass" ) {
 		$sort .= " and ((artikul LIKE '%".$word."%') or (title LIKE '%".$word."%') or (descr LIKE '%".$word."%'))";
 	}
 
-	$count = $db -> getOne( "SELECT COUNT(*) as count FROM ".$sqlname."price where n_id > 0 ".$sort." and identity = '$identity'" );
+	$count = $db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}price where n_id > 0 ".$sort." and identity = '$identity'" );
 
 	?>
 	<div class="zagolovok"><b>Групповое действие</b></div>

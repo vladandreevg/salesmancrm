@@ -9,6 +9,7 @@
 
 /* ============================ */
 
+use Salesman\Price;
 use Salesman\Storage;
 
 error_reporting(E_ERROR);
@@ -43,12 +44,23 @@ $id = $db -> getOne("select id from {$sqlname}modcatalog where prid='".$n_id."' 
 
 //---названия полей прайса. start---//
 $dname  = [];
+$fields = [];
 $result = $db -> getAll("SELECT * FROM {$sqlname}field WHERE fld_tip='price' and identity = '$identity' ORDER BY fld_order");
 foreach ($result as $data) {
 
 	$dname[$data['fld_name']] = $data['fld_title'];
 	$dvar[$data['fld_name']]  = $data['fld_var'];
 	$don[]                    = $data['fld_name'];
+
+	if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+		$fields[] = [
+			"field" => $data['fld_name'],
+			"title" => $data['fld_title'],
+			"value" => $data['fld_var'],
+		];
+
+	}
 
 }
 //---названия полей прайса. end---//
@@ -84,19 +96,7 @@ if ($action == "getInfo") {
 		'4' => 'red'
 	];
 
-	$result   = $db -> getRow("SELECT * FROM {$sqlname}price WHERE n_id='".$n_id."' and identity = '$identity'");
-	$artikul  = $result["artikul"];
-	$title    = $result["title"];
-	$descr    = $result["descr"];
-	$datum    = $result["datum"];
-	$price_in = $result["price_in"];
-	$price_1  = $result["price_1"];
-	$price_2  = $result["price_2"];
-	$price_3  = $result["price_3"];
-	$price_4  = $result["price_4"];
-	$price_5  = $result["price_5"];
-	$nds      = $result["nds"];
-	$edizm    = $result["edizm"];
+	$price = Price::info($n_id)['data'];
 
 	$result  = $db -> getRow("select * from {$sqlname}modcatalog where prid='".$n_id."' and identity = '$identity'");
 	$content = htmlspecialchars_decode($result["content"]);
@@ -105,9 +105,6 @@ if ($action == "getInfo") {
 	$id      = $result["id"];
 	$file    = $result["files"];
 	$sklad   = $result["sklad"];
-
-	/*$result = @mysql_query("SELECT * FROM {$sqlname}modcatalog_sklad WHERE id = '".$sklad."' and identity = '$identity'");
-	$sklad = mysql_result($result,0,'title');*/
 
 	$sum = $db -> getOne("SELECT SUM(summa) as sum FROM {$sqlname}modcatalog_dop WHERE prid = '".$n_id."' and identity = '$identity'");
 
@@ -121,29 +118,31 @@ if ($action == "getInfo") {
 	?>
 	<div class="viewdiv1 bgwhite">
 		<table id="noborder">
+			<tr>
+				<td width="100" height="25" align="right">Обновлен:</td>
+				<td><?=modifyDatetime($price['datum'], ["format" => "d.m.Y H:i"])?></td>
+			</tr>
 			<?php
 			if ($settings['mcArtikul'] == 'yes') { ?>
 				<tr>
 					<td width="100" height="25" align="right">Артикул:</td>
-					<td><?php
-						if ($artikul != '') { ?>
-							<b><?= $artikul ?></b>&nbsp;[Обновлен: <?= $datum ?>]<?php
-						} else print "--//--" ?></td>
+					<td><?php print ( !empty($price['artikul']) ) ? '<b>'.$price['artikul'].'</b>' : "--//--" ?>
+					</td>
 				</tr>
 			<?php
 			} ?>
 			<tr>
 				<td height="25" align="right"><?= $dname['price_1'] ?>:</td>
 				<td>
-					<b class="green"><?= num_format($price_1) ?></b> <?= $valuta ?>&nbsp;за&nbsp;<b><?= $edizm ?></b>&nbsp;, в т.ч.
-					<b>НДС </b><?= num_format($nds) ?>&nbsp;%<a href="javascript:void(0)" onclick="doLoad('modules/modcatalog/form.modcatalog.php?n_id=<?= $n_id ?>&action=editone&tip=price');" title="Изменить" class="dright gray"><i class="icon-pencil"></i></a>
+					<b class="green"><?= num_format($price['price_1']) ?></b> <?= $valuta ?>&nbsp;за&nbsp;<b><?= $price['edizm'] ?></b>&nbsp;, в т.ч.
+					<b>НДС </b><?= num_format($price['nds']) ?>&nbsp;%<a href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id=<?= $n_id ?>&action=editone&tip=price');" title="Изменить" class="dright gray"><i class="icon-pencil"></i></a>
 				</td>
 			</tr>
 			<?php
 			if ($show_marga == 'yes' && $otherSettings['marga']) { ?>
 				<tr>
 					<td height="25" align="right"><?= $dname['price_in'] ?>:</td>
-					<td><b class="red"><?= num_format($price_in) ?></b> <?= $valuta ?></td>
+					<td><b class="red"><?= num_format($price['price_in']) ?></b> <?= $valuta ?></td>
 				</tr>
 			<?php
 			} ?>
@@ -157,33 +156,18 @@ if ($action == "getInfo") {
 				<td>
 					<div id="tagbox">
 						<?php
-						if (in_array('price_2', $don)) { ?>
-							<div class="tags">
-								<?= $dname['price_2'] ?>:&nbsp;<b class="red"><?= num_format($price_2) ?></b> <?= $valuta ?>
-							</div>
-						<?php
-						} ?>
-						<?php
-						if (in_array('price_3', $don)) { ?>
-							<div class="tags">
-								<?= $dname['price_3'] ?>:&nbsp;<b class="red"><?= num_format($price_3) ?></b> <?= $valuta ?>
-							</div>
-						<?php
-						} ?>
-						<?php
-						if (in_array('price_4', $don)) { ?>
-							<div class="tags">
-								<?= $dname['price_4'] ?>:&nbsp;<b class="red"><?= num_format($price_4) ?></b> <?= $valuta ?>
-							</div>
-						<?php
-						} ?>
-						<?php
-						if (in_array('price_5', $don)) { ?>
-							<div class="tags">
-								<?= $dname['price_5'] ?>:&nbsp;<b class="red"><?= num_format($price_5) ?></b> <?= $valuta ?>
-							</div>
-						<?php
-						} ?>
+						foreach ($fields as $field) {
+
+							if ($field['field'] !== 'price_1') {
+								print '
+								<div class="tags">
+									'.$field['title'].':&nbsp;<b class="red">'.num_format( $price[$field['field']] ).'</b> '.$valuta.'
+								</div>
+								';
+							}
+
+						}
+						?>
 					</div>
 				</td>
 			</tr>
@@ -223,7 +207,7 @@ if ($action == "getInfo") {
 				<div class="divider mt10 mb10">Описание</div>
 				<div class="infodiv bgwhite text-wrap">
 
-					<?= nl2br($descr) ?>
+					<?= nl2br($price['descr']) ?>
 
 				</div>
 
@@ -284,7 +268,7 @@ if ($action == "getInfo") {
 
 	</div>
 	<script>
-		$(document).ready(function () {
+		$(function () {
 			$('#formtabs').tabs();
 			resizeImages();
 		});

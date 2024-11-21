@@ -44,7 +44,7 @@ if ($action == '') {
 				</tr>
 				</thead>
 				<?php
-				$result = $db -> getAll("select * from ".$sqlname."field where fld_tip='price' and fld_name != 'ztitle' and identity = '$identity' order by fld_order");
+				$result = $db -> getAll("SELECT * FROM {$sqlname}field WHERE fld_tip='price' and fld_name != 'ztitle' and identity = '$identity' order by fld_name");
 				foreach ($result as $data_array) {
 					?>
 					<tr class="ha" id="<?= $data_array['fld_id'] ?>" height="40">
@@ -59,11 +59,14 @@ if ($action == '') {
 						</td>
 						<td></td>
 					</tr>
-				<?php
+					<?php
 				} ?>
 			</table>
 
 		</div>
+
+		<hr>
+		<a href="javascript:void(0)" onclick="addField()" class="button ml10">Добавить поле</a>
 
 	</DIV>
 
@@ -74,9 +77,58 @@ if ($action == '') {
 	<?php
 }
 
+if ($action == 'addfield') {
+
+	$field = [];
+
+	//считаем все доп.поля
+	$result = $db -> getAll("SELECT fld_name FROM {$sqlname}field WHERE fld_name LIKE '%price%' AND fld_name != 'price_in' AND fld_tip = 'price' and identity = '$identity'");
+	foreach ($result as $data) {
+
+		$field[$data['fld_name']] = (int)preg_replace("/\D/", "", $data['fld_name']);
+
+	}
+
+	$last = max($field);
+
+	$next = (int)$last + 1;
+
+	$field = $db -> getRow("SHOW COLUMNS FROM {$sqlname}price LIKE 'price_{$next}'");
+	if (!empty($field['Field'])) {
+		$next++;
+	}
+
+	$db -> query("ALTER TABLE `{$sqlname}price` ADD `price_{$next}` DOUBLE(20,2) NULL DEFAULT '0.00' AFTER `price_{$last}`");
+
+	$fieldAdd = [
+		"fld_tip"   => 'price',
+		"fld_name"  => "price_{$next}",
+		"fld_title" => "Уровень ??",
+		"fld_on"    => 'yes',
+		"fld_var"   => '5',
+		"identity"  => $identity
+	];
+	$db -> query("INSERT INTO {$sqlname}field SET ?u", arrayNullClean($fieldAdd));
+	$id = $db -> insertId();
+
+	if ($hooks) {
+		$hooks -> do_action("price_addfield", $fieldAdd);
+	}
+
+	$pretext = 'Поле добавлено. Предлагаем задать его параметры.';
+
+	print json_encode_cyr([
+		"text" => $pretext,
+		"id"   => $id
+	]);
+
+	exit();
+
+}
+
 if ($action == 'edit') {
 
-	$result       = $db -> getRow("select * from ".$sqlname."field where fld_id = '".$_REQUEST['fld_id']."' and identity = '$identity'");
+	$result       = $db -> getRow("select * from {$sqlname}field where fld_id = '".$_REQUEST['fld_id']."' and identity = '$identity'");
 	$fld_name     = $result["fld_name"];
 	$fld_title    = $result["fld_title"];
 	$fld_type     = $result["fld_type"];
@@ -86,6 +138,7 @@ if ($action == 'edit') {
 	$fld_order    = $result["fld_order"];
 	$fld_temp     = $result["fld_temp"];
 	$fld_var      = $result["fld_var"];
+	$fld_sub      = $result["fld_sub"];
 
 	$exclude = [
 		'clid',
@@ -102,14 +155,18 @@ if ($action == 'edit') {
 		$d = "readonly";
 	}
 	?>
-	<FORM action="/content/admin/<?php
-	echo $thisfile; ?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
-		<INPUT type="hidden" name="action" id="action" value="edit_on">
+	<DIV class="zagolovok">Изменение поля</DIV>
+	<FORM action="/content/admin/<?=$thisfile?>" method="post" enctype="multipart/form-data" name="Form" id="Form">
+		<INPUT type="hidden" name="action" id="action" value="edit.on">
 		<INPUT name="fld_id" type="hidden" id="fld_id" value="<?= $_REQUEST['fld_id'] ?>">
 		<INPUT name="fld_tip" type="hidden" id="fld_tip" value="<?= $fld_tip ?>">
+		<INPUT name="fld_name" type="hidden" id="fld_name" value="<?= $fld_name ?>">
 		<INPUT name="tip" type="hidden" id="tip" value="<?= $_REQUEST['tip'] ?>">
-		<DIV class="zagolovok">Изменение поля</DIV>
-		<br>
+
+		<?php
+		$hooks -> do_action("price_formfield_before", $_REQUEST);
+		?>
+
 		<table id="zebra">
 			<tr height="25" class="noborder">
 				<td width="180"><b>Название:</b></td>
@@ -119,9 +176,20 @@ if ($action == 'edit') {
 			if ($fld_name != 'price_in') { ?>
 				<tr height="25" class="noborder">
 					<td valign="top">
-						<div style="margin-top: 5px;"><b>Наценка по-умолчанию, %%:</b></div>
+						<div style="margin-top: 5px;"><b>Наценка по-умолчанию:</b></div>
 					</td>
-					<td><input type="text" name="fld_var" id="fld_var" value="<?= $fld_var ?>" style="width:100px;">
+					<td><input type="text" name="fld_var" id="fld_var" value="<?= $fld_var ?>" style="width:100px;">%</td>
+				</tr>
+			<?php
+			} ?>
+			<?php
+			if ($fld_name != 'price_in') { ?>
+				<tr height="25" class="noborder">
+					<td valign="top">
+						<div style="margin-top: 5px;"><b>Скрыть колонку:</b></div>
+					</td>
+					<td>
+						<input name="fld_sub" id="fld_sub" type="checkbox" <?php print ($fld_sub == 'hidden') ? "checked" : "" ?> value="hidden">
 					</td>
 				</tr>
 			<?php
@@ -137,12 +205,26 @@ if ($action == 'edit') {
 					}
 					else {
 						?>
-						<b class="red">!</b> Это поле всегда должно быть включено						<input name="fld_on" id="fld_on" type="hidden" value="yes">
-					<?php
+						<b class="red">!</b> Это поле всегда должно быть включено
+						<input name="fld_on" id="fld_on" type="hidden" value="yes">
+						<?php
 					} ?>
 				</td>
 			</tr>
 		</table>
+
+		<?php
+		if ($fld_name != 'price_in') { ?>
+		<hr>
+
+		<div class="flex-container mt10 mb10">
+			<div class="flex-string text-center Bold blue">
+				<label>
+				<input name="recalc" id="recalc" type="checkbox" value="yes"> Пересчитать прайс
+				</label>
+			</div>
+		</div>
+		<?php } ?>
 
 		<hr>
 
@@ -152,21 +234,35 @@ if ($action == 'edit') {
 		</div>
 	</FORM>
 	<?php
+	$hooks -> do_action("price_formfield_after", $_REQUEST);
 }
-if ($action == "edit_on") {
+if ($action == "edit.on") {
 
 	$fld_id    = $_REQUEST['fld_id'];
 	$fld_tip   = $_REQUEST['fld_tip'];
 	$fld_title = $_REQUEST['fld_title'];
 	$fld_var   = $_REQUEST['fld_var'];
 	$fld_on    = $_REQUEST['fld_on'];
+	$fld_sub   = $_REQUEST['fld_sub'];
+	$fld_name  = $_REQUEST['fld_name'];
 	$tip       = $fld_tip;
 
 	//Обновляем данные для текущей записи
-	//if (mysql_query("update ".$sqlname."field set fld_title = '$fld_title', fld_temp = '$fld_temp', fld_required = '$fld_required', fld_on = '$fld_on' where fld_id = $fld_id")) print "Запись обновлена";
+	//if (mysql_query("update {$sqlname}field set fld_title = '$fld_title', fld_temp = '$fld_temp', fld_required = '$fld_required', fld_on = '$fld_on' where fld_id = $fld_id")) print "Запись обновлена";
 
-	if ($db -> query("update ".$sqlname."field set fld_title = '".$fld_title."', fld_var = '".$fld_var."', fld_on = '".$fld_on."' where fld_id = '".$fld_id."' and identity = '$identity'")) {
+	if ($db -> query("UPDATE {$sqlname}field set ?u WHERE fld_id = '$fld_id' and identity = '$identity'", [
+		"fld_title" => $fld_title,
+		"fld_var"   => $fld_var,
+		"fld_on"    => $fld_on,
+		"fld_sub"   => $fld_sub
+	])) {
 		print "Запись обновлена";
+	}
+	
+	if($_REQUEST['recalc'] == 'yes') {
+	
+		$db -> query("UPDATE {$sqlname}price SET $fld_name = (price_in * (1 + $fld_var / 100))");
+		
 	}
 
 	exit();
@@ -175,7 +271,6 @@ if ($action == "edit_on") {
 ?>
 <script>
 	$(function () {
-
 		$('#Form').ajaxForm({
 			beforeSubmit: function () {
 
@@ -205,5 +300,24 @@ if ($action == "edit_on") {
 
 			}
 		});
-	});
+	})
+
+	function addField() {
+
+		$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id="loader"><img src="/assets/images/loader.gif">Пожалуйста подождите...</div>');
+
+		$.get('/content/admin/<?php echo $thisfile; ?>?action=addfield', function (data) {
+
+			$('#message').fadeTo(1, 1).css('display', 'block').html(data.text);
+			setTimeout(function () {
+				$('#message').fadeTo(1000, 0);
+			}, 20000);
+
+			doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit&fld_id=' + data.id);
+
+			razdel(hash);
+
+		}, 'json');
+
+	}
 </script>

@@ -102,7 +102,7 @@ class DealAnketa {
 			$value = (is_array( $value )) ? yimplode( ";", $value ) : $value;
 
 			//найдем id поля в базе
-			$id = (int)$db -> getOne( "SELECT id FROM ".$sqlname."deal_anketa_base WHERE pole = '$pole' AND ida = '$ida' AND identity = '$identity'" );
+			$id = (int)$db -> getOne( "SELECT id FROM {$sqlname}deal_anketa_base WHERE pole = '$pole' AND ida = '$ida' AND identity = '$identity'" );
 
 			//сформируем массив передаваемых значений имя профиля -> значение
 			$cfield[ $id ] = [
@@ -115,11 +115,11 @@ class DealAnketa {
 
 		//print_r($cfield);
 
-		$result = $db -> getAll( "SELECT * FROM ".$sqlname."deal_anketa_base WHERE ida = '$ida' AND identity = '$identity'" );
+		$result = $db -> getAll( "SELECT * FROM {$sqlname}deal_anketa_base WHERE ida = '$ida' AND identity = '$identity'" );
 		foreach ( $result as $fieldbase ) {
 
 			//Проверим существование текущего поля в базе
-			$aid = (int)$db -> getOne( "SELECT id FROM ".$sqlname."deal_anketa WHERE clid = '$clid' AND did = '$did' AND idbase = '$fieldbase[id]' AND ida = '$ida' AND identity = '$identity'" ) + 0;
+			$aid = (int)$db -> getOne( "SELECT id FROM {$sqlname}deal_anketa WHERE clid = '$clid' AND did = '$did' AND idbase = '$fieldbase[id]' AND ida = '$ida' AND identity = '$identity'" ) + 0;
 
 			//print $cfield[ $fieldbase['id'] ]['value']."\n";
 
@@ -129,7 +129,7 @@ class DealAnketa {
 				//Добавляем, если записи поля не найдено
 				if ( $aid == 0 ) {
 
-					$db -> query( "INSERT INTO ".$sqlname."deal_anketa SET ?u", [
+					$db -> query( "INSERT INTO {$sqlname}deal_anketa SET ?u", [
 						'idbase'   => $fieldbase['id'],
 						'ida'      => $ida,
 						'clid'     => $clid,
@@ -141,7 +141,7 @@ class DealAnketa {
 				}
 				//или устанавливаем новое значение
 				else {
-					$db -> query( "UPDATE ".$sqlname."deal_anketa SET ?u WHERE id = '$aid'", ['value' => $cfield[ $fieldbase['id'] ]['value']] );
+					$db -> query( "UPDATE {$sqlname}deal_anketa SET ?u WHERE id = '$aid'", ['value' => $cfield[ $fieldbase['id'] ]['value']] );
 				}
 
 			}
@@ -167,7 +167,7 @@ class DealAnketa {
 		$db       = $this -> db;
 		$identity = $this -> identity;
 
-		$db -> query( "DELETE FROM ".$sqlname."deal_anketa WHERE id = '$id' AND identity = '$identity'" );
+		$db -> query( "DELETE FROM {$sqlname}deal_anketa WHERE id = '$id' AND identity = '$identity'" );
 
 	}
 
@@ -183,9 +183,9 @@ class DealAnketa {
 		$db       = $this -> db;
 		$identity = $this -> identity;
 
-		$db -> query( "UPDATE ".$sqlname."deal_anketa SET value = '' WHERE id = '$id' and identity = '$identity'" );
+		$db -> query( "UPDATE {$sqlname}deal_anketa SET value = '' WHERE id = '$id' and identity = '$identity'" );
 
-		return (int)$db -> getOne( "SELECT ida FROM ".$sqlname."deal_anketa WHERE id = '$id' AND identity = '$identity'" );
+		return (int)$db -> getOne( "SELECT ida FROM {$sqlname}deal_anketa WHERE id = '$id' AND identity = '$identity'" );
 
 	}
 
@@ -203,7 +203,7 @@ class DealAnketa {
 
 		$field_types = db_columns_types( "{$sqlname}deal_anketa_list" );
 
-		$anketa = $db -> getRow( "SELECT * FROM ".$sqlname."deal_anketa_list WHERE id = '$id' AND identity = '$identity'" );
+		$anketa = $db -> getRow( "SELECT * FROM {$sqlname}deal_anketa_list WHERE id = '$id' AND identity = '$identity'" );
 
 		foreach ( $anketa as $k => $v ) {
 
@@ -235,9 +235,9 @@ class DealAnketa {
 	/**
 	 * Список анкет
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public function anketalist() {
+	public function anketalist(): array {
 
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
@@ -245,7 +245,7 @@ class DealAnketa {
 
 		$field_types = db_columns_types( "{$sqlname}deal_anketa_list" );
 
-		$anketa = $db -> getAll( "SELECT * FROM ".$sqlname."deal_anketa_list WHERE identity = '$identity' ORDER by id" );
+		$anketa = $db -> getAll( "SELECT * FROM {$sqlname}deal_anketa_list WHERE identity = '$identity' ORDER by id" );
 
 		foreach ( $anketa as $key => $value ) {
 
@@ -297,12 +297,12 @@ class DealAnketa {
 		$list = [];
 
 		//находим уникальные id анкет, которые есть в этой сделке
-		$ida = $db -> getCol( "SELECT DISTINCT ida FROM ".$sqlname."deal_anketa WHERE did = '$did' AND identity = '$identity'" );
+		$ida = $db -> getCol( "SELECT DISTINCT ida FROM {$sqlname}deal_anketa WHERE did = '$did' AND identity = '$identity'" );
 
 		//если анкеты есть, то составим их список
 		if ( !empty( $ida ) ) {
 
-			$list = $db -> getIndCol( "id", "SELECT title,id FROM ".$sqlname."deal_anketa_list WHERE id IN (".yimplode( ",", $ida ).") AND identity = '$identity' ORDER by id" );
+			$list = $db -> getIndCol( "id", "SELECT title,id FROM {$sqlname}deal_anketa_list WHERE id IN (".yimplode( ",", $ida ).") AND identity = '$identity' ORDER by id" );
 
 		}
 
@@ -340,7 +340,7 @@ class DealAnketa {
 
 		//выбираем все элементы, не включенные в блоки
 		//элементы в блоках будем добавлять внутри
-		$r = $db -> query( "SELECT * FROM ".$sqlname."deal_anketa_base WHERE ida = '$ida' AND block = '0' AND identity = '$identity' ORDER BY ord" );
+		$r = $db -> query( "SELECT * FROM {$sqlname}deal_anketa_base WHERE ida = '$ida' AND block = '0' AND identity = '$identity' ORDER BY ord" );
 		while ($d = $db -> fetch( $r )) {
 
 			$block = [];
@@ -349,7 +349,7 @@ class DealAnketa {
 			if ( $d['tip'] == 'divider' ) {
 
 				//поля, объединенные блоком
-				$re = $db -> getAll( "SELECT * FROM ".$sqlname."deal_anketa_base WHERE ida = '$ida' AND block > 0 AND block = '$d[id]' AND identity = '$identity' ORDER BY ord" );
+				$re = $db -> getAll( "SELECT * FROM {$sqlname}deal_anketa_base WHERE ida = '$ida' AND block > 0 AND block = '$d[id]' AND identity = '$identity' ORDER BY ord" );
 				foreach ( $re as $da ) {
 
 					$block[ $da['pole'] ] = [
@@ -648,7 +648,7 @@ class DealAnketa {
 
 		foreach ( $list as $pole => $fields ) {
 
-			$data = $db -> getRow( "SELECT id, value FROM ".$sqlname."deal_anketa WHERE did = '$did' AND idbase = '$fields[id]' AND ida = '$id' AND identity = '$identity'" );
+			$data = $db -> getRow( "SELECT id, value FROM {$sqlname}deal_anketa WHERE did = '$did' AND idbase = '$fields[id]' AND ida = '$id' AND identity = '$identity'" );
 
 			$values = [];
 
@@ -694,7 +694,7 @@ class DealAnketa {
 
 					$values = [];
 
-					$data = $db -> getRow( "SELECT id, value FROM ".$sqlname."deal_anketa WHERE did = '$did' AND idbase = '$item[id]' AND ida = '$id' AND identity = '$identity'" );
+					$data = $db -> getRow( "SELECT id, value FROM {$sqlname}deal_anketa WHERE did = '$did' AND idbase = '$item[id]' AND ida = '$id' AND identity = '$identity'" );
 
 					if ( !in_array( $item['tip'], $stringTip, true ) ) {
 
@@ -782,7 +782,7 @@ class DealAnketa {
 
 			$fp = '';
 
-			$data = ($did > 0) ? $db -> getOne( "SELECT value FROM ".$sqlname."deal_anketa WHERE did = '$did' AND idbase = '$fields[id]' AND ida = '$id' AND identity = '$identity'" ) : '';
+			$data = ($did > 0) ? $db -> getOne( "SELECT value FROM {$sqlname}deal_anketa WHERE did = '$did' AND idbase = '$fields[id]' AND ida = '$id' AND identity = '$identity'" ) : '';
 
 			if ( $forpaper && in_array( $fields['tip'], [
 					"select",
@@ -827,7 +827,7 @@ class DealAnketa {
 
 					$fp = '';
 
-					$data = ($did > 0) ? $db -> getOne( "SELECT value FROM ".$sqlname."deal_anketa WHERE did = '$did' AND idbase = '$item[id]' AND ida = '$id' AND identity = '$identity'" ) : '';
+					$data = ($did > 0) ? $db -> getOne( "SELECT value FROM {$sqlname}deal_anketa WHERE did = '$did' AND idbase = '$item[id]' AND ida = '$id' AND identity = '$identity'" ) : '';
 
 					if ( $forpaper && in_array( $item['tip'], [
 							"select",

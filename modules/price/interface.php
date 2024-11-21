@@ -100,7 +100,7 @@ if ($acs_price != 'on') {
 	</DIV>
 
 	<form name="cform" id="cform">
-	<div class="nano relativ" id="clientlist">
+	<div class="nano1 relativ" id="clientlist">
 
 		<div class="nano-content">
 			<div class="ui-layout-content" id="contentdiv"></div>
@@ -154,7 +154,7 @@ $( function() {
 	clear();
 	configpage();
 
-	$(".nano").nanoScroller();
+	//$(".nano").nanoScroller();
 
 	changeMounth();
 
@@ -374,18 +374,26 @@ function configpage(){
 
 			$('.header_contaner').find('#x-' + order).prepend(icn);
 
-			var $w = [45, 90, 50];
+			//setTimeout(function() {
 
-			if($(window).width() > 1500) $w = [60, 120, 80];
-			else if($(window).width() > 1700) $w = [100, 200, 160];
+				var $w = [45, 90, 50];
 
-			$(".name-ellipsis").liTextLength({
-				length: $w[2],
-				afterLength: '...',
-				fullText:false
-			});
+				if($(window).width() > 1500) $w = [60, 120, 80];
+				else if($(window).width() > 1700) $w = [100, 200, 160];
 
-			$(".nano").nanoScroller();
+				$w = [45, 90, 50];
+
+				$(".name-ellipsis").each(function (){
+					$(this).liTextLength({
+						length: $w[2],
+						afterLength: '...',
+						fullText:false
+					});
+				})
+
+			//}, 100);
+
+			//$(".nano").nanoScroller();
 
 			if(isMobile) {
 
@@ -398,6 +406,9 @@ function configpage(){
 	/*------------*/
 
 }
+
+
+
 /*
 Вызываем при применении фильтров, чтобы начинать с 1 страницы
  */
@@ -420,7 +431,7 @@ function changesort(param){
 	$('#ord').val(param);
 	$('#page').val('1');
 
-	if (param == tt){
+	if (param === tt){
 
 		if ($('#tuda').val()=='') $('#tuda').val('desc');
 		else $('#tuda').val('');
@@ -428,6 +439,7 @@ function changesort(param){
 	}
 
 	configpage();
+
 }
 function clear(){
 

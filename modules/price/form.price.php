@@ -30,11 +30,24 @@ $id   = (int)$_REQUEST['id'];
 $action = $_REQUEST['action'];
 
 $dname  = [];
-$result = $db -> query( "SELECT * FROM ".$sqlname."field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
+$fields = [];
+$result = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
 while ($data = $db -> fetch( $result )) {
+
 	$dname[ $data['fld_name'] ] = $data['fld_title'];
 	$dvar[ $data['fld_name'] ]  = $data['fld_var'];
 	$don[]                      = $data['fld_name'];
+
+	if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+		$fields[] = [
+			"field" => $data['fld_name'],
+			"title" => $data['fld_title'],
+			"value" => $data['fld_var'],
+		];
+
+	}
+
 }
 
 if ( $action == "edit" ) {
@@ -43,26 +56,7 @@ if ( $action == "edit" ) {
 
 	if ( $id > 0 ) {
 
-		/*
-		$result1  = $db -> getRow( "select * from ".$sqlname."price where n_id = '$id' and identity = '$identity'" );
-		$artikul  = $result1["artikul"];
-		$title    = clean( $result1["title"] );
-		$descr    = $result1["descr"];
-		$price_in = $result1["price_in"];
-		$price_1  = $result1["price_1"];
-		$price_2  = $result1["price_2"];
-		$price_3  = $result1["price_3"];
-		$price_4  = $result1["price_4"];
-		$price_5  = $result1["price_5"];
-		$edizm    = $result1["edizm"];
-		$folder   = $result1["pr_cat"];
-		$nds      = $result1["nds"];
-		$archive  = $result1["archive"];
-		*/
-
 		$price = Price::info($id)['data'];
-
-		//print_r($price);
 
 	}
 	?>
@@ -73,6 +67,10 @@ if ( $action == "edit" ) {
 		<INPUT name="n_id" type="hidden" id="n_id" value="<?= $id ?>">
 
 		<DIV id="formtabs" style="max-height: 80vh; overflow-y:auto !important; overflow-x:hidden">
+
+			<?php
+			$hooks -> do_action( "price_form_before", $_REQUEST );
+			?>
 
 			<div class="flex-container box--child mt10">
 
@@ -124,76 +122,35 @@ if ( $action == "edit" ) {
 				</div>
 
 			</div>
+
 			<div class="flex-container box--child mt10">
 
 				<div class="flex-string wp20 title"><?= $dname['price_in'] ?>:</div>
 				<div class="flex-string wp80">
-					<input name="price_in" id="price_in" onkeyup="priceCalc()" class="w160 required" type="text" value="<?= num_format( $price['price_in'] ) ?>">&nbsp;<?= $valuta ?>
+					<input name="price_in" id="price_in" class="w160 calc" type="text" value="<?= num_format( $price['price_in'] ) ?>">&nbsp;<?= $valuta ?>
 				</div>
 
 			</div>
 
 			<hr>
 
-			<?php if ( in_array( 'price_1', $don ) ) { ?>
+			<?php
+			foreach ($fields as $field) {
+
+				print '
 				<div class="flex-container box--child mt10">
 
-					<div class="flex-string wp20 title"><?= $dname['price_1'] ?>:</div>
-					<div class="flex-string wp80">
-						<input name="price_1" type="text" id="price_1" autocomplete="off" value="<?= num_format( $price['price_1'] ) ?>" class="w160">&nbsp;<?= $valuta ?>&nbsp;
-						<input name="mnog_1" type="text" id="mnog_1" value="<?= num_format( $dvar['price_1'] ) ?>" onkeyup="priceCalc('mnog1')" title="Наценка по-умолчанию" class="w100">&nbsp;%
+					<div class="flex-string wp20 title">'.$field['title'].':</div>
+					<div class="flex-string wp80 xcalc">
+						<input name="'.$field['field'].'" type="text" id="'.$field['field'].'" autocomplete="off" value="'.num_format( $price[$field['field']] ).'" class="w160 field">&nbsp;'.$valuta.'&nbsp;
+						<input name="mnog_'.$field['field'].'" type="text" id="mnog_'.$field['field'].'" value="'.num_format( $field['value'] ).'" title="Наценка по-умолчанию" class="w100 calc">&nbsp;%
 					</div>
 
 				</div>
-			<?php } ?>
+				';
 
-			<?php if ( in_array( 'price_2', $don ) ) { ?>
-				<div class="flex-container box--child mt10">
-
-					<div class="flex-string wp20 title"><?= $dname['price_2'] ?>:</div>
-					<div class="flex-string wp80">
-						<input name="price_2" type="text" id="price_2" autocomplete="off" value="<?= num_format( $price['price_2'] ) ?>" class="w160">&nbsp;<?= $valuta ?>&nbsp;
-						<input name="mnog_2" type="text" id="mnog_2" value="<?= num_format( $dvar['price_2'] ) ?>" onkeyup="priceCalc('mnog2')" title="Наценка по-умолчанию" class="w100">&nbsp;%
-					</div>
-
-				</div>
-			<?php } ?>
-
-			<?php if ( in_array( 'price_3', $don ) ) { ?>
-				<div class="flex-container box--child mt10">
-
-					<div class="flex-string wp20 title"><?= $dname['price_3'] ?>:</div>
-					<div class="flex-string wp80">
-						<input name="price_3" type="text" id="price_3" autocomplete="off" value="<?= num_format( $price['price_3'] ) ?>" class="w160">&nbsp;<?= $valuta ?>&nbsp;
-						<input name="mnog_3" type="text" id="mnog_3" value="<?= num_format( $dvar['price_3'] ) ?>" onkeyup="priceCalc('mnog3')" title="Наценка по-умолчанию" class="w100">&nbsp;%
-					</div>
-
-				</div>
-			<?php } ?>
-
-			<?php if ( in_array( 'price_4', $don ) ) { ?>
-				<div class="flex-container box--child mt10">
-
-					<div class="flex-string wp20 title"><?= $dname['price_4'] ?>:</div>
-					<div class="flex-string wp80">
-						<input name="price_4" type="text" id="price_4" autocomplete="off" value="<?= num_format( $price['price_4'] ) ?>" style="width: 100px"/>&nbsp;<?= $valuta ?>&nbsp;
-						<input name="mnog_4" type="text" id="mnog_4" value="<?= num_format( $dvar['price_4'] ) ?>" onkeyup="priceCalc('mnog4')" title="Наценка по-умолчанию" style="width: 60px"/>&nbsp;%
-					</div>
-
-				</div>
-			<?php } ?>
-
-			<?php if ( in_array( 'price_5', $don ) ) { ?>
-				<div class="flex-container box--child mt10">
-
-					<div class="flex-string wp20 title"><?= $dname['price_5'] ?>:</div>
-					<div class="flex-string wp80">
-						<input name="price_5" type="text" id="price_5" autocomplete="off" value="<?= num_format( $price['price_5'] ) ?>" style="width: 100px"/>&nbsp;<?= $valuta ?>&nbsp;
-						<input name="mnog_5" type="text" id="mnog_5" value="<?= num_format( $dvar['price_5'] ) ?>" onkeyup="priceCalc('mnog5')" title="Наценка по-умолчанию" style="width: 40px"/>&nbsp;%
-					</div>
-
-				</div>
-			<?php } ?>
+			}
+			?>
 
 			<hr>
 
@@ -241,6 +198,8 @@ if ( $action == "edit" ) {
 
 	</FORM>
 	<?php
+	$hooks -> do_action( "price_form_after", $_REQUEST );
+
 }
 
 if ( $action == "view" ) {
@@ -251,6 +210,13 @@ if ( $action == "view" ) {
 	<DIV class="zagolovok">Просмотр позиции</DIV>
 
 	<DIV id="formtabs" style="max-height: 80vh; overflow-y:auto !important; overflow-x:hidden">
+
+		<div class="flex-container box--child viewdiv">
+
+			<div class="flex-string wp100 fs-07 uppercase gray2">Дата изменения</div>
+			<div class="flex-string wp100 fs-12 flh-12 Bold broun"><?= modifyDatetime($price['datum'], ["format" => "d.m.Y H:i"]) ?></div>
+
+		</div>
 
 		<div class="flex-container box--child viewdiv">
 
@@ -306,47 +272,23 @@ if ( $action == "view" ) {
 
 				<div class="flex-container box--child">
 
-					<?php if ( in_array( 'price_in', $don ) ) { ?>
-						<div class="flex-string bgbluelight mr5 p10">
-							<div class="fs-07 uppercase mb10 gray2"><?= $dname['price_in'] ?>:&nbsp;</div>
-							<div class="Bold fs-12 blue"><?= num_format( $price['price_in'] ) ?> <?= $valuta ?></div>
-						</div>
-					<?php } ?>
+					<div class="flex-string bgbluelight mr5 p10">
+						<div class="fs-07 uppercase mb10 gray2"><?= $dname['price_in'] ?>:&nbsp;</div>
+						<div class="Bold fs-12 blue"><?= num_format( $price['price_in'] ) ?> <?= $valuta ?></div>
+					</div>
 
-					<?php if ( in_array( 'price_1', $don ) ) { ?>
-						<div class="flex-string bgbluelight mr5 p10">
-							<div class="fs-07 uppercase mb10 gray2"><?= $dname['price_1'] ?>:&nbsp;</div>
-							<div class="Bold fs-12 green"><?= num_format( $price['price_1'] ) ?> <?= $valuta ?></div>
-						</div>
-					<?php } ?>
+					<?php
+					foreach ($fields as $field) {
 
-					<?php if ( in_array( 'price_2', $don ) ) { ?>
+						print '
 						<div class="flex-string bgbluelight mr5 p10">
-							<div class="fs-07 uppercase mb10 gray2"><?= $dname['price_2'] ?>:&nbsp;</div>
-							<div class="Bold fs-12"><?= num_format( $price['price_2'] ) ?> <?= $valuta ?></div>
+							<div class="fs-07 uppercase mb10 gray2">'.$field['title'].':&nbsp;</div>
+							<div class="Bold fs-12 green">'.num_format( $price[$field['field']] ).' '.$valuta.'</div>
 						</div>
-					<?php } ?>
+						';
 
-					<?php if ( in_array( 'price_3', $don ) ) { ?>
-						<div class="flex-string bgbluelight mr5 p10">
-							<div class="fs-07 uppercase mb10 gray2"><?= $dname['price_3'] ?>:&nbsp;</div>
-							<div class="Bold fs-12"><?= num_format( $price['price_3'] ) ?> <?= $valuta ?></div>
-						</div>
-					<?php } ?>
-
-					<?php if ( in_array( 'price_4', $don ) ) { ?>
-						<div class="flex-string bgbluelight mr5 p10">
-							<div class="fs-07 uppercase mb10 gray2"><?= $dname['price_4'] ?>:&nbsp;</div>
-							<div class="Bold fs-12"><?= num_format( $price['price_4'] ) ?> <?= $valuta ?></div>
-						</div>
-					<?php } ?>
-
-					<?php if ( in_array( 'price_5', $don ) ) { ?>
-						<div class="flex-string bgbluelight mr5 p10">
-							<div class="fs-07 uppercase mb10 gray2"><?= $dname['price_5'] ?>:&nbsp;</div>
-							<div class="Bold fs-12"><?= num_format( $price['price_5'] ) ?> <?= $valuta ?></div>
-						</div>
-					<?php } ?>
+					}
+					?>
 
 				</div>
 
@@ -458,6 +400,7 @@ if ( $action == "import.select" ) {
 	$url  = $rootpath.'/files/'.$fpath.$file;
 
 	$xdata = parceExcel( $url, 0);
+
 	$data = [];
 	$x = 0;
 	while ($x < 3){
@@ -471,74 +414,44 @@ if ( $action == "import.select" ) {
 		<INPUT type="hidden" name="action" id="action" value="import.on">
 		<INPUT type="hidden" name="file" id="file" value="<?= $file ?>">
 
-		<table id="zebra">
-			<thead>
-			<tr class="noDrag">
-				<TH width="200" height="35" align="center" class="nodrop">Название поля в БД</TH>
-				<TH width="250" height="35" align="center" class="nodrop">Название поля из файла</TH>
-				<TH align="center" class="nodrop">Образец из файла</TH>
-			</tr>
-			</thead>
-		</table>
+		<DIV id="formtabs" style="height:60vh; overflow-x: hidden; overflow-y:auto">
 
-		<DIV class="bgwhite" style="height:60vh; overflow-y:auto">
-
-			<table id="zebra">
+			<table class="wp100">
+				<thead class="sticked--top">
+				<tr class="">
+					<TH height="35" class="w200">Название поля в БД</TH>
+					<TH height="35" class="w250">Название поля из файла</TH>
+					<TH class="nodrop">Образец из файла</TH>
+				</tr>
+				</thead>
 				<?php for ( $i = 0, $iMax = count( $data[0] ); $i < $iMax; $i++ ) { ?>
 					<tr class="ha">
-						<td width="200">
+						<td class="w200">
 							<select id="field[]" name="field[]" style="width:100%">
 								<option value="">--Выбор--</option>
 								<optgroup label="Общие">
-									<option value="price:n_id" <?php if ( ($data[0][ $i ]) == 'ID' )
-										print "selected"; ?>>ID позиции
-									</option>
-									<option value="price:artikul" <?php if ( ($data[0][ $i ]) == 'Артикул' )
-										print "selected"; ?>>Артикул
-									</option>
-									<option value="category:title" <?php if ( ($data[0][ $i ]) == 'Категория' )
-										print "selected"; ?>>Категория
-									</option>
-									<option value="category:idcat" <?php if ( ($data[0][ $i ]) == 'ID категории' )
-										print "selected"; ?>>ID Категории
-									</option>
-									<option value="price:title" <?php if ( ($data[0][ $i ]) == 'Наименование' )
-										print "selected"; ?>>Наименование
-									</option>
-									<option value="price:edizm" <?php if ( ($data[0][ $i ]) == 'Ед.изм.' )
-										print "selected"; ?>>Ед.измерения
-									</option>
-									<option value="price:descr" <?php if ( ($data[0][ $i ]) == 'Примечание' )
-										print "selected"; ?>>Описание краткое
-									</option>
+									<option value="price:n_id" <?php print ( ($data[0][ $i ]) == 'ID' ) ? "selected" : ""; ?>>ID позиции</option>
+									<option value="price:artikul" <?php print ( ($data[0][ $i ]) == 'Артикул' ) ? "selected" : ""; ?>>Артикул</option>
+									<option value="category:title" <?php print ( ($data[0][ $i ]) == 'Категория' ) ? "selected" : ""; ?>>Категория</option>
+									<option value="category:idcat" <?php print ( ($data[0][ $i ]) == 'ID категории' ) ? "selected" : ""; ?>>ID Категории</option>
+									<option value="price:title" <?php print ( ($data[0][ $i ]) == 'Наименование' ) ? "selected" : ""; ?>>Наименование</option>
+									<option value="price:edizm" <?php print ( ($data[0][ $i ]) == 'Ед.изм.' ) ? "selected" : ""; ?>>Ед.измерения</option>
+									<option value="price:descr" <?php print ( ($data[0][ $i ]) == 'Примечание' ) ? "selected" : ""; ?>>Описание краткое</option>
 								</optgroup>
 								<optgroup label="Цены">
-									<option value="price:price_in" <?php if ( ($data[0][ $i ]) == $dname['price_in'] )
-										print "selected"; ?>><?= $dname['price_in'] ?></option>
-									<?php if ( in_array( 'price_1', $don ) ) { ?>
-										<option value="price:price_1" <?php if ( ($data[0][ $i ]) == $dname['price_1'] )
-											print "selected"; ?>><?= $dname['price_1'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_2', $don ) ) { ?>
-										<option value="price:price_2" <?php if ( ($data[0][ $i ]) == $dname['price_2'] )
-											print "selected"; ?>><?= $dname['price_2'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_3', $don ) ) { ?>
-										<option value="price:price_3" <?php if ( ($data[0][ $i ]) == $dname['price_3'] )
-											print "selected"; ?>><?= $dname['price_3'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_4', $don ) ) { ?>
-										<option value="price:price_4" <?php if ( ($data[0][ $i ]) == $dname['price_4'] )
-											print "selected"; ?>><?= $dname['price_4'] ?></option><?php } ?>
-									<?php if ( in_array( 'price_5', $don ) ) { ?>
-										<option value="price:price_5" <?php if ( ($data[0][ $i ]) == $dname['price_5'] )
-											print "selected"; ?>><?= $dname['price_5'] ?></option><?php } ?>
-									<option value="price:nds" <?php if ( ($data[0][ $i ]) == 'НДС' )
-										print "selected"; ?>>НДС
-									</option>
+									<option value="price:price_in" <?php print ( $data[0][ $i ] == $dname['price_in'] ) ? "selected" : ""; ?>><?= $dname['price_in'] ?></option>
+									<?php
+									foreach ($fields as $field) {
+										print '<option value="price:'.$field['field'].'" '.( ( str_contains($field['title'], $data[0][ $i]) ) ? "selected" : "").'>'.$field['title'].'</option>';
+									}
+									?>
+									<option value="price:nds" <?php print ( ($data[0][ $i ]) == 'НДС' ) ? "selected" : ""; ?>>НДС</option>
 								</optgroup>
 							</select>
 						</td>
-						<td width="250"><b><?= $data[0][ $i ] ?></b></td>
+						<td class="w250"><b><?= $data[0][ $i ] ?></b></td>
 						<td>
-							<div class="ellipsis"><?= ($data[1][ $i ]) ?></div>
+							<div class=""><?= ($data[1][ $i ]) ?></div>
 						</td>
 					</tr>
 				<?php } ?>
@@ -583,13 +496,13 @@ if ( $action == "mass" ) {
 			$listcat[] = $value['id'];
 		}
 
-		$sort .= " and (".$sqlname."price.pr_cat='".$idcategory."' or ".$sqlname."price.pr_cat IN (".implode( ",", $listcat )."))";
+		$sort .= " and ({$sqlname}price.pr_cat='".$idcategory."' or {$sqlname}price.pr_cat IN (".implode( ",", $listcat )."))";
 	}
 
 	if ( $word != '' )
 		$sort .= " and ((artikul LIKE '%".$word."%') or (title LIKE '%".$word."%') or (descr LIKE '%".$word."%'))";
 
-	$count = $db -> getOne( "SELECT COUNT(*) as count FROM ".$sqlname."price where n_id > 0 ".$sort." and identity = '$identity'" );
+	$count = $db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}price where n_id > 0 ".$sort." and identity = '$identity'" );
 	?>
 	<div class="zagolovok"><b>Групповое действие</b></div>
 
@@ -677,7 +590,7 @@ if ( $action == "cat.list" ) {
 		<?php
 		if ( $_REQUEST['sklad'] == 'yes' ) {
 
-			$msettings = $db -> getOne( "SELECT settings FROM ".$sqlname."modcatalog_set WHERE identity = '$identity'" );
+			$msettings = $db -> getOne( "SELECT settings FROM {$sqlname}modcatalog_set WHERE identity = '$identity'" );
 			$msettings = json_decode( $msettings, true );
 
 			if(count( $msettings['mcPriceCat'] ) > 0) {
@@ -722,9 +635,9 @@ if ( $action == "cat.list" ) {
 					$subb[] = $v['id'];
 				}
 
-				$subb = ( count( $subb ) > 0 ) ? " or ".$sqlname."price.pr_cat IN (".implode( ",", $subb ).")" : '';
+				$subb = ( count( $subb ) > 0 ) ? " or {$sqlname}price.pr_cat IN (".implode( ",", $subb ).")" : '';
 
-				$count = $db -> getOne( "SELECT COUNT(*) as count FROM ".$sqlname."price WHERE (pr_cat='".$value['id']."' $subb) and identity = '$identity'" );
+				$count = $db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}price WHERE (pr_cat='".$value['id']."' $subb) and identity = '$identity'" );
 
 				$s = ( $value['level'] > 0 ) ? str_repeat( '&nbsp;&nbsp;&nbsp;', $value['level'] ).'<div class="strelka w20 ml10 mr10"></div>&nbsp;&nbsp;' : '';
 
@@ -910,11 +823,27 @@ if ( $action == "cat.edit" ) {
 
 	}
 
-	$('#dialog').center();
-
 	$(function () {
 
 		$('#descr').autoHeight(200);
+		$('#dialog').center();
+
+		$('.calc')
+			.off('keyup')
+			.on('keyup', function () {
+
+				var priceIn = parseFloat($('#price_in').val().replace(/ /g, '').replace(/,/g, '.'))
+
+				$('.xcalc').each(function () {
+
+					var calc  = parseFloat($(this).find('input.calc').val().replace(/ /g, '').replace(/,/g, '.'))
+					var newprice = priceIn * (1 + calc / 100)
+
+					$(this).find('input.field').val(new Intl.NumberFormat('ru', {style: 'decimal', minimumFractionDigits: 2}).format(newprice))
+
+				})
+
+			})
 
 	});
 
@@ -922,7 +851,7 @@ if ( $action == "cat.edit" ) {
 
 		if (action === 'import.on') Discard();
 
-	});
+	})
 
 	$('#priceForm').ajaxForm({
 		beforeSubmit: function () {
@@ -1018,9 +947,6 @@ if ( $action == "cat.edit" ) {
 			else configpage();
 
 		},
-		complete: function () {
-			//$('#dialog').addClass('dtransition');
-		}
 	});
 
 	function Discard() {
@@ -1041,55 +967,6 @@ if ( $action == "cat.edit" ) {
 
 		if (cel == 'pMove') $('#catt').removeClass('hidden');
 		else $('#catt').addClass('hidden');
-
-	}
-
-	function priceCalc(mnog) {
-
-		var priceIn = parseFloat($('#price_in').val().replace(/ /g, '').replace(/,/g, '.'));
-
-		if ($('#mnog_1').is('input')) var mnog1 = $('#mnog_1').val().replace(/ /g, '').replace(/,/g, '.');
-		if ($('#mnog_2').is('input')) var mnog2 = $('#mnog_2').val().replace(/ /g, '').replace(/,/g, '.');
-		if ($('#mnog_3').is('input')) var mnog3 = $('#mnog_3').val().replace(/ /g, '').replace(/,/g, '.');
-		if ($('#mnog_4').is('input')) var mnog4 = $('#mnog_4').val().replace(/ /g, '').replace(/,/g, '.');
-		if ($('#mnog_5').is('input')) var mnog5 = $('#mnog_5').val().replace(/ /g, '').replace(/,/g, '.');
-
-
-		if (mnog1 !== '') {
-
-			var price1 = priceIn * (1 + parseFloat(mnog1) / 100);
-
-			$('#price_1').val(setNumFormat(price1.toFixed(2), ',', ' ').replace('.', ','));
-
-		}
-		if (mnog2 !== '') {
-
-			var price2 = priceIn * (1 + parseFloat(mnog2) / 100);
-
-			$('#price_2').val(setNumFormat(price2.toFixed(2), ',', ' ').replace('.', ','));
-
-		}
-		if (mnog3 !== '') {
-
-			var price3 = priceIn * (1 + parseFloat(mnog3) / 100);
-
-			$('#price_3').val(setNumFormat(price3.toFixed(2), ',', ' ').replace('.', ','));
-
-		}
-		if (mnog4 !== '') {
-
-			var price4 = priceIn * (1 + parseFloat(mnog4) / 100);
-
-			$('#price_4').val(setNumFormat(price4.toFixed(2), ',', ' ').replace('.', ','));
-
-		}
-		if (mnog5 !== '') {
-
-			var price5 = priceIn * (1 + parseFloat(mnog5) / 100);
-
-			$('#price_5').val(setNumFormat(price5.toFixed(2), ',', ' ').replace('.', ','));
-
-		}
 
 	}
 

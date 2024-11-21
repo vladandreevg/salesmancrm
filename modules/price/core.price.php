@@ -58,34 +58,47 @@ if ($action == "delete") {
 if ($action == "export") {
 
 	$dname = [];
+	$fields = [];
+	$sfields = '';
+	$result = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
+	while ($data = $db -> fetch( $result )) {
 
-	$result = $db -> query("SELECT * FROM {$sqlname}field WHERE fld_tip='price' and identity = '$identity' ORDER BY fld_order");
-	while ($data = $db -> fetch($result)) {
-		$dname[$data['fld_name']] = $data['fld_title'];
-		$dvar[$data['fld_name']]  = $data['fld_var'];
-		$don[]                    = $data['fld_name'];
+		$dname[ $data['fld_name'] ] = $data['fld_title'];
+		$dvar[ $data['fld_name'] ]  = $data['fld_var'];
+		$don[]                      = $data['fld_name'];
+
+		if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+			$fields[] = [
+				"field" => $data['fld_name'],
+				"title" => $data['fld_title'],
+				"value" => $data['fld_var'],
+			];
+
+		}
+
 	}
 
 	$idcategory = (int)$_REQUEST['idcat'];
 	$word       = $_REQUEST['word'];
 	$sort       = '';
 
-	$otchet[] = [
+	$h = [
 		"ID",
 		"Артикул",
 		"Категория",
 		"ID категории",
 		"Наименование",
 		"Ед.изм.",
-		$dname['price_in'],
-		$dname['price_1'],
-		$dname['price_2'],
-		$dname['price_3'],
-		$dname['price_4'],
-		$dname['price_5'],
-		"Примечание",
-		"НДС"
+		$dname['price_in']
 	];
+	foreach ($fields as $field) {
+		$h[] = $field['title'];
+	}
+	$h[] = "Примечание";
+	$h[] = "НДС";
+
+	$otchet[] = $h;
 
 	if ($idcategory > 0) {
 
@@ -100,36 +113,35 @@ if ($action == "export") {
 	$result = $db -> query("SELECT * FROM {$sqlname}price WHERE n_id > 0 ".$sort." and identity = '$identity' ORDER BY pr_cat");
 	while ($data = $db -> fetch($result)) {
 
+		$s = [];
+
 		$result1 = $db -> getRow("select * from {$sqlname}price_cat where idcategory='".$data['pr_cat']."' and identity = '$identity'");
 		$cats    = $result1["title"];
 		$idsub   = $result1["sub"];
 
 		$sub2 = $db -> getOne("select title from {$sqlname}price_cat where idcategory='".$idsub."' and identity = '$identity'");
 
-		$otchet[] = [
-			$data['n_id'],
-			$data['artikul'],
+		$s = [
+			(int)$data['n_id'],
+			$data['artikul']." ",
 			$cats,
-			$data['pr_cat'],
+			(int)$data['pr_cat'],
 			$data['title'],
 			$data['edizm'],
-			$data['price_in'],
-			$data['price_1'],
-			$data['price_2'],
-			( $data['price_3'] ),
-			( $data['price_4'] ),
-			( $data['price_5'] ),
-			untag($data['descr']),
-			( $data['nds'] )
+			(float)$data['price_in']
 		];
+		foreach ($fields as $field) {
+			$s[] = (float)$data[$field['field']];
+		}
+		$s[] = $data['descr'];
+		$s[] = $data['nds'];
+
+		$otchet[] = $s;
 
 	}
 
-	/*
-	$xls = new Excel_XML( 'UTF-8', true, 'Price' );
-	$xls -> addArray( $otchet );
-	$xls -> generateXML( 'export_price' );
-	*/
+	//print_r($otchet);
+	//file_put_contents($rootpath."/cash/price.json", json_encode_cyr($otchet));
 
 	Shuchkin\SimpleXLSXGen ::fromArray($otchet) -> downloadAs('export.price.xlsx');
 
@@ -388,15 +400,14 @@ if ($action == "import.upload") {
 }
 if ($action == "import.on") {
 
-	$isPrice = [
+	$i = [
 		"price_in",
-		"price_1",
-		"price_2",
-		"price_3",
-		"price_4",
-		"price_5",
 		"nds"
 	];
+	foreach ($fields as $field) {
+		$i[] = $field['field'];
+	}
+	$isPrice = $i;
 
 	$url    = $rootpath.'/files/'.$fpath.$_COOKIE['url_catalog'];//файл для расшифровки
 	$fields = $_REQUEST['field'];                                //порядок полей
@@ -421,15 +432,18 @@ if ($action == "import.on") {
 
 			$headers[$i] = $val;
 
+			//индекс id позиции
 			if ($val == 'n_id') {
 				$idx = $i;
-			} //индекс id позиции
+			}
+			//индекс названия позиции
 			if ($val == 'title') {
 				$clx = $i;
-			} //индекс названия позиции
+			}
+			//индекс артикула позиции
 			if ($val == 'artikul') {
 				$alx = $i;
-			} //индекс артикула позиции
+			}
 
 			$indexs['price'][]  = $val;//массив ключ поля -> номер столбца
 			$names['price'][$i] = $val;//массив номер столбца -> индекс поля
@@ -637,6 +651,8 @@ if ($action == "import.on") {
 		elseif ($row['title'] != '') {
 			$prid = $db -> getOne("select n_id from {$sqlname}price where title = '".$row['title']."' and identity = '$identity'") + 0;
 		}
+
+		$row['datum'] = current_datumtime();
 
 		/**
 		 * Обрабатываем позиции

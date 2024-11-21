@@ -110,7 +110,6 @@ if ($resvizit < 1) {
 	<script src="/assets/js/jquery/jquery-ui.min.js?v=2019.4"></script>
 
 	<script src="/assets/js/moment.js/moment.min.js"></script>
-	<script src="/assets/js/app.js?v=2024.1"></script>
 
 	<script src="/assets/js/jquery/jquery.nanoscroller.js"></script>
 	<script src="/assets/js/jquery/jquery.ptTimeSelect.js"></script>
@@ -146,6 +145,8 @@ if ($resvizit < 1) {
 	<link href="/assets/js/dadata/suggestions.min.css" rel="stylesheet">
 	<script src="/assets/js/dadata/suggestions.jquery.min.js"></script>
 	<script src="/assets/js/dadata/suggestions.addon.js"></script>
+
+	<script src="/assets/js/app.js?v=2024.1"></script>
 
 	<?php
 	$hooks->do_action('main__js');

@@ -31,37 +31,37 @@ if ( $action == 'add' ) {
 	$action = 'edit';
 }
 
-
 $dname  = [];
-$result = $db -> query( "SELECT * FROM ".$sqlname."field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
+$fields = [];
+$result = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
 while ($data = $db -> fetch( $result )) {
 
 	$dname[ $data['fld_name'] ] = $data['fld_title'];
 	$dvar[ $data['fld_name'] ]  = $data['fld_var'];
 	$don[]                      = $data['fld_name'];
 
+	if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+		$fields[] = [
+			"field" => $data['fld_name'],
+			"title" => $data['fld_title'],
+			"value" => $data['fld_var'],
+		];
+
+	}
+
 }
 
 if ( $action == 'edit' ) {
 
 	$spid = (int)$_REQUEST['spid'];
+	$prid = 0;
 
 	if ( $spid > 0 ) {
 
 		$clid = getDogData( $did, "clid" );
 
-		$speka = $db -> getRow( "SELECT * FROM ".$sqlname."speca WHERE spid = '$spid' and identity = '$identity'" );
-		/*$artikul  = $result["artikul"];
-		$title    = $result["title"];
-		$tip      = $result["tip"];
-		$prid     = $result["prid"];
-		$price    = $result["price"];
-		$edizm    = $result["edizm"];
-		$kol      = $result["kol"];
-		$nds      = $result["nds"];
-		$dop      = $result["dop"];
-		$price_in = $result["price_in"];
-		$comment  = $result["comments"];*/
+		$speka = $db -> getRow( "SELECT * FROM {$sqlname}speca WHERE spid = '$spid' and identity = '$identity'" );
 
 		$prid = (int)$speka['prid'];
 
@@ -72,7 +72,7 @@ if ( $action == 'edit' ) {
 	}
 	else {
 
-		$result       = $db -> getRow( "SELECT mcid, clid FROM ".$sqlname."dogovor WHERE did = '$did' and identity = '$identity'" );
+		$result       = $db -> getRow( "SELECT mcid, clid FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'" );
 		$mcid         = (int)$result["mcid"];
 		$clid         = (int)$result["clid"];
 		$speka['dop'] = 1;
@@ -88,10 +88,9 @@ if ( $action == 'edit' ) {
 
 	if ( $prid > 0 ) {
 
-		//$price = $db -> getRow( "SELECT * FROM ".$sqlname."price WHERE n_id = '$prid' and identity = '$identity'" );
-
 		$price = Price ::info( $prid )['data'];
 
+		// расчет кол-ва на складах
 		if ( $GLOBALS['isCatalog'] == 'on' ) {
 
 			$sklad = [];
@@ -99,12 +98,12 @@ if ( $action == 'edit' ) {
 			$total = 0;
 
 			//запросим информацию по наличию на складе
-			$res = $db -> query( "SELECT sklad FROM ".$sqlname."modcatalog_skladpoz WHERE prid = '$prid' and status = 'in' and identity = '$identity' GROUP BY sklad" );
+			$res = $db -> query( "SELECT sklad FROM {$sqlname}modcatalog_skladpoz WHERE prid = '$prid' and status = 'in' and identity = '$identity' GROUP BY sklad" );
 			while ($da = $db -> fetch( $res )) {
 
-				$skld      = $db -> getOne( "SELECT title FROM ".$sqlname."modcatalog_sklad WHERE id = '$da[sklad]' and identity = '$identity'" );
-				$kol_res   = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_reserv WHERE prid = '$prid' and sklad = '$da[sklad]' and identity = '$identity'" );
-				$kol_sklad = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM ".$sqlname."modcatalog_skladpoz WHERE prid = '$prid' and `status` = 'in' and sklad = '$da[sklad]' and identity = '$identity'" );
+				$skld      = $db -> getOne( "SELECT title FROM {$sqlname}modcatalog_sklad WHERE id = '$da[sklad]' and identity = '$identity'" );
+				$kol_res   = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE prid = '$prid' and sklad = '$da[sklad]' and identity = '$identity'" );
+				$kol_sklad = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_skladpoz WHERE prid = '$prid' and `status` = 'in' and sklad = '$da[sklad]' and identity = '$identity'" );
 
 				$sklad[] = [
 					"sklad" => $skld,
@@ -130,8 +129,9 @@ if ( $action == 'edit' ) {
 
 			}
 
-			if ( $str == '' )
+			if ( $str == '' ) {
 				$str = '<div class="gray p10">Отсутствует на складах</div>';
+			}
 
 		}
 
@@ -273,30 +273,24 @@ if ( $action == 'edit' ) {
 
 							<div class="flex-string wp25 gray2 fs-11 text-right pt7">Уровни цен:</div>
 							<div class="flex-string wp70 pl10">
-								<?php if ( in_array( 'price_2', (array)$don ) ) { ?>
-									<div class="tags">
-										<b><?= $dname['price_2'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_2'] ) ?></b>&nbsp;
-										<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_2'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-									</div>
-								<?php } ?>
-								<?php if ( in_array( 'price_3', (array)$don ) ) { ?>
-									<div class="tags">
-										<b><?= $dname['price_3'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_3'] ) ?></b>&nbsp;
-										<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_3'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-									</div>
-								<?php } ?>
-								<?php if ( in_array( 'price_4', (array)$don ) ) { ?>
-									<div class="tags">
-										<b><?= $dname['price_4'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_4'] ) ?></b>&nbsp;
-										<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_4'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-									</div>
-								<?php } ?>
-								<?php if ( in_array( 'price_5', (array)$don ) ) { ?>
-									<div class="tags">
-										<b><?= $dname['price_5'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_5'] ) ?></b>&nbsp;
-										<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_5'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-									</div>
-								<?php } ?>
+
+								<?php
+								foreach ($fields as $field) {
+
+									if($field['field'] !== 'price_1'){
+
+										print '
+										<div class="tags">
+											<b>'.$field['title'].':</b>&nbsp;<b class="red">'.num_format( $price[$field['field']] ).'</b>&nbsp;
+											<a href="javascript:void(0)" class="txt xselect" title="Выбрать" data-value="'.num_format( $price[$field['field']] ).'">&nbsp;<i class="icon-plus broun"></i></a>
+										</div>
+										';
+
+									}
+
+								}
+								?>
+
 							</div>
 
 						</div>
@@ -416,6 +410,7 @@ if ( $action == 'edit' ) {
 
 }
 
+// вывод позиций поиска
 if ( $action == 'get.price' ) {
 
 	$idcategory = (int)$_GET['idcategory'];
@@ -433,8 +428,8 @@ if ( $action == 'get.price' ) {
 
 		//print_r($catalog);
 
-		$ss   = !empty( $listcat ) ? " or ".$sqlname."price.pr_cat IN (".implode( ",", $listcat ).")" : '';
-		$sort .= " and (".$sqlname."price.pr_cat='".$idcategory."'".$ss.")";
+		$ss   = !empty( $listcat ) ? " or {$sqlname}price.pr_cat IN (".implode( ",", $listcat ).")" : '';
+		$sort .= " and ({$sqlname}price.pr_cat='".$idcategory."'".$ss.")";
 
 	}
 
@@ -450,7 +445,7 @@ if ( $action == 'get.price' ) {
 
 	}
 
-	$result = $db -> query( "SELECT * FROM ".$sqlname."price WHERE n_id > 0 $sort and archive != 'yes' and identity = '$identity' ORDER BY title" );
+	$result = $db -> query( "SELECT * FROM {$sqlname}price WHERE n_id > 0 $sort and archive != 'yes' and identity = '$identity' ORDER BY title" );
 	while ($data = $db -> fetch( $result )) {
 
 		$art = ($data['artikul'] != '') ? $data['artikul']."  ::  " : '';
@@ -462,6 +457,8 @@ if ( $action == 'get.price' ) {
 	exit();
 
 }
+
+// подгрузка при выборе позиции прайса в спецификации
 if ( $action == 'get.poz' ) {
 
 	$prid = (int)$_REQUEST['prid'];
@@ -469,7 +466,7 @@ if ( $action == 'get.poz' ) {
 
 	$priceLevel = getClientData( $clid, "priceLevel" );
 
-	$result     = $db -> getRow( "SELECT * FROM ".$sqlname."price WHERE n_id='".$prid."' and identity = '$identity'" );
+	$result     = $db -> getRow( "SELECT * FROM {$sqlname}price WHERE n_id='".$prid."' and identity = '$identity'" );
 	$title      = $result["title"];
 	$artikul    = $result["artikul"];
 	$datum      = $result["datum"];
@@ -494,12 +491,12 @@ if ( $action == 'get.poz' ) {
 		$total = 0;
 
 		//запросим информацию по наличию на складе
-		$res = $db -> query( "SELECT sklad FROM ".$sqlname."modcatalog_skladpoz WHERE prid='".$prid."' and status = 'in' and identity = '$identity' GROUP BY sklad" );
+		$res = $db -> query( "SELECT sklad FROM {$sqlname}modcatalog_skladpoz WHERE prid='".$prid."' and status = 'in' and identity = '$identity' GROUP BY sklad" );
 		while ($da = $db -> fetch( $res )) {
 
-			$skld      = $db -> getOne( "select title from ".$sqlname."modcatalog_sklad where id='".$da['sklad']."' and identity = '$identity'" );
-			$kol_res   = (float)$db -> getOne( "select SUM(kol) as kol from ".$sqlname."modcatalog_reserv where prid='".$prid."' and sklad = '$da[sklad]' and identity = '$identity'" );
-			$kol_sklad = (float)$db -> getOne( "select SUM(kol) as kol from ".$sqlname."modcatalog_skladpoz where prid='".$prid."' and `status` = 'in' and sklad = '$da[sklad]' and identity = '$identity'" );
+			$skld      = $db -> getOne( "select title from {$sqlname}modcatalog_sklad where id='".$da['sklad']."' and identity = '$identity'" );
+			$kol_res   = (float)$db -> getOne( "select SUM(kol) as kol from {$sqlname}modcatalog_reserv where prid='".$prid."' and sklad = '$da[sklad]' and identity = '$identity'" );
+			$kol_sklad = (float)$db -> getOne( "select SUM(kol) as kol from {$sqlname}modcatalog_skladpoz where prid='".$prid."' and `status` = 'in' and sklad = '$da[sklad]' and identity = '$identity'" );
 
 			$sklad[] = [
 				"sklad" => $skld,
@@ -521,8 +518,9 @@ if ( $action == 'get.poz' ) {
 
 		}
 
-		if ( $str == '' )
+		if ( $str == '' ) {
 			$str = '<div class="gray p10">Отсутствует на складах</div>';
+		}
 
 	}
 
@@ -648,30 +646,24 @@ if ( $action == 'get.poz' ) {
 
 			<div class="flex-string wp25 gray2 fs-11 text-right pt7">Уровни цен:</div>
 			<div class="flex-string wp70 pl10">
-				<?php if ( in_array( 'price_2', (array)$don ) ) { ?>
-					<div class="tags">
-						<b><?= $dname['price_2'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_2'] ) ?></b>&nbsp;
-						<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_2'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-					</div>
-				<?php } ?>
-				<?php if ( in_array( 'price_3', (array)$don ) ) { ?>
-					<div class="tags">
-						<b><?= $dname['price_3'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_3'] ) ?></b>&nbsp;
-						<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_3'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-					</div>
-				<?php } ?>
-				<?php if ( in_array( 'price_4', (array)$don ) ) { ?>
-					<div class="tags">
-						<b><?= $dname['price_4'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_4'] ) ?></b>&nbsp;
-						<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_4'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-					</div>
-				<?php } ?>
-				<?php if ( in_array( 'price_5', (array)$don ) ) { ?>
-					<div class="tags">
-						<b><?= $dname['price_5'] ?>:</b>&nbsp;<b class="red"><?= num_format( $price['price_5'] ) ?></b>&nbsp;
-						<a href="javascript:void(0)" onclick="$('#price').val('<?= num_format( $price['price_5'] ) ?>')" class="txt" title="Выбрать">&nbsp;<i class="icon-plus broun"></i></a>
-					</div>
-				<?php } ?>
+
+				<?php
+				foreach ($fields as $field) {
+
+					if($field['field'] !== 'price_1'){
+
+						print '
+						<div class="tags">
+							<b>'.$field['title'].':</b>&nbsp;<b class="red">'.num_format( $price[$field['field']] ).'</b>&nbsp;
+							<a href="javascript:void(0)" class="txt xselect" title="Выбрать" data-value="'.num_format( $price[$field['field']] ).'">&nbsp;<i class="icon-plus broun"></i></a>
+						</div>
+						';
+
+					}
+
+				}
+				?>
+
 			</div>
 
 		</div>
@@ -720,6 +712,7 @@ if ( $action == 'get.poz' ) {
 	exit();
 }
 
+// импорт прайса
 if ( $action == 'import' ) {
 	?>
 	<div class="zagolovok">Импорт спецификации</div>
@@ -875,14 +868,14 @@ if ( $action == 'export' ) {
 			$err      = 0;
 			$num      = 0;
 			$sum_in   = 0;
-			$result_s = $db -> query( "SELECT * FROM ".$sqlname."speca WHERE did = '$did' and identity = '$identity' ORDER BY spid" );
+			$result_s = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' and identity = '$identity' ORDER BY spid" );
 			while ($data = $db -> fetch( $result_s )) {
 
 				$delta           = 0;
 				$price_in_actual = 0;
 				$all             = 0;
 
-				$price_in_actual = $db -> getOne( "SELECT price_in FROM ".$sqlname."price WHERE artikul='".$data['artikul']."' and identity = '$identity'" ) + 0;
+				$price_in_actual = $db -> getOne( "SELECT price_in FROM {$sqlname}price WHERE artikul='".$data['artikul']."' and identity = '$identity'" ) + 0;
 
 				$kol_sum = pre_format( $data['kol'] ) * num_format( $data['price'] ) * num_format( $data['dop'] );
 				$sum     += $kol_sum;
@@ -962,7 +955,7 @@ if ( $action == 'export' ) {
 if ( $action == 'priceSelect' ) {
 
 	$dop    = 1;
-	$result = $db -> getRow( "SELECT mcid, clid FROM ".$sqlname."dogovor WHERE did='".$did."' and identity = '$identity'" );
+	$result = $db -> getRow( "SELECT mcid, clid FROM {$sqlname}dogovor WHERE did='".$did."' and identity = '$identity'" );
 	$mcid   = (int)$result["mcid"];
 	$clid   = (int)$result["clid"];
 
@@ -1074,8 +1067,7 @@ if ( $action == 'priceSelect' ) {
 							</tr>
 							<tr>
 								<td>
-									<select name="price_list" id="price_list" multiple="multiple" style="width:100%; height:240px" onChange="GetNom();" onClick="GetNom();">
-									</select>
+									<select name="price_list" id="price_list" multiple="multiple" style="width:100%; height:240px" onChange="GetNom();" onClick="GetNom();"></select>
 								</td>
 							</tr>
 						</table>
@@ -1131,7 +1123,6 @@ if ( $action == 'priceSelect' ) {
 
 	}
 
-
 	$(function () {
 
 		$('#price_list').load('/content/forms/form.speca.php?action=get.price&idcategory=<?=$price['pr_cat']?>&clid=<?=$clid?>');
@@ -1180,10 +1171,14 @@ if ( $action == 'priceSelect' ) {
 		});
 
 		$(".required").on("change", function () {
-
 			$(".required").css({"background": "white", "color": "black"});
-
 		});
+
+		$('.xselect')
+			.off('click')
+			.on('click', function () {
+				$('#price').val( $(this).data('value') )
+			})
 
 	});
 
@@ -1232,6 +1227,7 @@ if ( $action == 'priceSelect' ) {
 
 	}
 
+	// поиск позиции
 	function SeachPrice() {
 
 		var word = $('#word').val().replace(/ /g, '--');
@@ -1241,6 +1237,7 @@ if ( $action == 'priceSelect' ) {
 
 	}
 
+	// выбор позиции
 	function GetNom() {
 
 		var id = $('#price_list option:selected').val();
@@ -1253,7 +1250,15 @@ if ( $action == 'priceSelect' ) {
 
 		})
 			.done(function () {
+
+				$('.xselect')
+					.off('click')
+					.on('click', function () {
+						$('#price').val( $(this).data('value') )
+					})
+
 				$('#dialog').center();
+
 			});
 
 		$('#prid').val(id);

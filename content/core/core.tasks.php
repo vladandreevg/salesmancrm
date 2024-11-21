@@ -109,7 +109,6 @@ if ($action == "edit") {
 		$_REQUEST = $hooks -> apply_filters( "task_addfilter", $_REQUEST );
 	}
 
-
 	$tparam['title']    = untag($_REQUEST['title']);
 	$tparam['des']      = str_replace("\r\n", "\n", untag($_REQUEST['des']));
 	$tparam['clid']     = (int)$_REQUEST['clid'];
