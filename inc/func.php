@@ -1030,6 +1030,8 @@ function pre_format(string $string = NULL): float {
 
 	if (!is_null($string)) {
 
+		$string = str_replace(" ", "", $string);
+
 		return (float)str_replace([
 			",",
 			" "

@@ -293,6 +293,22 @@ class Price {
 
 		$post = $params;
 
+		$fields = [];
+		$result = $db -> query( "SELECT * FROM {$sqlname}field WHERE fld_tip='price' AND fld_on='yes' and identity = '$identity' ORDER BY fld_order" );
+		while ($data = $db -> fetch( $result )) {
+
+			if($data['fld_name'] != 'price_in' && $data['fld_on'] == 'yes') {
+
+				$fields[] = [
+					"field" => $data['fld_name'],
+					"title" => $data['fld_title'],
+					"value" => $data['fld_var'],
+				];
+
+			}
+
+		}
+
 		//поля, которые есть в таблице
 		$allowed = [
 			'artikul',
@@ -311,10 +327,21 @@ class Price {
 			'identity'
 		];
 
+		foreach ($fields as $field) {
+			$allowed[] = $field['field'];
+			print $params[$field['field']]."\n";
+			$params[$field['field']] = pre_format($params[$field['field']]);
+			print $params[$field['field']]."\n";
+		}
+
 		$params['pr_cat']   = (int)$params['idcategory'];
+
+		//print_r($params);
 
 		$xparams = (array)data2dbtypes($params, "{$sqlname}price");
 		$params = $xparams;
+
+		//print_r($xparams);
 
 		$params['archive']  = ( $params['archive'] == 'yes' ) ? 'yes' : 'no';
 
