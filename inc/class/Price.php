@@ -329,9 +329,9 @@ class Price {
 
 		foreach ($fields as $field) {
 			$allowed[] = $field['field'];
-			print $params[$field['field']]."\n";
+			//print $params[$field['field']]."\n";
 			$params[$field['field']] = pre_format($params[$field['field']]);
-			print $params[$field['field']]."\n";
+			//print $params[$field['field']]."\n";
 		}
 
 		$params['pr_cat']   = (int)$params['idcategory'];
@@ -349,9 +349,7 @@ class Price {
 
 		//добавляем категорию
 		if ($params['new_folder'] != '') {
-
 			$params['pr_car'] = self ::addCategoryFromTitle($params['new_folder']);
-
 		}
 
 		//очищаем от мусора и случайных элементов
