@@ -1231,7 +1231,7 @@ if ( $action == "view" ) {
 						<tr>
 							<td>
 								<span class="smalltxt"><b class="blue">Описание</b>:</span><br>
-								<div class="viewdiv"><?= $descr ?></div>
+								<div class="viewdiv"><?= $price['descr'] ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -1270,8 +1270,9 @@ if ( $action == "view" ) {
 
 								$val = implode( "; ", $val );
 
-								if ( $val == '' )
+								if ( $val == '' ) {
 									$val = '--не заполнен--';
+								}
 
 								$width = $data['pwidth'] - 1;
 
@@ -1284,12 +1285,13 @@ if ( $action == "view" ) {
 										';
 									print '</div>';
 								}
-								if ( $data['tip'] == 'divider' )
+								if ( $data['tip'] == 'divider' ) {
 									print '
 									<tr>
 										<td colspan="2"><div id="divider" style="width:97%; float:left; margin-top:10px" align="center"><b>'.$data['name'].'</b></div></td>
 									</tr>
 									';
+								}
 								$val = '';
 							}
 							?>
