@@ -339,10 +339,10 @@ switch ($params['action']) {
 		}
 
 		if ($params['user'] != '') {
-			$sort .= " and ".$sqlname."person.iduser = '".current_userbylogin( $params['user'] )."'";
+			$sort .= " and iduser = '".current_userbylogin( $params['user'] )."'";
 		}
 		else {
-			$sort .= " and ".$sqlname."person.iduser IN (".yimplode( ",", get_people( $iduser, "yes" ) ).")";
+			$sort .= " and iduser IN (".yimplode( ",", get_people( $iduser, "yes" ) ).")";
 		}
 
 		//todo: проверить работу доп.фильтров
