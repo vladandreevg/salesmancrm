@@ -70,16 +70,17 @@ if ($action == "edit.on") {
 if ($action == "edit_order") {
 
 	$table1 = yexplode(';', yimplode(';', $_REQUEST['table-1']));
+	$i = 1;
 
-	$count1 = count($_REQUEST['table-1']);
-	$err    = 0;
+	foreach ($table1 as $table) {
 
-	//Обновляем данные для текущей записи
-	for ($i = 1; $i < $count1; $i++) {
+		//Обновляем данные для текущей записи
+		$db -> query("UPDATE {$sqlname}complect_cat SET corder = '$i' WHERE ccid = '$table' AND identity = '$identity'");
 
-		$db -> query("update {$sqlname}complect_cat set corder = '$i' where ccid = '".$table1[$i]."' and identity = '$identity'");
+		$i++;
 
 	}
+
 
 	print "Сделано";
 	exit;
@@ -93,8 +94,8 @@ if ($action == "edit") {
 		$result     = $db -> getRow("SELECT * FROM {$sqlname}complect_cat where ccid='".$ccid."' and identity = '$identity'");
 		$title      = $result["title"];
 		$idcategory = $result["dstep"];
-		$sroles     = yexplode(",", $result["role"]);
-		$users      = yexplode(",", $result["users"]);
+		$sroles     = (array)yexplode(",", $result["role"]);
+		$users      = (array)yexplode(",", $result["users"]);
 
 	}
 	?>
@@ -141,7 +142,7 @@ if ($action == "edit") {
 					print '
 					<div class="flex-string wp50 p5 pl20">
 
-						<label><input name="role[]" type="checkbox" id="role[]" value="'.$role.'" '.( in_array($role, $sroles) ? 'checked' : '' ).'>&nbsp;'.$role.'</label>
+						<label><input name="role[]" type="checkbox" id="role[]" value="'.$role.'" '.( in_array($role, (array)$sroles) ? 'checked' : '' ).'>&nbsp;'.$role.'</label>
 	
 					</div>
 					';

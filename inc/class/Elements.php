@@ -151,7 +151,7 @@ class Elements {
 				}
 
 				else {
-					$el['active'][] = '<option value="'.$data['iduser'].'" class="'.($data['iduser'] == $iduser1 ? "greenbg white" : "").'" '.(in_array( $data['iduser'], $opt['sel'] ) ? "selected" : "").'>'.$data['title'].($data['iduser'] == $iduser1 ? ' [ Я ]' : '').'</option>';
+					$el['active'][] = '<option value="'.$data['iduser'].'" class="'.($data['iduser'] == $iduser1 ? "greenbg white" : "").'" '.(in_array( $data['iduser'], (array)$opt['sel'] ) ? "selected" : "").'>'.$data['title'].($data['iduser'] == $iduser1 ? ' [ Я ]' : '').'</option>';
 				}
 
 			}
