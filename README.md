@@ -38,6 +38,15 @@ SalesMan CRM является универсальной системой упр
 - mod_php - желателен, но не обязателен (позволяет менять настройки php через файл .htaccess)
 
 > При использовании Nginx требуется настроить перенаправления вручную
+> При использовании Apache в конфигурационном файле хоста должна быть запись (для корректной работы mod_rewrite):
+>
+> ```
+> <Directory /var/www/test.ru/public_html/>
+>   Options Indexes FollowSymLinks
+>   AllowOverride All
+>   Require all granted
+> </Directory>```
+
 
 ### База данных: MySQL / MariaDB
 
