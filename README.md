@@ -59,7 +59,7 @@ SalesMan CRM является универсальной системой упр
 - если записи sql-mode нет в файле настроек, то необходимо добавить строку с перезагрузкой MySQL:
   `sql-mode="NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES"`
 
->    Чтобы узнать текущий параметр sql-log используйте команду:
+>    Чтобы узнать текущий параметр sql-mode используйте команду:
 > 
 >    `show variables like 'sql_mode';`
 
