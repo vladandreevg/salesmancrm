@@ -1,0 +1,25 @@
+<script id="uploadTpl" type="text/html">
+
+	{{#list}}
+		<div class="explorer--row float" data-id="{{id}}" data-title="{{title}}">
+
+			<div class="">
+				<div class="fs-12 flh-11 Bold blue mb10 text-wrap">{{title}}</div>
+				{{#content}}<div class="fs-10 mb10">{{content}}</div>{{/content}}
+				<div class="fs-09 gray">
+					<span><i class="icon-folder"></i> {{folder}}</span>&nbsp;
+					<span class="smalltxt gray hidden-iphone"><i class="icon-user-1"></i> {{user}}</span>
+					<span>{{size}} кб</span>
+				</div>
+			</div>
+			<div class="pl10">
+				<a href="javascript:void(0)" class="event button dotted greenbtn fs-09 p0" title="Выбрать" data-id="{{id}}" data-title="{{title}}"><i class="icon-ok"></i></a>
+				<A href="javascript:void(0)" onclick="fileDownload('{{id}}','download','yes','{{title}}')" title="Скачать" class="button dotted bluebtn fs-09 p0"><i class="icon-download"></i></A>
+				{{#view}}
+					<A href="javascript:void(0)" onclick="fileDownload('{{id}}')" title="Просмотр" class="button dotted brounbtn fs-09 p0"><i class="icon-eye"></i></A>
+				{{/view}}
+			</div>
+
+		</div>
+	{{/list}}
+</script>

@@ -1,0 +1,88 @@
+.explorer{
+	display: none;
+	position: absolute;
+	top: 0;
+	right: -40vw;
+	width: 40vw;
+	height: 100vh;
+	z-index: 100;
+	background: var(--gray-superlite);
+	transition         : left 300ms ease;
+	-webkit-transition : left 300ms ease;
+	-moz-transition    : left 300ms ease;
+	box-shadow         : -2px 0 3px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow : -2px 0 3px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow    : -2px 0 3px rgba(0, 0, 0, 0.3);
+}
+.explorer.open{
+	display: block;
+	right: 0;
+}
+.explorer--close {
+	position    : absolute;
+	top         : 0;
+	right       : 20px;
+	height      : 1.5rem;
+	width       : 1.5rem;
+	font-size   : 1.5rem;
+	line-height : 50px;
+	z-index     : 201;
+	cursor      : pointer;
+	color       : rgba(120, 144, 156, 1);
+}
+.explorer--close:hover {
+	color       : #FFF;
+	text-shadow : 0 0 2px #507192;
+}
+.explorer--block{
+	display: grid;
+	grid-template-rows: 50px 130px calc(100vh - 180px);
+}
+.explorer--header{
+	line-height: 50px;
+	font-size: 1.1em;
+	font-weight: 700;
+	background: var(--gray);
+	padding: 0 10px;
+}
+.explorer--folders{
+	padding: 10px 10px;
+}
+.explorer--search{
+	padding: 0 10px;
+}
+.explorer--files{
+	padding: 0 10px;
+}
+.explorer--filebox{
+	height: 95%;
+	overflow: auto;
+	padding-top: 10px;
+}
+.explorer--row{
+	display: grid;
+	grid-template-columns: 8fr 1fr;
+}
+.explorer--row:hover{
+	background: var(--biruza-lite);
+}
+.explorer--pages{
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+	border                          : 1px solid #CCC;
+	border-bottom                   : 0;
+	padding                         : 5px 10px;
+	text-align                      : center;
+	border-top-left-radius          : 1px;
+	-moz-border-radius-topleft      : 1px;
+	-webkit-border-top-left-radius  : 1px;
+	border-top-right-radius         : 1px;
+	-moz-border-radius-topright     : 1px;
+	-webkit-border-top-right-radius : 1px;
+}
+.explorer--row{
+	border: 1px solid var(--biruza-lite);
+	padding: 5px;
+	margin-bottom: 5px;
+}
