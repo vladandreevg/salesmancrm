@@ -49,6 +49,11 @@ if ( $action == 'edit.item' ) {
 	$print = '';
 	$fid = [];
 
+	// если передается файл
+	if(!empty($_REQUEST['fid'])){
+		$fid[] = (int)$_REQUEST['fid'];
+	}
+
 	//загружаем файлы
 	$upload = Upload ::upload();
 
@@ -427,15 +432,17 @@ if ( $action == 'files' ) {
 		$change = ($cdata['author'] == $iduser1 || $isadmin == 'on' || (in_array( $iduser1, $mdcsettings['Editor'] ) && !in_array( $iduser1, $mdcsettings['EditorMy'] ))) ? 'yes' : '';
 
 	}
-	elseif ( $type == 'Material' )
-		$fidd = CorpUniver ::infoMaterial( $id )['data']['fid'];
+	elseif ( $type == 'Material' ) {
+		$fidd = CorpUniver ::infoMaterial($id)['data']['fid'];
+	}
 
 	$fids = yexplode( ",", $fidd );
 
 	if ( !empty( $fids ) ) {
 
-		if ( $view == 'yes' )
+		if ( $view == 'yes' ) {
 			print '<DIV class="zagolovok">Курс: Прикрепленные файлы</DIV>';
+		}
 
 		foreach ( $fids as $fid ) {
 
@@ -586,11 +593,19 @@ if ( $action == 'resource' ) {
 		}
 
 		$img = '//img.youtube.com/vi/'.$id.'/maxresdefault.jpg';
-		$dom = $html = file_get_contents( $url );
+		$html = file_get_contents( $url );
 		$dom = new DomDocument();
 		$dom -> loadHTML( '<?xml version="1.0" encoding="UTF-8"?>'.$html );
 		$title = $dom -> getElementById( 'eow-title' );
-		$name  = $title -> nodeValue;
+
+		$name = $dom -> getElementsByTagName( 'title' )->item(0)->nodeValue;
+
+		//print_r($x);
+		//print_r($dom -> getElementById( 'title' ));
+		//print $html;
+		//print_r($dom);
+
+		//$name  = $title -> nodeValue;
 
 		$res = ($name != '') ? 'Видео найдено' : 'Успешно';
 
@@ -611,7 +626,7 @@ if ( $action == 'resource' ) {
 		curl_setopt( $curl, CURLOPT_USERAGENT, 'IE20' );
 		curl_setopt( $curl, CURLOPT_HEADER, 0 );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, 0 );
+		//curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, 0 );
 		$out = curl_exec( $curl );
 		curl_close( $curl );
 
@@ -656,8 +671,9 @@ if ( $action == 'resource' ) {
 		$headers = get_headers( $url, 1 );
 		$html    = file_get_contents( $url );
 
-		if(strtolower($headers['X-Frame-Options']) == "sameorigin")
+		if(strtolower($headers['X-Frame-Options']) == "sameorigin") {
 			$xssBlock = true;
+		}
 
 		//print_r($headers);
 
@@ -795,7 +811,7 @@ if ( $action == "cat.edit" ) {
 		"title" => $_REQUEST['title']
 	];
 
-	$category = CorpUniver ::editCategory( $_REQUEST['id'], $params );
+	$category = CorpUniver ::editCategory( (int)$_REQUEST['id'], $params );
 
 	$print = ($category['result'] !== 'Error') ? $category['result'] : $category['error']['text'];
 

@@ -2,8 +2,9 @@
 	<table class="list_header">
 		<thead class="sticked--top">
 		<TR class="header_contaner">
-			<th class="w15 hidden-ipad"><input type="checkbox" name="che" id="che"/></th>
+			<!--<th class="w15 hidden-ipad"></th>-->
 			<TH class="w100 text-left">
+				<input type="checkbox" name="che" id="che">
 				<div class="ellipsis hand" id="x-fid" onclick="changesort('fid')" title="Изменить порядок вывода">Дата</div>
 			</TH>
 			<TH class="w30 text-center">&nbsp;</TH>
@@ -11,17 +12,20 @@
 				<div class="ellipsis hand" id="x-ftitle" onclick="changesort('ftitle')" title="Изменить порядок вывода">Название файла</div>
 			</TH>
 			<TH class="w100 text-center">Размер, kb</TH>
-			<TH class="yw250 hidden-netbook">Родитель</TH>
+			<TH class="yw250 text-left hidden-netbook">Принадлежность</TH>
 			<TH class="w5"></TH>
 		</TR>
 		</thead>
 		<tbody>
 		{{#list}}
-			<tr class="ha th60" id="file{{id}}">
-				<td class="w15 hidden-ipad">
-					<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/>
-				</td>
-				<TD class="text-right"><span>{{{datum}}}</span></TD>
+			<tr class="ha th60" id="file{{id}}" data-type="row">
+				<!--<td class="w15 hidden-ipad"></td>-->
+				<TD class="text-right1">
+					<label class="flex-container">
+						<div class="hidden wp20"><input name="ch[]" type="checkbox" class="mc" id="ch{{id}}" value="{{id}}"/></div>
+						<div class="wp90">{{{datum}}}</div>
+					</label>
+				</TD>
 				<TD class="text-center hidden-iphone"><span class="hidden-iphone">{{{icon}}}</span></TD>
 				<TD>
 					<span class="ellipsis fs-11" title="{{title}}"><b><a href="javascript:void(0)" onClick="editUpload('{{id}}','info')">{{title}}</a></b></span><br>

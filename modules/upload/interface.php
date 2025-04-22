@@ -107,6 +107,14 @@ if ($acs_files != 'on') {
 		<div class="page pbottom mainbg" id="pagediv"></div>
 	</div>
 
+	<div class="multi--buttons box--child hidden">
+
+		<a href="javascript:void(0)" onclick="multiRowMove()" class="button bluebtn box-shadow amultidel" title="Перенести"><i class="icon-shuffle"></i>Перенести <span class="task--count"></span></a>
+		<a href="javascript:void(0)" onclick="multiRowDel()" class="button redbtn box-shadow amultidel" title="Удалить"><i class="icon-cancel-circled-1"></i>Удалить <span class="task--count"></span></a>
+		<a href="javascript:void(0)" onclick="multiRowClearCheck()" class="button greenbtn box-shadow amultidel" title="Снять выделение"><i class="icon-th"></i>Снять выделение <span class="task--count"></span></a>
+
+	</div>
+
 </DIV>
 <DIV class="ui-layout-east"></DIV>
 <DIV class="ui-layout-south"></DIV>
@@ -157,6 +165,8 @@ $(document).on('click', '.xfolder', function(){
 	$('#page').val('');
 
 	configpage();
+
+	multiRowClearCheck()
 
 });
 
@@ -326,7 +336,73 @@ function configpage(){
 				fullText:false
 			});
 
+			$('input.mc')
+				.off('change')
+				.on('change', function (){
+
+					if( $(this).prop('checked') ) {
+						$(this).closest('tr').addClass('yellowbg-sub');
+					}
+					else {
+						$(this).closest('tr').removeClass('yellowbg-sub');
+					}
+
+				})
+
+			$('tr[data-type="row"] td:first-child')
+				.on('mousedown', function(){
+
+					//$(this).closest('tr').toggleClass('yellowbg-sub');
+
+					$('tr[data-type="row"] td:first-child').on('mouseenter',function(){
+
+						//var $elm = $('input[type=checkbox]', this);
+						var $elm = $(this).closest('tr').find('input:checkbox');
+
+						//$elm.click();
+
+						//var checkBoxes = $("input[type=checkbox]", this);
+						//checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+
+						//console.log( $elm.prop('checked') );
+
+						if( $elm.prop('checked') ) {
+							$elm.prop('checked', false);
+							$(this).closest('tr').removeClass('yellowbg-sub');
+						}
+						else {
+							$elm.prop('checked', true);
+							$(this).closest('tr').addClass('yellowbg-sub');
+						}
+
+						//$(this).closest('tr').toggleClass('yellowbg-sub');
+
+						//console.log( $elm.prop('checked') );
+
+					});
+
+				})
+				.on('mouseup', function(){
+
+					$('tr[data-type="row"] td:first-child').off('mouseenter');
+
+					setTimeout(function() {
+
+						if( $('input:checkbox:checked').length > 0 ) {
+							$('.multi--buttons').removeClass('hidden');
+						}
+						else {
+							$('.multi--buttons').addClass('hidden');
+						}
+
+						$('.task--count').html( '( <b>' + $('input:checkbox:checked').length + '</b> )' );
+
+					}, 100)
+
+				});
+
 			$(".nano").nanoScroller();
+			multiRowClearCheck()
 
 			if (isMobile)
 				$('.ui-layout-center').find('table').rtResponsiveTables();
@@ -390,6 +466,74 @@ function massSend(){
 	doLoad(url + str);
 
 	return false;
+
+}
+
+function multiRowDel(){
+
+	Swal.fire({
+			title: 'Вы уверены?',
+			text: "Записи будут удалены безвозвратно!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Да, выполнить',
+			cancelButtonText: 'Отменить',
+			confirmButtonClass: 'greenbtn',
+			cancelButtonClass: 'redbtn'
+		},
+		function () {
+
+			multiRowDelDo();
+
+		}
+	).then((result) => {
+
+		if (result.value) {
+
+			multiRowDelDo();
+
+		}
+
+	});
+
+	function multiRowDelDo(){
+
+		var str = $("#cform").serialize();
+		var count = $('.mc:checked').length;
+		var url = '/modules/upload/form.upload.php?action=mass&sub=delete&count='+count+'&all='+$('#fcount').val()+'&';
+
+		doLoad(url + str);
+
+		multiTaskClearCheck();
+
+		return false;
+
+	}
+
+}
+
+function multiRowMove(){
+
+	var str = $("#cform").serialize();
+	var strs = $("#contentdiv tr.yellowbg-sub input:checkbox").map(function(){
+		return $(this).val();
+	}).get();
+
+	//console.log( strs.join(",") );
+
+	doLoad('/modules/upload/form.upload.php?action=mass&sub=move&count='+ strs.length+'&all='+$('#fcount').val() + '&' + str);
+
+	multiTaskClearCheck();
+
+}
+
+function multiRowClearCheck() {
+
+	$('tr[data-type="row"]').removeClass('yellowbg-sub');
+	$("input[type=checkbox]:checked").prop('checked',false);
+	$('.multi--buttons').addClass('hidden');
 
 }
 

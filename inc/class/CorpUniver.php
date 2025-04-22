@@ -120,27 +120,32 @@ class CorpUniver {
 
 				$isDo = $db -> getRow( "SELECT datum, datum_end FROM {$sqlname}corpuniver_coursebyusers WHERE idlecture = '$lec[id]' AND idmaterial = '$mat[id]' AND iduser = '$iduser' AND identity = '$identity'" );
 
-				if ( !is_null( $isDo['datum'] ) )
+				if ( !is_null( $isDo['datum'] ) ) {
 					$mclass = 'isstart';
-				if ( !is_null( $isDo['datum_end'] ) )
+				}
+				if ( !is_null( $isDo['datum_end'] ) ) {
 					$mclass = 'isend';
+				}
 
-				if ( !is_null( $isDo['datum'] ) )
-					$mtitle .= 'Начат с '.get_sfdate( $isDo['datum'] );
-				if ( !is_null( $isDo['datum_end'] ) )
-					$mtitle .= '; Пройден '.get_sfdate( $isDo['datum_end'] );
+				if ( !is_null( $isDo['datum'] ) ) {
+					$mtitle .= 'Начат с '.get_sfdate($isDo['datum']);
+				}
+				if ( !is_null( $isDo['datum_end'] ) ) {
+					$mtitle .= '; Пройден '.get_sfdate($isDo['datum_end']);
+				}
 
 				$icon = self ::iconBySource( $mat['source'] );
 
-				if(!$icon && $mat['type'] == "file"){
+				if(!$icon && ($mat['type'] == "file" || $mat['type'] == "efile")){
 
 					$file = Upload::info($mat['fid']);
 
-					if(!in_array($file['ext'], ['avi','mp4','mpeg']))
+					if(!in_array($file['ext'], ['avi','mp4','mpeg'])) {
 						$icon = get_icon3($file['file']);
-
-					else
+					}
+					else {
 						$icon = self::ICONMATERIAL['mpeg'];
+					}
 
 				}
 
@@ -1139,6 +1144,64 @@ class CorpUniver {
 		}
 
 		return $response;
+
+	}
+
+	/**
+	 * Возвращает структуру каталога, но без вложения подкаталогов в основной каталог
+	 *
+	 * @param int $id
+	 * @param int $level
+	 * @param array $ures
+	 *
+	 * @return array
+	 */
+	public static function getCategories(int $id = 0, int $level = 0, array $ures = []): array {
+
+		$rootpath = dirname(__DIR__, 2);
+
+		require_once $rootpath."/inc/config.php";
+		require_once $rootpath."/inc/dbconnector.php";
+		require_once $rootpath."/inc/func.php";
+
+		$identity = $GLOBALS['identity'];
+		$sqlname  = $GLOBALS['sqlname'];
+		$db       = $GLOBALS['db'];
+		$sort     = $GLOBALS['sort'];
+		$maxlevel = preg_replace("/[^0-9]/", "", $GLOBALS['maxlevel']);
+		//$maxlevel = 5;
+
+		global $ures;
+
+		$sort .= ( $id > 0 ) ? " and subid = '$id'" : " and subid = '0'";
+
+		if ($maxlevel != '' && $level > $maxlevel) {
+			goto la;
+		}
+
+		$re = $db -> query("SELECT * FROM {$sqlname}corpuniver_course_cat WHERE id > 0 $sort and identity = '$identity' ORDER BY title");
+		while ($da = $db -> fetch($re)) {
+
+			$ures[] = [
+				"id"       => (int)$da["id"],
+				"title"    => $da["title"],
+				"level"    => $level,
+				"subid"      => (int)$da["subid"]
+			];
+
+			if ((int)$da['id'] > 0) {
+
+				$level++;
+				self ::getCategories((int)$da['id'], $level);
+				$level--;
+
+			}
+
+		}
+
+		la:
+
+		return (array)$ures;
 
 	}
 

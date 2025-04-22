@@ -2255,6 +2255,13 @@ a.button.stick {
 	color      : #FFF !important;
 }
 
+#brounbutton .button:hover,
+.button.brounbtn:hover {
+	background : #795548 !important;
+	border     : 1px solid #8D6E63 !important;
+	color      : #FFF !important;
+}
+
 #greenbutton .button:hover,
 .button.greenbtn:hover {
 	background         : #8BC34A !important;

@@ -73,6 +73,7 @@ if ($resvizit < 1) {
 	<link rel="stylesheet" href="/assets/css/nanoscroller.css?v=2020.3">
 	<link rel="stylesheet" href="/assets/css/ui.jquery.css">
 	<link rel="stylesheet" href="/assets/css/animation.css">
+	<link rel="stylesheet" href="/assets/css/app.explorer.css">
 
 	<?php
 	$hooks->do_action('main__css');
@@ -261,6 +262,10 @@ if ($resvizit < 1) {
 	<div class="smframe--close" title="Закрыть"><i class="icon-cancel"></i></div>
 	<div class="smframe--url hidden" data-url="" title="Открыть в новом окне"><i class="icon-popup"></i></div>
 </div>
+
+<?php
+require_once $root."/content/explorer/init.php";
+?>
 
 <!--В этот блок можно помещать иконки плагинов-->
 <div class="plugin--panel"></div>

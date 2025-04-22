@@ -72,9 +72,9 @@ if ($action == "settings") {
 
 							$s = ($value['level'] > 0) ? str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $value['level']).'<div class="strelka mr10"></div>&nbsp;' : '';
 
-							$ss = (in_array($value['id'], $mdcsettings['Editor'])) ? "checked" : "";
+							$ss = (in_array($value['id'], (array)$mdcsettings['Editor'])) ? "checked" : "";
 
-							$ss1 = (in_array($value['id'], $mdcsettings['EditorMy'])) ? "checked" : "";
+							$ss1 = (in_array($value['id'], (array)$mdcsettings['EditorMy'])) ? "checked" : "";
 							?>
 
 							<label class="block ha coordcat" data-id="<?= $value['id'] ?>" data-sub="<?= $value['mid'] ?>">

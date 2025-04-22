@@ -316,7 +316,7 @@ if ($action == "edit") {
 
 								if ($value['level'] <= 3) {
 
-									$xshared = ( $datas['shared'] == 'yes' ) ? ' - Общая' : "";
+									$xshared = ( $value['shared'] == 'yes' ) ? ' - Общая' : "";
 
 									print '<option value="'.$value['id'].'" '.( $value['id'] == $info['idcategory'] ? "selected" : '' ).'>'.( $value['level'] > 0 ? str_repeat('&nbsp;&nbsp;', $value['level']).'&rarr;&nbsp;' : '' ).$value['title'].' '.$xshared.'</option>';
 								}
@@ -364,13 +364,103 @@ if ($action == "mass") {
 	$all = $_REQUEST['all'];
 	$kol = $_REQUEST['count'];
 	$ids = implode(",", $id);
+	//$ids  = $_REQUEST['ids'];
+
+	$title = $_REQUEST['sub'] == 'delete' ? "Удаление" : "Перемещение";
 	?>
-	<div class="zagolovok"><b>Групповое действие</b></div>
+	<div class="zagolovok"><b>Групповое действие</b> - <?= $title ?></div>
 	<form action="/modules/upload/core.upload.php" id="uploadForm" name="uploadForm" method="post" enctype="multipart/form-data">
 		<input name="ids" id="ids" type="hidden" value="<?= $ids ?>">
 		<input name="action" id="action" type="hidden" value="mass">
-		<div id="profile">
-			<table width="100%" border="0" cellpadding="5" cellspacing="1" id="bborder">
+		<input name="sub" id="sub" type="hidden" value="<?= $_REQUEST['sub'] ?>">
+
+		<DIV id="formtabs" class="box--child" style="overflow-y: auto; max-height:80vh;">
+
+			<div class="infodiv mb10">
+				<b class="red">Важная инфрмация:</b>
+				<ul>
+					<li class="Bold blue">При нажатой клавише Ctrl можно мышкой выбрать нужные записи</li>
+					<li>Отмена групповых действий не возможна</li>
+					<li>Действия будут применены только для записей, к которым у вас есть доступ</li>
+					<li>Ограничение для действия составляет 1000 записей</li>
+				</ul>
+			</div>
+
+			<div class="flex-container mb10">
+
+				<?php
+				if($_REQUEST['sub'] == 'move'){
+				?>
+				<div class="flex-string wp100 pl10">
+
+					<div class="flex-container box--child mt10 mb10" id="stepdiv">
+
+						<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Папка:</div>
+						<div class="flex-string wp80 pl10">
+
+							<select name="folder" id="folder" class="wp97">
+								<OPTION value="">--Выбор--</OPTION>
+								<?php
+								$catalog = Upload ::getCatalogLine(0);
+								foreach ($catalog as $key => $value) {
+
+									if ($value['level'] <= 3) {
+
+										$xshared = ( $value['shared'] == 'yes' ) ? ' - Общая' : "";
+
+										print '<option value="'.$value['id'].'">'.( $value['level'] > 0 ? str_repeat('&nbsp;&nbsp;', $value['level']).'&rarr;&nbsp;' : '' ).$value['title'].' '.$xshared.'</option>';
+									}
+
+								}
+
+								?>
+							</select>
+
+						</div>
+
+					</div>
+
+				</div>
+				<?php } ?>
+
+			</div>
+
+			<div class="flex-container mb10 pt15 warning bgwhite">
+
+				<div class="flex-string wp20 gray2 fs-12 right-text">Выполнить для:</div>
+				<div class="flex-string wp80 pl10">
+
+					<div class="flex-container">
+
+						<div class="flex-string wp40 pl10">
+							<div class="radio">
+								<label>
+									<input name="isSelect" id="isSelect" value="doSelected" type="radio" <?php if ( $kol > 0 ) print "checked"; ?>>
+									<span class="custom-radio success1"><i class="icon-radio-check"></i></span>
+									<span class="title">Выбранного (<b class="blue"><?= $kol ?></b>)</span>
+								</label>
+							</div>
+						</div>
+						<div class="flex-string wp40 pl10">
+							<div class="radio" title="Действие возможно для 500 записей максимум">
+								<label>
+									<input name="isSelect" id="isSelect" value="doAll" type="radio" <?php if ( $kol == 0 ) print "checked"; ?>>
+									<span class="custom-radio success1"><i class="icon-radio-check"></i></span>
+									<span class="title">Со всех страниц ( <b class="blue"><span id="alls"><?= $all ?></span></b> )</span>
+								</label>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</DIV>
+
+		<!--<div id="profile">
+			<table id="bborder">
 				<tr>
 					<td width="160"><b>Выполнить для записей:</b></td>
 					<td>
@@ -385,9 +475,11 @@ if ($action == "mass") {
 					</td>
 				</tr>
 			</table>
-		</div>
+		</div>-->
+
 		<div class="text-right button--pane">
-			<a href="javascript:void(0)" onclick="massSubmit()" class="button">Выполнить</a>&nbsp; <a href="javascript:void(0)" onclick="DClose()" class="button">Отмена</a>
+			<a href="javascript:void(0)" onclick="massSubmit()" class="button">Выполнить</a>
+			<a href="javascript:void(0)" onclick="DClose()" class="button">Отмена</a>
 		</div>
 	</form>
 	<?php
@@ -854,15 +946,17 @@ if ($action == "info") {
 			$('#message').empty().fadeTo(1, 1).css('display', 'block').append('<div id=loader><img src=/assets/images/loader.gif> Загрузка данных...</div>');
 
 			$.post(url, str, function (data) {
+
 				$('#resultdiv').empty();
 
 				configpage();
 
-				$('#message').fadeTo(1, 1).css('display', 'block').html(data);
+				$('#message').fadeTo(1, 1).css('display', 'block').html(data.message + data.error);
 				setTimeout(function () {
 					$('#message').fadeTo(1000, 0);
 				}, 20000);
-			});
+
+			}, 'json');
 
 		}
 

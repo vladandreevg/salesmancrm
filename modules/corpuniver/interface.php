@@ -30,7 +30,7 @@ if($ext_allow != '')
 
 		<A href="javascript:void(0)" onclick="configpage()" class="razdel bluebg pl5 pr5" title="Обновить"><i
 					class="icon-arrows-cw"></i></A>
-		<?php if ( $isadmin == "on" or in_array( $iduser1, $mdcsettings[ 'Editor' ] ) ) { ?>
+		<?php if ( $isadmin == "on" || in_array( $iduser1, (array)$mdcsettings[ 'Editor' ] ) ) { ?>
 			<A href="javascript:void(0)" onclick="editCourse('','edit')" class="razdel redbg-dark pl5 pr5" title="Добавить"><i class="icon-graduation-cap-1 white"><i class="icon-plus-circled sup fs-07"></i></i></A>
 		<?php } ?>
 		<?php require_once $rootpath."/content/leftnav/leftpop.php";
@@ -1065,7 +1065,7 @@ if($ext_allow != '')
 			if ($('#name').val() === '')
 				$('#name').val(f[0]);
 
-			$('#filelist').removeClass('hidden').append('<div class="viewdiv flex-string" id="newFile">' + a + '<A href="javascript:void(0)" onclick="delFileMat();" title="Удалить"><i class="icon-cancel red"></i></A></div>');
+			$('#filelist').removeClass('hidden').append('<div class="infodiv dotted inline bgwhite" id="newFile">' + a + '<A href="javascript:void(0)" onclick="delFileMat();" title="Удалить"><i class="icon-cancel red"></i></A></div>');
 
 			$('#addFilebtn').addClass('hidden');
 
@@ -1077,6 +1077,7 @@ if($ext_allow != '')
 
 		$('.file').val('');
 		$('#newFile').remove();
+		$('#neweFile').remove();
 		$('#addFilebtn').removeClass('hidden');
 
 	}
@@ -1166,6 +1167,18 @@ if($ext_allow != '')
 		if (tip === 'file') {
 
 			$('#filesMat').removeClass('hidden');
+			$('#filesEMat').addClass('hidden');
+			$('#addRes').addClass('hidden');
+			$('#cke_content').addClass('hidden');
+			$('#addText').addClass('hidden');
+
+			$('#dialog').center();
+
+		}
+		else if (tip === 'efile') {
+
+			$('#filesEMat').removeClass('hidden');
+			$('#filesMat').addClass('hidden');
 			$('#addRes').addClass('hidden');
 			$('#cke_content').addClass('hidden');
 			$('#addText').addClass('hidden');
@@ -1176,6 +1189,7 @@ if($ext_allow != '')
 		else if (tip === 'resource') {
 
 			$('#filesMat').addClass('hidden');
+			$('#filesEMat').addClass('hidden');
 			$('#addText').addClass('hidden');
 			$('#addRes').removeClass('hidden');
 			$('#cke_content').addClass('hidden');
@@ -1186,6 +1200,7 @@ if($ext_allow != '')
 		else if (tip === 'text') {
 
 			$('#filesMat').addClass('hidden');
+			$('#filesEMat').addClass('hidden');
 			$('#addRes').addClass('hidden');
 			$('#addText').removeClass('hidden');
 			$('#cke_content').removeClass('hidden');

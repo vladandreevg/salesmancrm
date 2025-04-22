@@ -358,42 +358,42 @@ class Upload {
 
 		$page       = (int)$params['page'];
 		$idcategory = (int)$params['idcategory'];
-		$word       = str_replace( " ", "%", $params['word'] );
+		$word       = str_replace(" ", "%", $params['word']);
 		$sort       = '';
 		$tuda       = $params['tuda'];
 		$ord        = $params['ord'];
 		$ftype      = $params['ftype'];
 
-		if ( $ord == '' ) {
+		if ($ord == '') {
 			$ord = 'fname';
 		}
-		if ( $tuda == '' ) {
+		if ($tuda == '') {
 			$tuda = '';
 		}
 
 		$list = [];
 
 		//если у пользователя есть доступ в Бюджет, то покажем папку бюджет
-		if ( !$userRights['budjet'] ) {
+		if (!$userRights['budjet']) {
 
-			$folder_ex = $db -> getOne( "SELECT idcategory FROM {$sqlname}file_cat WHERE title = 'Бюджет' and identity = '$identity'" );
+			$folder_ex = $db -> getOne("SELECT idcategory FROM {$sqlname}file_cat WHERE title = 'Бюджет' and identity = '$identity'");
 
-			if ( (int)$folder_ex > 0 ) {
+			if ((int)$folder_ex > 0) {
 				$sort .= " and COALESCE(file.folder, 0) != '$folder_ex'";
 			}
 
 		}
 
-		if ( $word != '' ) {
+		if ($word != '') {
 			$sort .= " AND (file.ftitle LIKE '%$word%' OR file.ftag LIKE '%$word%')";
 		}
 
 		//Найдем id категорий с общими папками и создадим массив
-		$farray = $db -> getCol( "SELECT idcategory FROM {$sqlname}file_cat WHERE shared = 'yes' and identity = '$identity' ORDER by title" );
+		$farray = $db -> getCol("SELECT idcategory FROM {$sqlname}file_cat WHERE shared = 'yes' and identity = '$identity' ORDER by title");
 
 		if ($idcategory > 0) {
 
-			$folders = self ::getFCatalog($idcategory);
+			$folders   = self ::getFCatalog($idcategory);
 			$folders[] = $idcategory;
 
 			/*foreach ($catalog as $value) {
@@ -407,28 +407,28 @@ class Upload {
 		}
 
 		$s = '';
-		if ( !empty( $farray ) ) {
-			$s = " OR file.folder IN (".yimplode( ",", $farray ).") ";
+		if (!empty($farray)) {
+			$s = " OR file.folder IN (".yimplode(",", $farray).") ";
 		}
 
-		$sort .= " and (file.iduser IN (".yimplode( ",", get_people( $iduser1, 'yes' ) ).") $s)";
+		$sort .= " and (file.iduser IN (".yimplode(",", get_people($iduser1, 'yes')).") $s)";
 
-		$ss = ($idcategory == 0) ? " OR file.folder IS NULL" : "";
+		$ss = ( $idcategory == 0 ) ? " OR file.folder IS NULL" : "";
 
-		if ( !empty( $folders ) ) {
-			$sort .= " and (file.folder IN (".yimplode( ",", $folders ).") $ss)";
+		if (!empty($folders)) {
+			$sort .= " and (file.folder IN (".yimplode(",", $folders).") $ss)";
 		}
 
-		if ( $ftype == 'img' ) {
+		if ($ftype == 'img') {
 			$sort .= " and (file.fname LIKE '%.png' OR file.fname LIKE '%.jpg' OR file.fname LIKE '%.gif' OR file.fname LIKE '%.jpeg' OR file.fname LIKE '%.tiff' OR file.fname LIKE '%.bmp')";
 		}
-		elseif ( $ftype == 'doc' ) {
+		elseif ($ftype == 'doc') {
 			$sort .= " and (file.fname LIKE '%.txt' OR file.fname LIKE '%.doc' OR file.fname LIKE '%.docx' OR file.fname LIKE '%.xls' OR file.fname LIKE '%.xlsx' OR file.fname LIKE '%.rtf' OR file.fname LIKE '%.ppt' OR file.fname LIKE '%.pptx')";
 		}
-		elseif ( $ftype == 'pdf' ) {
+		elseif ($ftype == 'pdf') {
 			$sort .= " and (file.fname LIKE '%.pdf')";
 		}
-		elseif ( $ftype == 'zip' ) {
+		elseif ($ftype == 'zip') {
 			$sort .= " and (file.fname LIKE '%.zip' OR file.fname LIKE '%.rar' OR file.fname LIKE '%.tar' OR file.fname LIKE '%.7z' OR file.fname LIKE '%.gz')";
 		}
 
@@ -442,6 +442,7 @@ class Upload {
 			file.ftitle as title,
 			file.fname as file,
 			file.iduser as iduser,
+			file.ftag as content,
 			{$sqlname}clientcat.title as client,
 			{$sqlname}personcat.person as person,
 			{$sqlname}dogovor.title as deal,
@@ -459,16 +460,16 @@ class Upload {
 		";
 
 		$lines_per_page = 100; //Стоимость записей на страницу
-		$result         = $db -> query( $query );
-		$all_lines      = $db -> affectedRows( $result );
+		$result         = $db -> query($query);
+		$all_lines      = $db -> affectedRows($result);
 
-		$count_pages = ceil( $all_lines / $lines_per_page );
+		$count_pages = ceil($all_lines / $lines_per_page);
 
-		if ( $page > $count_pages ) {
+		if ($page > $count_pages) {
 			$page = 1;
 		}
 
-		if ( empty( $page ) || $page <= 0 ) {
+		if (empty($page) || $page <= 0) {
 			$page = 1;
 		}
 		else {
@@ -480,45 +481,46 @@ class Upload {
 
 		$query .= " ORDER BY file.$ord $tuda LIMIT $lpos,$lines_per_page";
 
-		$result = $db -> query( $query );
+		$result = $db -> query($query);
 
-		if ( $count_pages == 0 ) {
+		if ($count_pages == 0) {
 			$count_pages = 1;
 		}
 
-		while ($da = $db -> fetch( $result )) {
+		while ($da = $db -> fetch($result)) {
 
 			$change = '';
 
-			$icon = get_icon2( $da['title'] );
-			$size = num_format( filesize( $rootpath."/files/".$fpath.$da['file'] ) / 1024 );
+			$icon = get_icon2($da['title']);
+			$size = num_format(filesize($rootpath."/files/".$fpath.$da['file']) / 1024);
 
-			if ( $userRights['delete'] && get_accesse_other( (int)$da['iduser'] ) == 'yes' ) {
+			if ($userRights['delete'] && get_accesse_other((int)$da['iduser']) == 'yes') {
 				$change = 'yes';
 			}
 
-			$dtime = filemtime( $rootpath."/files/".$fpath.$da['file'] );//current(explode(".", $da['file']));
-			$ddate = date( 'H:i d.m.Y', $dtime );
+			$dtime = filemtime($rootpath."/files/".$fpath.$da['file']);//current(explode(".", $da['file']));
+			$ddate = date('H:i d.m.Y', $dtime);
 
-			$isView = isViewable( $da['file'] ) ? '1' : '';
+			$isView = isViewable($da['file']) ? '1' : '';
 
 			$list[] = [
-				"id"     => (int)$da['id'],
-				"name"   => $da['file'],
-				"icon"   => $icon,
-				"title"  => $da['title'],
-				"datum"  => str_replace( " ", "&nbsp;<br>", $ddate ),
-				"size"   => $size,
-				"clid"   => (int)$da['clid'],
-				"client" => $da['client'],
-				"pid"    => (int)$da['pid'],
-				"person" => $da['person'],
-				"did"    => (int)$da['did'],
-				"deal"   => $da['deal'],
-				"user"   => $da['user'],
-				"change" => $change,
-				"view"   => $isView,
-				"folder" => $da['xfolder']
+				"id"      => (int)$da['id'],
+				"name"    => $da['file'],
+				"icon"    => $icon,
+				"title"   => $da['title'],
+				"content" => $da['content'],
+				"datum"   => str_replace(" ", "&nbsp;<br>", $ddate),
+				"size"    => $size,
+				"clid"    => (int)$da['clid'],
+				"client"  => $da['client'],
+				"pid"     => (int)$da['pid'],
+				"person"  => $da['person'],
+				"did"     => (int)$da['did'],
+				"deal"    => $da['deal'],
+				"user"    => $da['user'],
+				"change"  => $change,
+				"view"    => $isView,
+				"folder"  => $da['xfolder']
 			];
 
 		}
@@ -763,7 +765,7 @@ class Upload {
 		//$sort .= ( $id > 0 ) ? " and subid = '$id'" : " and subid = '0'";
 		$sort = !$id ? " and subid = '0'" : " and subid = '$id'";
 
-		if($id > 0 && empty($ures)){
+		if ($id > 0 && empty($ures)) {
 			$sort = " and idcategory = '$id'";
 		}
 
@@ -777,12 +779,12 @@ class Upload {
 			$xcount = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}file WHERE folder = '$da[idcategory]' AND identity = '$identity'");
 
 			$ures[] = [
-				"id"       => (int)$da["idcategory"],
-				"title"    => $da["title"],
+				"id"     => (int)$da["idcategory"],
+				"title"  => $da["title"],
 				"shared" => $da["shared"],
 				"count"  => $xcount,
-				"level"    => $level,
-				"sub"      => (int)$da["sub"]
+				"level"  => $level,
+				"sub"    => (int)$da["sub"]
 			];
 
 			if ((int)$da['idcategory'] > 0) {
@@ -809,21 +811,21 @@ class Upload {
 
 		$sort = !$id ? " and subid = '0'" : " and subid = '$id'";
 
-		if($id > 0 && empty($xres)){
+		if ($id > 0 && empty($xres)) {
 			$sort = " and idcategory = '$id'";
 		}
 
 		//print "$sort\n";
 
-		$re = $db -> query( "SELECT idcategory FROM {$sqlname}file_cat WHERE idcategory > 0 $sort and identity = '$identity' ORDER BY idcategory" );
-		while ($da = $db -> fetch( $re )) {
+		$re = $db -> query("SELECT idcategory FROM {$sqlname}file_cat WHERE idcategory > 0 $sort and identity = '$identity' ORDER BY idcategory");
+		while ($da = $db -> fetch($re)) {
 
 			$xres[] = (int)$da["idcategory"];
 
-			if ( (int)$da['idcategory'] > 0 ) {
+			if ((int)$da['idcategory'] > 0) {
 
 				$level++;
-				self::getFCatalog( (int)$da['idcategory'], $level );
+				self ::getFCatalog((int)$da['idcategory'], $level);
 				$level--;
 
 			}

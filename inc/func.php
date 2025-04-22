@@ -3488,13 +3488,14 @@ function sendNotify($tip, $params): string {
 	$productInfo = $GLOBALS['productInfo'];
 	$iduser1     = $GLOBALS['iduser1'];
 
+	$db = new SafeMySQL( $GLOBALS['opts'] );
+
 	if ($params['identity'] > 0) {
 		$identity = $params['identity'];
 	}
 
 	$server = $_SERVER['HTTP_HOST'];
 	$scheme = $_SERVER['HTTP_SCHEME'] ?? ( ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ) || 443 == $_SERVER['SERVER_PORT'] ) ? 'https://' : 'http://';
-
 
 	$arr  = [
 		'send_client',

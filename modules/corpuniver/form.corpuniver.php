@@ -29,8 +29,8 @@ $thisfile = basename( __FILE__ );
 
 $action = $_REQUEST['action'];
 
-$mdcset = $db -> getRow("SELECT * FROM ".$sqlname."modules WHERE mpath = 'corpuniver' and identity = '$identity'");
-$mdcsettings = json_decode($mdcset['content'], true);
+$mdcset = $db -> getRow("SELECT * FROM {$sqlname}modules WHERE mpath = 'corpuniver' and identity = '$identity'");
+$mdcsettings = json_decode((string)$mdcset['content'], true);
 
 $icoNMaterial = [
 	"video"    => "icon-video",
@@ -48,21 +48,21 @@ if ($action == "edit") {
 
 	$title = ($id > 0) ? 'Редактирование курса' : 'Создание курса';
 
-	$categories = '';
-
 	$result = CorpUniver::info($id)['data'];
 	$idcat = $result["cat"];
-	$cat = $db->getOne("SELECT title FROM ".$sqlname."corpuniver_course_cat WHERE id = '$idcat' AND identity = '$identity'");
 
-	$list_cats = $db->getAll("SELECT * FROM ".$sqlname."corpuniver_course_cat WHERE identity = '$identity'");
+	$cat = $db->getOne("SELECT title FROM {$sqlname}corpuniver_course_cat WHERE id = '$idcat' AND identity = '$identity'");
+
+	//$list_cats = $db->getAll("SELECT * FROM {$sqlname}corpuniver_course_cat WHERE identity = '$identity'");
 
 	$files = ($result['fid'] != '') ? '<div class="infodiv" id="filelist"></div>' : '<div class="attention">Файлы отсутствуют</div>';
 
+	/*$categories = '';
 	foreach ($list_cats as $c) {
 
 		$categories .= '<option '.($c['id'] == $idcat ? 'selected' : '').' value="'.$c['id'].'">'.$c['title'].'</option>';
 
-	}
+	}*/
 
 	?>
 		<FORM action="/modules/corpuniver/core.corpuniver.php" method="post" enctype="multipart/form-data" name="Form" id="Form">
@@ -93,7 +93,20 @@ if ($action == "edit") {
 					<div class="flex-string">
 
 						<span class="select">
-							<select name="cat" id="cat" class="wp30 required" onchange=""><?=$categories?></select>
+							<select name="cat" id="cat" class="wp30 required" onchange="">
+							<?=$categories?>
+							<?php
+							$catalog = CorpUniver::getCategories();
+							foreach ( $catalog as $key => $value ) {
+
+								$s = ( $value['level'] > 0 ) ? str_repeat( '&nbsp;&nbsp;', $value['level'] ).'&rarr;&nbsp;' : '';
+								$a = ( $value['id'] == $idcat ) ? "selected" : '';
+
+								print '<option value="'.$value['id'].'" '.$a.'>'.$s.$value['title'].'</option>';
+
+							}
+							 ?>
+							</select>
 						</span>
 						<a href="javascript:void(0)" onclick="addCat()" class="middle pb10 pl10 fs-11" id="newCatCoursebtn"><i class="icon-plus green"></i>Добавить новую</a>
 
@@ -246,7 +259,7 @@ if ($action == 'edit.item') {
 
 			$page_content = file_get_contents($item['source']);
 			preg_match_all("|<title>(.*)</title>|sUSi", $page_content, $titles);
-			$source = $titles[1][0] . '<A href="javascript:void(0)" onClick="delResMat();" title="Удалить"><i class="icon-cancel red"></i></A>';
+			$source = $titles[1][0] . '<A href="javascript:void(0)" onclick="delResMat();" title="Удалить"><i class="icon-cancel red"></i></A>';
 			$hideResbtn = 'hidden';
 
 		}
@@ -272,7 +285,7 @@ if ($action == 'edit.item') {
 				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
-						<input name="tip" type="radio" id="tip" value="file" class="tip" onClick="addMat()" '.($item['type'] == 'file' ? 'checked' : '').'>
+						<input name="tip" type="radio" id="tip" value="file" class="tip" onclick="addMat()" '.($item['type'] == 'file' ? 'checked' : '').'>
 						<span class="custom-radio" style="top:0"><i class="icon-radio-check"></i></span>
 						<span class="title Bold">Файл</span>
 						<input name="file[]" type="file" class="file hidden" id="file[]" multiple onchange="getFileMaterial();">
@@ -283,7 +296,7 @@ if ($action == 'edit.item') {
 				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
-					<input name="tip" type="radio" id="tip" value="resource" class="tip" onClick="addMat()" '.($item['type'] == 'resource' ? 'checked' : '').'>
+					<input name="tip" type="radio" id="tip" value="resource" class="tip" onclick="addMat()" '.($item['type'] == 'resource' ? 'checked' : '').'>
 						<span class="custom-radio" style="top:0"><i class="icon-radio-check"></i></span>
 						<span class="title Bold pt10">Сторонний ресурс</span>
 						<input name="source" type="text" class="hidden" id="source" value="'.$item['source'].'">
@@ -294,7 +307,7 @@ if ($action == 'edit.item') {
 				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
-						<input name="tip" type="radio" id="tip" value="text" class="tip" onClick="addMat()"  '.($item['type'] == 'text' ? 'checked' : '').'>
+						<input name="tip" type="radio" id="tip" value="text" class="tip" onclick="addMat()"  '.($item['type'] == 'text' ? 'checked' : '').'>
 						<span class="custom-radio" style="top:0"><i class="icon-radio-check"></i></span>
 						<span class="title Bold">Свой текст</span>
 						
@@ -306,14 +319,14 @@ if ($action == 'edit.item') {
 			
 			<span id="filesMat" class="infodiv fs-08 mt5 '.$hideFid.'">
 			
-				<A href="javascript:void(0)" id="addFilebtn" onClick="$(\'.file\').click();" class="button">выбрать файл</A>
+				<A href="javascript:void(0)" id="addFilebtn" onclick="$(\'.file\').click();" class="button">выбрать файл</A>
 				<span id="filelist" class="flex-container pl20 hidden"></span>
 				
 			</span>
 			
 			<span id="addRes" class="infodiv fs-08 mt5 '.$hideRes.'">
 			
-				<A href="javascript:void(0)" onClick="getLinkMaterial()" id="addResbtn" class="button '.$hideResbtn.'">указать ссылку на источник</A>
+				<A href="javascript:void(0)" onclick="getLinkMaterial()" id="addResbtn" class="button '.$hideResbtn.'">указать ссылку на источник</A>
 				<span id="resource" class="pt5 ml5 blue Bold">'.$source.'</span>
 				
 			</span>
@@ -365,19 +378,20 @@ if ($action == 'edit.item') {
 		</div>
 
 		<div class="text-right button--pane">
-			<A href="javascript:void(0)" id="saveitem" onClick="btn_submit()" class="button bluebtn m0 mr10 ptb5">Сохранить</A>
-			<A href="javascript:void(0)" class="button cancelbtn m0 ptb5" onClick="edit_close()">Отмена</A>
+			<A href="javascript:void(0)" id="saveitem" onclick="btn_submit()" class="button bluebtn m0 mr10 ptb5">Сохранить</A>
+			<A href="javascript:void(0)" class="button cancelbtn m0 ptb5" onclick="edit_close()">Отмена</A>
 		</div>
 
 	</FORM>
 
 	<script>
 
-		var tip = '<?=$item['type']?>';
-		var course = $('#course').val();
+		var tip = '<?=$item['type']?>'
+		var course = $('#course').val()
 
-		if(tip === 'text')
-			addMat();
+		if(tip === 'text') {
+			addMat()
+		}
 
 		$('#editItem').ajaxForm({
 			dataType:"json",
@@ -427,8 +441,7 @@ if ($action == 'edit.item') {
 				console.log(er);
 
 			}
-
-		});
+		})
 
 		function parceURL(){
 
@@ -492,8 +505,9 @@ if ($action == 'edit.item.dialog') {
 
 		$title = 'Название лекции';
 
-		if ($id > 0)
-			{$item = CorpUniver::infoLecture($id)['data'];}
+		if ($id > 0){
+			$item = CorpUniver::infoLecture($id)['data'];
+		}
 
 	}
 	elseif ($type == 'Material') {
@@ -502,12 +516,15 @@ if ($action == 'edit.item.dialog') {
 		$source = '';
 		$file = [];
 
-		$hideRes = $hideFid = 'hidden';
+		$hideRes = $hideFid = $hideEFid = 'hidden';
 
 		$item['type'] = 'file';
 
 		if ($id > 0){
 			$item = CorpUniver::infoMaterial($id)['data'];
+			if($item['type'] == 'efile'){
+				$item['type'] = 'file';
+			}
 		}
 
 		// ссылка на сторонний ресурс
@@ -515,7 +532,7 @@ if ($action == 'edit.item.dialog') {
 
 			$page_content = file_get_contents($item['source']);
 			preg_match_all("|<title>(.*)</title>|sUSi", $page_content, $titles);
-			$source = $titles[1][0] . '<A href="javascript:void(0)" onClick="delResMat();" title="Удалить"><i class="icon-cancel red"></i></A>';
+			$source = $titles[1][0] . '<A href="javascript:void(0)" onclick="delResMat();" title="Удалить"><i class="icon-cancel red"></i></A>';
 			$hideResbtn = 'hidden';
 
 		}
@@ -544,14 +561,16 @@ if ($action == 'edit.item.dialog') {
 		$content = '
 		<div class="pt10" id="checkcontainer">
 		
+			<input name="fid" type="hidden" class="hidden" id="fid" value="'.$item['fid'].'">
+		
 			<div class="flex-container box--child">
 			
 				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
-						<input name="tip" type="radio" id="tip" value="file" class="tip" onClick="addMat()" '.($item['type'] == 'file' ? 'checked' : '').'>
+						<input name="tip" type="radio" id="tip" value="file" class="tip" onclick="addMat()" '.($item['type'] == 'file' ? 'checked' : '').'>
 						<span class="custom-radio"><i class="icon-radio-check"></i></span>
-						<span class="title Bold">Файл</span>
+						<span class="title Bold">Файл (с компьютера)</span>
 						<input name="file[]" type="file" class="file hidden" id="file[]" multiple onchange="getFileMaterial();">
 					</label>
 					
@@ -560,7 +579,17 @@ if ($action == 'edit.item.dialog') {
 				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
-					<input name="tip" type="radio" id="tip" value="resource" class="tip" onClick="addMat()" '.($item['type'] == 'resource' ? 'checked' : '').'>
+						<input name="tip" type="radio" id="tip" value="efile" class="tip" onclick="addMat()" '.($item['type'] == 'efile' ? 'checked' : '').'>
+						<span class="custom-radio"><i class="icon-radio-check"></i></span>
+						<span class="title Bold">Файл (из загруженных)</span>
+					</label>
+					
+				</div>
+				
+				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
+				
+					<label>
+					<input name="tip" type="radio" id="tip" value="resource" class="tip" onclick="addMat()" '.($item['type'] == 'resource' ? 'checked' : '').'>
 						<span class="custom-radio"><i class="icon-radio-check"></i></span>
 						<span class="title Bold pt10">Сторонний ресурс</span>
 						<input name="source" type="text" class="hidden" id="source" value="'.$item['source'].'">
@@ -571,7 +600,7 @@ if ($action == 'edit.item.dialog') {
 				<div class="flex-string wp30 infodiv bgwhite radio mt5 ml5">
 				
 					<label>
-						<input name="tip" type="radio" id="tip" value="text" class="tip" onClick="addMat()"  '.($item['type'] == 'text' ? 'checked' : '').'>
+						<input name="tip" type="radio" id="tip" value="text" class="tip" onclick="addMat()"  '.($item['type'] == 'text' ? 'checked' : '').'>
 						<span class="custom-radio"><i class="icon-radio-check"></i></span>
 						<span class="title Bold">Свой текст</span>
 						
@@ -583,13 +612,13 @@ if ($action == 'edit.item.dialog') {
 			
 			<span id="filesMat" class="infodiv fs-08 mt5 '.$hideFid.'">
 				
-				<A href="javascript:void(0)" id="addFilebtn" onClick="$(\'.file\').click();" class="button '.($item['fid'] > 0 ? 'hidden' : '').'">выбрать файл</A>
+				<A href="javascript:void(0)" id="addFilebtn" onclick="$(\'.file\').trigger(\'click\');" class="button '.($item['fid'] > 0 ? 'hidden' : '').'">выбрать файл</A>
 				
-				<span id="filelist" class="flex-container '.($item['fid'] > 0 ? '' : 'hidden').'">
+				<span id="filelist" class="'.($item['fid'] > 0 ? '' : 'hidden').'">
 				
-					<div class="viewdiv flex-string" id="newFile">
-						<i class="'.$file['icon'].'"></i>'.$file['title'].'<A href="javascript:void(0)" onClick="delFileMat();" title="Удалить"><i class="icon-cancel red"></i></A>
-					</div>
+					'.($item['fid'] > 0 ? '<div class="infodiv dotted inline bgwhite" id="newFile">
+						<i class="'.$file['icon'].'"></i>'.$file['title'].'&nbsp;&nbsp;<A href="javascript:void(0)" onclick="delFileMat();" title="Удалить"><i class="icon-cancel-circled red"></i></A>
+					</div>' : '').'
 					
 				</span>
 			
@@ -602,9 +631,17 @@ if ($action == 'edit.item.dialog') {
 				
 			</span>
 			
+			<span id="filesEMat" class="infodiv fs-08 mt5 hidden">
+			
+				<A href="javascript:void(0)" onclick="$explorer.init()" class="button greenbtn">выбрать файл</A>
+				
+				<span id="efilelist" class="hidden"></span>
+			
+			</span>
+			
 			<span id="addRes" class="infodiv fs-08 mt5 '.$hideRes.'">
 			
-				<A href="javascript:void(0)" onClick="getLinkMaterial()" id="addResbtn" class="button '.$hideResbtn.'">указать ссылку на источник</A>
+				<A href="javascript:void(0)" onclick="getLinkMaterial()" id="addResbtn" class="button '.$hideResbtn.'">указать ссылку на источник</A>
 				<span id="resource" class="pt5 ml5 blue Bold">'.$source.'</span>
 				
 			</span>
@@ -673,8 +710,8 @@ if ($action == 'edit.item.dialog') {
 
 		<div class="text-right button--pane">
 
-			<A href="javascript:void(0)" id="saveitem" onClick="btn_submit()" class="button bluebtn">Сохранить</A>
-			<A href="javascript:void(0)" class="button cancelbtn" onClick="DClose()">Отмена</A>
+			<A href="javascript:void(0)" id="saveitem" onclick="btn_submit()" class="button bluebtn">Сохранить</A>
+			<A href="javascript:void(0)" class="button cancelbtn" onclick="DClose()">Отмена</A>
 
 		</div>
 
@@ -682,17 +719,20 @@ if ($action == 'edit.item.dialog') {
 
 	<script>
 
-		var tip = '<?=$item['type']?>';
-		var id = parseInt('<?=$id?>');
+		var tip = '<?=$item['type']?>'
+		var id = parseInt('<?=$id?>')
 
-		if(tip === 'text')
-			addMat();
+		if(tip === 'text') {
+			addMat()
+		}
 
-		if($('#content').is('textarea'))
-			$('#dialog').css('width', '800px').center();
+		if($('#content').is('textarea')) {
+			$('#dialog').css('width', '800px').center()
+		}
 
-		if(id > 0 && tip !== 'file')
-			$('#filelist').removeClass('hidden').load('/modules/corpuniver/core.corpuniver.php?action=files&type=' + tip + '&id=' + id);
+		if(id > 0 && tip !== 'file') {
+			$('#filelist').removeClass('hidden').load('/modules/corpuniver/core.corpuniver.php?action=files&type=' + tip + '&id=' + id)
+		}
 
 		$('#editItem').ajaxForm({
 			dataType:"json",
@@ -753,7 +793,7 @@ if ($action == 'edit.item.dialog') {
 
 			}
 
-		});
+		})
 
 		function parceURL(){
 
@@ -763,7 +803,7 @@ if ($action == 'edit.item.dialog') {
 				.then(response => response.json())
 					.then(data => {
 
-						//console.log(data);
+						console.log(data);
 
 						if(data.error)
 							Swal.fire({
@@ -797,6 +837,33 @@ if ($action == 'edit.item.dialog') {
 						});
 
 		}
+
+		// подписка на событие загрузки списка файлов в Explorer
+		ExplorerEvents.subscribe(function (eventArgs) {
+
+			//console.log(eventArgs)
+
+			if(eventArgs.etype === "explorer" && eventArgs.action === "loaded"){
+
+				$('.explorer').find('a.event')
+					.off('click')
+					.on('click', function(){
+
+						var fid = $(this).data('id')
+						var title = $(this).data('title')
+
+						delFileMat()
+
+						$('#fid').val(fid)
+						$('#efilelist').removeClass('hidden').empty().append('<div class="infodiv dotted inline bgwhite" id="neweFile">' + title + '<A href="javascript:void(0)" onclick="delFileMat();" title="Удалить"><i class="icon-cancel red"></i></A></div>')
+
+						$explorer.close()
+
+					})
+
+			}
+
+		})
 
 	</script>
 
@@ -1513,10 +1580,41 @@ if ($action == 'cat.list') {
 	<div class="zagolovok">Редактор разделов</div>
 	<div id="formtabs" style="max-height:70vh; overflow:auto" class="border--bottom">
 	<?php
-	$result = $db -> getAll("SELECT * FROM ".$sqlname."corpuniver_course_cat WHERE subid = '0' and identity = '$identity' ORDER BY title");
+	$catalog = CorpUniver::getCategories();
+	foreach ($catalog as $key => $value) {
+
+		$all = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_course WHERE cat = '".$value['id']."' and identity = '$identity'");
+
+		$padding = 'mt5 Bold';
+
+		if((int)$value['level'] == 1){
+			$padding = 'pl20';
+		}
+		elseif((int)$value['level'] > 1){
+			$x = 20 + (int)$value['level'] * 10;
+			$padding = "pl{$x} ml15 fs-09";
+		}
+
+		print '
+		<div class="flex-container float p10 ha">
+			<div class="flex-string float '.$padding.'">
+				<i class="icon-folder-open blue"></i>&nbsp;<B>'.$value['title'].'</B>&nbsp;[ <b class="green" title="Число записей">'.$all.'</b> ]
+			</div>
+			<div class="flex-string w50">
+				<A href="javascript:void(0)" onclick="editCourse(\''.$value['id'].'\',\'cat.edit\')"><i class="icon-pencil green" title="Редактировать"></i></A>
+			</div>
+			<div class="flex-string w50">
+				<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)editCourse(\''.$value['id'].'\',\'cat.delete\')"><i class="icon-cancel-circled red" title="Удалить"></i></A>
+			</div>
+		</div>';
+
+	}
+
+	/*
+	$result = $db -> getAll("SELECT * FROM {$sqlname}corpuniver_course_cat WHERE subid = '0' and identity = '$identity' ORDER BY title");
 	foreach ($result as $datat) {
 
-		$all = $db -> getOne("SELECT COUNT(*) FROM ".$sqlname."corpuniver_course WHERE cat = '".$datat['id']."' and identity = '$identity'");
+		$all = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_course WHERE cat = '".$datat['id']."' and identity = '$identity'");
 
 		print '
 			<div class="flex-container float p10 ha">
@@ -1524,17 +1622,17 @@ if ($action == 'cat.list') {
 					<i class="icon-folder-open blue"></i>&nbsp;<B>'.$datat['title'].'</B>&nbsp;[ <b class="green" title="Число записей">'.$all.'</b> ]
 				</div>
 				<div class="flex-string w50">
-					<A href="javascript:void(0)" onClick="editCourse(\''.$datat['id'].'\',\'cat.edit\')"><i class="icon-pencil green" title="Редактировать"></i></A>
+					<A href="javascript:void(0)" onclick="editCourse(\''.$datat['id'].'\',\'cat.edit\')"><i class="icon-pencil green" title="Редактировать"></i></A>
 				</div>
 				<div class="flex-string w50">
-					<A href="javascript:void(0)" onClick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)editCourse(\''.$datat['id'].'\',\'cat.delete\')"><i class="icon-cancel-circled red" title="Удалить"></i></A>
+					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)editCourse(\''.$datat['id'].'\',\'cat.delete\')"><i class="icon-cancel-circled red" title="Удалить"></i></A>
 				</div>
 			</div>';
 
-		$res = $db -> getAll("SELECT * FROM ".$sqlname."corpuniver_course_cat WHERE subid = '".$datat['id']."' and identity = '$identity' ORDER BY title");
+		$res = $db -> getAll("SELECT * FROM {$sqlname}corpuniver_course_cat WHERE subid = '".$datat['id']."' and identity = '$identity' ORDER BY title");
 		foreach ($res as $data) {
 
-			$all = $db -> getOne("SELECT COUNT(*) FROM ".$sqlname."corpuniver_course WHERE cat='".$data['id']."' and identity = '$identity'");
+			$all = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_course WHERE cat='".$data['id']."' and identity = '$identity'");
 
 			print '
 				<div class="flex-container float p10 ha bgwhite">
@@ -1543,16 +1641,17 @@ if ($action == 'cat.list') {
 						<i class="icon-folder gray2"></i>&nbsp;<B>'.$data['title'].'</B>&nbsp;[ <b class="blue" title="Число записей">'.$all.'</b> ]
 					</div>
 					<div class="flex-string w50">
-						<A href="javascript:void(0)" onClick="editCourse(\''.$data['id'].'\',\'cat.edit\')"><i class="icon-pencil green" title="Редактировать"></i></A>
+						<A href="javascript:void(0)" onclick="editCourse(\''.$data['id'].'\',\'cat.edit\')"><i class="icon-pencil green" title="Редактировать"></i></A>
 					</div>
 					<div class="flex-string w50">
-						<A href="javascript:void(0)" onClick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)editCourse(\''.$data['id'].'\',\'cat.delete\')"><i class="icon-cancel-circled red" title="Удалить"></i></A>
+						<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)editCourse(\''.$data['id'].'\',\'cat.delete\')"><i class="icon-cancel-circled red" title="Удалить"></i></A>
 					</div>
 				</div>';
 
 		}
 
 	}
+	*/
 
 	?>
 	<div class="button--pane text-right">
@@ -1571,7 +1670,7 @@ if ($action == "cat.edit") {
 
 	$idcat = $_REQUEST['id'];
 
-	$result = $db -> getRow("SELECT * FROM ".$sqlname."corpuniver_course_cat where id='".$idcat."' and identity = '$identity'");
+	$result = $db -> getRow("SELECT * FROM {$sqlname}corpuniver_course_cat where id='".$idcat."' and identity = '$identity'");
 	$title  = $result["title"];
 	$idcat  = $result["id"];
 	$subid  = $result["subid"];
@@ -1601,10 +1700,24 @@ if ($action == "cat.edit") {
 				<select name="subid" id="subid" class="wp100">
 					<OPTION value="">--Выбор--</OPTION>
 					<?php
-					$result = $db -> getAll("SELECT * FROM ".$sqlname."corpuniver_course_cat WHERE subid = '0' and id != '$idcat' and identity = '$identity' ORDER BY title");
+					/*$result = $db -> getAll("SELECT * FROM {$sqlname}corpuniver_course_cat WHERE subid = '0' and id != '$idcat' and identity = '$identity' ORDER BY title");
 					foreach ($result as $data) {
 
 						print '<OPTION value="'.$data['id'].'" '.($data['id'] == $subid ? "selected" : "").'>'.$data['title'].'</OPTION>';
+
+					}*/
+
+					$catalog = CorpUniver::getCategories();
+					foreach ( $catalog as $key => $value ) {
+
+						if($value['id'] == $idcat){
+							continue;
+						}
+
+						if ( $value['level'] < $maxUniverFolderLevel ) {
+
+							print '<option value="'.$value['id'].'" '.($value['id'] == $subid ? "selected" : '').'>'.($value['level'] > 0 ? str_repeat( '&nbsp;&nbsp;', $value['level'] ).'&rarr;&nbsp;' : '').$value['title'].'</option>';
+						}
 
 					}
 					?>

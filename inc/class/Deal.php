@@ -2686,6 +2686,7 @@ class Deal {
 
 					$db -> query("update {$sqlname}dogovor set idcategory = '$params[step]' where did = '$did' and identity = '$identity'");
 
+					$params['did'] = $did;
 					$params['step']    = $step;
 					$params['stepOld'] = $stepOld;
 

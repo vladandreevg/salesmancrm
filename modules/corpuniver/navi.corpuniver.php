@@ -20,7 +20,10 @@
 
 				<div class="relativ">
 					<B class="shad uppercase"><i class="icon-menu blue"></i>&nbsp;Разделы</B>
-					<?php if ($isadmin == "on" || in_array($iduser1, (array)$mdcsettings['Editor'])) { ?>
+					<?php
+					use Salesman\CorpUniver;
+
+					if ($isadmin == "on" || in_array($iduser1, (array)$mdcsettings['Editor'])) { ?>
 						<div class="pull-right">
 							<A href="javascript:void(0)" onclick="editCourse('','cat.list');" class="gray" title="Редактор разделов"><i class="icon-pencil blue"></i></A>
 						</div>
@@ -30,6 +33,34 @@
 					<div id="folder" class="ifolder nano-content paddleft10" style="min-height:200px;">
 						<a href="javascript:void(0)" data-id="" data-title="" class="fol_it"><i class="icon-folder blue"></i>&nbsp;[все]</a>
 						<?php
+						$catalog = CorpUniver::getCategories();
+						foreach ($catalog as $key => $value) {
+
+							$padding = 'mt5 Bold';
+
+							if((int)$value['level'] == 1){
+								$padding = 'pl20';
+							}
+							elseif((int)$value['level'] > 1){
+								$x = 20 + (int)$value['level'] * 10;
+								$padding = "pl{$x} ml15 fs-09";
+							}
+
+							$folder  = ($value['level'] == 0 ? 'icon-folder-open deepblue' : ($value['level'] == 1 ? 'icon-folder-open blue' : 'icon-folder broun'));
+							//$padding = ($value['level'] == 0 ? 'mt5 Bold' : ($value['level'] == 1 ? 'pl20' : 'pl20 ml15 fs-09'));
+
+							print '
+							<div class="pt5">
+								<div class="fol block ellipsis hand '.$padding.'" data-id="'.$value['id'].'" data-title="'.$value['title'].'">
+									<div class="strelka w5 ml10 mr10"></div><i class="'.$folder.'"></i>&nbsp;'.$value['title'].'
+								</div>
+							</div>
+							';
+
+						}
+						?>
+						<?php
+						/*
 						$result = $db -> getAll("SELECT * FROM ".$sqlname."corpuniver_course_cat WHERE subid = '0' and identity = '$identity' ORDER by title");
 						foreach ($result as $data) {
 
@@ -43,6 +74,7 @@
 							}
 
 						}
+						*/
 						?>
 					</div>
 				</div>
@@ -65,7 +97,7 @@
 
 			</div>
 
-			<?php if ($isadmin == "yes" || in_array($iduser1, $mdcsettings['Editor'])) { ?>
+			<?php if ($isadmin == "yes" || in_array($iduser1, (array)$mdcsettings['Editor'])) { ?>
 				<div class="contaner p5 addbutton">
 					<div class="div-center">
 						<A href="javascript:void(0)" onclick="editCourse('','edit');" class="button full"><i class="icon-plus-circled white"></i>Добавить курс</A>

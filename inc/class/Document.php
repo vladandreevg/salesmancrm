@@ -1278,7 +1278,7 @@ class Document {
 			}
 			// если это другой документ
 			else {
-				$cparams['number'] = ($format == '') ? untag( $params['number'] ) : genDocsNum( $params['idtype'] );
+				$cparams['number'] = ($format == '') ? untag( (string)$params['number'] ) : genDocsNum( $params['idtype'] );
 			}
 
 		}

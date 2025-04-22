@@ -7,14 +7,15 @@
 /*         salesman.pro         */
 /*          ver. 2019.х         */
 /* ============================ */
+
 /*   Developer: Ivan Drachyov   */
 
 use Salesman\CorpUniver;
 use Salesman\Elements;
 use Salesman\Upload;
 
-error_reporting( E_ERROR );
-header( "Pragma: no-cache" );
+error_reporting(E_ERROR);
+header("Pragma: no-cache");
 
 $rootpath = dirname(__DIR__, 2);
 
@@ -25,10 +26,10 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
-$thisfile = basename( __FILE__ );
+$thisfile = basename(__FILE__);
 
-$mdcset      = $db -> getRow( "SELECT * FROM ".$sqlname."modules WHERE mpath = 'corpuniver' and identity = '$identity'" );
-$mdcsettings = json_decode( $mdcset[ 'content' ], true );
+$mdcset      = $db -> getRow("SELECT * FROM ".$sqlname."modules WHERE mpath = 'corpuniver' and identity = '$identity'");
+$mdcsettings = json_decode($mdcset['content'], true);
 
 $icoNMaterial = [
 	"video"    => "icon-video",
@@ -39,37 +40,37 @@ $icoNMaterial = [
 	"file"     => "icon-attach-1"
 ];
 
-$action = $_REQUEST[ 'action' ];
+$action = $_REQUEST['action'];
 
 // Информация о курсе. Правая панель
-if ( $action == "courceView" ) {
+if ($action == "courceView") {
 
-	$id = $_REQUEST[ 'id' ];
+	$id = $_REQUEST['id'];
 
 	$categories = '';
 
-	$Course = CorpUniver ::info( $id )[ 'data' ];
+	$Course = CorpUniver ::info($id)['data'];
 
-	$idcat = $Course[ "cat" ];
-	$cat   = $db -> getOne( "SELECT title FROM ".$sqlname."corpuniver_course_cat WHERE id = '$idcat' AND identity = '$identity'" );
+	$idcat = $Course["cat"];
+	$cat   = $db -> getOne("SELECT title FROM ".$sqlname."corpuniver_course_cat WHERE id = '$idcat' AND identity = '$identity'");
 
-	$files = ( $Course[ 'fid' ] != '' ) ? '<div id="filelist"></div>
+	$files = ( $Course['fid'] != '' ) ? '<div id="filelist"></div>
 		<div class="fs-09 gray ml5 em">При прохождении курса слушатели могут просматривать и скачивать файлы</div>' : '<div class="bad">Файлы отсутствуют</div>';
 
 
-	$last_change = '<i class="icon-calendar-inv blue"></i> '.datetimeru2datetime( $Course[ 'date_edit' ] ).'<span class="noBold">, '.current_user( $Course[ 'editor' ] ).'</span>';
+	$last_change = '<i class="icon-calendar-inv blue"></i> '.datetimeru2datetime($Course['date_edit']).'<span class="noBold">, '.current_user($Course['editor']).'</span>';
 
 	// Признак начала курса
-	$way = CorpUniver ::infoWayCource( ["idcourse" => $id] );
+	$way = CorpUniver ::infoWayCource(["idcourse" => $id]);
 
 	// Прогресс выполнения
-	$progress = CorpUniver ::progressCource( $id );
+	$progress = CorpUniver ::progressCource($id);
 
 	print '
 	<div class="body" style="height:calc(100vh - 60px)">
 
 		<div class="m0 p0 pb20 mt10 blue fs-14 Bold">
-			<span class="gray">Курс: </span><span class="blue fs-12 uppercase">'.$Course[ 'name' ].'</span>
+			<span class="gray">Курс: </span><span class="blue fs-12 uppercase">'.$Course['name'].'</span>
 		</div>
 			
 		<div class="bgwhite fcontainer flex-vertical p0 border--bottom box--child fs-10">
@@ -79,7 +80,7 @@ if ( $action == "courceView" ) {
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Дата создания</div>
 				<div class="flex-string wp100 relativ blue">
 					<i class="icon-calendar-1 green"></i>
-					'.format_date_rus( $Course[ 'date_create' ] ).'
+					'.format_date_rus($Course['date_create']).'
 				</div>
 	
 			</div>
@@ -96,7 +97,7 @@ if ( $action == "courceView" ) {
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Автор</div>
 				<div class="flex-string wp100 relativ">
 					<i class="icon-user-1 blue"></i>
-					'.current_user( $Course[ 'author' ] ).'
+					'.current_user($Course['author']).'
 				</div>
 	
 			</div>
@@ -111,7 +112,7 @@ if ( $action == "courceView" ) {
 	
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2">Описание</div>
 				<div class="flex-string wp100 mt10 noBold text-wrap">
-					'.$Course[ 'des' ].'
+					'.$Course['des'].'
 				</div>
 	
 			</div>
@@ -126,7 +127,7 @@ if ( $action == "courceView" ) {
 	
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Начало прохождения</div>
 				<div class="flex-string wp100">
-					'.( $way[ 'isStart' ] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate( $way[ 'datum' ] ) : "<i class='icon-location red'></i> Не начат" ).'
+					'.( $way['isStart'] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate($way['datum']) : "<i class='icon-location red'></i> Не начат" ).'
 				</div>
 	
 			</div>
@@ -134,7 +135,7 @@ if ( $action == "courceView" ) {
 	
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Завершение прохождения</div>
 				<div class="flex-string wp100">
-					'.( $way[ 'isEnd' ] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate( $way[ 'datum_end' ] ) : "<i class='icon-flag-1 red'></i> Не закончен" ).'
+					'.( $way['isEnd'] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate($way['datum_end']) : "<i class='icon-flag-1 red'></i> Не закончен" ).'
 				</div>
 	
 			</div>
@@ -143,7 +144,7 @@ if ( $action == "courceView" ) {
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Текущий прогресс</div>
 				<div class="flex-string wp100">
 					
-					<div class="fs-14 blue">'.round( $progress[ 'progress' ] * 100, 1 ).'%</div>
+					<div class="fs-14 blue">'.round($progress['progress'] * 100, 1).'%</div>
 					
 				</div>
 	
@@ -168,27 +169,27 @@ if ( $action == "courceView" ) {
 }
 
 // Окно просмотра
-if ( $action == "courceViewDialog" ) {
+if ($action == "courceViewDialog") {
 
-	$id = $_REQUEST[ 'id' ];
+	$id = $_REQUEST['id'];
 
 	$categories = '';
 
-	$Course = CorpUniver ::info( $id )[ 'data' ];
+	$Course = CorpUniver ::info($id)['data'];
 
-	$idcat = $Course[ "cat" ];
-	$cat   = $db -> getOne( "SELECT title FROM ".$sqlname."corpuniver_course_cat WHERE id = '$idcat' AND identity = '$identity'" );
+	$idcat = $Course["cat"];
+	$cat   = $db -> getOne("SELECT title FROM ".$sqlname."corpuniver_course_cat WHERE id = '$idcat' AND identity = '$identity'");
 
-	$files = ( $Course[ 'fid' ] != '' ) ? '<div class="fs-09 gray ml5 em">При прохождении курса слушатели могут просматривать и скачивать файлы</div>' : '<div class="bad">Файлы отсутствуют</div>';
+	$files = ( $Course['fid'] != '' ) ? '<div class="fs-09 gray ml5 em">При прохождении курса слушатели могут просматривать и скачивать файлы</div>' : '<div class="bad">Файлы отсутствуют</div>';
 
-	$last_change = '<i class="icon-calendar-inv blue"></i> '.datetimeru2datetime( $Course[ 'date_edit' ] ).'<span class="noBold">, '.current_user( $Course[ 'editor' ] ).'</span>';
+	$last_change = '<i class="icon-calendar-inv blue"></i> '.datetimeru2datetime($Course['date_edit']).'<span class="noBold">, '.current_user($Course['editor']).'</span>';
 
 
 	// Признак начала курса
-	$way = CorpUniver ::infoWayCource( ["idcourse" => $id] );
+	$way = CorpUniver ::infoWayCource(["idcourse" => $id]);
 
 	// Прогресс выполнения
-	$progress = CorpUniver ::progressCource( $id );
+	$progress = CorpUniver ::progressCource($id);
 
 	?>
 	<DIV class="zagolovok">Сведения о курсе</DIV>
@@ -196,7 +197,7 @@ if ( $action == "courceViewDialog" ) {
 
 		<div class="m0 p0 pb20 mt10 blue fs-14 Bold">
 			<span class="gray">Курс: </span>
-			<span class="blue fs-12 uppercase"><?= $Course[ 'name' ] ?></span>
+			<span class="blue fs-12 uppercase"><?= $Course['name'] ?></span>
 		</div>
 
 		<div class="bgwhite fcontainer flex-vertical p0 border--bottom box--child fs-10">
@@ -206,7 +207,7 @@ if ( $action == "courceViewDialog" ) {
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Дата создания</div>
 				<div class="flex-string wp100 relativ blue">
 					<i class="icon-calendar-1 green"></i>
-					<?= format_date_rus( $Course[ 'date_create' ] ) ?>
+					<?= format_date_rus($Course['date_create']) ?>
 				</div>
 
 			</div>
@@ -225,7 +226,7 @@ if ( $action == "courceViewDialog" ) {
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Автор</div>
 				<div class="flex-string wp100 relativ">
 					<i class="icon-user-1 blue"></i>
-					<?= current_user( $Course[ 'author' ] ) ?>
+					<?= current_user($Course['author']) ?>
 				</div>
 
 			</div>
@@ -242,7 +243,7 @@ if ( $action == "courceViewDialog" ) {
 
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2">Описание</div>
 				<div class="flex-string wp100 mt10 noBold text-wrap">
-					<?= $Course[ 'des' ] ?>
+					<?= $Course['des'] ?>
 				</div>
 
 			</div>
@@ -257,7 +258,7 @@ if ( $action == "courceViewDialog" ) {
 
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Начало прохождения</div>
 				<div class="flex-string wp100">
-					<?= ( $way[ 'isStart' ] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate( $way[ 'datum' ] ) : "<i class='icon-location red'></i> Не начат" ) ?>
+					<?= ( $way['isStart'] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate($way['datum']) : "<i class='icon-location red'></i> Не начат" ) ?>
 				</div>
 
 			</div>
@@ -265,7 +266,7 @@ if ( $action == "courceViewDialog" ) {
 
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Завершение прохождения</div>
 				<div class="flex-string wp100">
-					<?= ( $way[ 'isEnd' ] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate( $way[ 'datum_end' ] ) : "<i class='icon-flag-1 red'></i> Не закончен" ) ?>
+					<?= ( $way['isEnd'] ? '<i class="icon-calendar-1 green"></i> '.get_sfdate($way['datum_end']) : "<i class='icon-flag-1 red'></i> Не закончен" ) ?>
 				</div>
 
 			</div>
@@ -274,7 +275,7 @@ if ( $action == "courceViewDialog" ) {
 				<div class="flex-string wp100 uppercase fs-09 Bold gray2 mb10">Текущий прогресс</div>
 				<div class="flex-string wp100">
 
-					<div class="fs-14 blue"><?= round( $progress[ 'progress' ] * 100, 1 ) ?>%</div>
+					<div class="fs-14 blue"><?= round($progress['progress'] * 100, 1) ?>%</div>
 
 				</div>
 
@@ -314,34 +315,35 @@ if ( $action == "courceViewDialog" ) {
 }
 
 // Массив содержимого курса ( для Шаблонизатора )
-if ( $action == "courseConstructor" ) {
+if ($action == "courseConstructor") {
 
-	$id = $_REQUEST[ 'id' ];
+	$id = $_REQUEST['id'];
 
 	$list = CorpUniver ::courseConstructor($id);
 
-	print json_encode_cyr( ["list" => $list] );
+	print json_encode_cyr(["list" => $list]);
 
 	exit();
 
 }
 
 // Начало изучения курса ( отрисовка основного окна )
-if ( $action == 'startCource' ) {
+if ($action == 'startCource') {
 
-	$id = $_REQUEST[ 'id' ];
+	$id = $_REQUEST['id'];
 
-	$cource   = CorpUniver ::info( $id );
-	$lections = CorpUniver ::listLections( $id )[ 'data' ];
+	$cource   = CorpUniver ::info($id);
+	$lections = CorpUniver ::listLections($id)['data'];
 
 	// Признак начала курса
-	$way = CorpUniver ::infoWayCource( ["idcourse" => $id] );
+	$way = CorpUniver ::infoWayCource(["idcourse" => $id]);
 
-	if ( !$way[ 'isStart' ] )
-		CorpUniver ::startWayCource( [
+	if (!$way['isStart']) {
+		CorpUniver ::startWayCource([
 			"idcourse" => $id,
 			"start"    => true
-		] );
+		]);
+	}
 	?>
 
 	<div class="flex-container box--child" style="">
@@ -517,7 +519,7 @@ if ( $action == 'startCource' ) {
 							$('div[data-type="totaskButton"]').removeClass('hidden');
 
 						}
-						else if(data.currentSlideType === 'material'){
+						else if (data.currentSlideType === 'material') {
 
 							$('div[data-type="totaskButton"]').addClass('hidden');
 							$('div[data-type="nextButton"]').removeClass('hidden');
@@ -755,7 +757,7 @@ if ( $action == 'startCource' ) {
 				timer: 3000
 			});
 
-			fetch(url+'?'+str)
+			fetch(url + '?' + str)
 				.then(response => response.json())
 				.then(data => {
 
@@ -807,7 +809,7 @@ if ( $action == 'startCource' ) {
 						.then(function () {
 
 							// последнее задание
-							if(islast === 'yes'){
+							if (islast === 'yes') {
 
 								$('div[data-type="totaskButton"]').addClass('hidden');
 								$('div[data-type="nextButton"]').removeClass('hidden');
@@ -862,112 +864,116 @@ if ( $action == 'startCource' ) {
 }
 
 // Список лекций по курсу ( для Шаблонизатора )
-if ( $action == 'courseList' ) {
+if ($action == 'courseList') {
 
-	$id = $_REQUEST[ 'id' ];
+	$id = $_REQUEST['id'];
 
-	$list = CorpUniver::courseList($id);
+	$list = CorpUniver ::courseList($id);
 
-	print json_encode_cyr( $list );
+	print json_encode_cyr($list);
 
 }
 
 // Слайд курса
-if ( $action == 'slide' ) {
+if ($action == 'slide') {
 
-	$id   = $_REQUEST[ 'id' ];
-	$type = $_REQUEST[ 'type' ];
-	$preview = $_REQUEST[ 'preview' ];
+	$id      = $_REQUEST['id'];
+	$type    = $_REQUEST['type'];
+	$preview = $_REQUEST['preview'];
 
-	if ( $type == 'material' ) {
+	if ($type == 'material') {
 
-		$mat = CorpUniver ::infoMaterial( $id )[ 'data' ];
+		$mat = CorpUniver ::infoMaterial($id)['data'];
 
-		if($preview != 'yes') {
+		if ($preview != 'yes') {
 
 			// признак начала изучения лекции
-			$way = CorpUniver ::infoWayCource( [
-				"idcourse"  => $mat[ 'course' ],
-				"idlecture" => $mat[ 'lecture' ]
-			] );
+			$way = CorpUniver ::infoWayCource([
+				"idcourse"  => $mat['course'],
+				"idlecture" => $mat['lecture']
+			]);
 
-			if ( !$way[ 'isStart' ] )
-				CorpUniver ::startWayCource( [
-					"idcourse"  => $mat[ 'course' ],
-					"idlecture" => $mat[ 'lecture' ],
+			if (!$way['isStart']) {
+				CorpUniver ::startWayCource([
+					"idcourse"  => $mat['course'],
+					"idlecture" => $mat['lecture'],
 					"start"     => true
-				] );
+				]);
+			}
 
 
 			// Признак начала изучения материала
-			$way = CorpUniver ::infoWayCource( [
-				"idcourse"   => $mat[ 'cours' ],
-				"idlecture"  => $mat[ 'lecture' ],
+			$way = CorpUniver ::infoWayCource([
+				"idcourse"   => $mat['cours'],
+				"idlecture"  => $mat['lecture'],
 				"idmaterial" => $id
-			] );
+			]);
 
-			if ( !$way[ 'isStart' ] )
-				CorpUniver ::startWayCource( [
-					"idcourse"   => $mat[ 'course' ],
-					"idlecture"  => $mat[ 'lecture' ],
+			if (!$way['isStart']) {
+				CorpUniver ::startWayCource([
+					"idcourse"   => $mat['course'],
+					"idlecture"  => $mat['lecture'],
 					"idmaterial" => $id,
 					"start"      => true
-				] );
+				]);
+			}
 
 		}
 
-		if ( $mat[ 'text' ] != '' )
-			print '<div class="p10 fs-12 flh-12 text-wrap">'.htmlspecialchars_decode( $mat[ 'text' ] ).'</div>';
+		if ($mat['text'] != '') {
+			print '<div class="p10 fs-12 flh-12 text-wrap">'.htmlspecialchars_decode($mat['text']).'</div>';
+		}
 
-		if ( $mat[ 'source' ] != ''){
+		if ($mat['source'] != '') {
 
-			$url = parse_url($mat[ 'source' ]);
+			$url = parse_url($mat['source']);
 
-			if(in_array(str_replace("www.","",$url['host']), CorpUniver::VIDEOSITE))
-				print '<embed width="100%" height="99.5%" class="pt5" src="'.$mat[ 'source' ].'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>';
-
-			else
-				print '<iframe src="'.$mat[ 'source' ].'" width="100%" height="99.5%" class="pt5"></iframe>';
+			if (in_array(str_replace("www.", "", $url['host']), CorpUniver::VIDEOSITE)) {
+				print '<embed width="100%" height="99.5%" class="pt5" src="'.$mat['source'].'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>';
+			}
+			else {
+				print '<iframe src="'.$mat['source'].'" width="100%" height="99.5%" class="pt5"></iframe>';
+			}
 
 		}
 
+		$fids = yexplode(",", $mat['fid']);
+		foreach ($fids as $fid) {
 
-		$fids = yexplode( ",", $mat[ 'fid' ] );
-		foreach ( $fids as $fid ) {
+			$file = Upload ::info($fid);
 
-			$file = Upload::info($fid);
-
-			if(in_array($file['ext'],['pdf','png','jpeg','jpg','gif'])) {
+			if (in_array($file['ext'], ['pdf', 'png', 'jpeg', 'jpg', 'gif'])) {
 				print '<embed width="100%" height="99.5%" class="pl5 pt5" style="background:black" src="/files/'.$fpath.$file['file'].'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>';
 			}
 
-			if(in_array($file['ext'],['avi','mp4','mpeg','ogv','webm'])) {
+			if (in_array($file['ext'], ['avi', 'mp4', 'mpeg', 'ogv', 'webm'])) {
 				print '<video src="/files/'.$fpath.$file['file'].'" type="'.$file['mime'].'" controls width="100%" height="99.5%"></video>';
 			}
 
 		}
 
 	}
-	elseif ( $type == 'task' ) {
+	elseif ($type == 'task') {
 
-		$task = CorpUniver ::infoTask( $id )[ 'data' ];
+		$task = CorpUniver ::infoTask($id)['data'];
 
-		if($preview != 'yes') {
+		if ($preview != 'yes') {
 
 			// Признак начала изучения материала
-			$way = CorpUniver ::infoWayCource( [
-				"idcourse"  => $task[ 'cours' ],
-				"idlecture" => $task[ 'lecture' ],
+			$way = CorpUniver ::infoWayCource([
+				"idcourse"  => $task['cours'],
+				"idlecture" => $task['lecture'],
 				"idtask"    => $id
-			] );
+			]);
 
-			if ( !$way[ 'isStart' ] )
-				CorpUniver ::startWayCource( [
-					"idcourse"  => $task[ 'course' ],
-					"idlecture" => $task[ 'lecture' ],
+			if (!$way['isStart']) {
+				CorpUniver ::startWayCource([
+					"idcourse"  => $task['course'],
+					"idlecture" => $task['lecture'],
 					"idtask"    => $id,
 					"start"     => true
-				] );
+				]);
+			}
 
 		}
 
@@ -975,22 +981,22 @@ if ( $action == 'slide' ) {
 		<FORM action="/modules/corpuniver/core.corpuniver.php" method="post" enctype="multipart/form-data" name="FormQuest" id="FormQuest">
 			<INPUT type="hidden" name="action" id="action" value="verification.task">
 			<INPUT type="hidden" name="id" id="id" value="<?= $id ?>">
-			<INPUT type="hidden" name="type" id="type" value="<?= $task[ 'type' ] ?>">
-			<INPUT type="hidden" name="islast" id="islast" value="<?= ($task[ 'isLast' ] ? "yes" : "no") ?>">
+			<INPUT type="hidden" name="type" id="type" value="<?= $task['type'] ?>">
+			<INPUT type="hidden" name="islast" id="islast" value="<?= ( $task['isLast'] ? "yes" : "no" ) ?>">
 
 			<div class="p20">
 
-				<div class="mb20 pt10 Bold fs-14 uppercase"><?= $task[ 'name' ] ?></div>
+				<div class="mb20 pt10 Bold fs-14 uppercase"><?= $task['name'] ?></div>
 
 				<?php
-				if ( $task[ 'type' ] == 'question' ) {
+				if ($task['type'] == 'question') {
 
-					$quest = $db -> getRow( "SELECT id, text FROM ".$sqlname."corpuniver_questions WHERE task = '$id' and identity = '$identity'" );
+					$quest = $db -> getRow("SELECT id, text FROM ".$sqlname."corpuniver_questions WHERE task = '$id' and identity = '$identity'");
 
 					?>
-					<div class="pt10 fs-11 flh-11 text-wrap"><?= htmlspecialchars_decode( $quest[ 'text' ] ) ?></div>
+					<div class="pt10 fs-11 flh-11 text-wrap"><?= htmlspecialchars_decode($quest['text']) ?></div>
 
-					<input type="hidden" id="question" name="question" value="<?= $quest[ 'id' ] ?>">
+					<input type="hidden" id="question" name="question" value="<?= $quest['id'] ?>">
 					<div class="infodiv mt15 p20 fs-11">
 
 						<div class="Bold gray2 fs-09 mb10">Ответ</div>
@@ -1003,24 +1009,28 @@ if ( $action == 'slide' ) {
 				}
 				else {
 
-					$questions = CorpUniver ::listQuestions( $id )[ 'data' ];
+					$questions = CorpUniver ::listQuestions($id)['data'];
 					$print     = '';
 
-					foreach ( $questions as $i => $q ) {
+					foreach ($questions as $i => $q) {
 
 						$ans     = [];
-						$answers = CorpUniver ::infoQuestion( $q[ 'id' ] )[ 'answers' ];
+						$answers = CorpUniver ::infoQuestion($q['id'])['answers'];
 
-						foreach ( $answers as $a )
-							$ans[] = $a[ 'text' ];
+						foreach ($answers as $a) $ans[] = $a['text'];
 
 						$print .= '
 						<div class="mb20 infodiv">
 						
-							<div class="pt10 fs-11 flh-12">'.$q[ 'text' ].'</div>
-							<input type="hidden" id="question[]" name="question[]" value="'.$q[ 'id' ].'">
+							<div class="pt10 fs-11 flh-12">'.$q['text'].'</div>
+							<input type="hidden" id="question[]" name="question[]" value="'.$q['id'].'">
 							<div class="mt15 p0 fs-11 req">
-								'.Elements ::Radio( 'answer-'.$q[ 'id' ], $ans, ["sel" => -1, "mainclass" => "mb5 mt5", "radioclass" => "infodiv inset1 bgwhite p10 rounded-r10", "empty" => false] ).'
+								'.Elements ::Radio('answer-'.$q['id'], $ans, [
+								"sel"        => -1,
+								"mainclass"  => "mb5 mt5",
+								"radioclass" => "infodiv inset1 bgwhite p10 rounded-r10",
+								"empty"      => false
+							]).'
 							</div>
 							
 						</div>
@@ -1163,7 +1173,7 @@ if ( $action == 'slide' ) {
 /**
  * статистика курса
  */
-if ( $action == "courseStat" ){
+if ($action == "courseStat") {
 
 	$id = $_REQUEST['id'];
 
@@ -1172,7 +1182,7 @@ if ( $action == "courseStat" ){
 
 	$list = [];
 
-	foreach ($users as $iduser){
+	foreach ($users as $iduser) {
 
 		$list[$iduser] = CorpUniver ::courseConstructor($id, $iduser);
 
@@ -1181,7 +1191,7 @@ if ( $action == "courseStat" ){
 	//print array2string( $list, "<br>", str_repeat( "&nbsp;", 5 ) );
 
 	$head = CorpUniver ::courseConstructor($id, 0);
-	$str = '';
+	$str  = '';
 	?>
 	<div class="zagolovok">Статистика прохождения курса</div>
 	<div id="formtabs" style="overflow-y: auto; overflow-x: hidden; min-height: 400px; max-height: 80vh" class="p5 bgwhite graybg-sub">
@@ -1191,73 +1201,75 @@ if ( $action == "courseStat" ){
 			<tr>
 				<th rowspan="2">Сотрудник</th>
 				<?php
-				foreach ($head['lection'] as $num => $lection){
+				foreach ($head['lection'] as $num => $lection) {
 
-					if(($lection['materialCount'] + $lection['taskCount']) > 0) {
+					if (( $lection['materialCount'] + $lection['taskCount'] ) > 0) {
 
 						print '
-						<th colspan="'.($lection['materialCount'] + $lection['taskCount']).'" class="'.($num % 2 == 0 ? 'greenbg' : '').'">'.$lection['name'].'</th>';
+						<th colspan="'.( $lection['materialCount'] + $lection['taskCount'] ).'" class="'.( $num % 2 == 0 ? 'greenbg' : '' ).'">'.$lection['name'].'</th>';
 
-						foreach ( $lection['material'] as $material )
-							$str .= '
-							<th title="'.trim($material['name']).'" class="top0">'.($material['num'] + 1).' <i class="'.$material['icon'].'"></i></th>';
+						foreach ($lection['material'] as $material) $str .= '
+							<th title="'.trim($material['name']).'" class="top0">'.( $material['num'] + 1 ).' <i class="'.$material['icon'].'"></i></th>';
 
-						foreach ( $lection['task'] as $task )
-							$str .= '
-							<th title="'.trim($task['name']).'" class="top0">'.($task['num'] + 1).' <i class="'.$task['icon'].'"></i></th>';
+						foreach ($lection['task'] as $task) $str .= '
+							<th title="'.trim($task['name']).'" class="top0">'.( $task['num'] + 1 ).' <i class="'.$task['icon'].'"></i></th>';
 
 					}
 
 				}
 				?>
 			</tr>
-			<tr><?=$str?></tr>
+			<tr><?= $str ?></tr>
 			</thead>
 			<tbody class="graybg-sub">
 			<?php
-			foreach ($list as $iduser => $item){
+			foreach ($list as $iduser => $item) {
 
 				$str = '';
 
 				foreach ($item['lection'] as $lection) {
 
-					foreach ( $lection['material'] as $material ) {
+					foreach ($lection['material'] as $material) {
 
 						$icon = '';
 
-						if($material['isStart'])
+						if ($material['isStart']) {
 							$icon = '<i class="icon-location blue"></i>';
+						}
 
-						if($material['isEnd'])
+						if ($material['isEnd']) {
 							$icon = '<i class="icon-ok-circled green"></i>';
+						}
 
 						$str .= '
 						<td title="'.$material['text'].'" class="text-center">'.$icon.'</td>';
 
 					}
 
-					foreach ( $lection['task'] as $task ) {
+					foreach ($lection['task'] as $task) {
 
 						$title = $task['title'];
 
-						if($task['isStart'])
+						if ($task['isStart']) {
 							$icon = '<i class="icon-location blue"></i>';
+						}
 
-						if($task['isEnd'])
+						if ($task['isEnd']) {
 							$icon = '<i class="icon-ok-circled green"></i>';
+						}
 
-						if($task['rezult']){
+						if ($task['rezult']) {
 
 							$icon = '';
 
-							foreach($task['rezult'] as $r) {
+							foreach ($task['rezult'] as $r) {
 
-								$title = "Вопрос:\n".untag($r[ 'query' ])."\n\n";
-								$title .= "Ответ сотрудника: ".$r[ 'answer' ]."\n";
-								$title .= "Верный ответ: ".$r[ 'answerGood' ]."\n\n";
-								$title .= "Результат: ".$r[ 'title' ];
+								$title = "Вопрос:\n".untag($r['query'])."\n\n";
+								$title .= "Ответ сотрудника: ".$r['answer']."\n";
+								$title .= "Верный ответ: ".$r['answerGood']."\n\n";
+								$title .= "Результат: ".$r['title'];
 
-								$icon  .= '<i class="'.$r[ 'icon' ].'" title="'.$title.'"></i>';
+								$icon .= '<i class="'.$r['icon'].'" title="'.$title.'"></i>';
 
 							}
 
@@ -1287,17 +1299,17 @@ if ( $action == "courseStat" ){
 
 	<script>
 
-		$('#dialog').css({'width':'90vw'});
+		$('#dialog').css({'width': '90vw'});
 
 	</script>
-<?php
+	<?php
 
 }
 
 /**
  * статистика курса
  */
-if ( $action == "courseStatUser" ){
+if ($action == "courseStatUser") {
 
 	$id = $_REQUEST['id'];
 
@@ -1310,13 +1322,13 @@ if ( $action == "courseStatUser" ){
 
 		<?php
 		// обходим лекции
-		foreach ($list['lection'] as $lec){
+		foreach ($list['lection'] as $lec) {
 
-			if($lec['materialCount'] > 0) {
+			if ($lec['materialCount'] > 0) {
 
 				$material = $tasks = '';
 
-				foreach ( $lec['material'] as $mat ) {
+				foreach ($lec['material'] as $mat) {
 
 					$material .= '
 					<div class="flex-container p10">
@@ -1328,8 +1340,8 @@ if ( $action == "courseStatUser" ){
 							
 							<div class="fs-07 gray mt10">
 							
-								<span class="black Bold fs-12">[ '.diffDateTime( $mat['do']['datum'], $mat['do']['datum_end'] ).' ]</span>
-								&nbsp<i class="icon-location blue"></i>&nbsp;'.get_sfdate( $mat['do']['datum'] ).' - <i class="icon-flag-1 green"></i>&nbsp;'.get_sfdate( $mat['do']['datum_end'] ).'
+								<span class="black Bold fs-12">[ '.diffDateTime($mat['do']['datum'], $mat['do']['datum_end']).' ]</span>
+								&nbsp<i class="icon-location blue"></i>&nbsp;'.get_sfdate($mat['do']['datum']).' - <i class="icon-flag-1 green"></i>&nbsp;'.get_sfdate($mat['do']['datum_end']).'
 								
 							</div>
 							
@@ -1340,19 +1352,19 @@ if ( $action == "courseStatUser" ){
 
 				}
 
-				foreach ( $lec['task'] as $task ) {
+				foreach ($lec['task'] as $task) {
 
 					$reztxt = '';
 
-					if($task['rezult']){
+					if ($task['rezult']) {
 
-						foreach($task['rezult'] as $r) {
+						foreach ($task['rezult'] as $r) {
 
 							$reztxt .= '
 							<div class="infodiv bgwhite fs-09 mb5">
-								<b>Вопрос:</b><br>'.untag($r[ 'query' ]).'<br><br>
-								<b>Ответ сотрудника:</b> '.$r[ 'answer' ].'<br>
-								<b>Результат:</b> <i class="'.$r[ 'icon' ].'"></i>&nbsp;'.$r[ 'title' ].'
+								<b>Вопрос:</b><br>'.untag($r['query']).'<br><br>
+								<b>Ответ сотрудника:</b> '.$r['answer'].'<br>
+								<b>Результат:</b> <i class="'.$r['icon'].'"></i>&nbsp;'.$r['title'].'
 							</div>
 							';
 
@@ -1370,8 +1382,8 @@ if ( $action == "courseStatUser" ){
 							
 							<div class="fs-07 gray mt10 pl10">
 							
-								<span class="black Bold fs-12">[ '.diffDateTime( $task['do']['datum'], $task['do']['datum_end'] ).' ]</span>
-								&nbsp<i class="icon-location blue"></i>&nbsp;'.get_sfdate( $task['do']['datum'] ).' - <i class="icon-flag-1 green"></i>&nbsp;'.get_sfdate( $task['do']['datum_end'] ).'
+								<span class="black Bold fs-12">[ '.diffDateTime($task['do']['datum'], $task['do']['datum_end']).' ]</span>
+								&nbsp<i class="icon-location blue"></i>&nbsp;'.get_sfdate($task['do']['datum']).' - <i class="icon-flag-1 green"></i>&nbsp;'.get_sfdate($task['do']['datum_end']).'
 								
 							</div>
 							
@@ -1410,7 +1422,7 @@ if ( $action == "courseStatUser" ){
 
 	<script>
 
-		$('#dialog').css({'width':'600px'});
+		$('#dialog').css({'width': '600px'});
 
 	</script>
 	<?php

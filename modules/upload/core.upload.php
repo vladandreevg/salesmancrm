@@ -229,7 +229,8 @@ if ($action == "delete") {
 
 if ($action == "mass") {
 
-	$idcategory = $_REQUEST['idcat'];
+	$subaction = $_REQUEST['sub'];
+	$idcategory = $_REQUEST['folder'];
 	$word       = str_replace(" ", "%", $_REQUEST['word']);
 	$sort       = '';
 
@@ -268,66 +269,96 @@ if ($action == "mass") {
 			$folders[] = $idcategory;
 		}
 
-		if (count($farray) > 0) {
+		if ( !empty($farray) ) {
 			$s = " OR folder IN (".implode(",", $farray).") ";
 		}
 		$sort .= " and ({$sqlname}file.iduser IN (".implode(",", get_people($iduser1, 'yes')).") $s)";
 
-		if (count($folders) > 0) {
+		if ( !empty($folders) ) {
 			$sort .= " and folder IN (".implode(",", $folders).") ";
 		}
 
-		$query = "
-		SELECT
-			{$sqlname}file.fid as id,
-			{$sqlname}file.pid as pid,
-			{$sqlname}file.clid as clid,
-			{$sqlname}file.did as did,
-			{$sqlname}file.ftitle as title,
-			{$sqlname}file.fname as file,
-			{$sqlname}file.iduser as iduser,
-			{$sqlname}clientcat.title as client,
-			{$sqlname}personcat.person as person,
-			{$sqlname}dogovor.title as deal,
-			{$sqlname}user.title as user,
-			{$sqlname}file_cat.title as folder
-		FROM {$sqlname}file
-			LEFT JOIN {$sqlname}user ON {$sqlname}file.iduser = {$sqlname}user.iduser
-			LEFT JOIN {$sqlname}personcat ON {$sqlname}file.pid = {$sqlname}personcat.pid
-			LEFT JOIN {$sqlname}clientcat ON {$sqlname}file.clid = {$sqlname}clientcat.clid
-			LEFT JOIN {$sqlname}dogovor ON {$sqlname}file.did = {$sqlname}dogovor.did
-			LEFT JOIN {$sqlname}file_cat ON {$sqlname}file.folder = {$sqlname}file_cat.idcategory
-		WHERE
-			{$sqlname}file.fid > 0 $sort AND
-			{$sqlname}file.identity = '$identity'
-		ORDER BY {$sqlname}file.fname";
+		if($subaction == 'delete') {
 
-		$result = $db -> query($query);
-		while ($data = $db -> fetch($result)) {
+			$query = "
+			SELECT
+				{$sqlname}file.fid as id,
+				{$sqlname}file.pid as pid,
+				{$sqlname}file.clid as clid,
+				{$sqlname}file.did as did,
+				{$sqlname}file.ftitle as title,
+				{$sqlname}file.fname as file,
+				{$sqlname}file.iduser as iduser,
+				{$sqlname}clientcat.title as client,
+				{$sqlname}personcat.person as person,
+				{$sqlname}dogovor.title as deal,
+				{$sqlname}user.title as user,
+				{$sqlname}file_cat.title as folder
+			FROM {$sqlname}file
+				LEFT JOIN {$sqlname}user ON {$sqlname}file.iduser = {$sqlname}user.iduser
+				LEFT JOIN {$sqlname}personcat ON {$sqlname}file.pid = {$sqlname}personcat.pid
+				LEFT JOIN {$sqlname}clientcat ON {$sqlname}file.clid = {$sqlname}clientcat.clid
+				LEFT JOIN {$sqlname}dogovor ON {$sqlname}file.did = {$sqlname}dogovor.did
+				LEFT JOIN {$sqlname}file_cat ON {$sqlname}file.folder = {$sqlname}file_cat.idcategory
+			WHERE
+				{$sqlname}file.fid > 0 
+				$sort AND
+				{$sqlname}file.identity = '$identity'
+			ORDER BY {$sqlname}file.fname";
+
+			$result = $db -> query($query);
+			while ($data = $db -> fetch($result)) {
+
+				try {
+
+					$db -> query("delete from {$sqlname}file where fid = '".$data['id']."' and identity = '$identity'");
+
+					if (file_exists($fpath.$data['file'])) {
+						unlink($fpath.$data['file']);
+					}
+
+					//удаляем id удаленного файла из массива
+					$res = $db -> query("SELECT * FROM {$sqlname}history WHERE FIND_IN_SET('".$data['fid']."', REPLACE(fid, ';',',')) > 0");
+					while ($da = $db -> fetch($res)) {
+
+						$f = yexplode(";", $da['fid']);
+						if (( $key = array_search($data['fid'], $f) ) !== false) {
+							unset($f[$key]);
+						}
+
+						//запишем новое значение
+						$db -> query("update {$sqlname}history set fid = '".implode(";", $f)."' where cid = '".$da['cid']."'");
+
+					}
+
+					$good++;
+
+				}
+				catch (Exception $e) {
+
+					$err[] = $e -> getMessage();
+
+				}
+
+			}
+
+		}
+		else{
+
+			$query = "
+			UPDATE {$sqlname}file
+			SET idcategory = '$idcategory'
+			WHERE
+				{$sqlname}file.fid > 0 
+				$sort AND
+				{$sqlname}file.identity = '$identity'
+			ORDER BY {$sqlname}file.fname";
 
 			try {
 
-				$db -> query("delete from {$sqlname}file where fid = '".$data['id']."' and identity = '$identity'");
+				$db -> query($query);
+				$good = $db -> affectedRows();
 
-				if (file_exists($fpath.$data['file'])) {
-					unlink($fpath.$data['file']);
-				}
-
-				//удаляем id удаленного файла из массива
-				$res = $db -> query("SELECT * FROM {$sqlname}history WHERE FIND_IN_SET('".$data['fid']."', REPLACE(fid, ';',',')) > 0");
-				while ($da = $db -> fetch($res)) {
-
-					$f = yexplode(";", $da['fid']);
-					if (( $key = array_search($data['fid'], $f) ) !== false) {
-						unset($f[$key]);
-					}
-
-					//запишем новое значение
-					$db -> query("update {$sqlname}history set fid = '".implode(";", $f)."' where cid = '".$da['cid']."'");
-
-				}
-
-				$good++;
 			}
 			catch (Exception $e) {
 
@@ -341,32 +372,60 @@ if ($action == "mass") {
 
 	if ($isSelect == 'doSelected') {
 
-		$result = $db -> query("SELECT * FROM {$sqlname}file WHERE fid IN (".implode(",", $ids).") and identity = '$identity'");
-		while ($data = $db -> fetch($result)) {
+		if($subaction == 'delete') {
+
+			$result = $db -> query("SELECT * FROM {$sqlname}file WHERE fid IN (".implode(",", $ids).") and identity = '$identity'");
+			//print $db -> lastQuery();
+			while ($data = $db -> fetch($result)) {
+
+				try {
+
+					$db -> query("delete from {$sqlname}file where fid = '".$data['fid']."' and identity = '$identity'");
+
+					if (file_exists($fpath.$data['file'])) {
+						unlink($fpath.$data['file']);
+					}
+
+					//удаляем id удаленного файла из массива
+					$res = $db -> query("SELECT * FROM {$sqlname}history WHERE FIND_IN_SET('".$data['fid']."', REPLACE(fid, ';',',')) > 0");
+					while ($da = $db -> fetch($res)) {
+
+						$f = yexplode(";", $da['fid']);
+						if (( $key = array_search($data['fid'], $f) ) !== false) {
+							unset($f[$key]);
+						}
+
+						//запишем новое значение
+						$db -> query("update {$sqlname}history set fid = '".implode(";", $f)."' where cid = '".$da['cid']."'");
+
+					}
+
+					$good++;
+
+				}
+				catch (Exception $e) {
+
+					$err[] = $e -> getMessage();
+
+				}
+
+			}
+
+		}
+		else{
+
+			//print
+			$query = "
+			UPDATE {$sqlname}file
+			SET folder = '$idcategory'
+			WHERE
+				fid IN (".yimplode(",", $ids).") AND
+				identity = '$identity'";
 
 			try {
 
-				$db -> query("delete from {$sqlname}file where fid = '".$data['fid']."' and identity = '$identity'");
-
-				if (file_exists($fpath.$data['file'])) {
-					unlink($fpath.$data['file']);
-				}
-
-				//удаляем id удаленного файла из массива
-				$res = $db -> query("SELECT * FROM {$sqlname}history WHERE FIND_IN_SET('".$data['fid']."', REPLACE(fid, ';',',')) > 0");
-				while ($da = $db -> fetch($res)) {
-
-					$f = yexplode(";", $da['fid']);
-					if (( $key = array_search($data['fid'], $f) ) !== false) {
-						unset($f[$key]);
-					}
-
-					//запишем новое значение
-					$db -> query("update {$sqlname}history set fid = '".implode(";", $f)."' where cid = '".$da['cid']."'");
-
-				}
-
-				$good++;
+				$db -> query($query);
+				$good = $db -> affectedRows();
 
 			}
 			catch (Exception $e) {
@@ -382,7 +441,7 @@ if ($action == "mass") {
 	//print 'Удалено '.$good.' записей';
 
 	$result = [
-		"message" => 'Удалено '.$good.' записей',
+		"message" => 'Выполнено для '.$good.' записей',
 		"error"   => yimplode('<br>', $err)
 	];
 
