@@ -30,9 +30,9 @@ $action = $_REQUEST['action'];
 if( $action == 'list' ){
 
 	$lists = Upload::list([
-		"idcategory" => $_REQUEST['folder'],
-		"page" => $_REQUEST['page'],
-		"word" => $_REQUEST['seach'],
+		"idcategory" => $_REQUEST['efolder'],
+		"page" => $_REQUEST['epage'],
+		"word" => $_REQUEST['eseach'],
 		"ord" => "fid",
 		"tuda" => "DESC"
 	]);

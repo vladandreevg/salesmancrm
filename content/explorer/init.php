@@ -19,8 +19,8 @@ use Salesman\Upload;
 <div class="explorer">
 
 	<FORM action="/content/explorer/index.php" method="post" enctype="multipart/form-data" name="explorerForm" id="explorerForm" onsubmit="return false;">
-		<INPUT type="hidden" name="action" id="action" value="list">
-		<INPUT type="hidden" name="page" id="page" value="1">
+		<INPUT type="hidden" name="eaction" id="eaction" value="list">
+		<INPUT type="hidden" name="epage" id="epage" value="1">
 
 		<div class="explorer--block">
 
@@ -36,7 +36,7 @@ use Salesman\Upload;
 				<div class="explorer--folders">
 
 					<div class="fs-09 gray-dark">Каталог</div>
-					<select name="folder" id="folder" class="wp100" onchange="$explorer.search()">
+					<select name="efolder" id="efolder" class="wp100" onchange="$explorer.search()">
 						<OPTION value="">--Не выбрано--</OPTION>
 						<?php
 						$catalog = Upload ::getCatalogLine(0);
@@ -57,7 +57,7 @@ use Salesman\Upload;
 				<div class="explorer--search">
 
 					<div class="fs-09 gray-dark">Поиск по названию и описанию</div>
-					<input type="text" name="seach" id="explorerseach" class="wp100" placeholder="Поиск по названию и описанию..."">
+					<input type="text" name="eseach" id="explorerseach" class="wp100" placeholder="Поиск по названию и описанию..."">
 
 				</div>
 
