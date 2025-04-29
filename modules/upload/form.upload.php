@@ -275,7 +275,7 @@ if ($action == "edit") {
 					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Описание:</div>
 					<div class="flex-string wp80 pl10">
 
-						<TEXTAREA name="ftag" rows="2" class="des wp97" id="ftag"><?= $info['ftag'] ?></TEXTAREA>
+						<TEXTAREA name="ftag" rows="2" class="des wp97" id="ftag"><?= $info['text'] ?></TEXTAREA>
 
 					</div>
 

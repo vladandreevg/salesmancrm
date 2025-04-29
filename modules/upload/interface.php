@@ -122,6 +122,8 @@ if ($acs_files != 'on') {
 <script src="/assets/js/jquery.liTextLength.js"></script>
 <script>
 
+includeJS('/assets/js/jquery.liTextLength.js');
+
 var $display = 'upload';
 var $folder = 0;
 
@@ -332,6 +334,12 @@ function configpage(){
 
 			$(".name-ellipsis").liTextLength({
 				length: $w[2],
+				afterLength: '...',
+				fullText:false
+			});
+
+			$(".dot-ellipsis").liTextLength({
+				length: $w[1],
 				afterLength: '...',
 				fullText:false
 			});
