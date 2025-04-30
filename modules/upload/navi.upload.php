@@ -128,7 +128,7 @@ if (!$userRights['budjet']) {
 					<div class="relativ">
 						<input id="word" name="word" type="text" placeholder="Впишите запрос" class="searchwordinput" data-func="preconfigpage">
 						<span class="idel"><a href="javascript:void(0)" title="Найти" onclick="preconfigpage();"><i class="icon-search blue"></i></a></span>
-						<div class="smalltxt gray">По названию, тэгам:</div>
+						<div class="smalltxt gray">По названию, описанию</div>
 					</div>
 				</DIV>
 			</div>
