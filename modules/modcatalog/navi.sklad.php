@@ -70,7 +70,7 @@
 								print '
 								<div class="pt5" title="'.$value['title'].'">
 									<a href="javascript:void(0)" class="fol block ellipsis hand '.$padding.'" data-id="'.$value['id'].'" data-title="'.$value['title'].'">
-										<div class="strelka w5 mr10"></div><i class="'.$folder.'"></i>&nbsp;'.$value['id'].': '.$value['title'].'
+										<div class="strelka w5 mr10"></div><i class="'.$folder.'"></i>&nbsp;'.$value['title'].'
 									</a>
 								</div>
 								';
