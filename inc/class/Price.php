@@ -737,7 +737,7 @@ class Price {
 	 *
 	 * @return array
 	 */
-	public static function getPriceCatalog(int $id = 0, int $level = 0, array $ures = []): array {
+	public static function getPriceCatalog(int $id = 0, int $level = 0, array $xures = []): array {
 
 		$rootpath = dirname(__DIR__, 2);
 
@@ -752,7 +752,7 @@ class Price {
 		$maxlevel = preg_replace("/[^0-9]/", "", $GLOBALS['maxlevel']);
 		//$maxlevel = 5;
 
-		global $ures;
+		global $xures;
 
 		$sort .= ( $id > 0 ) ? " and sub = '$id'" : " and sub = '0'";
 
@@ -763,7 +763,7 @@ class Price {
 		$re = $db -> query("SELECT * FROM {$sqlname}price_cat WHERE idcategory > 0 $sort and identity = '$identity' ORDER BY title");
 		while ($da = $db -> fetch($re)) {
 
-			$ures[] = [
+			$xures[] = [
 				"id"       => (int)$da["idcategory"],
 				"title"    => $da["title"],
 				"type"     => $da["type"],
@@ -784,7 +784,7 @@ class Price {
 
 		la:
 
-		return (array)$ures;
+		return (array)$xures;
 
 	}
 
