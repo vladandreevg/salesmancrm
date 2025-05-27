@@ -53,7 +53,7 @@ if ($acs_files != 'on') {
 </DIV>
 <DIV class="ui-layout-west disable--select compact">
 
-	<?php require_once $rootpath."/modules/upload/navi.upload.php"; flush();?>
+	<?php require_once $rootpath."/modules/upload/navi.upload.php";?>
 
 </DIV>
 <DIV class="ui-layout-center disable--select compact" style="overflow: hidden">

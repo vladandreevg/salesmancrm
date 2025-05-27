@@ -52,8 +52,8 @@ if (!$userRights['budjet']) {
 						?>
 
 						<?php
-						$catalog = Upload::getCatalogLine();
-						foreach ($catalog as $key => $value) {
+						$xcatalog = Upload::getCatalogLine();
+						foreach ($xcatalog as $value) {
 
 							if($folder_ex > 0 && $value['id']== $folder_ex){
 								continue;
@@ -81,6 +81,9 @@ if (!$userRights['budjet']) {
 
 						}
 						?>
+
+						<div class="space-20"></div>
+
 					</div>
 
 				</div>

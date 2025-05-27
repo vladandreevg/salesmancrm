@@ -745,7 +745,7 @@ class Upload {
 	 *
 	 * @return array
 	 */
-	public static function getCatalogLine(int $id = 0, int $level = 0, array $ures = []): array {
+	public static function getCatalogLine(int $id = 0, int $level = 0): array {
 
 		$rootpath = dirname(__DIR__, 2);
 
@@ -756,7 +756,7 @@ class Upload {
 		$identity = $GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
-		$sort     = $GLOBALS['sort'];
+		//$sort     = $GLOBALS['sort'];
 		$maxlevel = preg_replace("/[^0-9]/", "", $GLOBALS['maxlevel']);
 		//$maxlevel = 5;
 
@@ -765,9 +765,9 @@ class Upload {
 		//$sort .= ( $id > 0 ) ? " and subid = '$id'" : " and subid = '0'";
 		$sort = !$id ? " and subid = '0'" : " and subid = '$id'";
 
-		if ($id > 0 && empty($ures)) {
+		/*if ($id > 0 && empty($ures)) {
 			$sort = " and idcategory = '$id'";
-		}
+		}*/
 
 		if ($maxlevel != '' && $level > $maxlevel) {
 			return (array)$ures;
@@ -778,7 +778,7 @@ class Upload {
 
 			$xcount = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}file WHERE folder = '$da[idcategory]' AND identity = '$identity'");
 
-			$ures[] = [
+			$ures[(int)$da["idcategory"]] = [
 				"id"     => (int)$da["idcategory"],
 				"title"  => $da["title"],
 				"shared" => $da["shared"],
@@ -789,9 +789,9 @@ class Upload {
 
 			if ((int)$da['idcategory'] > 0) {
 
-				$level++;
-				self ::getCatalogLine((int)$da['idcategory'], $level);
-				$level--;
+				//$level++;
+				self ::getCatalogLine((int)$da['idcategory'], $level+1);
+				//$level--;
 
 			}
 
