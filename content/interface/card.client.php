@@ -258,8 +258,10 @@ $tabs = $hooks -> apply_filters( "card_tab", $tabs, [
 										<i class="icon-calendar-inv green"></i>&nbsp;<?= $lang['all']['Add'] ?> <?= $lang['face']['TodoName'][0] ?>
 									</div>
 
+									<!--
 									<div onclick="window.open('print.php?clid=<?= $clid ?>',this.target,'width=650,height=500,'+'location=no,toolbar=no,menubar=yes,status=no,resizeable=yes,scrollbars=yes')" title="<?= $lang['all']['Print'] ?>" class="item ha hand">
 										<i class="icon-print blue"></i>&nbsp;<?= $lang['all']['Print'] ?></div>
+									-->
 
 									<div onclick="settab('0')" class="item ha hand" title="<?= $lang['all']['Refresh'] ?>">
 										<i class=" icon-arrows-cw blue"></i>&nbsp;<?= $lang['all']['Refresh'] ?></div>
