@@ -9,7 +9,7 @@ error_reporting( E_ERROR );
 ini_set( 'display_errors', 1 );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../' );
+$rootpath = dirname(__DIR__);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -65,10 +65,10 @@ foreach ( $result as $data ) {
 	$kol_f   = $result6['kol_fact'];
 	$marga_f = $result6['marga'];
 
-	$all_d       = $all_d + $cl_d;
-	$all_kol     = $all_kol + $kol;
-	$all_kol_f   = $all_kol_f + $kol_f;
-	$all_marga_f = $all_marga_f + $marga_f;
+	$all_d     += $cl_d;
+	$all_kol   += $kol;
+	$all_kol_f += $kol_f;
+	$all_marga_f += $marga_f;
 
 	$effect[ $i ] = [
 		"tip"        => $tip,
@@ -84,7 +84,7 @@ foreach ( $result as $data ) {
 
 	$order[] = "'Статус #".$j."'";
 
-	$i       = $i + 1;
+	++$i;
 	$cl_d    = 0;
 	$kol     = 0;
 	$kol_f   = 0;
@@ -111,11 +111,14 @@ $order = implode( ",", $order );
 		stroke           : #CFD8DC !important;
 	}
 </style>
-<br/>
-<div class="zagolovok_rep" align="center">
-	<b>Анализ закрытых сделок за период&nbsp;с&nbsp;<?= format_date_rus( $da1 ) ?>&nbsp;по&nbsp;<?= format_date_rus( $da2 ) ?></b>:
+
+<div class="relativ mt20 mb20 wp95 text-center">
+	<h1 class="uppercase fs-14 m0 mb10">Анализ закрытых сделок</h1>
+	<div class="gray2">за период&nbsp;с&nbsp;<?= format_date_rus($da1) ?>&nbsp;по&nbsp;<?= format_date_rus($da2) ?></div>
 </div>
+
 <hr>
+
 <?php if ( $count > 0 ) { ?>
 	<div id="graf" style="display:block; height:350px">
 		<div id="chart" style="padding:5px; height:100%"></div>

@@ -115,11 +115,16 @@ foreach ($result as $data_array) {
 		WHERE 
 			deal.datum_close between '$da1' and '$da2' and 
 			deal.direction = '".$data_array['id']."' and 
+			COALESCE(deal.close, 'no') = 'yes' AND
+			-- deal.sid = '1' AND
+			deal.kol_fact > 0 AND
 			$sort
 			deal.identity = '$identity'
 		");
+
 	$cl_d    = $result6['count'];
-	$kol_c = $result6['kol_fact'];
+	$kol_c   = $result6['kol_fact'];
+	$marga_c = $result6['marga'];
 
 	/*if ($plan_form == 'datum_close') {
 		$kol_c = $result6['kol_fact'];
@@ -127,8 +132,6 @@ foreach ($result as $data_array) {
 	else {
 		$kol_c = $result6['kol'];
 	}*/
-
-	$marga_c = $result6['marga'];
 
 	$effect[$i] = [
 		"dogovor"    => $data_array['title'],
@@ -182,8 +185,11 @@ $datas = implode(",", $datas);
 	}
 </style>
 
-<div class="zagolovok_rep" align="center">
-	<b>Анализ сделок<b class="red">по направлениям</b> за период&nbsp;с&nbsp;<?= format_date_rus($da1) ?>&nbsp;по&nbsp;<?= format_date_rus($da2) ?></b></div>
+<div class="relativ mt20 mb20 wp95 text-center">
+	<h1 class="uppercase fs-14 m0 mb10">Анализ сделок по направлениям</h1>
+	<div class="gray2">за период&nbsp;с&nbsp;<?= format_date_rus($da1) ?>&nbsp;по&nbsp;<?= format_date_rus($da2) ?></div>
+</div>
+
 <hr>
 
 <?php

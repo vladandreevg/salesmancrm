@@ -10,7 +10,7 @@ error_reporting( E_ERROR );
 ini_set( 'display_errors', 1 );
 header( "Pragma: no-cache" );
 
-$rootpath = realpath( __DIR__.'/../' );
+$rootpath = dirname(__DIR__);
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -37,7 +37,7 @@ $so = $sort = '';
 $channel    = [];
 $channel[0] = 'Не указан';
 
-$result = $db -> query( "SELECT * FROM ".$sqlname."relations WHERE identity = '$identity'" );
+$result = $db -> query( "SELECT * FROM {$sqlname}relations WHERE identity = '$identity'" );
 while ($daz = $db -> fetch( $result )) {
 
 	$channel[ $daz['id'] ] = $daz['title'];
@@ -77,10 +77,10 @@ if ( $action == 'view' ) {
 			us.title as user,
 			cc.title as client,
 			rl.title as relation
-		FROM ".$sqlname."dogovor `deal`
-			LEFT JOIN ".$sqlname."clientcat `cc` ON deal.clid = cc.clid
-			LEFT JOIN ".$sqlname."relations `rl` ON rl.title = ".$sqlname."clientcat.tip_cmr
-			LEFT JOIN ".$sqlname."user `us` ON deal.iduser = us.iduser
+		FROM {$sqlname}dogovor `deal`
+			LEFT JOIN {$sqlname}clientcat `cc` ON deal.clid = cc.clid
+			LEFT JOIN {$sqlname}relations `rl` ON rl.title = {$sqlname}clientcat.tip_cmr
+			LEFT JOIN {$sqlname}user `us` ON deal.iduser = us.iduser
 		WHERE
 			deal.did > 0 and
 			COALESCE(deal.close, 'no') = 'yes' and
@@ -135,11 +135,11 @@ if ( $action == 'view' ) {
 				us.title as user,
 				cc.title as client,
 				rl.title as relation
-			FROM ".$sqlname."credit `cr`
-				LEFT JOIN ".$sqlname."dogovor `deal` ON cr.did = deal.did
-				LEFT JOIN ".$sqlname."clientcat `cc` ON deal.clid = cc.clid
-				LEFT JOIN ".$sqlname."relations `rl` ON rl.title = cc.tip_cmr
-				LEFT JOIN ".$sqlname."user `us` ON deal.iduser = us.iduser
+			FROM {$sqlname}credit `cr`
+				LEFT JOIN {$sqlname}dogovor `deal` ON cr.did = deal.did
+				LEFT JOIN {$sqlname}clientcat `cc` ON deal.clid = cc.clid
+				LEFT JOIN {$sqlname}relations `rl` ON rl.title = cc.tip_cmr
+				LEFT JOIN {$sqlname}user `us` ON deal.iduser = us.iduser
 			WHERE
 				cr.do = 'on' and
 				cr.invoice_date BETWEEN '$da1 00:00:00' and '$da2 23:59:59' and
@@ -168,11 +168,11 @@ if ( $action == 'view' ) {
 				us.title as user,
 				cc.title as client,
 				rl.title as relation
-			FROM ".$sqlname."credit `cr`
-				LEFT JOIN ".$sqlname."dogovor `deal` ON cr.did = deal.did
-				LEFT JOIN ".$sqlname."clientcat `cc` ON deal.clid = cc.clid
-				LEFT JOIN ".$sqlname."relations `rl` ON rl.title = cc.tip_cmr
-				LEFT JOIN ".$sqlname."user `us` ON deal.iduser = us.iduser
+			FROM {$sqlname}credit `cr`
+				LEFT JOIN {$sqlname}dogovor `deal` ON cr.did = deal.did
+				LEFT JOIN {$sqlname}clientcat `cc` ON deal.clid = cc.clid
+				LEFT JOIN {$sqlname}relations `rl` ON rl.title = cc.tip_cmr
+				LEFT JOIN {$sqlname}user `us` ON deal.iduser = us.iduser
 			WHERE
 				cr.do = 'on' and
 				COALESCE(deal.close, 'no') = 'yes' and
@@ -247,9 +247,9 @@ if ( !$otherSettings['credit'] ) {
 		SUM(DISTINCT deal.marga) as marga,
 		COUNT(deal.did) as count,
 		rl.title as relation
-	FROM ".$sqlname."dogovor `deal`
-		LEFT JOIN ".$sqlname."clientcat `cc` ON deal.clid = cc.clid
-		LEFT JOIN ".$sqlname."relations `rl` ON ".$sqlname."relations.title = cc.tip_cmr
+	FROM {$sqlname}dogovor `deal`
+		LEFT JOIN {$sqlname}clientcat `cc` ON deal.clid = cc.clid
+		LEFT JOIN {$sqlname}relations `rl` ON {$sqlname}relations.title = cc.tip_cmr
 	WHERE
 		deal.did > 0 and
 		COALESCE(deal.close, 'no') = 'yes' and
@@ -298,10 +298,10 @@ if ( $otherSettings['credit'] ) {
 			SUM(DISTINCT cr.summa_credit) as summa,
 			deal.kol as dsumma,
 			deal.marga as dmarga
-		FROM ".$sqlname."credit `cr`
-			LEFT JOIN ".$sqlname."dogovor `deal` ON cr.did = deal.did
-			LEFT JOIN ".$sqlname."clientcat `cc` ON deal.clid = cc.clid
-			LEFT JOIN ".$sqlname."relations `rl` ON rl.title = cc.tip_cmr
+		FROM {$sqlname}credit `cr`
+			LEFT JOIN {$sqlname}dogovor `deal` ON cr.did = deal.did
+			LEFT JOIN {$sqlname}clientcat `cc` ON deal.clid = cc.clid
+			LEFT JOIN {$sqlname}relations `rl` ON rl.title = cc.tip_cmr
 		WHERE
 			cr.do = 'on' and
 			cr.invoice_date BETWEEN '$da1 00:00:00' and '$da2 23:59:59' and
@@ -324,10 +324,10 @@ if ( $otherSettings['credit'] ) {
 			deal.title as dogovor,
 			deal.kol as dsumma,
 			deal.marga as dmarga
-		FROM ".$sqlname."credit `cr`
-			LEFT JOIN ".$sqlname."dogovor `deal` ON cr.did = deal.did
-			LEFT JOIN ".$sqlname."clientcat  `cc` deal.clid = cc.clid
-			LEFT JOIN ".$sqlname."relations `rl` ON rl.title = cc.tip_cmr
+		FROM {$sqlname}credit `cr`
+			LEFT JOIN {$sqlname}dogovor `deal` ON cr.did = deal.did
+			LEFT JOIN {$sqlname}clientcat  `cc` deal.clid = cc.clid
+			LEFT JOIN {$sqlname}relations `rl` ON rl.title = cc.tip_cmr
 		WHERE
 			cr.do = 'on' and
 			COALESCE(deal.close, 'no') = 'yes' and
@@ -364,7 +364,9 @@ if ( $otherSettings['credit'] ) {
 		if ( $key == '' ) {
 			$relation = 'Unknown';
 		}
-		else $relation = $channel[ $key ];
+		else {
+			$relation = $channel[$key];
+		}
 
 		$list[] = [
 			"id"       => $key,
@@ -374,7 +376,7 @@ if ( $otherSettings['credit'] ) {
 			"count"    => $val['count']
 		];
 
-		$datas[] = '{"Тип":"'.$relation.'", "Сумма":"'.pre_format( $val['summa'] ).'", "id":"'.$daz['id'].'"}';
+		$datas[] = '{"Тип":"'.$relation.'", "Сумма":"'.pre_format( $val['summa'] ).'", "id":"'.$key.'"}';
 
 	}
 
@@ -454,9 +456,9 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) {
 		-->
 	</style>
 
-	<div class="relativ mt20 mb20 wp95" align="center">
+	<div class="relativ mt20 mb20 wp95 text-center">
 		<h1 class="uppercase fs-14 m0 mb10">Анализ продаж по Типам отношений</h1>
-		<div class="gray2">за период&nbsp;с&nbsp;<?= format_date_rus( $da1 ) ?>&nbsp;по&nbsp;<?= format_date_rus( $da2 ) ?></div>
+		<div class="gray2">за период&nbsp;с&nbsp;<?= format_date_rus($da1) ?>&nbsp;по&nbsp;<?= format_date_rus($da2) ?></div>
 	</div>
 
 	<hr>
