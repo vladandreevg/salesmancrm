@@ -268,7 +268,7 @@ $xdatas = implode( ",", $datas );
 				<th class="w100">Тип</th>
 				<th class="w100">Маржа</th>
 				<th class="w100">Сумма</th>
-				<th class="w80">Дата факт</th>
+				<th class="w80">Дата</th>
 				<th class="w100">Ответственный</th>
 				<th class="">Примечание</th>
 			</tr>
@@ -579,7 +579,7 @@ if ( count( $datas ) > 0 ) {
 
 					summa = summa + parseFloat(data[i].summa);
 					marga = marga + parseFloat(data[i].marga);
-					
+
 				}
 
 				f =

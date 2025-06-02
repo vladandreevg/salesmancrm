@@ -393,7 +393,6 @@ $dataset1 = implode(",", $dataset1);
 
 <div class="row">
 	<div id="chart1" style="height: 300px" class="column12 grid-12"></div>
-	<!--<div id="chart2" style="height: 300px" class="column12 grid-3"></div>-->
 </div>
 
 <div class="mt10 mb20">
@@ -465,7 +464,7 @@ $dataset1 = implode(",", $dataset1);
 			<th class="w100">Источник</th>
 			<th class="w100">Маржа</th>
 			<th class="w100">Сумма</th>
-			<th class="w80">Дата факт</th>
+			<th class="w80">Дата создания</th>
 			<th class="w100">Ответственный</th>
 			<th class="">Примечание</th>
 		</tr>
@@ -477,26 +476,20 @@ $dataset1 = implode(",", $dataset1);
 
 <div style="height:80px"></div>
 
-<script src="/assets/js/dimple.js/dimple.min.js"></script><!--<script src="/assets/js/d3.min.js"></script>-->
-
-<!--<script src="js/Chart.js"></script>-->
+<script src="/assets/js/dimple.js/dimple.min.js"></script>
 
 <script>
 	$(function () {
 		drawChart1();
-		//drawChart2();
-		//drawChart3();
 	});
 	
 	$(window).on('resizeEnd', function () {
 		drawChart1();
-		//drawChart2();
-		//drawChart3();
 	});
 	
 	function drawChart1() {
 		
-		var width = $('#chart').width() - 40;
+		var width = $('#chart1').width() - 200;
 		var height = 350;
 		var svg = dimple.newSvg("#chart1", "100%", "350px");
 		var data = [<?=$datas?>];
@@ -546,8 +539,8 @@ $dataset1 = implode(",", $dataset1);
 		myChart.ease = "bounce";
 		myChart.staggerDraw = true;
 		
-		var myLegend = myChart.addLegend(width - 200, 40, 200, 250, "right");
-		myChart.setMargins(60, 20, 40, 70);
+		var myLegend = myChart.addLegend(width - 100, 40, 200, 250, "right");
+		myChart.setMargins(60, 20, 300, 70);
 		
 		s.addEventHandler("click", function (e) {
 			showData(e.seriesValue[0], e.xValue);
@@ -587,56 +580,6 @@ $dataset1 = implode(",", $dataset1);
 		s.shapes.style("opacity", function (d) {
 			return (d.y === null ? 0 : 0.8);
 		});
-		
-	}
-	
-	function drawChart2() {
-		
-		var width = $('#chart2').width();
-		var height = 300;
-		var svg = dimple.newSvg("#chart2", width, height);
-		var data = [<?=$datac?>];
-		
-		var myChart2 = new dimple.chart(svg, data);
-		
-		myChart2.defaultColors = [
-			new dimple.color("#2196F3", "#2196F3"),
-			new dimple.color("#F44336", "#F44336"),
-			new dimple.color("#4CAF50", "#4CAF50"),
-			new dimple.color("#795548", "#795548"),
-			new dimple.color("#FF9800", "#FF9800"),
-			new dimple.color("#673AB7", "#673AB7"),
-			new dimple.color("#3F51B5", "#3F51B5"),
-			new dimple.color("#03A9F4", "#03A9F4"),
-			new dimple.color("#FFEB3B", "#FFEB3B"),
-			new dimple.color("#E91E63", "#E91E63"),
-			new dimple.color("#A1887F", "#A1887F"),
-			new dimple.color("#FFC107", "#FFC107"),
-			new dimple.color("#8BC34A", "#8BC34A"),
-			new dimple.color("#00BCD4", "#00BCD4"),
-			new dimple.color("#7CB342", "#7CB342"),
-			new dimple.color("#0097A7", "#0097A7"),
-			new dimple.color("#D500F9", "#D500F9"),
-			new dimple.color("#76FF03", "#76FF03"),
-			new dimple.color("#DD2C00", "#DD2C00"),
-			new dimple.color("#B0BEC5", "#B0BEC5"),
-			new dimple.color("#90A4AE", "#90A4AE"),
-			new dimple.color("#78909C", "#78909C"),
-			new dimple.color("#607D8B", "#607D8B"),
-			new dimple.color("#9E9E9E", "#9E9E9E"),
-			new dimple.color("#6D4C41", "#6D4C41")
-		];
-		
-		myChart2.setBounds(20, 50, 300, 300);
-		
-		myChart2.addMeasureAxis("p", "Сумма");
-		var ring = myChart2.addSeries("Источник", dimple.plot.pie);
-		
-		ring.innerRadius = "50%";
-		
-		//var myLegend = myChart2.addLegend(0, 0, 100, 100, "left");
-		myChart2.setMargins(20, 20, 60, 20);
-		myChart2.draw(1000);
 		
 	}
 	

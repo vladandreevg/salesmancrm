@@ -145,12 +145,12 @@ if (!empty($clientTip)) {
 
 //фильтр по территории
 if (!empty($clientTerritory)) {
-	$sort .= " and {$sqlname}clientcat.territory IN (".yimplode(",", $clientTerritory, "'").")";
+	$sort .= " and {$sqlname}clientcat.territory IN (".yimplode(",", $clientTerritory).")";
 }
 
 //фильтр по источнику
 if (!empty($clientPath)) {
-	$sort .= " and {$sqlname}clientcat.clientpath IN (".yimplode(",", $clientPath, "'").")";
+	$sort .= " and {$sqlname}clientcat.clientpath IN (".yimplode(",", $clientPath).")";
 }
 
 //составляем запрос по параметрам сделок
@@ -160,12 +160,7 @@ $ar = [
 ];
 foreach ($fields as $i => $field) {
 
-	if (
-		!in_array($field, $ar) && !in_array($field, [
-			'close',
-			'mcid'
-		])
-	) {
+	if (!in_array($field, $ar) && !in_array($field, ['close', 'mcid'])) {
 		$sort .= " {$sqlname}dogovor.".$field." = '".$field_query[$i]."' AND ";
 	}
 	elseif ($field == 'close') {
@@ -590,8 +585,8 @@ if ($action == "") {
 				{$sqlname}dogovor.did > 0 and 
 				{$sqlname}dogovor.datum between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
 				{$sqlname}dogovor.iduser in (".implode(",", $userlist).") and 
-				{$sqlname}dogovor.identity = '$identity'
 				$sort
+				{$sqlname}dogovor.identity = '$identity'
 			");
 
 	//формирование данных
@@ -614,8 +609,8 @@ if ($action == "") {
 			{$sqlname}credit.invoice_date between '".$da1." 00:00:00' and '".$da2." 23:59:59' and
 			{$sqlname}dogovor.iduser in (".implode(",", $userlist).") and 
 			{$sqlname}dogovor.direction = '".$key."' and 
-			{$sqlname}credit.identity = '$identity'
 			$sort
+			{$sqlname}credit.identity = '$identity'
 		";
 
 		$result = $db -> query($q);
@@ -644,8 +639,8 @@ if ($action == "") {
 			{$sqlname}credit.invoice_date between '$da1 00:00:00' and '$da2 23:59:59' and
 			{$sqlname}credit.iduser in (".implode(",", $userlist).") and 
 			{$sqlname}credit.did IN (SELECT did FROM {$sqlname}dogovor WHERE direction = '$key' and identity = '$identity') and 
-			{$sqlname}credit.identity = '$identity'
 			$sort
+			{$sqlname}credit.identity = '$identity'
 		");
 
 		$dogs[$key]['doInvoice']      = $data['count'];
@@ -664,8 +659,8 @@ if ($action == "") {
 				{$sqlname}dogovor.datum between '$da1 00:00:00' and '$da2 23:59:59' and
 				{$sqlname}dogovor.iduser in (".implode(",", $userlist).") and 
 				{$sqlname}dogovor.direction = '$key' and 
-				{$sqlname}dogovor.identity = '$identity'
 				$sort
+				{$sqlname}dogovor.identity = '$identity'
 			");
 		$dogs[$key]['newDogs'] = $data['count'];
 
@@ -694,9 +689,9 @@ if ($action == "") {
 			{$sqlname}credit.did > 0 and 
 			{$sqlname}credit.datum between '$da1 00:00:00' and '$da2 23:59:59' and
 			{$sqlname}credit.iduser in (".implode(",", $userlist).") and 
-			{$sqlname}credit.did IN (SELECT did FROM {$sqlname}dogovor WHERE direction = '$key' and identity = '$identity') and 
+			{$sqlname}credit.did IN (SELECT did FROM {$sqlname}dogovor WHERE direction = '$key' and identity = '$identity') and
+			$sort 
 			{$sqlname}credit.identity = '$identity'
-			$sort
 		");
 
 		$dogs[$key]['vistChetSumma'] = $data['summa'];
