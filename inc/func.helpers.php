@@ -5113,12 +5113,14 @@ function addHistorty(array $params = []): int {
 		}
 
 		$params['des']   = ($params['untag'] == "no") ? str_replace( "\\r\\n", "\r\n", $params['des'] ) : untag( str_replace( "\\r\\n", "\r\n", $params['des'] ) );
-		$params['datum'] = (empty( $params['datum'] ) || $params['datum'] == '') ? current_datumtime() : $params['datum'];
+		$params['datum'] = empty( $params['datum'] ) ? current_datumtime() : $params['datum'];
 
 		unset( $params['untag'] );
 
 		$db -> query( "INSERT INTO {$sqlname}history SET ?u", arrayNullClean( $params ) );
 		$hid = $db -> insertId();
+
+		//print $db -> lastQuery()."\n\n";
 
 		//добавим запись о дате активности по клиенту
 		if ( (int)$params['clid'] > 0 ) {

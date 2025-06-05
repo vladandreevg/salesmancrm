@@ -4620,10 +4620,11 @@ class Mailer {
 		$folder  = $result['folder'];
 		$content = $result['content'];
 		$did     = $result['did'];
+		$datum   = $result['datum'];
 		$xfid    = yexplode( ",", (string)$result['fid'] );
 		$content = html2text( removeChild( htmlspecialchars_decode( $content ), ['index' => 2] ) );
 		$iduser  = ($iduser == 0) ? $result['iduser'] : $iduser;
-		$hid     = $result['hid'];
+		$hid     = (int)$result['hid'];
 
 		if ( $hid == 0 && $content != '' ) {
 
@@ -4675,21 +4676,21 @@ class Mailer {
 				$fidss = implode( ";", $fids );
 
 				//найдем, к какой организации относится контакт
-				if ( $data['pid'] > 0 && $data['clid'] < 1 ) {
+				if ( (int)$data['pid'] > 0 && (int)$data['clid'] == 0 ) {
 
 					unset( $db );
 					$db = new SafeMySQL( $opts );
 
-					$data['clid'] = getPersonData( $data['pid'], 'clid' );
+					$data['clid'] = (int)getPersonData( (int)$data['pid'], 'clid' );
 
 				}
 
-				if ( $data['clid'] > 0 || $data['pid'] > 0 ) {
+				if ( (int)$data['clid'] > 0 || (int)$data['pid'] > 0 ) {
 
 					unset( $db );
 					$db = new SafeMySQL( $opts );
 
-					$hid = addHistorty( [
+					$hp = [
 						"iduser"   => $iduser,
 						"clid"     => (int)$data['clid'],
 						"pid"      => (int)$data['pid'],
@@ -4697,13 +4698,21 @@ class Mailer {
 						"des"      => html2text( remove_emoji($content) ),
 						"tip"      => $htip,
 						"fid"      => $fidss,
-						"datum"    => $data['datum'],
+						"datum"    => $datum,
 						//current_datumtime(),
 						"identity" => $identity
-					] );
+					];
 
-					$db -> query( "UPDATE {$sqlname}ymail_messages SET hid = '$hid' WHERE id = '$id' and identity = '$identity'" );
-					$mrez[] = 'Добавлено в активности';
+					//print_r($hp);
+
+					$hid = addHistorty( $hp );
+
+					if( $hid > 0 ) {
+
+						$db -> query("UPDATE {$sqlname}ymail_messages SET hid = '$hid' WHERE id = '$id' and identity = '$identity'");
+						$mrez[] = 'Добавлено в активности';
+
+					}
 
 					//оптимизация хранения файлов-вложений в письмах - прикрепленные к истории файлы удаляем из папки files/ymail и прикрепляем из папки files
 

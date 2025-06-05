@@ -10,9 +10,9 @@
 				{{#rights.edit}}
 					<A href="javascript:void(0)" onclick="editPerson('{{pid}}','edit');" title="Редактировать" class="gray blue mr5"><i class="icon-pencil blue"></i></A>
 				{{/rights.edit}}
-				{{#delete.edit}}
+				{{#rights.delete}}
 					<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)deleteCCD('person','{{pid}}','');" title="Удалить" class="gray red mr5"><i class="icon-cancel-circled red"></i></A>
-				{{/delete.edit}}
+				{{/rights.delete}}
 				{{#accesse}}
 					<a href="javascript:void(0)" onclick="openPerson('{{pid}}')" title="Карточка"><i class="icon-user-1 green"></i></a>
 				{{/accesse}}

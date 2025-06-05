@@ -36,6 +36,7 @@ $persons = (new Person()) -> card([
 ]);
 
 //print_r($persons);
+//file_put_contents($rootpath."/cash/persons.json", json_encode_cyr($persons));
 
 $html = file_get_contents( $rootpath.'/content/tpl/card.persons.mustache' );
 

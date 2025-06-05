@@ -213,7 +213,7 @@ class Person {
 
 		$aparams = $fields = $err = $mes = $newParams = $oldParams = [];
 
-		$res = $db -> getAll("select * from ".$sqlname."field where fld_tip='person' and fld_on='yes' and identity = '$identity' order by fld_order");
+		$res = $db -> getAll("select * from {$sqlname}field where fld_tip='person' and fld_on='yes' and identity = '$identity' order by fld_order");
 		foreach ($res as $data) {
 
 			if ($data['fld_name'] == 'social') {
@@ -291,7 +291,7 @@ class Person {
 
 				//print_r($aparams);
 
-				$db -> query("UPDATE ".$sqlname."personcat SET ?u where pid = '$pid' and identity = '$identity'", $aparams);
+				$db -> query("UPDATE {$sqlname}personcat SET ?u where pid = '$pid' and identity = '$identity'", $aparams);
 
 				$aparams['pid'] = $pid;
 
@@ -341,27 +341,25 @@ class Person {
 
 			if ($mperson == 'yes' && $aparams['clid'] > 0) {
 
-				$db -> query("update ".$sqlname."clientcat set pid = '$pid' where clid = '$aparams[clid]' and identity = '$identity'");
+				$db -> query("update {$sqlname}clientcat set pid = '$pid' where clid = '$aparams[clid]' and identity = '$identity'");
 
 			}
 
 			/**
 			 * Проходим письма в почтовике и присоединим созданный Клиент/Контакт
 			 */
-			if ($aparams['mail'] != '') {
 
-				//$clid = $aparams['clid'];
+			if ($aparams['mail'] != '' && $newParams['mail'] != $oldParams['mail']) {
 
 				$mail = yexplode(",", str_replace(";", ",", $aparams['mail']));
 				foreach ($mail as $email) {
 
-					//если pid не указан, то добавляем
-					//$db -> query("UPDATE ".$sqlname."ymail_messagesrec SET pid = IF(pid = 0, '$pid', pid), clid = IF(clid = 0, '$clid', clid) WHERE email = '$email' and identity = '$identity'");
 					$this -> checkMailerEmail($email, $pid);
 
 				}
 
 			}
+
 
 		}
 		else {
@@ -447,7 +445,7 @@ class Person {
 
 		$aparams = $fields = $err = $mes = $newParams = $oldParams = [];
 
-		$res = $db -> getAll("select * from ".$sqlname."field where fld_tip='person' and fld_on='yes' and identity = '$identity' order by fld_order");
+		$res = $db -> getAll("select * from {$sqlname}field where fld_tip='person' and fld_on='yes' and identity = '$identity' order by fld_order");
 		foreach ($res as $data) {
 
 			if (!$person[$data['fld_name']] || $data['fld_name'] == 'social') {
@@ -540,7 +538,7 @@ class Person {
 
 				try {
 
-					$db -> query("INSERT INTO ".$sqlname."personcat SET ?u", arrayNullClean($aparams));
+					$db -> query("INSERT INTO {$sqlname}personcat SET ?u", arrayNullClean($aparams));
 					$pid = $db -> insertId();
 
 					$aparams['pid'] = $pid;
@@ -630,7 +628,7 @@ class Person {
 
 					try {
 
-						$db -> query("UPDATE ".$sqlname."personcat SET ?u where pid = '$pid' and identity = '$identity'", $aparams);
+						$db -> query("UPDATE {$sqlname}personcat SET ?u where pid = '$pid' and identity = '$identity'", $aparams);
 
 						$aparams['pid'] = $pid;
 
@@ -694,7 +692,7 @@ class Person {
 
 		if ($mperson == 'yes' && $aparams['clid'] > 0) {
 
-			$db -> query("update ".$sqlname."clientcat set pid = '$pid' where clid = '$aparams[clid]' and identity = '$identity'");
+			$db -> query("update {$sqlname}clientcat set pid = '$pid' where clid = '$aparams[clid]' and identity = '$identity'");
 
 		}
 
@@ -709,7 +707,7 @@ class Person {
 			foreach ($mail as $email) {
 
 				//если pid не указан, то добавляем
-				//$db -> query("UPDATE ".$sqlname."ymail_messagesrec SET pid = IF(pid = 0, '$pid', pid), clid = IF(clid = 0, '$clid', clid) WHERE email = '$email' and identity = '$identity'");
+				//$db -> query("UPDATE {$sqlname}ymail_messagesrec SET pid = IF(pid = 0, '$pid', pid), clid = IF(clid = 0, '$clid', clid) WHERE email = '$email' and identity = '$identity'");
 				$this -> checkMailerEmail($email, $pid);
 
 			}
@@ -779,7 +777,7 @@ class Person {
 		$title = current_person($pid);
 
 		//проверяем на наличие сделок
-		$count = $db -> getOne("SELECT COUNT(*) as count FROM ".$sqlname."dogovor WHERE pid = '$pid' and identity = '$identity'");
+		$count = $db -> getOne("SELECT COUNT(*) as count FROM {$sqlname}dogovor WHERE pid = '$pid' and identity = '$identity'");
 
 		if ($count > 0) {
 
@@ -799,16 +797,16 @@ class Person {
 			$countFiles = 0;
 
 			//Удалим всю связанные файлы
-			$res = $db -> getAll("select * from ".$sqlname."file WHERE pid = '$pid' and identity = '$identity'");
+			$res = $db -> getAll("select * from {$sqlname}file WHERE pid = '$pid' and identity = '$identity'");
 			foreach ($res as $data) {
 
 				if ($data['clid'] > 0 || $data['did'] > 0) {
-					$db -> query("update ".$sqlname."file set pid = '' where pid = '$pid' and identity = '$identity'");
+					$db -> query("update {$sqlname}file set pid = '' where pid = '$pid' and identity = '$identity'");
 				}
 				else {
 
 					@unlink($rootpath."/files/".$fpath.$data['fname']);
-					$db -> query("delete from ".$sqlname."file where fid = '".$data['fid']."' and identity = '$identity'");
+					$db -> query("delete from {$sqlname}file where fid = '".$data['fid']."' and identity = '$identity'");
 
 					$countFiles++;
 
@@ -816,14 +814,14 @@ class Person {
 
 			}
 
-			$db -> query("update ".$sqlname."leads set pid = '' where pid = '".$pid."' and identity = '$identity'");
+			$db -> query("update {$sqlname}leads set pid = '' where pid = '".$pid."' and identity = '$identity'");
 			$countLead = $db -> affectedRows();
 
-			$db -> query("update ".$sqlname."entry set pid = '' where clid = '$pid' and identity = '$identity'");
+			$db -> query("update {$sqlname}entry set pid = '' where clid = '$pid' and identity = '$identity'");
 			$countEntry = $db -> affectedRows();
 
 			$countHistory = 0;
-			$result1      = $db -> query("select * from ".$sqlname."history WHERE FIND_IN_SET('$pid', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
+			$result1      = $db -> query("select * from {$sqlname}history WHERE FIND_IN_SET('$pid', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
 			while ($data = $db -> fetch($result1)) {
 
 				$pids = yexplode(";", $data['pid']);
@@ -835,27 +833,27 @@ class Person {
 				if ($data['clid'] < 1 and $data['did'] < 1) {
 
 					if (count((array)$pids) == 0) {
-						$db -> query("delete from ".$sqlname."history where cid = '$data[cid]' and identity = '$identity'");
+						$db -> query("delete from {$sqlname}history where cid = '$data[cid]' and identity = '$identity'");
 					}
 					else {
-						$db -> query("update ".$sqlname."history set pid = '".implode(";", $pids)."' where cid = '$data[cid]' and identity = '$identity'");
+						$db -> query("update {$sqlname}history set pid = '".implode(";", $pids)."' where cid = '$data[cid]' and identity = '$identity'");
 					}
 
 				}
 				else {
-					$db -> query("update ".$sqlname."history set pid = '".implode(";", $pids)."' where cid = '$data[cid]' and identity = '$identity'");
+					$db -> query("update {$sqlname}history set pid = '".implode(";", $pids)."' where cid = '$data[cid]' and identity = '$identity'");
 				}
 
 				$countHistory++;
 
 			}
 
-			$db -> query("delete from ".$sqlname."dogovor where pid = '$pid' and identity = '$identity'");
+			$db -> query("delete from {$sqlname}dogovor where pid = '$pid' and identity = '$identity'");
 			$countDogovor = $db -> affectedRows();
 
 			//Удалим все напоминания
 			$countTask = 0;
-			$result1   = $db -> query("select * from ".$sqlname."tasks WHERE FIND_IN_SET('".$pid."', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
+			$result1   = $db -> query("select * from {$sqlname}tasks WHERE FIND_IN_SET('".$pid."', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
 			while ($data = $db -> fetch($result1)) {
 
 				$pids = yexplode(";", $data['pid']);
@@ -867,15 +865,15 @@ class Person {
 				if ($data['clid'] < 1 and $data['did'] < 1) {
 
 					if (count((array)$pids) == 0) {
-						$db -> query("delete from ".$sqlname."tasks where tid = '".$data['tid']."' and identity = '$identity'");
+						$db -> query("delete from {$sqlname}tasks where tid = '".$data['tid']."' and identity = '$identity'");
 					}
 					else {
-						$db -> query("update ".$sqlname."tasks set pid = '".implode(";", $pids)."' where tid = '".$data['tid']."' and identity = '$identity'");
+						$db -> query("update {$sqlname}tasks set pid = '".implode(";", $pids)."' where tid = '".$data['tid']."' and identity = '$identity'");
 					}
 
 				}
 				else {
-					$db -> query("update ".$sqlname."tasks set pid = '".implode(";", $pids)."' where tid = '".$data['tid']."' and identity = '$identity'");
+					$db -> query("update {$sqlname}tasks set pid = '".implode(";", $pids)."' where tid = '".$data['tid']."' and identity = '$identity'");
 				}
 
 				$countTask++;
@@ -883,9 +881,9 @@ class Person {
 			}
 
 			//удалим привязки в письмах
-			$db -> query("UPDATE ".$sqlname."ymail_messagesrec SET pid = '0', clid = '0' WHERE pid = '$pid' and identity = '$identity'");
+			$db -> query("UPDATE {$sqlname}ymail_messagesrec SET pid = '0', clid = '0' WHERE pid = '$pid' and identity = '$identity'");
 
-			$db -> query("delete from ".$sqlname."personcat where pid = '$pid' and identity = '$identity'");
+			$db -> query("delete from {$sqlname}personcat where pid = '$pid' and identity = '$identity'");
 
 			logger('12', 'Удален контакт: '.$title, $iduser1);
 
@@ -935,18 +933,18 @@ class Person {
 			$mail = yexplode(",", str_replace(";", ",", $mail_url));
 			foreach ($mail as $email) {
 
-				//print "SELECT id, mid FROM ".$sqlname."ymail_messagesrec WHERE email = '$email' and identity = '$identity'\n";
+				//print "SELECT id, mid FROM {$sqlname}ymail_messagesrec WHERE email = '$email' and identity = '$identity'\n";
 
-				$res = $db -> query("SELECT id, mid FROM ".$sqlname."ymail_messagesrec WHERE email = '$email' and identity = '$identity'");
+				$res = $db -> query("SELECT id, mid FROM {$sqlname}ymail_messagesrec WHERE email = '$email' and identity = '$identity'");
 				while ($data = $db -> fetch($res)) {
 
 					//если pid не указан, то добавляем
-					$db -> query("UPDATE ".$sqlname."ymail_messagesrec SET pid = IF(pid = 0, '$pid', pid), clid = IF(clid = 0, '$clid', clid) WHERE id = '$data[id]' and identity = '$identity'");
+					$db -> query("UPDATE {$sqlname}ymail_messagesrec SET pid = IF(pid = 0, '$pid', pid), clid = IF(clid = 0, '$clid', clid) WHERE id = '$data[id]' and identity = '$identity'");
 
 					//проверяем наличие письма в истории
-					$hid = $db -> getOne("SELECT hid FROM ".$sqlname."ymail_messages WHERE id = '$data[mid]'") + 0;
+					$hid = (int)$db -> getOne("SELECT hid FROM {$sqlname}ymail_messages WHERE id = '$data[mid]'");
 
-					//print $hid."\n";
+					//print "hid = ".$hid."\n";
 
 					if ($hid == 0) {
 						Mailer ::putHistory((int)$data['mid']);
@@ -1001,13 +999,13 @@ class Person {
 		}
 
 		//смотрим, производилась ли проверка организации
-		$exist = (int)$db -> getOne("SELECT COUNT(*) FROM ".$sqlname."doubles WHERE tip = 'person' and idmain = '$pid' AND status = 'no'") + 0;
+		$exist = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}doubles WHERE tip = 'person' and idmain = '$pid' AND status = 'no'") + 0;
 		if ($exist > 0) {
 			goto extp;
 		}
 
 		//для мультипроверки будем фильтровать по уже проверенным
-		$multi = $params['multi'] ? "pid NOT IN (SELECT idmain FROM ".$sqlname."doubles WHERE tip = 'person' and status = 'no' AND identity = '$identity') AND" : "";
+		$multi = $params['multi'] ? "pid NOT IN (SELECT idmain FROM {$sqlname}doubles WHERE tip = 'person' and status = 'no' AND identity = '$identity') AND" : "";
 
 		//получаем данные по контакту
 		$prsn = get_person_info($pid, 'yes');
@@ -1032,7 +1030,7 @@ class Person {
 			if ($title != '' && count((array)$ta) > 1) {
 				$ids = $db -> getCol("
 				SELECT pid 
-				FROM ".$sqlname."personcat 
+				FROM {$sqlname}personcat 
 				WHERE 
 					pid != '$pid' AND 
 					$multi
@@ -1059,7 +1057,7 @@ class Person {
 				if ($phone != '' && strlen($phone) > 5) {
 					$ids = $db -> getCol("
 				SELECT pid 
-				FROM ".$sqlname."personcat 
+				FROM {$sqlname}personcat 
 				WHERE 
 					pid != '$pid' AND 
 					$multi
@@ -1090,7 +1088,7 @@ class Person {
 				if ($mail != '' && strlen($mail) > 5) {
 					$ids = $db -> getCol("
 				SELECT pid 
-				FROM ".$sqlname."personcat 
+				FROM {$sqlname}personcat 
 				WHERE 
 					pid != '$pid' AND 
 					$multi
@@ -1132,7 +1130,7 @@ class Person {
 				$ida   = $isdouble['pid'];
 				$ida[] = $pid;
 
-				$db -> query("INSERT INTO ".$sqlname."doubles SET ?u", [
+				$db -> query("INSERT INTO {$sqlname}doubles SET ?u", [
 					"idmain"   => $pid,
 					"tip"      => "person",
 					"list"     => json_encode_cyr($isdouble),
@@ -1392,7 +1390,7 @@ class Person {
 			$db -> query("UPDATE {$sqlname}clientcat SET pid = '$pid' WHERE pid = '$ida'");
 
 			//проходим Историю
-			$result = $db -> query("select * from ".$sqlname."history WHERE FIND_IN_SET('$ida', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
+			$result = $db -> query("select * from {$sqlname}history WHERE FIND_IN_SET('$ida', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
 			while ($data = $db -> fetch($result)) {
 
 				$pids = [];
@@ -1409,12 +1407,12 @@ class Person {
 					$pids[] = $pid;
 				}
 
-				$db -> query("update ".$sqlname."history set pid = '".implode(";", $pids)."' where cid = '$data[cid]' and identity = '$identity'");
+				$db -> query("update {$sqlname}history set pid = '".implode(";", $pids)."' where cid = '$data[cid]' and identity = '$identity'");
 
 			}
 
 			//проходим Напоминания
-			$result = $db -> query("select * from ".$sqlname."tasks WHERE FIND_IN_SET('".$ida."', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
+			$result = $db -> query("select * from {$sqlname}tasks WHERE FIND_IN_SET('".$ida."', REPLACE(pid, ';',',')) > 0 and identity = '$identity'");
 			while ($data = $db -> fetch($result)) {
 
 				$pids = [];
@@ -1431,7 +1429,7 @@ class Person {
 					$pids[] = $pid;
 				}
 
-				$db -> query("update ".$sqlname."tasks set pid = '".implode(";", $pids)."' where tid = '".$data['tid']."' and identity = '$identity'");
+				$db -> query("update {$sqlname}tasks set pid = '".implode(";", $pids)."' where tid = '".$data['tid']."' and identity = '$identity'");
 
 			}
 
@@ -1621,7 +1619,7 @@ class Person {
 		$identity = $this -> identity;
 
 		//массив имен полей
-		return $db -> getIndCol('fld_name', "select fld_title, fld_name from ".$sqlname."field where fld_tip='person' and fld_on='yes' and identity = '$identity' order by fld_order");
+		return $db -> getIndCol('fld_name', "select fld_title, fld_name from {$sqlname}field where fld_tip='person' and fld_on='yes' and identity = '$identity' order by fld_order");
 
 	}
 
@@ -1797,7 +1795,7 @@ class Person {
 
 		try {
 
-			$db -> query("update ".$sqlname."personcat set ?u where pid = '$pid' and identity = '$identity'", ["iduser" => $newuser]);
+			$db -> query("update {$sqlname}personcat set ?u where pid = '$pid' and identity = '$identity'", ["iduser" => $newuser]);
 
 		}
 		catch (Exception $e) {
@@ -1831,7 +1829,7 @@ class Person {
 			"comment" => $reazon
 		]);
 
-		return $response = [
+		return [
 			'result' => "Сделано",
 			"error"  => $err
 		];
@@ -1992,7 +1990,7 @@ class Person {
 			if ($user['result']['rights']['personEdit'] == 'on' && $accesse) {
 				$btn['edit'] = true;
 			}
-			if ($user['result']['rights']['personDelete'] == 'on') {
+			if ($user['result']['rights']['personDelete'] == 'on' /*|| $user['result']['isadmin'] == 'on'*/) {
 				$btn['delete'] = true;
 			}
 
@@ -2102,7 +2100,7 @@ class Person {
 		return [
 			"clid"        => (int)$params['clid'],
 			"list"        => $list,
-			//"user"        => $user['result'],
+			"user"        => $user['result'],
 			"inputs"      => $inputs,
 			"fieldsNames" => $fieldsNames['person'],
 			"iduser1"     => $iduser1,
