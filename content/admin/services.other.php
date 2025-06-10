@@ -27,30 +27,26 @@ $action = $_REQUEST['action'];
 if ($action == "edit.on") {
 	
 	$s = $_REQUEST;
-	
-	foreach ($s as $tip => $value) {
-		
-		$value = [
-			"key"    => rij_crypt( $value['key'], $skey, $ivc ),
-			"secret" => rij_crypt( $value['secret'], $skey, $ivc )
-		];
-		
-		$id = $db -> getOne( "SELECT id FROM {$sqlname}customsettings WHERE tip = '$tip' AND identity = '$identity'" ) + 0;
-		if ($id > 0) {
-			
-			$db -> query( "UPDATE {$sqlname}customsettings SET ?u WHERE id = '$id' and identity = '$identity'", ["params" => json_encode( $value )] );
-			
-		}
-		else {
-			
-			$db -> query( "INSERT INTO {$sqlname}customsettings SET ?u", [
-				"tip"      => $tip,
-				"params"   => json_encode( $value ),
-				"identity" => $identity
-			] );
-			
-		}
-		
+
+	$value = [
+		"key"    => rij_crypt( $s['key'], $skey, $ivc ),
+		"secret" => rij_crypt( $s['secret'], $skey, $ivc )
+	];
+
+	$id = $db -> getOne( "SELECT id FROM {$sqlname}customsettings WHERE tip = '$tip' AND identity = '$identity'" ) + 0;
+	if ($id > 0) {
+
+		$db -> query( "UPDATE {$sqlname}customsettings SET ?u WHERE id = '$id' and identity = '$identity'", ["params" => json_encode( $value )] );
+
+	}
+	else {
+
+		$db -> query( "INSERT INTO {$sqlname}customsettings SET ?u", [
+			"tip"      => $tip,
+			"params"   => json_encode( $value ),
+			"identity" => $identity
+		] );
+
 	}
 	
 	print "Выполнено";
