@@ -152,7 +152,7 @@ if ( $count == 0 ) {
 /*YMailer*/
 
 //версия, на которую будем обновлять БД
-$lastVer = '2024.3';
+$lastVer = '2025.2';
 $step    = (int)$_REQUEST['step'];
 $currentVersion = getVersion();
 
@@ -166,7 +166,7 @@ $seria = [
 	'2024.1',
 	'2024.2',
 	'2024.3',
-	'2024.4'
+	'2025.2'
 ];
 
 //printf("Step: %s; Sapi: %s; Ver: %s; LastVer: %s; IsLast: %s\n", $step, PHP_SAPI, getVersion(), $lastVer, getVersion() == $lastVer);
@@ -1217,12 +1217,57 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 	}
 
-	if ( getVersion() == '2024.3' && in_array( '2024.4', $seria)) {
+	/*2025*/
+
+	if ( getVersion() == '2024.3' && in_array( '2025.2', $seria)) {
+
+		$db -> query("SET sql_mode='NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES'");
+
+		$x = $db -> getAll("SHOW INDEX FROM `{$sqlname}file_cat` WHERE KEY_NAME = 'subid'");
+		if( empty($x) ) {
+
+			$db -> query("ALTER TABLE `{$sqlname}file_cat` ADD INDEX `subid` (`subid`)");
+
+		}
+
+		$db -> query("ALTER TABLE `{$sqlname}file` CHANGE COLUMN `folder` `folder` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Папка _file_cat.idcategory' AFTER `coid`");
+
+		$x = $db -> getAll("SHOW INDEX FROM `{$sqlname}file` WHERE KEY_NAME = 'folder'");
+		if( empty($x) ) {
+
+			$db -> query("ALTER TABLE `{$sqlname}file` ADD INDEX `ftitle` (`ftitle`), ADD INDEX `folder` (`folder`)");
+
+		}
+
+		$x = $db -> getAll("SHOW INDEX FROM `{$sqlname}modcatalog` WHERE KEY_NAME = 'prid'");
+		if( empty($x) ) {
+
+			$db -> query("ALTER TABLE `{$sqlname}modcatalog` ADD INDEX `prid` (`prid`)");
+
+		}
+
+		$x = $db -> getAll("SHOW INDEX FROM `{$sqlname}price_cat` WHERE KEY_NAME = 'sub'");
+		if( empty($x) ) {
+
+			$db -> query("ALTER TABLE `{$sqlname}price_cat` ADD INDEX `sub` (`sub`)");
+
+		}
+
+		$db -> query("ALTER TABLE `{$sqlname}price` CHANGE COLUMN `datum` `datum` TIMESTAMP NULL DEFAULT (CURRENT_TIMESTAMP) AFTER `price_5`");
+
+		$db -> query("UPDATE `{$sqlname}price` SET datum = NULL WHERE datum = '0000-00-00 00:00:00'");
+
+		$x = $db -> getAll("SHOW INDEX FROM `{$sqlname}price` WHERE KEY_NAME = 'pr_cat'");
+		if( empty($x) ) {
+
+			$db -> query("ALTER TABLE `{$sqlname}price` ADD INDEX `pr_cat` (`pr_cat`)");
+
+		}
 
 		/**
 		 * Обновим версию
 		 */
-		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2024.4']);
+		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2025.2']);
 
 		$currentVer = getVersion();
 
