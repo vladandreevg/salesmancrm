@@ -17,10 +17,10 @@ if ( defined( 'SMPLUGIN' ) ) {
 }
 
 $hooks -> add_action( 'main__js', 'js_main_reportfilters' );
-$hooks -> add_action( 'main__css', 'css_main_reportfilters' );
+//$hooks -> add_action( 'main__css', 'css_main_reportfilters' );
 
-$hooks -> add_action( 'card__js', 'js_card_reportfilters' );
-$hooks -> add_action( 'card__css', 'css_card_reportfilters' );
+//$hooks -> add_action( 'card__js', 'js_card_reportfilters' );
+//$hooks -> add_action( 'card__css', 'css_card_reportfilters' );
 
 /**
  * Активация плагина
