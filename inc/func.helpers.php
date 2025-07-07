@@ -5931,7 +5931,7 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 			}
 
 			$iduser = $params['iduser'];
-			$word   = str_replace( " ", "", trim( $params['word'] ) );
+			$word        = preg_replace('/[^a-zA-Z0-9а-яА-Я ]/u', '', $params['word'] );
 			//$dword    = untag($params['word']);
 			$alf      = $params['alf'];
 			$tbl_list = $params['tbl_list'];
@@ -6282,16 +6282,16 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 			if ( $word != "" && $tbl_list == 'person' ) {
 
 				$regexp = $so = [];
-				$words  = yexplode( " ", (string)$params['word'] );
+				$words  = yexplode( " ", (string)$word );
 
 				if ( count( $words ) > 1 ) {
 
 					asort( $words );
 
-					foreach ( $words as $word ) {
+					foreach ( $words as $xword ) {
 
-						if ( $word != ' ' ) {
-							$regexp[] = '('.$word.')+';
+						if ( $xword != ' ' ) {
+							$regexp[] = '('.$xword.')+';
 						}
 
 					}
@@ -6304,10 +6304,10 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 
 					rsort( $words );
 
-					foreach ( $words as $word ) {
+					foreach ( $words as $xword ) {
 
-						if ( $word != ' ' ) {
-							$regexp[] = '('.$word.')+';
+						if ( $xword != ' ' ) {
+							$regexp[] = '('.$xword.')+';
 						}
 
 					}
@@ -6400,7 +6400,8 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 			}
 
 			$iduser      = $params['iduser'];
-			$word        = str_replace( " ", "", untag( $params['word'] ) );
+			//$word        = str_replace( " ", "", untag( $params['word'] ) );
+			$word        = preg_replace('/[^a-zA-Z0-9а-яА-Я ]/u', '', $params['word'] );
 			$alf         = $params['alf'];
 			$tbl_list    = $params['tbl_list'];
 			$filter      = ($params['filter'] == '') ? 'my' : $params['filter'];
@@ -7055,7 +7056,7 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 				elseif ( $tbl_list == 'title' ) {
 
 					$regexp = $aso = [];
-					$words  = yexplode( " ", (string)$params['word'] );
+					$words  = yexplode( " ", (string)$word );
 
 					//print_r($words);
 
@@ -7063,12 +7064,11 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 
 						asort( $words );
 
-						foreach ( $words as $word ) {
-							if ( $word != ' ' ) {
-								$regexp[] = '('.$word.')+';
+						foreach ( $words as $xword ) {
+							if ( !empty($xword) ) {
+								$regexp[] = '('.$xword.')+';
 							}
 						}
-
 
 						$aso[] = " LOWER({$sqlname}clientcat.title) REGEXP '".implode( "(.*)?", $regexp )."'";
 
@@ -7078,9 +7078,9 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 
 						rsort( $words );
 
-						foreach ( $words as $word ) {
-							if ( $word != ' ' ) {
-								$regexp[] = '('.$word.')+';
+						foreach ( $words as $xword ) {
+							if ( !empty($xword) ) {
+								$regexp[] = '('.$xword.')+';
 							}
 						}
 
@@ -7186,7 +7186,7 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 
 			$iduser     = $params['iduser'];
 			$idcategory = !empty( $params['idcategory'] ) ? implode( ",", $params['idcategory'] ) : '';
-			$word       = untag( $params['word'] );
+			$word        = preg_replace('/[^a-zA-Z0-9а-яА-Я ]/u', '', $params['word'] );
 			$tbl_list   = $params['tbl_list'];
 			$tid        = $params['tid'];
 			$filter     = $params['filter'];

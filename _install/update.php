@@ -1253,7 +1253,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		}
 
-		$db -> query("ALTER TABLE `{$sqlname}price` CHANGE COLUMN `datum` `datum` TIMESTAMP NULL DEFAULT (CURRENT_TIMESTAMP) AFTER `price_5`");
+		$db -> query("ALTER TABLE `{$sqlname}price` CHANGE COLUMN `datum` `datum` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `price_5`");
 
 		$db -> query("UPDATE `{$sqlname}price` SET datum = NULL WHERE datum = '0000-00-00 00:00:00'");
 

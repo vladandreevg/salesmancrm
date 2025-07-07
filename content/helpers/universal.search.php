@@ -455,7 +455,7 @@ if ( $strong != 'yes' ) {
 
 }
 else {
-	$so[] = "title LIKE '".$dword."%'";
+	$so[] = "deal.title LIKE '".$dword."%'";
 }
 
 if ( !empty( $clids ) ) {
