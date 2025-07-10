@@ -478,7 +478,7 @@ switch ($action) {
 	case 'close':
 
 		$Deal     = new Deal();
-		$response = $Deal -> changeClose($params['did'], $params);
+		$response = $Deal -> changeClose((int)$params['did'], $params);
 
 		break;
 
@@ -488,7 +488,7 @@ switch ($action) {
 		$uid = untag($params["uid"]);
 
 		//проверка принадлежности did к данному аккаунту и вообще её существование
-		if ($params['did'] > 0) {
+		if ((int)$params['did'] > 0) {
 			$s = "did = '$params[did]'";
 		}
 		elseif ($uid != '') {
@@ -496,9 +496,9 @@ switch ($action) {
 		}
 
 		//проверка принадлежности clid к данному аккаунту
-		$did = $db -> getOne("SELECT did FROM {$sqlname}dogovor WHERE $s ".get_people($iduser)." and identity = '$identity'");
+		$did = (int)$db -> getOne("SELECT did FROM {$sqlname}dogovor WHERE $s ".get_people($iduser)." and identity = '$identity'");
 
-		if ($did < 1) {
+		if ($did == 0) {
 
 			$response['result']        = 'Error';
 			$response['error']['code'] = 403;
@@ -517,7 +517,7 @@ switch ($action) {
 			$params['step'] = getStep($params['step']);
 
 			$Deal     = new Deal();
-			$response = $Deal -> changestep($params['did'], $params);
+			$response = $Deal -> changestep((int)$params['did'], $params);
 
 		}
 
@@ -535,7 +535,7 @@ switch ($action) {
 	case 'change.freeze':
 
 		$Deal     = new Deal();
-		$response = $Deal -> changeFreeze($params['did'], $params['date']);
+		$response = $Deal -> changeFreeze((int)$params['did'], $params['date']);
 
 		break;
 
@@ -545,7 +545,7 @@ switch ($action) {
 		$uid = untag($params["uid"]);
 
 		//проверка принадлежности did к данному аккаунту и вообще её существование
-		if ($params['did'] > 0) {
+		if ((int)$params['did'] > 0) {
 			$s = "did = '$params[did]'";
 		}
 		elseif ($uid != '') {
@@ -608,7 +608,7 @@ switch ($action) {
 		$uid = untag($params["uid"]);
 
 		//проверка принадлежности did к данному аккаунту и вообще её существование
-		if ($params['did'] > 0) {
+		if ((int)$params['did'] > 0) {
 			$s = "did = '$params[did]'";
 		}
 		elseif ($uid != '') {
