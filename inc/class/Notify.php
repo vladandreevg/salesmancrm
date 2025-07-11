@@ -370,7 +370,7 @@ class Notify {
 
 		//$params['autor'] = $autor;
 
-		$notifyText = self ::eventNotify( $event, $params );
+		$notifyText = self ::eventNotify( $event, (array)$params );
 
 		//пользователи, которым отправляем уведомление
 		$users = $notifyText['users'];
@@ -1344,7 +1344,7 @@ class Notify {
 			"title"   => $tag['title'],
 			"content" => $tag['content'],
 			"url"     => $tag['url'],
-			"users"   => array_unique( $toUsers ),
+			"users"   => array_unique( (array)$toUsers ),
 			"tip"     => $tag['tip'],
 			"uid"     => $tag['uid']
 		];
