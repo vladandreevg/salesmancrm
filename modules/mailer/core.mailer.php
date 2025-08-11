@@ -790,7 +790,7 @@ if ( $action == 'folder.count' ) {
 			break;
 			case 'draft':
 
-				$draft = (int)$folder['icount'];
+				$draft += (int)$folder['icount'];
 
 			break;
 			case 'sended':

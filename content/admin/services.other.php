@@ -27,13 +27,15 @@ $action = $_REQUEST['action'];
 if ($action == "edit.on") {
 	
 	$s = $_REQUEST;
+	$tip = $_REQUEST['tip'];
+	$id = $_REQUEST['id'];
 
 	$value = [
-		"key"    => rij_crypt( $s['key'], $skey, $ivc ),
-		"secret" => rij_crypt( $s['secret'], $skey, $ivc )
+		"key"    => rij_crypt( $s[$tip]['key'], $skey, $ivc ),
+		"secret" => rij_crypt( $s[$tip]['secret'], $skey, $ivc )
 	];
 
-	$id = $db -> getOne( "SELECT id FROM {$sqlname}customsettings WHERE tip = '$tip' AND identity = '$identity'" ) + 0;
+	$id = (int)$db -> getOne( "SELECT id FROM {$sqlname}customsettings WHERE tip = '$tip' AND identity = '$identity'" );
 	if ($id > 0) {
 
 		$db -> query( "UPDATE {$sqlname}customsettings SET ?u WHERE id = '$id' and identity = '$identity'", ["params" => json_encode( $value )] );
@@ -78,6 +80,7 @@ if ($action == "edit") {
 	<form method="post" action="/content/admin/<?php echo $thisfile; ?>" enctype="multipart/form-data" name="form" id="form" autocomplete="off">
 		<input name="action" type="hidden" value="edit.on">
 		<input name="id" type="hidden" value="<?= $id ?>">
+		<input name="tip" type="hidden" value="<?= $tip ?>">
 
 		<DIV id="formtabs" class="box--child" style="max-height:80vh; overflow-x: hidden; overflow-y: auto !important;">
 
