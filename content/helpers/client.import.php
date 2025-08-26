@@ -443,7 +443,7 @@ if ($action == "import_on") {
 	//файл для расшифровки
 	$url = $rootpath.'/files/'.$fpath.$_COOKIE['url'];
 
-	$fields      = $_REQUEST['field']; //порядок полей
+	$fields     = $_REQUEST['field']; //порядок полей
 	$new_user   = $_REQUEST['new_user'];
 	$clientpath = $_REQUEST['clientpath'];
 	$ctype      = $_REQUEST['ctype'];
@@ -511,7 +511,9 @@ if ($action == "import_on") {
 		}
 		if (strpos($field, 'person') !== false && strpos($field, 'personpath') === false) {
 
-			$c = str_replace("person:", "", $field[$i]);
+			$c = str_replace("person:", "", $field);
+			
+			//print $c."\n";
 
 			if ($c == 'person') {
 				$pp++; //индикатор наличия персоны
@@ -584,6 +586,8 @@ if ($action == "import_on") {
 		}
 
 	}
+	
+	//print_r($indexs);
 
 	$data = [];
 
@@ -623,8 +627,8 @@ if ($action == "import_on") {
 		$idcategory  = 0;
 		$idterritory = 0;
 		$idrelation  = '';
-		$idcppath    = $clientpath + 0;
-		$idpppath    = $clientpath + 0;
+		$idcppath    = (int)$clientpath;
+		$idpppath    = (int)$clientpath;
 		$date_create = current_datumtime();
 
 		$castName = $data[$indexs['client']['title']];
@@ -698,7 +702,7 @@ if ($action == "import_on") {
 		}
 
 		//обработаем источник клиента, если не указан общий источник
-		if (!$clientpath) {
+		if ($idcppath == 0) {
 
 			if ($data[$indexs['clientpath']['title']] != '') {
 
@@ -723,7 +727,7 @@ if ($action == "import_on") {
 		}
 
 		//обработаем источник контакта, если не указан общий источник
-		if (!$clientpath) {
+		if ($idpppath == 0) {
 
 			if ($data[$indexs['personpath']['title']] != '') {
 
@@ -817,9 +821,12 @@ if ($action == "import_on") {
 			}
 
 		}
+		
+		//print "data:".$data[$plx]."++";
+		//print "plx:".$plx."++";
 
 		//добавим контакт,если он есть в данных
-		if ($pp > 0 && $data[$plx] != '') {
+		if ($pp > 0 && !empty($data[$plx])) {
 
 			$qr = '';
 
@@ -836,7 +843,7 @@ if ($action == "import_on") {
 			}
 
 			$result = $db -> getRow("SELECT pid,clid FROM {$sqlname}personcat WHERE person = '".$data[$plx]."' $qr and identity = '$identity'");
-			if (count($result) > 0) {
+			if (!empty($result)) {
 
 				$pid  = $result["pid"];
 				$clid = $result["clid"];
@@ -857,7 +864,7 @@ if ($action == "import_on") {
 
 
 				foreach ($indexs['person'] as $k => $v) {
-					$person[$names['person'][$v]] = $data[$i][$indexs['person'][$k]];
+					$person[$names['person'][$v]] = $data[$indexs['person'][$k]];
 				}
 
 
