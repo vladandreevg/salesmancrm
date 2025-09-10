@@ -22,7 +22,7 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
-$action = $_REQUEST['action'];
+$action = $_REQUEST['eaction'];
 
 /**
  * Формирование модального окна

@@ -1581,6 +1581,7 @@ if ($action == 'cat.list') {
 	<div id="formtabs" style="max-height:70vh; overflow:auto" class="border--bottom">
 	<?php
 	$catalog = CorpUniver::getCategories();
+	//print_r($catalog);
 	foreach ($catalog as $key => $value) {
 
 		$all = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_course WHERE cat = '".$value['id']."' and identity = '$identity'");

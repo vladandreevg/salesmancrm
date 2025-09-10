@@ -1303,7 +1303,7 @@ class Project {
 				}
 				
 				//отправка email-уведомления
-				if (in_array( $project['iduser'], $mdcsettings['projNotify'] )) {
+				if (in_array( $project['iduser'], (array)$mdcsettings['projNotify'] )) {
 					
 					$user   = $db -> getRow( "SELECT iduser, title, email, phone, mob FROM {$sqlname}user WHERE iduser='$project[iduser]'" );
 					$author = $db -> getRow( "SELECT iduser, title, email, phone, mob FROM {$sqlname}user WHERE iduser='$iduser1'" );

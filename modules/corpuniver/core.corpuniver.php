@@ -843,6 +843,7 @@ if ( $action == "catlist" ) {
 
 	print '<a href="javascript:void(0)" data-id="" data-title="" class="'.$ss.'"><i class="icon-folder blue"></i>&nbsp;[все]</a>';
 
+	/*
 	$result = $db -> getAll( "SELECT * FROM ".$sqlname."corpuniver_course_cat WHERE subid = '0' and identity = '$identity' ORDER by title" );
 	foreach ( $result as $data ) {
 
@@ -858,6 +859,34 @@ if ( $action == "catlist" ) {
 			print '<a href="javascript:void(0)" class="fol mt5" data-id="'.$da['id'].'" data-title="'.$da['title'].'"><span class="ellipsis pl20"><div class="strelka w5 mr10"></div><i class="icon-folder gray2"></i>&nbsp;'.$da['title'].'</span></a>';
 
 		}
+
+	}
+	*/
+
+	$catalog = CorpUniver::getCategories();
+	foreach ($catalog as $key => $value) {
+
+		$padding = 'mt5 Bold';
+
+		if((int)$value['level'] == 1){
+			$padding = 'pl20';
+		}
+		elseif((int)$value['level'] > 1){
+			$x = 20 + (int)$value['level'] * 10;
+			$padding = "pl{$x} ml15 fs-09";
+		}
+
+		$folder  = ($value['level'] == 0 ? 'icon-folder-open deepblue' : ($value['level'] == 1 ? 'icon-folder-open blue' : 'icon-folder broun'));
+
+		$ss = ($value['id'] == $idcat) ? 'fol_it' : 'fol';
+
+		print '
+		<div class="pt5">
+			<div class="fol block ellipsis hand '.$padding.' '.$ss.'" data-id="'.$value['id'].'" data-title="'.$value['title'].'">
+				<div class="strelka w5 ml10 mr10"></div><i class="'.$folder.'"></i>&nbsp;'.$value['title'].'
+			</div>
+		</div>
+		';
 
 	}
 
