@@ -11,7 +11,7 @@ error_reporting(E_ERROR);
 
 $rootpath = realpath( __DIR__ );
 
-require_once $rootpath."/inc/licloader.php";
+//require_once $rootpath."/inc/licloader.php";
 
 global $script;
 
