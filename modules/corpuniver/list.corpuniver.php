@@ -40,6 +40,25 @@ $sort = '';
 
 if ($idcat > 0) {
 
+	$catlist = CorpUniver::getCategories($idcat);
+	$c = [];
+
+	foreach ($catlist as $cat) {
+		$c[] = $cat['id'];
+	}
+
+	if(!empty($c)) {
+
+		$sort .= "({$sqlname}corpuniver_course.cat IN (".implode(",", $c).") OR {$sqlname}corpuniver_course.cat = '$idcat') AND";
+
+	}
+	else{
+
+		$sort .= $sqlname."corpuniver_course.cat = '$idcat' AND";
+
+	}
+
+	/*
 	$subid = $db -> getOne("select id from {$sqlname}corpuniver_course_cat where subid = '$idcat' and identity = '$identity'");
 
 	if ($subid > 0) {
@@ -48,6 +67,7 @@ if ($idcat > 0) {
 	else {
 		$sort .= $sqlname."corpuniver_course.cat = '$idcat' AND";
 	}
+	*/
 
 }
 

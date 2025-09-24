@@ -28,8 +28,7 @@ if($ext_allow != '')
 
 		<a href="javascript:void(0)" class="lpToggler" title="Фильтры"><i class="icon-toggler"></i></a>
 
-		<A href="javascript:void(0)" onclick="configpage()" class="razdel bluebg pl5 pr5" title="Обновить"><i
-					class="icon-arrows-cw"></i></A>
+		<A href="javascript:void(0)" onclick="configpage()" class="razdel bluebg pl5 pr5" title="Обновить"><i class="icon-arrows-cw"></i></A>
 		<?php if ( $isadmin == "on" || in_array( $iduser1, (array)$mdcsettings[ 'Editor' ] ) ) { ?>
 			<A href="javascript:void(0)" onclick="editCourse('','edit')" class="razdel redbg-dark pl5 pr5" title="Добавить"><i class="icon-graduation-cap-1 white"><i class="icon-plus-circled sup fs-07"></i></i></A>
 		<?php } ?>
@@ -352,6 +351,7 @@ if($ext_allow != '')
 		var title = $(this).data('title');
 
 		$('.ifolder a').removeClass('fol_it');
+		$('.fol').removeClass('fol_it');
 		$(this).addClass('fol_it');
 
 		$('#idcat').val(id);
@@ -361,6 +361,23 @@ if($ext_allow != '')
 
 		configpage();
 
+	});
+	$(document).on('click', '.fol', function () {
+		
+		var id = $(this).data('id');
+		var title = $(this).data('title');
+		
+		$('.ifolder a').removeClass('fol_it');
+		$('.fol').removeClass('fol_it');
+		$(this).addClass('fol_it');
+		
+		$('#idcat').val(id);
+		$('#place').html(title);
+		$('#page').val('0');
+		$('#tag').val('');
+		
+		configpage();
+		
 	});
 
 	$(document).on('click', '.messagelist', function () {

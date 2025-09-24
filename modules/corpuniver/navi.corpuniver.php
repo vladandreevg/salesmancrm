@@ -34,6 +34,7 @@
 						<a href="javascript:void(0)" data-id="" data-title="" class="fol_it"><i class="icon-folder blue"></i>&nbsp;[все]</a>
 						<?php
 						$catalog = CorpUniver::getCategories();
+						//print_r($catalog);
 						foreach ($catalog as $key => $value) {
 
 							$padding = 'mt5 Bold';
