@@ -262,6 +262,8 @@ class CorpUniver {
 
 			$progress = self ::progressLecture($lec['id']);
 
+			$x = (float)$progress['progress'] * 100;
+
 			$Lec[] = [
 				"idlection"       => $lec['id'],
 				"num"             => $num0,
@@ -270,7 +272,7 @@ class CorpUniver {
 				"materialCount"   => count($Mat),
 				"task"            => $Task,
 				"taskCount"       => count($Task),
-				"progressLecture" => $progress['progress'] ? round($progress['progress'] * 100, 1) : NULL
+				"progressLecture" => $progress['progress'] ? num_format($x, 1) : NULL
 			];
 
 		}
@@ -600,23 +602,28 @@ class CorpUniver {
 		if ($id > 0) {
 
 			// Прохождение материалов
-			$count['MaterialsTotal'] = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_material WHERE lecture = '$id'") + 0;
+			$count['MaterialsTotal'] = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_material WHERE lecture = '$id'");
 
-			$count['MaterialsDo'] = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_coursebyusers WHERE idlecture = '$id' AND datum_end IS NOT NULL AND idmaterial > 0 AND iduser = '$iduser'") + 0;
+			$count['MaterialsDo'] = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_coursebyusers WHERE idlecture = '$id' AND datum_end IS NOT NULL AND idmaterial > 0 AND iduser = '$iduser'");
 
 			// Прохождение заданий
-			$count['TasksTotal'] = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_task WHERE lecture = '$id'") + 0;
+			$count['TasksTotal'] = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_task WHERE lecture = '$id'");
 
-			$count['TasksDo'] = $db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_coursebyusers WHERE idlecture = '$id' AND datum_end IS NOT NULL AND idmaterial = 0 AND idtask > 0 and iduser = '$iduser'") + 0;
+			$count['TasksDo'] = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}corpuniver_coursebyusers WHERE idlecture = '$id' AND datum_end IS NOT NULL AND idmaterial = 0 AND idtask > 0 and iduser = '$iduser'");
 
-			$count['progress'] = ( $count['MaterialsTotal'] + $count['TasksTotal'] ) > 0 ? ( $count['MaterialsDo'] + $count['TasksDo'] ) / ( $count['MaterialsTotal'] + $count['TasksTotal'] ) : 0;
+			$count['progress'] = (float)( $count['MaterialsTotal'] + $count['TasksTotal'] ) > 0 ? ( $count['MaterialsDo'] + $count['TasksDo'] ) / ( $count['MaterialsTotal'] + $count['TasksTotal'] ) : 0;
 
 			return $count;
 
 		}
-		else {
-			return [];
-		}
+
+		return [
+			"MaterialsTotal" => 0,
+			"MaterialsDo"    => 0,
+			"TasksTotal"    => 0,
+			"TasksDo"       => 0,
+			"progress"      => 0,
+		];
 
 	}
 
@@ -662,14 +669,13 @@ class CorpUniver {
 
 			$count['progress'] = ( $count['MaterialsTotal'] + $count['TasksTotal'] ) > 0 ? ( $count['MaterialsDo'] + $count['TasksDo'] ) / ( $count['MaterialsTotal'] + $count['TasksTotal'] ) : 0;
 
-			$count['progressTotal'] = ( $count['LecturesTotal'] + $count['MaterialsTotal'] + $count['TasksTotal'] ) > 0 ? ( $count['LecturesDo'] + $count['MaterialsDo'] + $count['TasksDo'] ) / ( $count['LecturesTotal'] + $count['MaterialsTotal'] + $count['TasksTotal'] ) : 0;
+			$count['progressTotal'] = (float)( $count['LecturesTotal'] + $count['MaterialsTotal'] + $count['TasksTotal'] ) > 0 ? ( $count['LecturesDo'] + $count['MaterialsDo'] + $count['TasksDo'] ) / ( $count['LecturesTotal'] + $count['MaterialsTotal'] + $count['TasksTotal'] ) : 0;
 
 			return $count;
 
 		}
-		else {
-			return [];
-		}
+
+		return [];
 
 	}
 

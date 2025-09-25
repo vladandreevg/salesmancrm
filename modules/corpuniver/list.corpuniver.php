@@ -151,7 +151,7 @@ foreach ($result as $da) {
 		"category"    => $da['category'],
 		"change"      => $change,
 		"author"      => $da['user'],
-		"progress"    => round($progress['progressTotal'] * 100, 0)
+		"progress"    => num_format($progress['progressTotal'] * 100, 0)
 	];
 
 }
