@@ -604,7 +604,7 @@ if ( $action == 'get_xml' ) {
 						$i++;
 
 						$header[ $i ]        = "Должность";
-						$clients[ $g ][ $i ] = $prsn['title'];
+						$clients[ $g ][ $i ] = $prsn['post'];
 
 						$i++;
 
