@@ -2156,6 +2156,7 @@ class Mailer {
 			$trash    = $result['trash'];
 			$uid      = $result['uid'];
 			$xfid     = $result['fid'];
+			$owner    = (int)$result['iduser'];
 			$did      = ($result['did'] > 0) ? $result['did'] : NULL;
 
 			//print $content;
@@ -2180,7 +2181,7 @@ class Mailer {
 
 				$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE id = '$id' and identity = '$identity'" );
 
-				if ( $this -> boxSettings['ymailOnReadSeen'] || (string)$this -> boxSettings['ymailOnReadSeen'] == 'true' ) {
+				if ( ($this -> boxSettings['ymailOnReadSeen'] || (string)$this -> boxSettings['ymailOnReadSeen'] == 'true') && $owner == $this -> iduser1 ) {
 
 					// отметим прочитанным
 					self ::mailAction( $id, 'seen' );
