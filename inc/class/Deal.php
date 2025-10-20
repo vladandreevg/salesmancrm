@@ -3424,8 +3424,14 @@ class Deal {
 		$list   = [];
 
 		if ($clid > 0) {
-			$s      = "deal.clid = '$clid' OR deal.payer = '$clid'";
+
+			$clids = $db -> getCol("SELECT clid FROM {$sqlname}clientcat WHERE head_clid = '$clid'");
+
+			$apx = !empty($clids) ? " OR deal.clid IN ('".implode("','", $clids)."')" : '';
+
+			$s      = "deal.clid = '$clid' OR deal.payer = '$clid' $apx";
 			$client = current_client($clid);
+
 		}
 		if ($pid > 0) {
 			$s      = "deal.pid = '$pid'";
@@ -3553,6 +3559,9 @@ class Deal {
 				"payerName"     => ( (int)$row['payer'] != (int)$row['clid'] ) ? $row['payerName'] : NULL,
 				"showPeriod"    => $row['datum_start'] != "0000-00-00" && !is_null($row['datum_start']) && in_array('period', $fieldsOn['dogovor']),
 				"showButtons"   => ( get_accesse(0, 0, (int)$row['did']) == "yes" || (int)$row['iduser'] == (int)$iduser1 ) ? true : NULL,
+				"isCurreent"    => (int)$row['clid'] == $clid ? true : NULL,
+				"clid"   => $row['clid'],
+				"clientTitle"   => $row['payerName'],
 			];
 
 			foreach ($inputs as $field) {

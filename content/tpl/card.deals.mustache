@@ -14,13 +14,20 @@
 			{{/isMobile}}
 		{{/showButtons}}
 
-		<div class="fs-12 mb20 Bold blue">
+		<div class="fs-12 mb20 Bold blue1">
 
 			{{#close}}
 			<div class="fs-09 pt10 pb10 mb20 red">
 				<i class="icon-lock red"></i>Закрыта {{datum_closef}}
 			</div>
 			{{/close}}
+
+			{{^isCurreent}}
+			<div class="fs-09 pt10 pb10 mb10">
+				Сделка с дочерней организацией: <A href="javascript:void(0);" onclick="openClient('{{clid}}')"><i class="icon-building broun"></i>{{clientTitle}}</A>
+				{{#uid}},&nbsp;<span class="Bold gray">UID {{uid}}</span>&nbsp;{{/uid}}
+			</div>
+			{{/isCurreent}}
 
 			<div>
 				<A href="javascript:void(0);" onclick="openDogovor('{{did}}')"><i class="icon-briefcase-1 blue"></i>{{title}}</A>

@@ -34,17 +34,23 @@ $did  = (int)$_REQUEST['did'];
 $docSort = untag($_COOKIE['dealsSort']);
 
 if ($clid > 0) {
-	$s      = "clid = '$clid' OR payer = '$clid'";
+	
+	$clids = $db -> getCol("SELECT clid FROM {$sqlname}clientcat WHERE head_clid = '$clid'");
+	
+	$apx = !empty($clids) ? " OR clid IN ('".implode("','", $clids)."')" : '';
+	
+	$s      = "clid = '$clid' OR payer = '$clid' $apx";
 	$client = current_client($clid);
+	
 }
 if ($pid > 0) {
 	$s      = "pid = '$pid'";
 	$client = current_person($pid);
 }
 
-$closedDeals = $db -> getRow("SELECT COUNT(did) as count, SUM(kol_fact) as summa, SUM(marga) as marga FROM {$sqlname}dogovor WHERE (clid = '$clid' OR payer = '$clid') AND close = 'yes' and kol_fact > 0 AND identity = '$identity'");
+$closedDeals = $db -> getRow("SELECT COUNT(did) as count, SUM(kol_fact) as summa, SUM(marga) as marga FROM {$sqlname}dogovor WHERE (clid = '$clid' OR payer = '$clid' $apx) AND close = 'yes' and kol_fact > 0 AND identity = '$identity'");
 
-$activeDeals = $db -> getRow("SELECT COUNT(did) as count, SUM(kol) as summa, SUM(marga) as marga FROM {$sqlname}dogovor WHERE (clid = '$clid' OR payer = '$clid') AND close != 'yes' AND identity = '$identity'");
+$activeDeals = $db -> getRow("SELECT COUNT(did) as count, SUM(kol) as summa, SUM(marga) as marga FROM {$sqlname}dogovor WHERE (clid = '$clid' OR payer = '$clid' $apx) AND close != 'yes' AND identity = '$identity'");
 
 $ssort = ($docSort == 'DESC') ? '' : 'DESC';
 $icon  = ($docSort == 'DESC') ? 'icon-sort-alt-down' : 'icon-sort-alt-up';
