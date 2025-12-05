@@ -530,7 +530,7 @@ if ( $action == "client.mass" ) {
 		//--новый запрос. старт
 
 		$iduser     = (int)$_REQUEST['iduser'];
-		$idcategory = implode( ",", $_REQUEST['idcategory'] );
+		$idcategory = implode( ",", (array)$_REQUEST['idcategory'] );
 		$word       = $_REQUEST['word'];
 		$alf        = $_REQUEST['alf'];
 		$tbl_list   = $_REQUEST['tbl_list'];
@@ -539,7 +539,7 @@ if ( $action == "client.mass" ) {
 
 		$tip_cmr = $_REQUEST['tip_cmr'];
 
-		$clientpath  = implode( ",", $_REQUEST['clientpath'] );
+		$clientpath  = implode( ",", (array)$_REQUEST['clientpath'] );
 		$clientpath0 = $_REQUEST['clientpath0'];
 		$territory   = $_REQUEST['territory'];
 		$type        = $_REQUEST['type'];

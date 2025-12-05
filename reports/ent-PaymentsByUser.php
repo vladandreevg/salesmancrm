@@ -61,10 +61,10 @@ function getDateCustom($date): string {
 
 //массив выбранных пользователей
 if ( !empty( $user_list ) ) {
-	$susers = "cr.iduser IN (".yimplode( ",", $user_list ).") and ";
+	$sort .= "cr.iduser IN (".yimplode( ",", $user_list ).") and ";
 }
 else {
-	$susers = "cr.iduser IN (".yimplode( ",", get_people( $iduser1, "yes" ) ).") and ";
+	$sort .= "cr.iduser IN (".yimplode( ",", get_people( $iduser1, "yes" ) ).") and ";
 }
 
 //составляем запрос по параметрам сделок

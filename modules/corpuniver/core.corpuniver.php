@@ -237,7 +237,7 @@ if ( $action == 'edit.item' ) {
 if ( $action == 'delete' ) {
 
 	$id   = (int)$_REQUEST['id'];
-	$type = (int)$_REQUEST['type'];
+	$type = $_REQUEST['type'];
 
 	if ( $id > 0 ) {
 
@@ -246,7 +246,7 @@ if ( $action == 'delete' ) {
 			$response = CorpUniver ::delete( $id );
 
 		}
-		elseif ( $type == 'lecture' ) {
+		elseif ( $type == 'lecture' || $type == 'Lecture' ) {
 
 			$response = CorpUniver ::deleteLecture( $id );
 
@@ -264,6 +264,13 @@ if ( $action == 'delete' ) {
 		elseif ( $type == 'question' ) {
 
 			$response = CorpUniver ::deleteQuestion( $id );
+
+		}
+		else {
+
+			$response['result']        = 'Error';
+			$response['error']['code'] = '404';
+			$response['error']['text'] = "Не известное действие";
 
 		}
 
