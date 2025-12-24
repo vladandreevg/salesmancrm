@@ -66,7 +66,7 @@ $da1 = ( $da1 != '' ) ? $da1 : $period[0];
 $da2 = ( $da2 != '' ) ? $da2 : $period[1];
 
 $dateStart = "$year-$month-01";
-$dateEnd   = modifyDatetime($dateStart, ["modify" => "1 year", "format" => "Y-m-d"]);
+$dateEnd   = modifyDatetime($dateStart, ["modify" => "3 year", "format" => "Y-m-d"]);
 
 //print $dateStart." : ".$dateEnd;
 //exit();

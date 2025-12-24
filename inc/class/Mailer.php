@@ -3603,26 +3603,26 @@ class Mailer {
 					}
 
 					//найдем и добавим отправителя по базе и добавим его
-					$r    = $db -> getRow( "SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE '%".$message['fromAddr']."%' AND identity = '$identity'" );
-					$pid  = $r['pid'];
-					$clid = $r['clid'];
+					$r    = $db -> getRow( "SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE '%".$message['fromAddr']."%' AND identity = '$identity' ORDER BY pid DESC LIMIT 1" );
+					$pid  = (int)$r['pid'];
+					$clid = (int)$r['clid'];
 
-					if ( $clid < 1 && $pid < 1 ) {
+					if ( $clid == 0 && $pid == 0 ) {
 
-						$clid = $db -> getOne( "SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE '%".$message['fromAddr']."%' AND identity = '$identity'" );
+						$clid = (int)$db -> getOne( "SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE '%".$message['fromAddr']."%' AND identity = '$identity' ORDER BY clid DESC LIMIT 1" );
 
-						if ( $clid < 1 ) {
-							$pid = $db -> getOne( "SELECT pid FROM {$sqlname}personcat WHERE mail LIKE '%".$message['fromAddr']."%' AND identity = '$identity'" );
+						if ( $clid == 0 ) {
+							$pid = (int)$db -> getOne( "SELECT pid FROM {$sqlname}personcat WHERE mail LIKE '%".$message['fromAddr']."%' AND identity = '$identity' ORDER BY pid DESC LIMIT 1" );
 						}
 
 					}
 
 					if ( $message['fromName'] == '' ) {
 
-						if ( (int)$clid > 0 ) {
+						if ( $clid > 0 ) {
 							$message['fromName'] = current_client( $clid );
 						}
-						if ( (int)$pid > 0 ) {
+						if ( $pid > 0 ) {
 							$message['fromName'] = current_person( $pid );
 						}
 
@@ -3633,8 +3633,8 @@ class Mailer {
 						'tip'      => $tip,
 						'email'    => $message['fromAddr'],
 						'name'     => remove_emoji( $message['fromName'] ),
-						'clid'     => (int)$clid,
-						'pid'      => (int)$pid,
+						'clid'     => $clid,
+						'pid'      => $pid,
 						'identity' => $identity
 					];
 					$db -> query( "INSERT INTO {$sqlname}ymail_messagesrec SET ?u", $msgrec );
