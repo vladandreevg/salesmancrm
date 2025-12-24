@@ -53,7 +53,7 @@ require_once $root."/inc/func.php";
 //определим версию системы
 function getVersion() {
 
-	$root = realpath( __DIR__.'/../' );
+	$root = dirname(__DIR__);
 
 	require_once $root."/inc/config.php";
 	require_once $root."/inc/dbconnector.php";
@@ -152,7 +152,7 @@ if ( $count == 0 ) {
 /*YMailer*/
 
 //версия, на которую будем обновлять БД
-$lastVer = '2025.2';
+$lastVer = '2025.4';
 $step    = (int)$_REQUEST['step'];
 $currentVersion = getVersion();
 
@@ -166,7 +166,8 @@ $seria = [
 	'2024.1',
 	'2024.2',
 	'2024.3',
-	'2025.2'
+	'2025.2',
+	'2025.4'
 ];
 
 //printf("Step: %s; Sapi: %s; Ver: %s; LastVer: %s; IsLast: %s\n", $step, PHP_SAPI, getVersion(), $lastVer, getVersion() == $lastVer);
@@ -1293,6 +1294,38 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		}
 
+	}
+	if ( getVersion() == '2025.2' && in_array( '2025.4', $seria)) {
+		
+		/**
+		 * Обновим версию
+		 */
+		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2025.4']);
+		
+		$currentVer = getVersion();
+		
+		if ( $currentVer == $lastVer ) {
+			
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			
+		}
+		
+		if (PHP_SAPI != 'cli') {
+			
+			$message = 'Обновление до версии '.$currentVer.' установлено.<br>
+			<div class="main_div div-center">
+				<A href="update.php?step=1" class="button"><b>Продолжить</b> установку</A>
+			</div>
+			';
+			
+		}
+		
+		if ( PHP_SAPI === 'cli' ) {
+			
+			print $message."\n";
+			
+		}
+		
 	}
 
 }
