@@ -65,7 +65,17 @@
 							) {
 
 								$folder = ($value['level'] == 0 ? 'icon-folder-open deepblue' : ($value['level'] == 1 ? 'icon-folder-open blue' : 'icon-folder broun'));
-								$padding = ($value['level'] == 0 ? 'mt5 Bold' : ($value['level'] == 1 ? 'pl20' : 'pl20 ml15 fs-09'));
+								//$padding = ($value['level'] == 0 ? 'mt5 Bold' : ($value['level'] == 1 ? 'pl20' : 'pl20 ml15 fs-09'));
+								
+								$padding = 'mt5 Bold';
+								
+								if((int)$value['level'] == 1){
+									$padding = 'pl20';
+								}
+								elseif((int)$value['level'] > 1){
+									$x = 20 + (int)$value['level'] * 10;
+									$padding = "pl{$x} ml15 fs-09";
+								}
 
 								print '
 								<div class="pt5" title="'.$value['title'].'">
