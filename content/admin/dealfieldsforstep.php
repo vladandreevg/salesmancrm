@@ -192,7 +192,7 @@ if ( $action == 'edit' ) {
 
 					<table id="rowtable">
 						<thead>
-						<tr class="header_contaner" height="40">
+						<tr class="header_contaner">
 							<TH width="350">Поле сделки</TH>
 							<TH width="100">Обязательное</TH>
 							<TH></TH>
@@ -203,7 +203,7 @@ if ( $action == 'edit' ) {
 						//ksort($edefault);
 						foreach ( $edefault as $input => $title ) {
 
-							$s1 = (in_array( $input, array_keys( $params[ $id ]['inputs'] ) )) ? 'checked' : '';
+							$s1 = array_key_exists($input, (array)$params[$id]['inputs']) ? 'checked' : '';
 							$s2 = $params[ $id ]['inputs'][$input] == 'required' ? 'checked' : '';
 							$d = (in_array( $input, $inputs )) ? 'disabled' : '';
 							$g = (in_array( $input, $inputs )) ? 'grayb' : '';

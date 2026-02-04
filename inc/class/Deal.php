@@ -2405,7 +2405,9 @@ class Deal {
 				$db -> query("UPDATE {$sqlname}complect SET ?u WHERE did = '$did' and identity = '$identity'", ["iduser" => $newuser]);
 
 				//передадим напоминания
-				$db -> query("UPDATE {$sqlname}tasks set iduser = '$newuser' WHERE did = '$did' and iduser = '$olduser'");
+				if($params['todo_send'] == 'yes') {
+					$db -> query("UPDATE {$sqlname}tasks set iduser = '$newuser' WHERE did = '$did' and iduser = '$olduser'");
+				}
 
 				//проверим счета
 				$db -> query("UPDATE {$sqlname}credit set idowner = '$newuser' WHERE did = '$did' and do != 'on'");

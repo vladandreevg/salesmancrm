@@ -1882,7 +1882,9 @@ class Client {
 			]);
 
 			//передадим напоминания
-			$db -> query("UPDATE {$sqlname}tasks SET iduser = '$newuser' WHERE clid = '$clid' AND iduser = '$olduser'");
+			if($params['todo_send'] == 'yes') {
+				$db -> query("UPDATE {$sqlname}tasks SET iduser = '$newuser' WHERE clid = '$clid' AND iduser = '$olduser'");
+			}
 
 		}
 		catch (Exception $e) {
