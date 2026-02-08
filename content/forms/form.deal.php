@@ -1232,9 +1232,12 @@ if ( $action == "close" ) {
 
 	$payments = $db -> getOne( "SELECT COUNT(crid) FROM {$sqlname}credit WHERE do='on' AND did='$did' AND identity='$identity' GROUP BY did" );
 
-	if ( $payments == 0 )
-		$status = (current_dogstep( $did ) < 90) ? 'lose' : '';
-	else $status = 'win';
+	if ( $payments == 0 ) {
+		$status = ( current_dogstep($did) < 90 ) ? 'lose' : '';
+	}
+	else {
+		$status = 'win';
+	}
 
 	$winAnswers  = '';
 	$loseAnswers = '';
@@ -1259,6 +1262,9 @@ if ( $action == "close" ) {
 
 	$sel = '';
 	$l   = 0;
+	
+	// новая дата напоминания
+	$thistime = modifyDatetime(NULL, ["format" => "Y-m-d 11:00", "modify" => "+14 days"]);
 
 	?>
 	<div class="zagolovok">Закрытие <?= $lang['face']['DealName'][1] ?></div>
@@ -1423,6 +1429,207 @@ if ( $action == "close" ) {
 			</div>
 
 			<?= $wrn ?>
+			
+			<div id="todoBoxExpress" class="mb20">
+				
+				<div class="flex-container mt20 mb20">
+					
+					<div class="flex-string wp100">
+						<div id="divider" class="red text-center">
+							<b class="blue">Добавить напоминание</b>
+						</div>
+					</div>
+				
+				</div>
+				
+				<div class="flex-container box--child mt10">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Тема:</div>
+					<div class="flex-string wp80 pl10">
+						<INPUT name="todo[theme]" id="todo[theme]" type="text" value="<?= $title ?>" placeholder="Укажите тему напоминания" class="wp95">
+						<div class="em gray2 fs-09">Например: <b>Узнать как дела</b></div>
+					</div>
+				
+				</div>
+				
+				<hr>
+				
+				<div class="flex-container box--child mt10">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">К исполнению:</div>
+					<div class="flex-string wp80 pl10 relativ">
+						
+						<input name="todo[datumtime]" type="text" class="inputdatetime required1" id="todo[datumtime]" value="<?= $thistime ?>" onclick="$('.datumTasksView').empty().hide()" onchange="getDateTasksNew('todo\\[datumtime\\]')" autocomplete="off">
+						
+						<div class="datumTasks hand tagsmenuToggler p10">
+							Число дел: <span class="taskcount Bold">0</span>
+							<div class="tagsmenu left hidden">
+								<div class="blok"></div>
+							</div>
+						</div>
+						<div class="datumTasksView" onblur="$('.datumTasksView').hide()"></div>
+					
+					</div>
+				
+				</div>
+				
+				<div class="flex-container box--child mt10 infodiv bgwhite">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Опции:</div>
+					<div class="flex-string wp80 pt7 pl10 fs-11">
+						
+						<div class="mb10 pl10">
+							
+							<label for="todo[day]" class="switch">
+								<input type="checkbox" name="todo[day]" id="todo[day]" value="yes">
+								<span class="slider empty"></span>
+							</label>
+							<label for="todo[day]" class="inline">&nbsp;Весь день&nbsp;<i class="icon-info-circled blue" title="Включите, чтобы напоминание не было привязано к времени"></i></label>
+						
+						</div>
+						
+						<div class="mb10 pl10">
+							
+							<label for="todo[readonly]" class="switch">
+								<input type="checkbox" name="todo[readonly]" id="todo[readonly]" value="yes">
+								<span class="slider empty"></span>
+							</label>
+							<label for="todo[readonly]" class="inline">&nbsp;Только чтение&nbsp;<i class="icon-info-circled blue" title="Включите, чтобы не ставить отметку о выполнении"></i></label>
+						
+						</div>
+						
+						<div class="mb10 pl10">
+							
+							<label for="todo[alert]" class="switch">
+								<input type="checkbox" name="todo[alert]" id="todo[alert]" value="yes" <?php if ($alert == 'no' || $usersettings['taskAlarm'] == 'yes') {
+									print "checked";
+								} ?>>
+								<span class="slider empty"></span>
+							</label>
+							<label for="todo[alert]" class="inline">&nbsp;Напоминать&nbsp;<i class="icon-info-circled blue" title="Если включено, то будет показано всплывающее окно"></i></label>
+						
+						</div>
+					
+					</div>
+				
+				</div>
+				
+				<div class="flex-container box--child mt10">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Исполнитель</div>
+					<div class="flex-string wp80 pl10">
+						
+						<?php
+						$element = new Elements();
+						print $element -> UsersSelect("todo[touser]", [
+								"class"   => ['wp95'],
+								"active"  => true,
+								"sel"     => $iduser1,
+								"noempty" => true
+						]);
+						?>
+					
+					</div>
+				
+				</div>
+				
+				<div class="flex-container box--child mt10">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Тип напоминания:</div>
+					<div class="flex-string wp80 pl10">
+						
+						<select name="todo[tip]" id="todo[tip]" class="wp95 required1" data-change="activities" data-id="todo[des]">
+							<?php
+							$res = $db -> getAll("SELECT * FROM {$sqlname}activities WHERE filter IN ('all','task') and identity = '$identity' ORDER by aorder");
+							foreach ($res as $data) {
+								
+								//$s = ( $data[ 'id' ] == $actDefault ) ? "selected" : "";
+								//print '<option value="'.$data[ 'title' ].'" '.$s.' style="color:'.$data[ 'color' ].'">'.$data[ 'title' ].'</option>';
+								
+								print '<option value="'.$data['title'].'" '.($data['id'] == $actDefault ? "selected" : "").' style="color:'.$data['color'].'" data-color="'.$data['color'].'" data-icon="'.get_ticon($data['title'], '', true).'">'.$data['title'].'</option>';
+								
+							}
+							?>
+						</select>
+					
+					</div>
+				
+				</div>
+				
+				<div class="flex-container box--child mt10">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Срочность:</div>
+					<div class="flex-string wp80 pl10">
+						
+						<div class="like-input wp95">
+							
+							<div id="psdiv" class="speed">
+								
+								<input type="hidden" id="todo[speed]" name="todo[speed]" value="0" data-id="speed">
+								<div class="but black w100 text-center" id="sp1" title="Не срочно" onclick="setPS('speed','1')">
+									<i class="icon-down-big"></i>&nbsp;Не срочно
+								</div>
+								<div class="but black active w100 text-center" id="sp0" title="Обычно" onclick="setPS('speed','0')">
+									<i class="icon-check-empty"></i>&nbsp;Обычно
+								</div>
+								<div class="but black w100 text-center" id="sp2" title="Срочно" onclick="setPS('speed','2')">
+									<i class="icon-up-big"></i>&nbsp;Срочно
+								</div>
+							
+							</div>
+						
+						</div>
+					
+					</div>
+				
+				</div>
+				
+				<div class="flex-container box--child mt10">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Важность:</div>
+					<div class="flex-string wp80 pl10">
+						
+						<div class="like-input wp95">
+							
+							<div id="psdiv" class="priority">
+								
+								<input type="hidden" id="todo[priority]" name="todo[priority]" value="0" data-id="priority">
+								<div class="but black w100 text-center" id="pr1" title="Не важно" onclick="setPS('priority','1')">
+									<i class="icon-down-big"></i>&nbsp;Не важно
+								</div>
+								<div class="but black active w100 text-center" id="pr0" title="Обычно" onclick="setPS('priority','0')">
+									<i class="icon-check-empty"></i>&nbsp;Обычно
+								</div>
+								<div class="but black w100 text-center" id="pr2" title="Важно" onclick="setPS('priority','2')">
+									<i class="icon-up-big"></i>&nbsp;Важно
+								</div>
+							
+							</div>
+						
+						</div>
+					
+					</div>
+				
+				</div>
+				
+				<hr>
+				
+				<div class="flex-container box--child mt10 mb20">
+					
+					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Агенда:</div>
+					<div class="flex-string wp80 pl10 relativ">
+						
+						<textarea name="todo[des]" id="todo[des]" rows="4" class="required1 wp95 pr20" style="height:120px;" placeholder="Здесь можно указать детали напоминания - что именно надо сделать?"><?= $des ?></textarea>
+						
+						<!--<div id="tagbox" class="gray1 fs-09 mt5" data-id="todo[des]" data-tip="todotip"></div>-->
+					
+					</div>
+				
+				</div>
+				
+				<div class="space-50"></div>
+			
+			</div>
 
 		</DIV>
 
@@ -1455,6 +1662,39 @@ if ( $action == "close" ) {
 		$(function () {
 
 			getResSel();
+			
+			getDateTasksNew('todo\\[datumtime\\]');
+			
+			$('#todo\\[des\\]').autoHeight(120);
+			
+			//$(document).find('select[data-change="activities"]').trigger('change')
+			
+			$("#todo\\[theme\\]").autocomplete("/content/core/core.tasks.php?action=theme", {
+				autoFill: false,
+				minChars: 0,
+				cacheLength: 1,
+				max: 100,
+				selectFirst: false,
+				multiple: false,
+				delay: 500,
+				matchSubset: 3,
+				matchContains: true
+			});
+
+			/*
+			$('.ydropDown[data-change="activities"]').each(function () {
+	
+				var $el = $(this).data('selected');
+				var $tip = $(this).data('id');
+				$('#tagbox[data-tip="' + $tip + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($el));
+	
+			});
+			
+			$(document).on('change', 'select[data-change="activities"]', function () {
+				var $el = $(this).data('id');
+				$('#tagbox[data-id="' + $el + '"]').empty().load('/content/core/core.tasks.php?action=itags&tip=' + urlEncodeData($('option:selected', this).val()));
+			});
+			*/
 
 		});
 

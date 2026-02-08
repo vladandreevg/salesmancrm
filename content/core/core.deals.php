@@ -959,8 +959,8 @@ if ( $action == "deal.change.close" ) {
 
 	if ( !empty($deal) ) {
 
-		$deal   = new Deal();
-		$result = $deal -> update( $did, $deal );
+		$xdeal   = new Deal();
+		$result = $xdeal -> update( $did, $deal );
 
 	}
 
@@ -975,8 +975,8 @@ if ( $action == "deal.change.close" ) {
 	$params['co_kol']   = pre_format( $_REQUEST['co_kol'] );
 	$params['marga']    = pre_format( $_REQUEST['marga'] );
 
-	$deal   = new Deal();
-	$result = $deal -> changeClose( $did, $params );
+	$xdeal   = new Deal();
+	$result = $xdeal -> changeClose( $did, $params );
 
 	// закрываем все напоминания по-тихому
 	if ( $_REQUEST['closetask'] == 'yes' ) {
@@ -1002,6 +1002,64 @@ if ( $action == "deal.change.close" ) {
 			] );
 
 			//print_r($r);
+
+		}
+
+	}
+
+	// создаем напоминание на буудущее
+	$todo = $_REQUEST['todo'];
+	if ( $todo['theme'] != '' ) {
+
+		$todo = $hooks -> apply_filters( "task_addfilter", $todo );
+
+		$iduser = $todo['touser'] = ($todo['touser'] < 1) ? $iduser1 : $todo['touser'];
+
+		$tparam = [
+			"iduser"   => $todo['touser'],
+			"clid"     => $deal['clid'],
+			"pid"      => yexplode(";", getDogData($did, "pid_list")),
+			"did"      => $did,
+			"datum"    => $todo['datum'],
+			"totime"   => $todo['totime'],
+			"title"    => untag( $todo['theme'] ),
+			"des"      => untag( $todo['des'] ),
+			"tip"      => $todo['tip'],
+			"active"   => 'yes',
+			"autor"    => $iduser1,
+			"priority" => untag( $todo['priority'] ),
+			"speed"    => untag( $todo['speed'] ),
+			"created"  => current_datumtime(),
+			"alert"    => $todo['alert'],
+			"readonly" => $todo['readonly'],
+			"day"      => $todo['day'],
+			"identity" => $identity
+		];
+
+		if ( isset( $todo['datumtime'] ) ) {
+
+			$todo['datumtime'] = str_replace( [
+				"T",
+				"Z"
+			], [
+				" ",
+				""
+			], $todo['datumtime'] );
+
+			$tparam['datum']  = datetime2date( $todo['datumtime'] );
+			$tparam['totime'] = getTime( (string)$todo['datumtime'] );
+
+		}
+
+		$xtodo = new Todo();
+		$task = $xtodo -> add( (int)$iduser, $tparam );
+
+		if ( $task['result'] == 'Success' ) {
+
+			$hooks -> do_action( "task_add", $todo, $tparam );
+
+			$mes[]  = implode( "<br>", (array)$task['text'] );
+			$newtid = (int)$task['id'];
 
 		}
 
