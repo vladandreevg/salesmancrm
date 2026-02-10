@@ -1000,9 +1000,8 @@ if ( $action == 'getFieldElement' ) {
 
 	$a = yimplode( ',', $systemFields, '"' );
 
-
 	//доп фильтр по типу записи
-	$s = " AND (fld_sub IS NULL OR fld_sub = '$hash')";
+	$s = " AND (fld_sub IS NULL OR fld_sub = '$hash' OR fld_sub = '')";
 
 	if ( $fldvals != 'append' ) {
 
@@ -1014,6 +1013,10 @@ if ( $action == 'getFieldElement' ) {
 		$datas = $db -> getAll( "SELECT * FROM {$sqlname}field WHERE fld_tip='client' $s AND fld_name NOT IN ($a) AND fld_on='yes' AND fld_temp != 'hidden' AND identity = '$identity'" );
 
 	}
+
+	//print $db -> lastQuery();
+	//print_r($datas);
+	//exit();
 
 	if ( $fldnew == "new" ) {
 
