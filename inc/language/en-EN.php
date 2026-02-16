@@ -446,6 +446,14 @@ $lang['role']['Поддержка продаж']           = 'Sales Support';
 $lang['role']['Специалист']                 = 'Specialist';
 $lang['role']['Администратор']              = 'Administrator';
 
+$lang['agenttypes'] = [
+	'client'     => 'Commercial',
+	'person'     => 'Residential',
+	'partner'    => 'Sub-contractor',
+	'contractor' => 'Supplier',
+	'concurent'  => 'Competitor',
+];
+
 $lang['period'] = [
 	'day'              => 'day',
 	'today'            => 'today',

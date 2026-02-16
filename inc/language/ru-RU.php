@@ -257,10 +257,10 @@ $lang['agents']['Concurent']  = [
 ];
 
 /*Бюджет, Финансы*/
-$lang['face']['DohodRashod']    = "Бюджет: Доходы/Расходы";
-$lang['face']['JournalRashod']  = "Журнал расходов";
-$lang['face']['JournalPayment'] = "Журнал оплат";
-$lang['face']['JournalStatement'] = "Банковские выписки";
+$lang['face']['DohodRashod']       = "Бюджет: Доходы/Расходы";
+$lang['face']['JournalRashod']     = "Журнал расходов";
+$lang['face']['JournalPayment']    = "Журнал оплат";
+$lang['face']['JournalStatement']  = "Банковские выписки";
 $lang['face']['SuppliersPartners'] = "Поставщики / Партнеры";
 
 $lang['finance']['Budjet']  = "Бюджет";
@@ -444,6 +444,14 @@ $lang['role']['Менеджер продаж']            = 'Менеджер п
 $lang['role']['Поддержка продаж']           = 'Поддержка продаж';
 $lang['role']['Специалист']                 = 'Специалист';
 $lang['role']['Администратор']              = 'Администратор';
+
+$lang['agenttypes'] = [
+	'client'     => 'Клиент. Юр.лицо',
+	'person'     => 'Клиент. Физ.лицо',
+	'partner'    => 'Партнер',
+	'contractor' => 'Поставщик',
+	'concurent'  => 'Конкурент',
+];
 
 $lang['period'] = [
 	'day'              => 'день',
