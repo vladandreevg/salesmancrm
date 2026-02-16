@@ -298,15 +298,16 @@ function loadIncludes(): void {
 		/**
 		 * Подключаем хуки
 		 */
+		if( file_exists($rootpath."/developer/hooks/") ) {
 
-		$files = getDirFiles("developer/hooks/");
+			$files = getDirFiles("developer/hooks/");
 
-		//print_r($files);
+			foreach ($files as $file) {
 
-		foreach ($files as $file) {
+				if ($file != '' && file_exists($rootpath."/developer/hooks/{$file}")) {
+					require_once $rootpath."/developer/hooks/{$file}";
+				}
 
-			if (file_exists($rootpath."/developer/hooks/{$file}") && $file != '') {
-				require_once $rootpath."/developer/hooks/{$file}";
 			}
 
 		}
@@ -1722,7 +1723,13 @@ function modifyDatetime(string $date = NULL, array $params = NULL): string {
 		$tz2 = new DateTimeZone($params['timezone']);
 	}
 
-	$a = new DateTime($date, $tz);
+	try {
+		$a = new DateTime($date, $tz);
+	}
+	catch (Exception $e) {
+		return $date;
+	}
+
 	$a -> setTimezone($tz2);
 
 	// смещаем время на часы
@@ -8058,10 +8065,14 @@ function getDirFiles($folder): array {
 		$cmd = "forfiles /m *.* /p $path";
 		exec($cmd, $list, $exit);
 
-		//возвращает только имена файлов, без кавычек
-		$listNames = array_map(static function ($var) {
-			return str_replace("\"", "", $var);
-		}, $list);
+		if(!empty($list)) {
+
+			//возвращает только имена файлов, без кавычек
+			$listNames = array_map(static function ($var) {
+				return str_replace("\"", "", $var);
+			}, $list);
+
+		}
 
 	}
 	else {
@@ -8077,10 +8088,16 @@ function getDirFiles($folder): array {
 
 		exec($cmd, $list, $exit);
 
-		//возвращает только имена файлов, без пути
-		$listNames = array_map(static function ($var) {
-			return basename($var);
-		}, $list);
+		if(!empty($list)) {
+
+			//возвращает только имена файлов, без пути
+			$listNames = array_map(static function ($var) {
+				return basename($var);
+			}, $list);
+
+		}
+
+
 
 	}
 
