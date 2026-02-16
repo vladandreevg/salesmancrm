@@ -1031,11 +1031,11 @@ if ($action == "express") {
 					<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Тип:</div>
 					<div class="flex-string wp80 pl10">
 						<SELECT name="client[type]" id="client[type]" data-class="required" class="required wp93 typeselect" onchange="getOtrasli()">
-							<OPTION value="client" <?php if (!$otherSettings['clientIsPerson']) { print "selected"; } ?>>Клиент. Юр.лицо</OPTION>
-							<OPTION value="person" <?php if ($otherSettings['clientIsPerson']) { print "selected"; } ?>>Клиент. Физ.лицо</OPTION>
-							<OPTION value="partner">Партнер</OPTION>
-							<OPTION value="contractor" <?php if ($_REQUEST['tip'] == "other") { print "selected"; } ?>>Поставщик</OPTION>
-							<OPTION value="concurent">Конкурент</OPTION>
+							<OPTION value="client" <?php if (!$otherSettings['clientIsPerson']) { print "selected"; } ?>><?=$lang['agenttypes']['client']?></OPTION>
+							<OPTION value="person" <?php if ($otherSettings['clientIsPerson']) { print "selected"; } ?>><?=$lang['agenttypes']['person']?></OPTION>
+							<OPTION value="partner"><?=$lang['agenttypes']['partner']?></OPTION>
+							<OPTION value="contractor" <?php if ($_REQUEST['tip'] == "other") { print "selected"; } ?>><?=$lang['agenttypes']['contractor']?></OPTION>
+							<OPTION value="concurent"><?=$lang['agenttypes']['concurent']?></OPTION>
 						</SELECT>
 					</div>
 
@@ -2141,11 +2141,11 @@ if ($action == "express") {
 				$('#dialog_container').css('display', 'none');
 				$('#dialog').css('display', 'none');
 
-				if ($('#dogblock').is('div') && $('#dogovor\\[title\\]').val() !== '') {
+				/*if ($('#dogblock').is('div') && $('#dogovor\\[title\\]').val() !== '') {
 
 					window.open('card.deal?did=' + data.did);
 
-				}
+				}*/
 
 				if (data.clid > 0 && data.did === 0) {
 					//window.open('card.client?clid=' + data.clid);
@@ -2731,11 +2731,11 @@ if ($action == "edit") {
 						<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Тип:</div>
 						<div class="flex-string wp80 pl10">
 							<SELECT name="type" id="type" class="required typeselect" onchange="getOtrasli('<?=$client['idcategory']?>')">
-								<OPTION value="client" <?php if ($client['type'] == 'client') { print "selected"; } ?>>Клиент. Юр.лицо</OPTION>
-								<OPTION value="person" <?php if ($client['type'] == 'person') { print "selected"; } ?>>Клиент. Физ.лицо</OPTION>
-								<OPTION value="concurent" <?php if ($client['type'] == 'concurent') { print "selected"; } ?>>Конкурент</OPTION>
-								<OPTION value="contractor" <?php if ($client['type'] == 'contractor') { print "selected"; } ?>>Поставщик</OPTION>
-								<OPTION value="partner" <?php if ($client['type'] == 'partner') { print "selected"; } ?>>Партнер</OPTION>
+								<OPTION value="client" <?php if ($client['type'] == 'client') { print "selected"; } ?>><?=$lang['agenttypes']['client']?></OPTION>
+								<OPTION value="person" <?php if ($client['type'] == 'person') { print "selected"; } ?>><?=$lang['agenttypes']['person']?></OPTION>
+								<OPTION value="concurent" <?php if ($client['type'] == 'concurent') { print "selected"; } ?>><?=$lang['agenttypes']['concurent']?></OPTION>
+								<OPTION value="contractor" <?php if ($client['type'] == 'contractor') { print "selected"; } ?>><?=$lang['agenttypes']['contractor']?></OPTION>
+								<OPTION value="partner" <?php if ($client['type'] == 'partner') { print "selected"; } ?>><?=$lang['agenttypes']['partner']?></OPTION>
 							</SELECT>
 						</div>
 
