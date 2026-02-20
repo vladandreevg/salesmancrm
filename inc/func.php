@@ -1707,14 +1707,20 @@ function current_date(): string {
  */
 function modifyDatetime(string $date = NULL, array $params = NULL): string {
 
-	if ($date == '' && !is_null($date)) {
+	if ( ($date == '' && !is_null($date)) || is_null($date)) {
 		$date = current_datumtime();
 	}
 
 	if (!isset($params['format'])) {
-
 		$params['format'] = 'Y-m-d H:i:s';
+	}
 
+	// ✅ ПРОВЕРКА: не дата? Возвращаем как есть
+	$testDate = DateTime::createFromFormat($params['format'], $date);
+	if (!$testDate || $testDate->format($params['format']) !== $date) {
+		if (strtotime($date) === false) {
+			return $date;  // Текст "Выявление..." или garbage [web:18][web:23]
+		}
 	}
 
 	$tz2 = $tz = new DateTimeZone($GLOBALS['tmzone']);
