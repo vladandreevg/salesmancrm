@@ -1620,6 +1620,10 @@ class Deal {
 			}
 			else {
 
+				if ($hooks) {
+					$hooks -> do_action("deal_edit", $post, $deal);
+				}
+
 				$response['result']        = 'Данные корректны, но идентичны имеющимся.';
 				$response['data']          = $did;
 				$response['error']['code'] = 304;
@@ -2164,6 +2168,11 @@ class Deal {
 
 			}
 			else {
+
+				if ($hooks) {
+					$hooks -> do_action("deal_edit", $post, $deal);
+				}
+
 				$response['result']        = 'Данные корректны, но идентичны имеющимся.';
 				$response['data']          = $did;
 				$response['error']['code'] = 302;

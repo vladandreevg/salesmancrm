@@ -157,7 +157,7 @@ $isAccess = get_accesse( (int)$clid ) == "yes" || $isadmin == 'on';
 				</div>
 				<?php
 			}
-			if ( stripos( $tipuser, 'Руководитель' ) !== false && $clid > 0 ) {
+			if ( (stripos( $tipuser, 'Руководитель' ) !== false || $isadmin == 'on') && $clid > 0 ) {
 				?>
 				<div class="flex-container p10">
 
@@ -564,6 +564,9 @@ $isAccess = get_accesse( (int)$clid ) == "yes" || $isadmin == 'on';
 				}
 
 			}
+			
+			$hooks -> do_action( "client_card_field", $clid );
+			
 			if ( $isAccess ) { ?>
 				<div class="flex-container p10" id="field-append">
 

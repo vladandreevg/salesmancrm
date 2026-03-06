@@ -5679,48 +5679,53 @@ if ( $action == 'provider.edit' ) {
 			});
 
 		});
-
-		$("#client").autocomplete('/content/helpers/client.helpers.php?action=clientlist', {
-			autofill: false,
-			minChars: 2,
-			cacheLength: 2,
-			maxItemsToShow: 10,
-			selectFirst: false,
-			multiple: false,
-			delay: 500,
-			matchSubset: 1,
-			formatItem: function (data, j, n, value) {
-				return '<div>' + data[0] + '&nbsp;[<span class="red">' + data[2] + '</span>]</div>';
-			},
-			formatResult: function (data) {
-				return data[0];
-			}
-		})
+		
+		$("#client")
+			.unautocomplete()
+			.autocomplete('/content/helpers/client.helpers.php?action=clientlist', {
+				autofill: false,
+				minChars: 2,
+				cacheLength: 2,
+				maxItemsToShow: 10,
+				selectFirst: false,
+				multiple: false,
+				delay: 500,
+				matchSubset: 1,
+				formatItem: function (data, j, n, value) {
+					return '<div>' + data[0] + '&nbsp;[<span class="red">' + data[2] + '</span>]</div>';
+				},
+				formatResult: function (data) {
+					return data[0];
+				}
+			})
 			.result(function (value, data) {
 				selItem('client', data[1]);
-				$('#clid').val(data[1]);
+				$('#clid').val(data[1]).trigger('change');
 			});
-
-		$("#person").autocomplete("/content/helpers/client.helpers.php?action=contactlist", {
-			autofill: true,
-			minChars: 2,
-			cacheLength: 2,
-			maxItemsToShow: 10,
-			selectFirst: false,
-			multiple: false,
-			delay: 500,
-			matchSubset: 1,
-			formatItem: function (data, i, n, value) {
-				return '<div onclick="selItem(\'person\',\'' + data[1] + '\')">' + data[0] + '&nbsp;[<span class="red">' + data[2] + '</span>]</div>';
-			},
-			formatResult: function (data) {
-				return data[0];
-			}
-		})
-			.result(function (value, data) {
-				selItem('person', data[1]);
-			});
-
+		
+		$("#person")
+			.unautocomplete()
+			.autocomplete("/content/helpers/client.helpers.php?action=contactlist", {
+				autofill: true,
+				minChars: 2,
+				cacheLength: 2,
+				maxItemsToShow: 10,
+				selectFirst: false,
+				multiple: false,
+				delay: 500,
+				matchSubset: 1,
+				formatItem: function (data, i, n, value) {
+					return '<div onclick="selItem(\'person\',\'' + data[1] + '\')">' + data[0] + '&nbsp;[<span class="red">' + data[2] + '</span>]</div>';
+				},
+				formatResult: function (data) {
+					return data[0];
+				}
+			})
+				.result(function (value, data) {
+					selItem('person', data[1]);
+				});
+		
+		$("#speca_title\\[\\]").unautocomplete()
 		$("#speca_title\\[\\]").autocomplete("/content/helpers/price.helpers.php?clid=" + $('#clid').val(), {
 			autofill: true,
 			minChars: 2,

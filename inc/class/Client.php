@@ -931,6 +931,10 @@ class Client {
 		}
 		else {
 
+			if ($hooks) {
+				$hooks -> do_action("client_edit", $post, $client);
+			}
+
 			$mes[]            = 'Данные корректны, но идентичны имеющимся';
 			$response['data'] = $clid;
 
@@ -1233,6 +1237,10 @@ class Client {
 
 			}
 			else {
+
+				if ($hooks) {
+					$hooks -> do_action("client_edit", $post, $client);
+				}
 
 				$mes[]            = 'Данные корректны, но идентичны имеющимся. ';
 				$response['data'] = $clid;

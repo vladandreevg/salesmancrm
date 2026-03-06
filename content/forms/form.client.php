@@ -1971,6 +1971,7 @@ if ($action == "express") {
 			$("#person\\[person\\]").trigger('focus');
 
 			$("#client\\[title\\]")
+				.unautocomplete()
 				.autocomplete('/content/helpers/client.helpers.php?action=clientlist', {
 					autofill: false,
 					minChars: 2,
@@ -2257,7 +2258,7 @@ if ($action == "express") {
 				if ($('#vphone').find('.phone:first-child').hasClass('required')) reqphone = 'required';
 				if ($('#vfax').find('.phone:first-child').hasClass('required')) reqfax = 'required';
 
-				$("#client\\[clid\\]").val(id);
+				$("#client\\[clid\\]").val(id).trigger('change');
 
 				$.getJSON(url, function (data) {
 
@@ -2373,7 +2374,7 @@ if ($action == "express") {
 
 				url = '/content/helpers/client.helpers.php?action=clientinfo&pid=' + id;
 
-				$("#person\\[pid\\]").val(id);
+				$("#person\\[pid\\]").val(id).trigger('change');
 
 				$.getJSON(url, function (data) {
 

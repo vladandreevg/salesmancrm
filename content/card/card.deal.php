@@ -1221,6 +1221,9 @@ $hide = $userSettings['hideAllContacts'] == 'yes' && ($isAccess != 'yes' && $acs
 			}
 
 		}
+		
+		$hooks -> do_action( "deal_card_field", $did );
+		
 		if ( $isAccess && $userRights['deal']['edit'] ) {
 			?>
 			<div class="flex-container p10" id="field-coid1">
@@ -1248,6 +1251,7 @@ $hide = $userSettings['hideAllContacts'] == 'yes' && ($isAccess != 'yes' && $acs
 			</div>
 			<?php
 		}
+		
 		?>
 
 	</div>

@@ -1175,8 +1175,42 @@ if ( $action == "mass" ) {
 		$(document).off('click', '#dtitle');
 		$(document).on('click', '#dtitle', function () {
 
-			$("#dtitle").autocomplete("/content/helpers/deal.helpers.php?action=doglist", {
-				autofill: true,
+			$("#dtitle")
+				.unautocomplete()
+				.autocomplete("/content/helpers/deal.helpers.php?action=doglist", {
+					autofill: true,
+					minChars: 2,
+					cacheLength: 10,
+					max: 30,
+					selectFirst: false,
+					multiple: false,
+					delay: 500,
+					matchSubset: 1,
+					extraParams: {clid: $('#clid').val()},
+					formatItem: function (data, i, n, value) {
+						return '<div id="selitemid-' + data[1] + '" data-clid="' + data[1] + '">' + data[0] + '&nbsp;<span class="pull-aright">[<span class="broun">' + data[5] + '</span>]</span><div class="blue smalltext">' + data[3] + '</div></div>';
+					},
+					formatResult: function (data) {
+						return data[0];
+					}
+				})
+					.result(function (value, data) {
+	
+						$('#did').val(data[1]).trigger('change');
+						$('#clid').val(data[2]).trigger('change');
+						$('#client').val(data[3]);
+	
+						if (data[4] !== '')
+							$("#pid_list").append('<div class="infodiv h0 fs-10 flh-12" title="' + data[6] + '"><INPUT type="hidden" name="pid[]" id="pid[]" value="' + data[4] + '"><div class="el"><div class="del"><i class="icon-cancel-circled"></i></div>' + data[6] + '</div></div>');
+	
+					});
+
+		});
+
+		$("#client")
+			.unautocomplete()
+			.autocomplete('/content/helpers/client.helpers.php?action=clientlist&strong=yes', {
+				autofill: false,
 				minChars: 2,
 				cacheLength: 10,
 				max: 30,
@@ -1184,46 +1218,16 @@ if ( $action == "mass" ) {
 				multiple: false,
 				delay: 500,
 				matchSubset: 1,
-				extraParams: {clid: $('#clid').val()},
-				formatItem: function (data, i, n, value) {
-					return '<div id="selitemid-' + data[1] + '" data-clid="' + data[1] + '">' + data[0] + '&nbsp;<span class="pull-aright">[<span class="broun">' + data[5] + '</span>]</span><div class="blue smalltext">' + data[3] + '</div></div>';
+				formatItem: function (data, j, n, value) {
+					return '<div onclick="selItem(\'client\',\'' + data[1] + '\')">' + data[0] + '&nbsp;[<span class="red">' + data[2] + '</span>]</div>';
 				},
 				formatResult: function (data) {
 					return data[0];
 				}
 			})
 				.result(function (value, data) {
-
-					$('#did').val(data[1]);
-					$('#clid').val(data[2]);
-					$('#client').val(data[3]);
-
-					if (data[4] !== '')
-						$("#pid_list").append('<div class="infodiv h0 fs-10 flh-12" title="' + data[6] + '"><INPUT type="hidden" name="pid[]" id="pid[]" value="' + data[4] + '"><div class="el"><div class="del"><i class="icon-cancel-circled"></i></div>' + data[6] + '</div></div>');
-
+					selItem('client', data[1]);
 				});
-
-		});
-
-		$("#client").autocomplete('/content/helpers/client.helpers.php?action=clientlist&strong=yes', {
-			autofill: false,
-			minChars: 2,
-			cacheLength: 10,
-			max: 30,
-			selectFirst: false,
-			multiple: false,
-			delay: 500,
-			matchSubset: 1,
-			formatItem: function (data, j, n, value) {
-				return '<div onclick="selItem(\'client\',\'' + data[1] + '\')">' + data[0] + '&nbsp;[<span class="red">' + data[2] + '</span>]</div>';
-			},
-			formatResult: function (data) {
-				return data[0];
-			}
-		})
-			.result(function (value, data) {
-				selItem('client', data[1]);
-			});
 
 		$("#person").autocomplete("/content/helpers/client.helpers.php?action=personlist", {
 			autofill: true,
@@ -1244,7 +1248,7 @@ if ( $action == "mass" ) {
 		})
 			.result(function (value, data) {
 				selItem('person', data[1], data[0]);
-				$("#person").val();
+				$("#person").val().trigger('change');
 			});
 
 		if (parseInt($('#did').val()) > 0) {
@@ -1521,7 +1525,7 @@ if ( $action == "mass" ) {
 
 		if (tip === 'client') {
 
-			$("#clid").val(id);
+			$("#clid").val(id).trigger('change');
 
 			// если напоминание ставится для конкретного контакта
 			var pid = parseInt('<?=$pid?>');

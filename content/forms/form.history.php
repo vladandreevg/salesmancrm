@@ -945,7 +945,7 @@ if ( $action == "edit" ) {
 
 		if (tip === 'client') {
 
-			$("#clid").val(id);
+			$("#clid").val(id).trigger('change');
 
 			var url = '/content/helpers/client.helpers.php?action=personlist&clid=' + id;
 			$.getJSON(url, function (data) {
