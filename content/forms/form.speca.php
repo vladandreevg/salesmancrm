@@ -310,7 +310,7 @@ if ( $action == 'edit' ) {
 
 							<div class="flex-string wp25 gray2 fs-11 text-right pt7">НДС:</div>
 							<div class="flex-string wp70 pl10">
-								<input type="text" name="nds" id="nds" value="<?= num_format( $speka['nds'] ) ?>" class="w100">&nbsp;%
+								<input type="text" name="nds" id="nds" value="<?= num_format( round($speka['nds'], 2) ) ?>" class="w100">&nbsp;%
 							</div>
 
 						</div>
@@ -686,7 +686,7 @@ if ( $action == 'get.poz' ) {
 
 		<div class="flex-string wp25 gray2 fs-11 text-right pt7">НДС:</div>
 		<div class="flex-string wp70 pl10">
-			<input type="text" name="nds" id="nds" value="<?= num_format( $price['nds'] ) ?>" class="w100">&nbsp;%
+			<input type="text" name="nds" id="nds" value="<?= num_format( round($price['nds'], 2) ) ?>" class="w100">&nbsp;%
 		</div>
 
 	</div>

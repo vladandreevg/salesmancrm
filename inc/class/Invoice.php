@@ -626,7 +626,7 @@ class Invoice {
 				"incurrency" => Currency ::currencyConvert($data['summa'], $deal['idcourse'], true, true),
 				"iscurrency" => $deal['idcurrency'] > 0,
 				"nds"        => $nds_credit,
-				"ndsf"       => num_format($nds_credit),
+				"ndsf"       => num_format(round($nds_credit, 2)),
 				"isdo"       => $data['do'] == 'on',
 				"days"       => $data['day'],
 				"status"     => $status,
@@ -2891,7 +2891,7 @@ class Invoice {
 				"Edizm"    => '',
 				"Kol"      => '-',
 				"Price"    => num_format($summaInvoice),
-				"Nalog"    => num_format($summaNalog),
+				"Nalog"    => num_format(round($summaNalog, 2)),
 				"Summa"    => num_format($summaInvoice),
 				"Dop"      => ( $otherSettings['dop'] ) ? '-' : ''
 			];
@@ -3117,14 +3117,14 @@ class Invoice {
 		}
 
 		//налоги
-		$tags['nalogSumma'] = num_format($summaNalog);
+		$tags['nalogSumma'] = num_format(round($summaNalog, 2));
 		$tags['nalogName']  = ( $ndsRaschet != 'yes' ) ? "В том числе НДС" : "Налог";
 		$tags['nalogTitle'] = ( $ndsRaschet != 'yes' ) ? "НДС" : "Налог";
 
 		//налог на товары
-		$tags['nalogTovar'] = num_format($nalogTovar);
+		$tags['nalogTovar'] = num_format(round($nalogTovar, 2));
 		//налог на услуги
-		$tags['nalogUsluga'] = num_format($nalogUsluga);
+		$tags['nalogUsluga'] = num_format(round($nalogUsluga, 2));
 
 		if ($nalogScheme['nalog'] == 0 || $summaNalog == 0) {
 			$tags['nalogSumma'] = "Не облагается";

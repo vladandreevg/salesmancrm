@@ -3515,11 +3515,11 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 					"Kol"         => num_format( $da['kol'] ),
 					"Edizm"       => $da['edizm'],
 					"Dop"         => num_format( $da['dop'] ),
-					"PriceWoNds"  => num_format( $priceWoNds ),
+					"PriceWoNds"  => num_format( round($priceWoNds, 2) ),
 					"Price"       => num_format( $da['price'] ),
 					"NdsPer"      => $da['nds'],
-					"Nds"         => num_format( $nds_i ),
-					"SumWoNds"    => num_format( $summaWoNds ),
+					"Nds"         => num_format( round($nds_i, 2) ),
+					"SumWoNds"    => num_format( round($summaWoNds, 2) ),
 					"Sum"         => num_format( $kol_sum ),
 					"Description" => untag2($description),
 					"Comment"     => $da['comments'],
@@ -3559,8 +3559,8 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 					"PriceWoNds"  => num_format( $priceWoNds ),
 					"Price"       => num_format( $da['price'] ),
 					"NdsPer"      => $da['nds'],
-					"Nds"         => num_format( $nds_i ),
-					"SumWoNds"    => num_format( $summaWoNds ),
+					"Nds"         => num_format( round($nds_i, 2) ),
+					"SumWoNds"    => num_format( round($summaWoNds, 2) ),
 					"Sum"         => num_format( $kol_sum ),
 					"Description" => untag2($description),
 					"Comment"     => $da['comments'],
@@ -3587,7 +3587,7 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 				"DatePlan" => format_date_rus_name( $da['datum_credit'] ),
 				"DateOrig" => $da['datum_credit'],
 				"Summa"    => num_format( $da['summa_credit'] ),
-				"Nds"      => num_format( $da['nds_credit'] ),
+				"Nds"      => num_format( round($da['nds_credit'], 2) ),
 				"crid"     => (int)$da['crid']
 			];
 
@@ -3617,7 +3617,7 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 	$tags["speka"]             = $spekaArray;
 	$tags["spekaCount"]        = count( $spekaArray );
 	$tags["spekaKol"]          = num_format( arraysum( $spekaArray, 'Kol', true ) );//num_format($spekaNum);
-	$tags["spekaNds"]          = num_format( arraysum( $spekaArray, 'Nds', true ) );//num_format($spekaNds);
+	$tags["spekaNds"]          = num_format( round(arraysum( $spekaArray, 'Nds', true ), 2) );//num_format($spekaNds);
 	$tags["spekaSum"]          = num_format( arraysum( $spekaArray, 'Sum', true ) );//num_format($spekaSum);
 	$tags["spekaSumWoNds"]     = num_format( arraysum( $spekaArray, 'SumWoNds', true ) );//num_format($spekaSumWoN);
 	$tags["spekadocOsnovanie"] = $docOsnovanie;
@@ -3626,7 +3626,7 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 	$tags["tovar"]         = $tovarArray;
 	$tags["tovarCount"]    = count( $tovarArray );
 	$tags["tovarKol"]      = num_format( arraysum( $tovarArray, 'Kol', true ) );//num_format($tovarNum);
-	$tags["tovarNds"]      = num_format( arraysum( $tovarArray, 'Nds', true ) );//num_format($tovarNds);
+	$tags["tovarNds"]      = num_format( round(arraysum( $tovarArray, 'Nds', true ), 2) );//num_format($tovarNds);
 	$tags["tovarSum"]      = num_format( arraysum( $tovarArray, 'Sum', true ) );//num_format($tovarSum);
 	$tags["tovarSumWoNds"] = num_format( arraysum( $tovarArray, 'SumWoNds', true ) );//num_format($tovarSumWoN);
 
@@ -3634,7 +3634,7 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 	$tags["usluga"]         = $uslugaArray;
 	$tags["uslugaCount"]    = count( $uslugaArray );
 	$tags["uslugaKol"]      = num_format( arraysum( $uslugaArray, 'Kol', true ) );//num_format($uslugiNum);
-	$tags["uslugaNds"]      = num_format( arraysum( $uslugaArray, 'Nds', true ) );//num_format($uslugiNds);
+	$tags["uslugaNds"]      = num_format( round(arraysum( $uslugaArray, 'Nds', true ), 2) );//num_format($uslugiNds);
 	$tags["uslugaSum"]      = num_format( arraysum( $uslugaArray, 'Sum', true ) );//num_format($uslugiSum);
 	$tags["uslugaSumWoNds"] = num_format( arraysum( $uslugaArray, 'SumWoNds', true ) );//num_format($uslugiSumWoN);
 
@@ -3642,7 +3642,7 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 	$tags["material"]         = $materialArray;
 	$tags["materialCount"]    = count( $materialArray );
 	$tags["materialKol"]      = num_format( arraysum( $materialArray, 'Kol', true ) );//num_format($materialNum);
-	$tags["materialNds"]      = num_format( arraysum( $materialArray, 'Nds', true ) );//num_format($materialNds);
+	$tags["materialNds"]      = num_format( round(arraysum( $materialArray, 'Nds', true ), 2) );//num_format($materialNds);
 	$tags["materialSum"]      = num_format( arraysum( $materialArray, 'Sum', true ) );//num_format($materialSum);
 	$tags["materialSumWoNds"] = num_format( arraysum( $materialArray, 'SumWoNds', true ) );//num_format($materialSumWoN);
 
@@ -3731,7 +3731,7 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 	//$tags["dogSpekWONds"] = $specaSmall;
 
 	$tags["summaCredit"]         = num_format( $creditSum );
-	$tags["summaNds"]            = num_format( $spekaNds );
+	$tags["summaNds"]            = num_format( round($spekaNds, 2) );
 	$tags["summaPropis"]         = mb_ucfirst( trim( num2str( (float)$spekaSum ) ) );
 	$tags["summaUslugaPropis"]   = mb_ucfirst( trim( num2str( (float)$tags["uslugaSum"] ) ) );
 	$tags["summaTovarPropis"]    = mb_ucfirst( trim( num2str( (float)$tags["tovarSum"] ) ) );
