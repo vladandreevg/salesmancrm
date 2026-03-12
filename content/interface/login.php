@@ -400,7 +400,7 @@ if ($action == "fogot_get") {
 	else {
 
 		$resultat = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;<b class="red">WTF</b> Походу вы ломитесь в чужой огород :).<br>Мы уже настучали администратору.</div>';
-		logger('15', 'Пользователь запросил пароль на email: '.$_POST['email'], $iduser1);
+		logger('15', 'Пользователь запросил пароль на email: '.$_POST['email'], (int)$iduser1);
 
 	}
 
@@ -458,31 +458,19 @@ if ($action == "changepass") {
 
 		$db -> query("DELETE FROM ".$sqlname."changepass WHERE code = '$code'");
 
-		if ($iduser and $isCloud != true) {
+		if ($iduser > 0) {
 
-			$sess = preg_replace("#[^a-zA-Z0-9]#i", ",", crypt($login + time(), $pwd));
-
-			$db -> query("UPDATE ".$sqlname."user SET ses='$sess' WHERE iduser = '$iduser'");
-
-			setcookie("ses", $sess, time() + $session, "/; samesite=strict");
-
-			logger('0', 'Пользователь авторизовался в системе', $iduser);
-
-			if (!$rurl) {
-				header( "Location: index.php" );
-			}
-			else {
-				header( "Location: ".$rurl );
-			}
-
-		}
-		if ($iduser and $isCloud == true) {
-
-			$sess = preg_replace("#[^a-zA-Z0-9]#i", ",", crypt($_POST['logi'] + time(), $newpass));
+			$sess = preg_replace("#[^a-zA-Z0-9]#i", ",", crypt($login . time(), $pwd));
 
 			$db -> query("UPDATE ".$sqlname."user SET ses='$sess' WHERE iduser = '$iduser'");
 
-			setcookie("ses", $sess, time() + $session, "/; samesite=strict");
+			setcookie("ses", $sess, time() + $session, "/");
+			
+			/*setcookie("ses", $sess, [
+				'expires' => time() + $session,
+				'path' => '/',
+				'samesite' => 'Strict'
+			]);*/
 
 			logger('0', 'Пользователь авторизовался в системе', $iduser);
 
