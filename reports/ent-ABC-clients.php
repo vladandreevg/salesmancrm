@@ -585,22 +585,26 @@ foreach ($nda as $i => $item) {
 //file_put_contents($rootpath."/cash/abc.json", json_encode_cyr($nda));
 
 if (!empty($da)) {
+	
+	$xa = (array_sum($da['summa']) > 0 ) ? round($da['summa']['A'] / array_sum($da['summa']) * 100, 2) : 0;
+	$xb = (array_sum($da['summa']) > 0 ) ? round($da['summa']['B'] / array_sum($da['summa']) * 100, 2) : 0;
+	$xc = (array_sum($da['summa']) > 0 ) ? round($da['summa']['C'] / array_sum($da['summa']) * 100, 2) : 0;
 
 	$chartData = '
 		{
-			value: '.round($da['summa']['A'] / array_sum($da['summa']) * 100, 2).',
+			value: '.$xa.',
 			color: "rgba(241,196,15,0.9)",
 			highlight: "rgba(241,196,15,0.5)",
 			label: "Группа A"
 		},
 		{
-			value: '.round($da['summa']['B'] / array_sum($da['summa']) * 100, 2).',
+			value: '.$xb.',
 			color: "rgba(157,198,216,0.9)",
 			highlight: "rgba(157,198,216,0.5)",
 			label: "Группа B"
 		},
 		{
-			value: '.round($da['summa']['C'] / array_sum($da['summa']) * 100, 2).',
+			value: '.$xc.',
 			color: "rgba(127,140,141,0.9)",
 			highlight: "rgba(127,140,141,0.5)",
 			label: "Группа C"

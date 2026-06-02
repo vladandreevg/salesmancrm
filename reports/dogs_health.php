@@ -185,7 +185,9 @@ function cmp($a, $b) {
 	return $b['day'] < $a['day'];
 }
 
-usort( $dogs, 'cmp' );
+if(!empty($dogs)) {
+	usort($dogs, 'cmp');
+}
 ?>
 <style>
 	<!--

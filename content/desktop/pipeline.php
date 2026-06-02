@@ -23,7 +23,7 @@ include $rootpath."/inc/language/".$language.".php";
 $thisfile = basename( __FILE__ );
 
 $action  = $_REQUEST['action'];
-$onlymyp = $_REQUEST['onlymyp'];
+$onlymyp = $_REQUEST['onlymyp'] ?? "no";
 $users   = explode( ",", $_REQUEST['user'] );
 
 $steps = [];
