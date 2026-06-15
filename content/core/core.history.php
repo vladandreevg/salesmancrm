@@ -358,9 +358,12 @@ if ( $action == "setparam" ) {
 
 if ( $action == "export" ) {
 
-	$task = (int)$_REQUEST['tsk'];
+	$task = (array)$_REQUEST['tsk'];
 	$d1   = $_REQUEST['da1'];
 	$d2   = $_REQUEST['da2'];
+
+	//print_r($_REQUEST);
+	//exit();
 
 	$sort = '';
 
@@ -406,6 +409,8 @@ if ( $action == "export" ) {
 			hst.identity = '$identity' 
 		ORDER BY hst.datum DESC
 	" );
+	//print $db -> lastQuery();
+	//exit;
 	while ($data = $db -> fetch( $result )) {
 
 		$content = htmlspecialchars_decode( $data['des'] );
