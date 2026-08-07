@@ -1236,7 +1236,7 @@ if ( $action == 'getFieldElement' ) {
 
 		$vars = explode( ",", $datas['fld_var'] );
 
-		$string  = Elements::Radio( "value", $vars, ["sel" => $client[ $datas['fld_name'] ]] );
+		$string  = Elements::Radio( "value", (array)$vars, ["sel" => (string)$client[ $datas['fld_name'] ]] );
 
 	}
 	elseif ( $fldtip == "datum" ) {

@@ -45,14 +45,18 @@
 					<a href="javascript:void(0)" onclick="catalogResize()" class="smalltxt blue"><i class="icon-resize-small"></i></a>
 				</div>
 
-				<div class="nano mt10" style="max-height: 70vh;" id="catbox">
+				<div class="nano mt10" style="max-height: 50vh;" id="catbox">
 
 					<div id="folder" class="ifolder nano-content pl5" style="min-height: 300px;">
 
+						<!--
 						<a href="javascript:void(0)" data-id="" data-title="" class="fol_it block"><i class="icon-folder blue"></i>&nbsp;[все]</a>
+						-->
 						<?php
-
 						use Salesman\Elements;
+						use Salesman\Storage;
+						
+						/*
 						use Salesman\Price;
 
 						$catalog = Price::getPriceCatalog();
@@ -88,6 +92,9 @@
 							}
 
 						}
+						*/
+						
+						include "tree.php";
 						?>
 
 					</div>
@@ -116,9 +123,20 @@
 
 					<div class="relativ cleared paddtop5">
 						<input id="wordc" name="wordc" type="text" placeholder="Впишите запрос" class="searchwordinput" data-func="preconfigpage">
-						<span class="idel red clearinputs paddtop10" onclick="preconfigpage();"><i class="icon-block-1" title="Очистить"></i></span>
+						<span class="idel red clearinputs paddtop10" data-func="preconfigpage"><i class="icon-block-1" title="Очистить"></i></span>
 						<div class="smalltxt gray">По названию, описанию, артикулу</div>
 					</div>
+					
+					<?php
+					$fields = Storage ::getFields();
+					if(!empty($fields)){
+					?>
+					<div class="relativ cleared paddtop5">
+						<input id="additionalword" name="additionalword" type="text" placeholder="Впишите запрос" class="searchwordinput" data-func="preconfigpage">
+						<span class="idel red clearinputs paddtop10" data-func="preconfigpage"><i class="icon-block-1" title="Очистить"></i></span>
+						<div class="smalltxt gray">По доп.характеристике</div>
+					</div>
+					<?php } ?>
 
 					<div class="paddtop10 hidden">
 						<select name="status" id="status" class="wp100" onchange="preconfigpage()">

@@ -31,6 +31,29 @@ if ($acs_price != 'on') {
 	exit();
 }
 ?>
+<style>
+
+	@media (min-width : 1500px) {
+
+		.ui-layout-west.compact {
+			width: 380px !important;
+		}
+
+		.ui-layout-west.compact #lmenu {
+			width: 380px !important;
+		}
+
+		.ui-layout-center.compact {
+			left: 435px !important;
+			width: calc(100vw - 435px) !important;
+		}
+
+		.ui-layout-center.simple {
+			width: calc(100vw - 56px) !important;
+		}
+
+	}
+</style>
 <DIV class="" id="rmenu">
 
 	<div class="tabs">

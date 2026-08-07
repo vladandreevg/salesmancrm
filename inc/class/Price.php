@@ -891,12 +891,13 @@ class Price {
 	 * основной шаблон)
 	 *
 	 * @param int $id
+	 * @param int $level
 	 * @param string $template
 	 * @param string $block
 	 *
 	 * @return string
 	 */
-	public static function getCatalogHtml(int $id = 0, string $template = '<li data-id="{{id}}"><a href="javascript:void(0)" title="{{title}}" class="category" data-id="{{id}}">{{title}}</a>{{sub}}</li>', string $block = '<ul>{{html}}</ul>'): string {
+	public static function getCatalogHtml(int $id = 0, int $level = 0, string $template = '<li data-id="{{id}}"><a href="javascript:void(0)" title="{{title}}" class="category fol block ellipsis" data-id="{{id}}"><i class="{{icon}}"></i>{{title}}</a>{{sub}}</li>', string $block = '<ul data-id="{{id}}">{{html}}</ul>'): string {
 
 		$rootpath = dirname(__DIR__, 2);
 
@@ -918,11 +919,14 @@ class Price {
 			//найдем категории, в которых данная категория является главной
 			$count = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}price_cat WHERE idcategory = '$da[idcategory]' AND identity = '$identity'");
 
-			$subcat = ( $count > 0 ) ? self ::getCatalogHtml((int)$da['idcategory']) : [];
+			$subcat = ( $count > 0 ) ? self ::getCatalogHtml((int)$da['idcategory'], $level + 1, $template, $block) : [];
+
+			$icon  = ( $level == 0 ? 'icon-folder-open deepblue' : ($level == 1 ? 'icon-folder-open blue' : 'icon-folder broun'));
 
 			$tags = [
 				"{{id}}"    => (int)$da['idcategory'],
-				"{{title}}" => $da["title"]
+				"{{title}}" => $da["title"],
+				"{{icon}}"  => $icon
 			];
 
 			$html .= strtr($template, $tags);
@@ -933,7 +937,13 @@ class Price {
 		}
 
 		if ($html != '') {
-			$html = str_replace("{{html}}", $html, $block);
+			$html = str_replace([
+				"{{html}}",
+				"{{id}}"
+			], [
+				$html,
+				$id
+			], $block);
 		}
 
 		return $html;

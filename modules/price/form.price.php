@@ -7,6 +7,7 @@
 /* ============================ */
 
 use Salesman\Price;
+use Salesman\Storage;
 
 error_reporting( E_ERROR );
 header( "Pragma: no-cache" );
@@ -581,7 +582,7 @@ if ( $action == "mass" ) {
 	<?php
 }
 
-if ( $action == "cat.list" ) {
+if ( $action == "cat.list.old" ) {
 	?>
 	<DIV class="zagolovok">Редактор категорий</DIV>
 
@@ -680,6 +681,139 @@ if ( $action == "cat.list" ) {
 	<?php
 }
 
+if ( $action == "cat.list" ) {
+	
+	$idcategory = 0;
+	
+	if ( $_REQUEST['sklad'] == 'yes' ) {
+		
+		$template = '
+		<div class="price-node" data-id="{{id}}">
+			<div class="flex-container float">
+				<div class="flex-string float">
+					<a href="javascript:void(0)" title="{{title}}" class="xcategory block ellipsis" data-id="{{id}}"><i class="{{icon}}"></i>{{title}}</a>
+				</div>
+				<div class="flex-string w100">
+					<A href="javascript:void(0)" onclick="editPrice(\'{{id}}\',\'cat.edit\')" class="button bluebtn dotted small fs-07 m0 p3"><i class="icon-pencil inherit" title="Редактировать"></i></A>&nbsp;&nbsp;
+					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)editPrice(\'{{id}}\',\'cat.delete\')" class="button redbtn dotted small fs-07 m0 p3"><i class="icon-cancel-circled inherit" title="Удалить"></i></A>
+				</div>
+			</div>
+			{{sub}}
+		</div>
+		';
+		$block    = '
+		<div class="price-children" data-id="{{id}}">{{html}}</div>
+		';
+		$price    = Storage::getCatalogHtml($idcategory, 0, $template, $block);
+		
+	}
+	else{
+		
+		$template = '
+		<div class="price-node" data-id="{{id}}">
+			<div class="flex-container float">
+				<div class="flex-string float">
+					<a href="javascript:void(0)" title="{{title}}" class="xcategory block ellipsis" data-id="{{id}}"><i class="{{icon}}"></i>{{title}}</a>
+				</div>
+				<div class="flex-string w100">
+					<A href="javascript:void(0)" onclick="editPrice(\'{{id}}\',\'cat.edit\')" class="button bluebtn dotted small fs-07 m0 p3"><i class="icon-pencil inherit" title="Редактировать"></i></A>&nbsp;&nbsp;
+					<A href="javascript:void(0)" onclick="cf=confirm(\'Вы действительно хотите удалить запись?\');if (cf)editPrice(\'{{id}}\',\'cat.delete\')" class="button redbtn dotted small  fs-07 m0 p3"><i class="icon-cancel-circled inherit" title="Удалить"></i></A>
+				</div>
+			</div>
+			{{sub}}
+		</div>
+		';
+		$block    = '
+		<div class="price-children" data-id="{{id}}">{{html}}</div>
+		';
+		$price    = Price::getCatalogHtml($idcategory, 0, $template, $block);
+		
+	}
+	?>
+	<DIV class="zagolovok">Редактор категорий</DIV>
+	
+	<DIV id="formtabs" style="max-height: 80vh; overflow-y:auto !important; overflow-x:hidden">
+		
+		<?php
+		if ( $_REQUEST['sklad'] == 'yes' ) {
+			
+			$msettings = $db -> getOne( "SELECT settings FROM {$sqlname}modcatalog_set WHERE identity = '$identity'" );
+			$msettings = json_decode( $msettings, true );
+			
+			if(count( $msettings['mcPriceCat'] ) > 0) {
+				
+				print '<div class="attention">Отображены только категории, указанные в настройках Модуля Каталог-склад</div>';
+				
+			}
+			
+		}
+		?>
+		
+		<div class="price-tree">
+			<?php print $price; ?>
+		</div>
+	
+	</DIV>
+	
+	<hr>
+	
+	<div class="button--pane text-right">
+		
+		<div class="inline pull-left">
+			
+			<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить записи?'); if (cf)deleteEmpty();" class="button redbtn">Удалить пустые</A>
+		
+		</div>
+		
+		<A href="javascript:void(0)" onclick="editPrice('0','cat.edit')" class="button">Добавить</A>
+	
+	</div>
+	
+	<script>
+		$(function () {
+			
+			//добавляем иконку раскрытия только категориям, у которых есть дочерний список,
+			//а отступ по уровню вложенности вешаем только на название (сама строка/кнопки не сдвигаются)
+			$('.price-tree .price-node').each(function () {
+				
+				var $node     = $(this);
+				var $childDiv = $node.children('.price-children');
+				var $link     = $node.children('.flex-container').children('.flex-string').eq(0).children('a.xcategory');
+				var $icon     = $('<i class="cat-toggle"></i>');
+				var depth     = $node.parents('.price-children').length - 1;
+				var indent    = depth * 24;
+				
+				if ($childDiv.length) $icon.addClass('icon-angle-right');
+				
+				$link.prepend($icon);
+				$link.css('padding-left', indent + 'px');
+				$node.css('--indent', indent + 'px');
+				
+			});
+			
+			//клик по названию категории раскрывает/сворачивает дочерние категории
+			$(document)
+				.off('click', '.price-tree a.xcategory')
+				.on('click', '.price-tree a.xcategory', function (e) {
+					
+					e.preventDefault();
+					
+					var $link     = $(this);
+					var $node     = $link.closest('.price-node');
+					var $childDiv = $node.children('.price-children');
+					
+					if (!$childDiv.length) return;
+					
+					$childDiv.toggleClass('open');
+					$link.children('.cat-toggle').toggleClass('icon-angle-right icon-angle-down');
+					
+				});
+			
+		});
+	</script>
+	<?php
+}
+
 if ( $action == "cat.edit" ) {
 
 	$id = $_REQUEST['id'];
@@ -701,6 +835,8 @@ if ( $action == "cat.edit" ) {
 		<input type="hidden" name="idcategory" id="idcategory" value="<?= $id ?>">
 
 		<div id="formtabse">
+			
+			<div class="warning"><b class="red">Внимание!</b> После изменений в списке категорий обновите окно браузера!</div>
 
 			<div class="flex-vertical p10">
 
@@ -896,13 +1032,14 @@ if ( $action == "cat.edit" ) {
 
 			if (['cat.add','cat.edit','import.on'].includes(action)) {
 
+				/*
 				if($display === 'sklad') {
 
 					$('.ifolder').load('/modules/modcatalog/form.modcatalog.php?action=cat.list&id=' + id, function () {
 						$('.ifolder a [data-id=' + id + ']').addClass('fol_it');
 					});
 
-					/*
+					/!*
 					$('.ifolder a').on('click', function () {
 
 						var id = $(this).data('id');
@@ -918,7 +1055,7 @@ if ( $action == "cat.edit" ) {
 						preconfigpage();
 
 					});
-					*/
+					*!/
 
 				}
 				else{
@@ -928,6 +1065,7 @@ if ( $action == "cat.edit" ) {
 					});
 
 				}
+				*/
 
 				editPrice(0, 'cat.list');
 
@@ -983,6 +1121,7 @@ if ( $action == "cat.edit" ) {
 
 			editPrice(0, 'cat.list');
 
+			/*
 			if($display === 'sklad') {
 
 				$('.ifolder').load('/modules/modcatalog/form.modcatalog.php?action=cat.list' + id, function () {
@@ -997,6 +1136,7 @@ if ( $action == "cat.edit" ) {
 				});
 
 			}
+			*/
 
 		})
 

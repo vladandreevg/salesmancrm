@@ -4344,4 +4344,88 @@ class Storage {
 
 	}
 
+	/**
+	 * Рекурсивно возвращает массив со всеми категориями и подкатегориями прайс-листа.
+	 *
+	 * Можно задать стартовый id категории. Тогда будет возвращена только эта ветка.
+	 * Оформление задается с помощью параметров $template и $block. По умолчанию:
+	 * $block    = <ul>{{html}}</ul> - обертка блока категорий
+	 * $template = <li data-id="{{id}}><a href="javascript:void(0)" title="{{title}}" class="category"
+	 * data-id="{{id}}">{{title}}</a>{{sub}}</li> - шаблон списка где {{sub}} - вставка подкатегорий (применяется
+	 * основной шаблон)
+	 *
+	 * @param int $id
+	 * @param int $level
+	 * @param string $template
+	 * @param string $block
+	 * @param null $maxlevel
+	 * @return string
+	 */
+	public static function getCatalogHtml(int $id = 0, int $level = 0, string $template = '<li data-id="{{id}}"><a href="javascript:void(0)" title="{{title}}" class="category fol block ellipsis" data-id="{{id}}"><i class="{{icon}}"></i>{{title}}</a>{{sub}}</li>', string $block = '<ul data-id="{{id}}">{{html}}</ul>', $maxlevel = NULL): string {
+
+		$rootpath = dirname(__DIR__, 2);
+
+		require_once $rootpath."/inc/config.php";
+		require_once $rootpath."/inc/dbconnector.php";
+		require_once $rootpath."/inc/func.php";
+
+		$identity = $GLOBALS['identity'];
+		$sqlname  = $GLOBALS['sqlname'];
+		$db       = $GLOBALS['db'];
+		global $msettings;
+
+		$html = '';
+
+		$sort = ( $id > 0 ) ? "sub = '$id' AND" : "sub = 0 AND";
+
+		$re = $db -> query("SELECT * FROM {$sqlname}price_cat WHERE $sort identity = '$identity' ORDER BY title");
+		while ($da = $db -> fetch($re)) {
+
+			if (!empty( $msettings['mcPriceCat'] ) &&
+				(
+					in_array( $da['id'], (array)$msettings['mcPriceCat'] ) ||
+					in_array( $da['sub'], (array)$msettings['mcPriceCat'] )
+				)
+			) {
+				continue;
+			}
+
+			if(!empty($maxlevel) && $level > $maxlevel) {
+				continue;
+			}
+
+			//найдем категории, в которых данная категория является главной
+			$count = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}price_cat WHERE idcategory = '$da[idcategory]' AND identity = '$identity'");
+
+			$subcat = ( $count > 0 ) ? self ::getCatalogHtml((int)$da['idcategory'], $level + 1, $template, $block, $maxlevel) : [];
+
+			$icon  = ( $level == 0 ? 'icon-folder-open deepblue' : ($level == 1 ? 'icon-folder-open blue' : 'icon-folder broun'));
+
+			$tags = [
+				"{{id}}"    => (int)$da['idcategory'],
+				"{{title}}" => $da["title"],
+				"{{icon}}"  => $icon
+			];
+
+			$html .= strtr($template, $tags);
+
+			//если есть подкатегории, то добавим их рекурсивно
+			$html = strtr($html, ["{{sub}}" => $subcat]);
+
+		}
+
+		if ($html != '') {
+			$html = str_replace([
+				"{{html}}",
+				"{{id}}"
+			], [
+				$html,
+				$id
+			], $block);
+		}
+
+		return $html;
+
+	}
+
 }

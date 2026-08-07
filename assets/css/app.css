@@ -13019,3 +13019,137 @@ code blockquote{
 	}
 
 }
+
+
+/*Дерево категорий прайса*/
+.price-tree, .price-tree ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.price-tree ul {
+	padding-left: 24px;
+}
+
+.price-tree > ul {
+	padding-left: 0;
+}
+
+/*дочерние категории свернуты по умолчанию*/
+.price-tree ul ul {
+	display: none;
+}
+
+.price-tree ul ul.open {
+	display: block;
+}
+
+.price-tree li {
+	position: relative;
+	padding: 3px 0;
+}
+
+/*вертикальная линия-ветка, соединяющая элементы одного уровня*/
+.price-tree ul li::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -14px;
+	width: 1px;
+	height: 100%;
+	background: #b0b0b0;
+}
+
+/*у последнего элемента уровня линия обрывается на его же горизонтальном отводе*/
+.price-tree ul li:last-child::before {
+	height: 15px;
+}
+
+/*горизонтальный отвод от вертикальной линии к элементу*/
+.price-tree ul li::after {
+	content: '';
+	position: absolute;
+	top: 15px;
+	left: -14px;
+	width: 14px;
+	height: 1px;
+	background: #b0b0b0;
+}
+
+/*у категорий верхнего уровня веток и вертикальных линий нет*/
+.price-tree > ul > li::before,
+.price-tree > ul > li::after {
+	display: none;
+}
+
+.price-tree a.category {
+	display: inline-flex;
+	align-items: center;
+	color: #333;
+	text-decoration: none;
+	cursor: pointer;
+	position: relative;
+	z-index: 1;
+}
+
+.price-tree a.category:hover {
+	color: #1a73e8;
+}
+
+.price-tree .cat-toggle {
+	display: inline-block;
+	width: 16px;
+	text-align: center;
+	margin-right: 2px;
+	color: #888;
+	cursor: pointer;
+}
+
+.price-tree .cat-toggle:empty {
+	cursor: default;
+}
+
+.price-tree, .price-tree .price-children {
+	margin: 0;
+	padding: 0;
+}
+
+/*дочерние категории свернуты по умолчанию*/
+.price-tree .price-children .price-children {
+	display: none;
+}
+
+.price-tree .price-children .price-children.open {
+	display: block;
+}
+
+.price-tree .price-node {
+	position: relative;
+	padding: 3px 0;
+}
+
+/*подсветка всей строки категории при наведении, чтобы было видно, каким кнопкам она принадлежит*/
+.price-tree .flex-container {
+	align-items: center;
+	border-radius: 3px;
+}
+
+.price-tree .flex-container:hover {
+	background: #ECEFF1;
+}
+
+.price-tree a.xcategory {
+	display: inline-flex;
+	align-items: center;
+	color: #333;
+	text-decoration: none;
+	cursor: pointer;
+	position: relative;
+	z-index: 1;
+	padding: 5px 0px;
+}
+
+.price-tree a.xcategory:hover {
+	color: #1a73e8;
+}

@@ -32,6 +32,31 @@ const moduleName   = "Каталог. Склад";
 const moduleBDName = "modcatalog";
 ?>
 
+<style>
+
+	@media (min-width : 1500px) {
+		
+		.ui-layout-west.compact {
+			width: 380px !important;
+		}
+
+		.ui-layout-west.compact #lmenu {
+			width: 380px !important;
+		}
+
+		.ui-layout-center.compact {
+			left: 435px !important;
+			width: calc(100vw - 435px) !important;
+		}
+
+		.ui-layout-center.simple {
+			width: calc(100vw - 56px) !important;
+		}
+		
+	}
+	
+</style>
+
 <DIV class="" id="rmenu">
 
 	<div class="tabs">
@@ -246,6 +271,7 @@ const moduleBDName = "modcatalog";
 				</div>
 
 				<A href="javascript:void(0)" onclick="configpage()"><i class="icon-arrows-cw blue"></i>&nbsp;Обновить</A>&nbsp;&nbsp;
+				<a href="javascript:void(0)" onclick="getColumnEditorSklad()" title="Настроить колонки" class="hidden-ipad" data-step="8" data-intro="<h1>Редактор списка.</h1>Поможет настроить вывод списка - порядок колонок, включить/отключить колонки и задать их ширину" data-position="left"><i class="icon-th blue"></i>&nbsp;&nbsp;</a>
 
 			</div>
 
@@ -301,6 +327,9 @@ const moduleBDName = "modcatalog";
 		$(".nano").nanoScroller();
 
 		changeMounth();
+		
+		includeJS("/assets/js/dragtable-master/jquery.dragtable.js");
+		includeCSS("/assets/js/dragtable-master/dragtable.css");
 
 	});
 
@@ -337,7 +366,7 @@ const moduleBDName = "modcatalog";
 		$('#contentdiv').parent(".nano").nanoScroller({scroll: 'top'});
 
 		var str = $('#pageform').serialize();
-		var url = '/modules/modcatalog/list.modcatalog.php';
+		var url = '/modules/modcatalog/list.modcatalog.new.php';
 		var tar = $('#tar').val();
 
 		$('#contentdiv').append('<div class="contentloader"><img src="/assets/images/Services.svg" width="50px" height="50px"></div>');
@@ -400,6 +429,13 @@ const moduleBDName = "modcatalog";
 				//console.log(order + ' : ' + icn);
 
 				$(".nano").nanoScroller();
+				
+				//перемещаемые столбцы
+				$('.list_header').dragtable({
+					persistState: '/modules/modcatalog/columneditor.php?action=columnOrderSave',
+					dragaccept: '.drag--accept',
+					dragHandle: '.thandler'
+				})
 
 				if (isMobile)
 					$('.ui-layout-center').find('table').rtResponsiveTables();
@@ -871,6 +907,12 @@ const moduleBDName = "modcatalog";
 
 		window.open('/modules/modcatalog/core.modcatalog.php?action=exportPoz&' + str);
 
+	}
+	
+	function getColumnEditorSklad(){
+		
+		doLoad('/modules/modcatalog/columneditor.php?action=columneditor');
+		
 	}
 
 </script>
