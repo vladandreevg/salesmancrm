@@ -15,7 +15,7 @@
 			<input id="ord" name="ord" type="hidden" value="title">
 			<input id="tuda" name="tuda" type="hidden" value="">
 
-			<div class="contaner p5" id="pricecategory">
+			<div class="contaner p5x" id="pricecategory">
 
 				<div class="margbot10">
 					<B class="shad"><i class="icon-menu blue"></i>&nbsp;КАТЕГОРИИ</B>
@@ -25,14 +25,16 @@
 
 					<div id="folder" class="ifolder nano-content" style="min-height: 200px;">
 
+						<!--
 						<div class="pt5">
 							<div class="fol_it block ellipsis hand" data-id="" data-title="">
 								<i class="icon-folder blue"></i>&nbsp;[все]
 							</div>
 						</div>
+						-->
 
 						<?php
-
+						/**
 						use Salesman\Price;
 
 						$catalog = Price::getPriceCatalog(0);
@@ -60,6 +62,9 @@
 							';
 
 						}
+						*/
+						
+						include "tree.php";
 						?>
 
 					</div>
