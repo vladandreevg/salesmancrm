@@ -781,12 +781,13 @@ if ( $action == "cat.list" ) {
 				var $link     = $node.children('.flex-container').children('.flex-string').eq(0).children('a.xcategory');
 				var $icon     = $('<i class="cat-toggle"></i>');
 				var depth     = $node.parents('.price-children').length - 1;
-				var indent    = depth * 24;
+				var indent    = depth * 20;
 				
 				if ($childDiv.length) $icon.addClass('icon-angle-right');
 				
 				$link.prepend($icon);
 				$link.css('padding-left', indent + 'px');
+				$link.css('width', 'calc(100% - ' +indent + 'px');
 				$node.css('--indent', indent + 'px');
 				
 			});
