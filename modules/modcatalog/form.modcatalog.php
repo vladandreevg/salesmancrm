@@ -138,6 +138,12 @@ $statear = [
 	'4' => 'Резерв'
 ];
 
+$subaction = '';
+if ( $action == "clone" ){
+	$action = "edit";
+	$subaction = 'clone';
+}
+
 /**
  * Редактирование позиции
  */
@@ -231,9 +237,19 @@ if ( $action == "edit" ) {
 
 		$zstatus++;
 	}
-
+	
+	$htitle = "Редактировать позицию";
+	
+	if($n_id == 0){
+		$n_id = 0;
+		$htitle = "Добавить позиции";
+	}
+	if($subaction == 'clone'){
+		$n_id = 0;
+		$htitle = "Клонировать позицию";
+	}
 	?>
-	<DIV class="zagolovok">Добавить/Редактировать позицию</DIV>
+	<DIV class="zagolovok"><?=$htitle?></DIV>
 	<FORM action="/modules/modcatalog/core.modcatalog.php" method="post" enctype="multipart/form-data" name="priceForm" id="priceForm">
 		<INPUT type="hidden" name="action" id="action" value="edit_on">
 		<INPUT name="n_id" type="hidden" id="n_id" value="<?= $n_id ?>">

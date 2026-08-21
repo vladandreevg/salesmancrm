@@ -155,7 +155,13 @@ if ($action == "mass") {
 	$ids      = explode(";", $_REQUEST['ids']);
 	$doAction = $_REQUEST['doAction'];
 	$newcat   = (int)$_REQUEST['newcat'];
+	$nds      = (int)$_REQUEST['nds'];
 	$isSelect = $_REQUEST['isSelect'];
+
+	if ($idcategory > 0) {
+		$categories = Price::getCatalogTree($idcategory);
+		$categories[] = $idcategory;
+	}
 
 	$good = 0;
 	$err  = [];
@@ -166,32 +172,26 @@ if ($action == "mass") {
 
 		if ($isSelect == 'doAll') {//все
 
-			if ($idcategory > 0) {
-
-				$sort .= " and ({$sqlname}price.pr_cat='".$idcategory."' or {$sqlname}price.pr_cat IN (SELECT idcategory FROM {$sqlname}price_cat WHERE {$sqlname}price_cat.sub='".$idcategory."' and {$sqlname}price_cat.identity = '".$identity."'))";
-
+			if (!empty($categories)) {
+				$sort .= " and {$sqlname}price.pr_cat IN (".yimplode(",", $categories).")";
 			}
 
 			if ($word != '') {
 				$sort .= " and (({$sqlname}price.artikul LIKE '%".$word."%') or ({$sqlname}price.title LIKE '%".$word."%') or ({$sqlname}price.descr LIKE '%".$word."%'))";
 			}
 
-			$results = $db -> query("SELECT * FROM {$sqlname}price WHERE n_id > 0 $sort and identity = '$identity' ORDER BY title");
-			while ($datas = $db -> fetch($results)) {
+			try {
 
-				try {
-
-					$db -> query("UPDATE {$sqlname}price SET pr_cat = '$newcat' WHERE n_id = '".$datas['n_id']."' and identity = '$identity'");
-					$good++;
-
-				}
-				catch (Exception $e) {
-					$err[] = $e -> getMessage();
-				}
+				$db -> query("UPDATE {$sqlname}price SET pr_cat = '$newcat' WHERE n_id > 0 $sort and identity = '$identity'");
+				$good = $db ->affectedRows();
 
 			}
+			catch (Exception $e) {
+				$err[] = $e -> getMessage();
+			}
+
 		}
-		if ($isSelect == 'doSel' && !empty($ids)) {//выбранные
+		if ($isSelect == 'doSelected' && !empty($ids)) {//выбранные
 
 			foreach ($ids as $id) {
 
@@ -211,34 +211,66 @@ if ($action == "mass") {
 		}
 
 	}
-	if ($doAction == 'pDele') {//если удаляем
+	if ($nds > 0 && $doAction == 'pNds') {//если пеоемещаем
 
 		if ($isSelect == 'doAll') {//все
 
-			if ($idcategory > 0) {
-
-				$sort .= " and ({$sqlname}price.pr_cat='".$idcategory."' or {$sqlname}price.pr_cat IN (SELECT idcategory FROM {$sqlname}price_cat WHERE {$sqlname}price_cat.sub='".$idcategory."' and {$sqlname}price_cat.identity = '".$identity."'))";
-
+			if (!empty($categories)) {
+				$sort .= " and {$sqlname}price.pr_cat IN (".yimplode(",", $categories).")";
 			}
 
 			if ($word != '') {
 				$sort .= " and (({$sqlname}price.artikul LIKE '%".$word."%') or ({$sqlname}price.title LIKE '%".$word."%') or ({$sqlname}price.descr LIKE '%".$word."%'))";
 			}
 
-			$results = $db -> query("SELECT * FROM {$sqlname}price WHERE n_id > 0 ".$sort." and identity = '$identity'");
-			while ($datas = $db -> fetch($results)) {
+			try {
 
-				try {
-					$db -> query("delete from {$sqlname}price where n_id = '".$datas['n_id']."' and identity = '$identity'");
-					$good++;
-				}
-				catch (Exception $e) {
-					$err[] = $e -> getMessage();
-				}
+				$db -> query("UPDATE {$sqlname}price SET nds = '$nds' WHERE n_id > 0 $sort and identity = '$identity'");
+				$good = $db ->affectedRows();
 
 			}
+			catch (Exception $e) {
+				$err[] = $e -> getMessage();
+			}
+
 		}
-		if ($isSelect == 'doSel' && !empty($ids)) {//выбранные
+		if ($isSelect == 'doSelected' && !empty($ids)) {//выбранные
+
+			try {
+
+				$db -> query("UPDATE {$sqlname}price SET nds = '$nds' WHERE n_id IN (".yimplode(",", $ids).") and identity = '$identity'");
+				$good = $db ->affectedRows();
+
+			}
+			catch (Exception $e) {
+				$err[] = $e -> getMessage();
+			}
+
+		}
+
+	}
+	if ($doAction == 'pDele') {//если удаляем
+
+		if ($isSelect == 'doAll') {//все
+
+			if (!empty($categories)) {
+				$sort .= " and {$sqlname}price.pr_cat IN (".yimplode(",", $categories).")";
+			}
+
+			if ($word != '') {
+				$sort .= " and (({$sqlname}price.artikul LIKE '%".$word."%') or ({$sqlname}price.title LIKE '%".$word."%') or ({$sqlname}price.descr LIKE '%".$word."%'))";
+			}
+
+			try {
+				$db -> query("DELETE FROM {$sqlname}price WHERE n_id > 0 {$sort} and identity = '$identity'");
+				$good = $db ->affectedRows();
+			}
+			catch (Exception $e) {
+				$err[] = $e -> getMessage();
+			}
+
+		}
+		if ($isSelect == 'doSelected' && !empty($ids)) {//выбранные
 
 			foreach ($ids as $id) {
 
@@ -260,30 +292,24 @@ if ($action == "mass") {
 
 		if ($isSelect == 'doAll') {//все
 
-			if ($idcategory > 0) {
-
-				$sort .= " and ({$sqlname}price.pr_cat = '$idcategory' or {$sqlname}price.pr_cat IN (SELECT idcategory FROM {$sqlname}price_cat WHERE {$sqlname}price_cat.sub = '$idcategory' and {$sqlname}price_cat.identity = '$identity'))";
-
+			if (!empty($categories)) {
+				$sort .= " and {$sqlname}price.pr_cat IN (".yimplode(",", $categories).")";
 			}
 
 			if ($word != '') {
 				$sort .= " and (({$sqlname}price.artikul LIKE '%$word%') or ({$sqlname}price.title LIKE '%$word%') or ({$sqlname}price.descr LIKE '%$word%'))";
 			}
 
-			$results = $db -> query("SELECT * FROM {$sqlname}price WHERE n_id > 0 $sort and identity = '$identity'");
-			while ($datas = $db -> fetch($results)) {
-
-				try {
-					$db -> query("UPDATE {$sqlname}price SET archive = 'yes' WHERE n_id = '$datas[n_id]' and identity = '$identity'");
-					$good++;
-				}
-				catch (Exception $e) {
-					$err[] = $e -> getMessage();
-				}
-
+			try {
+				$db -> query("UPDATE {$sqlname}price SET archive = 'yes' WHERE n_id > 0 $sort and identity = '$identity'");
+				$good = $db ->affectedRows();
 			}
+			catch (Exception $e) {
+				$err[] = $e -> getMessage();
+			}
+
 		}
-		if ($isSelect == 'doSel' && !empty($ids)) {//выбранные
+		if ($isSelect == 'doSelected' && !empty($ids)) {//выбранные
 
 			foreach ($ids as $id) {
 
@@ -308,30 +334,24 @@ if ($action == "mass") {
 
 		if ($isSelect == 'doAll') {//все
 
-			if ($idcategory > 0) {
-
-				$sort .= " and ({$sqlname}price.pr_cat = '$idcategory' or {$sqlname}price.pr_cat IN (SELECT idcategory FROM {$sqlname}price_cat WHERE {$sqlname}price_cat.sub = '$idcategory' and {$sqlname}price_cat.identity = '$identity'))";
-
+			if (!empty($categories)) {
+				$sort .= " and {$sqlname}price.pr_cat IN (".yimplode(",", $categories).")";
 			}
 
 			if ($word != '') {
 				$sort .= " and (({$sqlname}price.artikul LIKE '%$word%') or ({$sqlname}price.title LIKE '%$word%') or ({$sqlname}price.descr LIKE '%$word%'))";
 			}
 
-			$results = $db -> query("SELECT * FROM {$sqlname}price WHERE n_id > 0 $sort and identity = '$identity'");
-			while ($datas = $db -> fetch($results)) {
-
-				try {
-					$db -> query("UPDATE {$sqlname}price SET archive = 'no' WHERE n_id = '$datas[n_id]' and identity = '$identity'");
-					$good++;
-				}
-				catch (Exception $e) {
-					$err[] = $e -> getMessage();
-				}
-
+			try {
+				$db -> query("UPDATE {$sqlname}price SET archive = 'no' WHERE n_id > 0 $sort and identity = '$identity'");
+				$good = $db ->affectedRows();
 			}
+			catch (Exception $e) {
+				$err[] = $e -> getMessage();
+			}
+
 		}
-		if ($isSelect == 'doSel' && !empty($ids)) {//выбранные
+		if ($isSelect == 'doSelected' && !empty($ids)) {//выбранные
 
 			foreach ($ids as $id) {
 

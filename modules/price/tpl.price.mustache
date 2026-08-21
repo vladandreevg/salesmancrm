@@ -60,3 +60,45 @@
 	<div class="space-40"></div>
 	
 </script>
+
+<script id="priceTplColumns" type="text/html">
+
+	<table class="list_header">
+		<thead class="sticked--top">
+		<TR class="header_contaner">
+			<TH class="w15 hidden-netbook">
+				<input type="checkbox" name="che" id="che" onclick="checkb()"/>
+			</TH>
+			{{#columns}}
+				<TH class="{{class}}" data-id="{{field}}" id="x_{{field}}">
+					{{{th}}}
+					<div class="thandler" title="Переместить колонку"></div>
+				</TH>
+			{{/columns}}
+			<TH class="w5" data-id="buttons"></TH>
+		</TR>
+		</thead>
+		<tbody>
+		{{#list}}
+			<tr class="ha th55 {{#archive}}graybg-sub gray-dark{{/archive}}" id="catalog{{id}}">
+				<TD class="hidden-netbook">
+					<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/>
+				</TD>
+				{{#cols}}
+					{{{td}}}
+				{{/cols}}
+				<TD data-id="buttons">
+					<div class="action--container">
+						<div class="action--block">
+							<A href="javascript:void(0)" onclick="editPrice('{{id}}','edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></A>
+							<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить файл?');if (cf)editPrice('{{id}}','delete')" title="Удалить" class="gray red"><i class="icon-cancel red"></i></A>
+						</div>
+					</div>
+				</TD>
+			</tr>
+		{{/list}}
+		</tbody>
+	</TABLE>
+	<div class="h60" style="height:60px"></div>
+
+</script>

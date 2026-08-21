@@ -84,7 +84,7 @@
 
 <script id="catalogTpl" type="text/html">
 
-	<table class="list_header">
+	<table class="list_header top">
 		<thead class="sticked--top">
 		<TR class="header_contaner">
 			<TH class="w15 hidden-netbook">
@@ -101,7 +101,7 @@
 		</thead>
 		<tbody>
 		{{#list}}
-			<tr class="ha th55" id="catalog{{id}}">
+			<tr class="ha th55 {{#archive}}graybg-sub gray-dark{{/archive}}" id="catalog{{id}}">
 				<TD class="hidden-netbook">
 					<input name="ch[]" type="checkbox" class="mc" id="ch[]" value="{{id}}"/>
 				</TD>
@@ -114,6 +114,7 @@
 							<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=view');" title="Просмотр" class="gray green"><i class="icon-eye broun"></i></A>
 							{{#mcCoordinator}}
 								<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=edit');" title="Изменить" class="gray blue"><i class="icon-pencil blue"></i></A>
+								<A href="javascript:void(0)" onclick="doLoad('/modules/modcatalog/form.modcatalog.php?n_id={{id}}&action=clone');" title="Клонировать" class="gray orange"><i class="icon-paste orange"></i></A>
 								<A href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить?');if (cf)delCat('{{id}}')" title="Удалить" class="gray red"><i class="icon-cancel red"></i></A>
 							{{/mcCoordinator}}
 						</div>

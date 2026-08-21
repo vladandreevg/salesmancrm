@@ -767,7 +767,8 @@ const moduleBDName = "modcatalog";
 	function massSend() {
 
 		var str = $("#cform").serialize() + '&' + $('#pageform').serialize();
-		var url = '/modules/modcatalog/form.modcatalog.php?action=mass&';
+		//var url = '/modules/modcatalog/form.modcatalog.php?action=mass&';
+		var url = '/modules/price/form.price.php?action=mass&';
 
 		doLoad(url + str).append('<div id="loader" class="loader">Загрузка данных...</div>');
 

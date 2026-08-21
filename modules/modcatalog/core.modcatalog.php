@@ -1789,6 +1789,10 @@ if ($action == "import_on") {
 	exit();
 }
 
+/**
+ * @deprecated
+ * перенесено в форму прайса
+ */
 if ($action == "mass_do") {
 
 	$idcategory = $_REQUEST['idcategory'];

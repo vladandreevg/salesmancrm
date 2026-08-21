@@ -1169,6 +1169,7 @@ class Price {
 			prc.artikul as artikul,
 			prc.edizm as edizm,
 			prc.price_in as price_in,
+			prc.nds as nds,
 			".yimplode(",", $qfields).",
 			prc.archive as archive,
 			{$sqlname}price_cat.title as category
@@ -1209,6 +1210,7 @@ class Price {
 
 				$pfields[] = [
 					"name" => $field['title'],
+					"field" => $field['field'],
 					"value" => num_format($da[$field['field']])
 				];
 
@@ -1222,10 +1224,8 @@ class Price {
 				"edizm"    => $da['edizm'],
 				"category" => $da['category'],
 				"price_in" => num_format($da['price_in']),
+				"nds"     => (int)$da['nds'],
 				"fields" => $pfields,
-				"price_1"  => num_format($da['price_1']),
-				"price_2"  => num_format($da['price_2']),
-				"price_3"  => num_format($da['price_3']),
 				"archive"  => ( $da['archive'] == 'yes' ) ? '1' : ''
 			];
 

@@ -115,6 +115,7 @@ if ($acs_price != 'on') {
 
 				</div>
 				&nbsp;&nbsp;<a href="javascript:void(0)" title="Обновить представление" onclick="configpage();"><i class="icon-arrows-cw blue"></i>Обновить</a>&nbsp;&nbsp;
+				<a href="javascript:void(0)" onclick="getColumnEditorPrice()" title="Настроить колонки" class="hidden-ipad" data-step="8" data-intro="<h1>Редактор списка.</h1>Поможет настроить вывод списка - порядок колонок, включить/отключить колонки и задать их ширину" data-position="left"><i class="icon-th blue"></i>&nbsp;&nbsp;</a>
 
 			</div>
 
@@ -180,6 +181,9 @@ $( function() {
 	//$(".nano").nanoScroller();
 
 	changeMounth();
+	
+	includeJS("/assets/js/dragtable-master/jquery.dragtable.js");
+	includeCSS("/assets/js/dragtable-master/dragtable.css");
 
 });
 
@@ -357,7 +361,7 @@ function configpage(){
 
 	$.getJSON(url, str, function(viewData) {
 
-		$('#contentdiv').empty().mustache('priceTpl', viewData);
+		$('#contentdiv').empty().mustache('priceTplColumns', viewData);
 
 		page = viewData.page;
 		var pageall = viewData.pageall;
@@ -396,6 +400,13 @@ function configpage(){
 			if (desc === 'desc') icn = '<i class="icon-angle-up"></i>';
 
 			$('.header_contaner').find('#x-' + order).prepend(icn);
+			
+			//перемещаемые столбцы
+			$('.list_header').dragtable({
+				persistState: '/modules/price/columneditor.php?action=columnOrderSave',
+				dragaccept: '.drag--accept',
+				dragHandle: '.thandler'
+			})
 
 			//setTimeout(function() {
 
@@ -473,6 +484,12 @@ function clear(){
 	$('#idcat').val('');
 	$('#word').val('');
 
+}
+
+function getColumnEditorPrice(){
+	
+	doLoad('/modules/price/columneditor.php?action=columneditor');
+	
 }
 
 </script>

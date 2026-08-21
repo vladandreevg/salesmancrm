@@ -6,6 +6,7 @@
 /*        ver. 2017.x           */
 /* ============================ */
 
+use Salesman\Elements;
 use Salesman\Price;
 use Salesman\Storage;
 
@@ -491,19 +492,18 @@ if ( $action == "mass" ) {
 	$catalog = Price::getPriceCatalog( 0 );
 
 	if ( $idcategory > 0 ) {
-
-		$listcat = [];
-		foreach ( $catalog as $key => $value ) {
-			$listcat[] = $value['id'];
-		}
-
-		$sort .= " and ({$sqlname}price.pr_cat='".$idcategory."' or {$sqlname}price.pr_cat IN (".implode( ",", $listcat )."))";
+		
+		$categories = Price::getCatalogTree($idcategory);
+		$categories[] = $idcategory;
+		
+		$sort .= " and {$sqlname}price.pr_cat IN (".yimplode(",", $categories).")";
 	}
 
-	if ( $word != '' )
+	if ( $word != '' ) {
 		$sort .= " and ((artikul LIKE '%".$word."%') or (title LIKE '%".$word."%') or (descr LIKE '%".$word."%'))";
+	}
 
-	$count = $db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}price where n_id > 0 ".$sort." and identity = '$identity'" );
+	$count = $db -> getOne( "SELECT COUNT(*) as count FROM {$sqlname}price where n_id > 0 $sort and identity = '$identity'" );
 	?>
 	<div class="zagolovok"><b>Групповое действие</b></div>
 
@@ -513,62 +513,96 @@ if ( $action == "mass" ) {
 		<input name="word" id="word" type="hidden" value="<?= $word ?>"/>
 		<input name="action" id="action" type="hidden" value="mass"/>
 
-		<div id="profile">
-
-			<table id="bborder">
-				<tr>
-					<td>
-						<div class="fnameForm">Действие с записями:</div>
-					</td>
-					<td>
-						<select name="doAction" id="doAction" style="width: auto;" onchange="showd()">
-							<option value="">--выбор--</option>
-							<option value="pArchive">В архив</option>
-							<option value="pArchiveOut">Из архива</option>
-							<option value="pMove">Переместить</option>
-							<option value="pDele">Удалить</option>
-						</select>
-					</td>
-				</tr>
-				<tr class="hidden" id="catt">
-					<td valign="top">
-						<div class="fnameForm">Переместить в категорию:</div>
-					</td>
-					<td>
-						<select name="newcat" id="newcat" style="width: 99.7%;">
-							<option value="">--выбор--</option>
-							<?php
-							foreach ( $catalog as $key => $value ) {
-
-								if ( $value['level'] > 0 ) {
-									$s = str_repeat( '&nbsp;', $value['level'] ).'&rarr;&nbsp;';
-								}
-								else $s = '';
-
-								if ( $value['id'] == $idcategory )
-									$a = "selected";
-								else $a = '';
-
-								print '<option value="'.$value['id'].'" '.$a.'>'.$s.$value['title'].'</option>';
-
+		<div id="formtabs" class="box--child" style="overflow-y: auto; max-height:80vh;">
+			
+			<div class="flex-container box--child mt10 mb10">
+				
+				<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Действие:</div>
+				<div class="flex-string wp80 pl10">
+					<select name="doAction" id="doAction" style="width: auto;" onchange="showd()">
+						<option value="">--выбор--</option>
+						<option value="pArchive">В архив</option>
+						<option value="pArchiveOut">Из архива</option>
+						<option value="pMove">Переместить</option>
+						<option value="pNds">Установить НДС</option>
+						<option value="pDele">Удалить</option>
+					</select>
+				</div>
+			
+			</div>
+			
+			<div class="flex-container box--child mt10 mb10 option hidden" data-id="pMove">
+				
+				<div class="flex-string wp20 gray2 fs-12 pt7 right-text">В категорию:</div>
+				<div class="flex-string wp80 pl10">
+					<select name="newcat" id="newcat" class="wp97">
+						<option value="">--выбор--</option>
+						<?php
+						foreach ( $catalog as $key => $value ) {
+							
+							if ( $value['level'] > 0 ) {
+								$s = str_repeat( '&nbsp;', $value['level'] ).'&rarr;&nbsp;';
 							}
-							?>
-						</select>
-						<div class="infodiv">Позиции прайса будут перемещены в выбранную категорию</div>
-					</td>
-				</tr>
-				<tr>
-					<td width="200">
-						<div class="fnameForm">Выполнить для записей:</div>
-					</td>
-					<td>
-						<label><input name="isSelect" id="isSelect" value="doSel" type="radio" <?php if ( $kol > 0 )
-								print "checked"; ?>>&nbsp;Выбранное (<b class="blue"><?= $kol ?></b>)</label>
-						<label><input name="isSelect" id="isSelect" value="doAll" type="radio" <?php if ( $kol == 0 )
-								print "checked"; ?>>&nbsp;Со всех страниц (<b class="blue"><?= $count ?></b>)</label>
-					</td>
-				</tr>
-			</table>
+							else $s = '';
+							
+							if ( $value['id'] == $idcategory )
+								$a = "selected";
+							else $a = '';
+							
+							print '<option value="'.$value['id'].'" '.$a.'>'.$s.$value['title'].'</option>';
+							
+						}
+						?>
+					</select>
+					<div class="infodiv">Позиции прайса будут перемещены в выбранную категорию</div>
+				</div>
+			
+			</div>
+			
+			<div class="flex-container box--child mt10 mb10 option hidden" data-id="pNds">
+				
+				<div class="flex-string wp20 gray2 fs-12 pt7 right-text">Новая ставка:</div>
+				<div class="flex-string wp80 pl10">
+					<input name="nds" id="nds" type="number" value=""/>
+				</div>
+			
+			</div>
+			
+			<div class="flex-container mb10 pt15 warning bgwhite">
+				
+				<div class="flex-string wp20 gray2 fs-12 right-text">Выполнить для:</div>
+				<div class="flex-string wp80 pl10">
+					
+					<div class="flex-container">
+						
+						<div class="flex-string wp40 pl10">
+							<div class="radio">
+								<label>
+									<input name="isSelect" id="isSelect" value="doSelected" type="radio" <?php if ( $kol > 0 )
+										print "checked"; ?>>
+									<span class="custom-radio success1"><i class="icon-radio-check"></i></span>
+									<span class="title">Выбранного (<b class="blue"><?= $kol ?></b>)</span>
+								</label>
+							</div>
+						</div>
+						<div class="flex-string wp40 pl10">
+							<div class="radio" title="Действие возможно для 500 записей максимум">
+								<label>
+									<input name="isSelect" id="isSelect" value="doAll" type="radio" <?php if ( $kol == 0 ) print "checked"; ?>>
+									<span class="custom-radio success1"><i class="icon-radio-check"></i></span>
+									<span class="title">
+										Всех записей (<b class="blue"><?= $count ?></b>)
+										<div class="gray">с учетом выбранной категории</div>
+									</span>
+								</label>
+							</div>
+						</div>
+					
+					</div>
+				
+				</div>
+			
+			</div>
 
 		</div>
 
@@ -579,6 +613,18 @@ if ( $action == "mass" ) {
 			<a href="javascript:void(0)" onclick="DClose()" class="button">Отмена</a>
 		</div>
 	</form>
+	<script>
+		
+		function showd() {
+			
+			var cel = $('#doAction option:selected').val();
+			
+			$('#formtabs .option').addClass('hidden');
+			$('.option[data-id="'+cel+'"]').removeClass('hidden');
+			
+		}
+		
+	</script>
 	<?php
 }
 
@@ -1097,15 +1143,6 @@ if ( $action == "cat.edit" ) {
 			DClose();
 
 		});
-
-	}
-
-	function showd() {
-
-		var cel = $('#doAction option:selected').val();
-
-		if (cel == 'pMove') $('#catt').removeClass('hidden');
-		else $('#catt').addClass('hidden');
 
 	}
 

@@ -429,6 +429,7 @@ if ($tar == 'catalog') {
 			"res"     => $rez,
 			"content" => $da['content'],
 			"image"   => $image,
+			"archive"  => ( $da['archive'] == 'yes' ) ? '1' : '',
 			//"fields"  => $fdata,
 			"additionalMatch"  => $additionalMatch
 		];
