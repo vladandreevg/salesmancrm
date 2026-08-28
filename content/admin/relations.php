@@ -280,6 +280,8 @@ if ($action == '') {
 	?>
 	<h2>&nbsp;Раздел: "<?php echo ($fieldsNames['client']['tip_cmr'] ?? '<b class="red">Отключено</b>');?>"</h2>
 	<h3 class="gray-dark fs-09 pl10">Стандарт: Типы отношений</h3>
+	
+	<div class="infodiv mb10"><i class="icon-info-1 blue"></i> Справочник связан с формой Клиента, поле "Типы отношений". Его можно переименовать в разделе "<a href="#fields" title="Форма Контакта" class="Bold blue">Форма Контакта</a>"</div>
 
 	<TABLE id="zebra">
 		<thead class="hidden-iphone sticked--top">

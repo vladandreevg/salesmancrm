@@ -2337,6 +2337,9 @@ class Akt {
 		//$akt_temp = $rdog["akt_temp"];
 
 		if ( $temp != '' ) {
+			// защита от Path Traversal: разрешаем только имя файла шаблона без разделителей каталогов
+			$temp = str_replace( [ "\\", "/" ], "", (string)$temp );
+			$temp = preg_replace( '#[^a-zA-Z0-9_.-]#', '', $temp );
 			$akt_temp = $temp;
 		}
 
@@ -2896,6 +2899,9 @@ class Akt {
 		//заменяем старое расширение новым
 		$akt_temp = str_replace( ".htm", ".tpl", $akt_temp );
 
+		// защита от Path Traversal: итоговый файл обязан лежать внутри каталога шаблонов
+		$akt_temp = basename( str_replace( [ "\\", "/" ], "/", (string)$akt_temp ) );
+
 		if ( $akt_temp == '' || (!file_exists( $rootpath.'/cash/'.$fpath.'templates/'.$akt_temp )) ) {
 			$akt_temp = 'akt_simple.tpl';
 		}
@@ -3010,7 +3016,7 @@ class Akt {
 
 				$fname = 'Акт №'.$akt_num.' от '.format_date_rus_name( $akt_date )." года";
 				header( "Content-Type: application/pdf" );
-				header( "Content-Disposition: attachment; filename=".str_replace( " ", "_", $fname ).".pdf" );
+				header( "Content-Disposition: attachment; filename=".safeHeaderValue( str_replace( " ", "_", $fname ) ).".pdf" );
 				@readfile( $file );
 
 			}
@@ -3019,7 +3025,7 @@ class Akt {
 				if ( $download == "view" ) {
 
 					header( 'Content-Type: application/pdf' );
-					header( 'Content-Disposition: inline; filename="'.$pdfname.'"' );
+					header( 'Content-Disposition: inline; filename="'.safeHeaderValue( $pdfname ).'"' );
 					//header('Content-Transfer-Encoding: binary');
 					//header('Accept-Ranges: bytes');
 

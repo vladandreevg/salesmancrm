@@ -78,7 +78,7 @@ if ($isPad || $isMac) {
 
 $db = $GLOBALS['db'];
 
-$identity = (int)$db -> getOne("SELECT identity FROM {$sqlname}user WHERE ses='".$_COOKIE['ses']."'");
+$identity = (int)$db -> getOne("SELECT identity FROM {$sqlname}user WHERE ses=?s", $_COOKIE['ses']);
 
 //перенос в inc/config.php
 //$isCloud = false;

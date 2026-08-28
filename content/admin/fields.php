@@ -576,11 +576,7 @@ if ($action == '') {
 
 			</div>
 
-			<?php
-			if (!$isCloud) { ?>
-				<hr>				<a href="javascript:void(0)" onclick="addField('client')" class="button ml10">Добавить поле</a>
-			<?php
-			} ?>
+			<hr><a href="javascript:void(0)" onclick="addField('client')" class="button ml10">Добавить поле</a>
 
 		</div>
 		<div id="tab-form-2">

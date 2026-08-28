@@ -268,6 +268,8 @@ if ($action == '') {
 	?>
 	<h2>&nbsp;Раздел: "<?php echo ($fieldsNames['client']['territory'] ?? '<b class="red">Отключено</b>');?>"</h2>
 	<h3 class="gray-dark fs-09 pl10">Стандарт: Территории</h3>
+	
+	<div class="infodiv mb10"><i class="icon-info-1 blue"></i> Справочник связан с формой Клиента, поле "Территория". Его можно переименовать в разделе "<a href="#fields" title="Форма Клиента" class="Bold blue">Форма Клиента</a>"</div>
 
 	<form id="list">
 

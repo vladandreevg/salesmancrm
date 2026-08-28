@@ -38,7 +38,7 @@ try {
 
 	if ($_COOKIE['ses']) {
 
-		$result = (array)$db -> getRow("SELECT * FROM {$sqlname}user WHERE ses='".$_COOKIE['ses']."'");
+		$result = (array)$db -> getRow("SELECT * FROM {$sqlname}user WHERE ses=?s", $_COOKIE['ses']);
 		if (!empty($result)) {
 
 			$iduser1 = $result["iduser"];

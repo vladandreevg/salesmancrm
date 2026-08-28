@@ -781,9 +781,11 @@ class Deal {
 							break;
 						/*case 'idcategory':
 							$deal['idcategory'] = (int)$value;
-						break;*/ case 'category':
-						$key   = 'idcategory';
-						$value = (int)$value == 0 ? (int)$otherSettings['dealStepDefault'] : (int)$value;
+						break;*/
+						case 'idcategory':
+						case 'category':
+							$key   = 'idcategory';
+							$value = (int)$value == 0 ? (int)$otherSettings['dealStepDefault'] : (int)$value;
 						//$params['idcategory'] = $value;
 						break;
 						case 'datum_izm':

@@ -292,8 +292,8 @@ class Mailer {
 		$params = $this -> params;
 
 		$this -> rootpath = $rootpath;
-		$this -> identity = ($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity'];
-		$this -> iduser1  = ($this -> iduser > 0) ? $this -> iduser : $GLOBALS['iduser1'];
+		$this -> identity = (int)(($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity']);
+		$this -> iduser1  = (int)(($this -> iduser > 0) ? $this -> iduser : $GLOBALS['iduser1']);
 		$this -> sqlname  = $GLOBALS['sqlname'];
 		$this -> db       = $GLOBALS['db'];
 		$this -> fpath    = $GLOBALS['fpath'];
@@ -301,7 +301,7 @@ class Mailer {
 		$this -> skey     = ($this -> skey != '') ? $this -> skey : $GLOBALS['skey'];
 		$this -> ivc      = ($this -> ivc != '') ? $this -> ivc : $GLOBALS['ivc'];
 		$this -> tmzone   = $GLOBALS['tmzone'];
-		$this -> iduser   = $params['iduser'] ?? $this -> iduser1;
+		$this -> iduser   = (int)($params['iduser'] ?? $this -> iduser1);
 
 		// тут почему-то не срабатывает
 		if ( !empty( $params ) ) {
@@ -405,7 +405,7 @@ class Mailer {
 		$identity = $this -> identity;
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
-		$id       = $this -> id;
+		$id       = (int)$this -> id;
 
 		if ( $id > 0 ) {
 
@@ -569,18 +569,26 @@ class Mailer {
 		$list   = [];
 
 		if ( $word != '' ) {
-			$sort .= " and ({$sqlname}ymail_messages.theme LIKE '%$word%' or {$sqlname}ymail_messages.content LIKE '%$word%' or {$sqlname}ymail_messages.fromname LIKE '%$word%' or {$sqlname}ymail_messages.fromm LIKE '%$word%')";
+
+			$w    = $db -> parse( "?s", "%".$word."%" );
+			$sort .= " and ({$sqlname}ymail_messages.theme LIKE $w or {$sqlname}ymail_messages.content LIKE $w or {$sqlname}ymail_messages.fromname LIKE $w or {$sqlname}ymail_messages.fromm LIKE $w)";
+
 		}
 
 		if ( $folder != 'trash' ) {
-			$sort .= " and COALESCE({$sqlname}ymail_messages.folder, '') = '$folder' and COALESCE({$sqlname}ymail_messages.trash, '') != 'yes'";
+
+			$f    = $db -> parse( "?s", $folder );
+			$sort .= " and COALESCE({$sqlname}ymail_messages.folder, '') = $f and COALESCE({$sqlname}ymail_messages.trash, '') != 'yes'";
+
 		}
 		else {
 			$sort .= " and COALESCE({$sqlname}ymail_messages.trash, '') = 'yes'";
 		}
 
 		if ( $da1 != '' && $da2 != '' ) {
-			$sort .= " and DATE(datum) BETWEEN '$da1' AND '$da2'";
+
+			$sort .= " and DATE(datum) BETWEEN ".$db -> parse( "?s", $da1 )." AND ".$db -> parse( "?s", $da2 );
+
 		}
 
 		//$set   = $db -> getOne("SELECT other FROM {$sqlname}settings WHERE id = '$identity'");
@@ -806,11 +814,11 @@ class Mailer {
 
 			if ( $data['folder'] != 'draft' && $data['folder'] != 'sended' ) {
 
-				$iduserFrom = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$data[fromm]%' and identity = '$identity'" );
+				$iduserFrom = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE ?s and identity = '$identity'", "%".$data['fromm']."%" );
 				if ( $iduserFrom > 0 ) {
 
 					$from = [
-						"email"  => $dataa['fromm'],
+						"email"  => $data['fromm'],
 						"name"   => current_user( $iduserFrom ),
 						"iduser" => $iduserFrom,
 						"icon"   => "icon-user-1 green"
@@ -946,13 +954,19 @@ class Mailer {
 		}
 
 		if ( $word != '' ) {
-			$sort .= " and (msg.theme LIKE '%$word%' or msg.content LIKE '%$word%' or msg.fromname LIKE '%$word%' or msg.fromm LIKE '%$word%' or msg.id IN (SELECT mid FROM {$sqlname}ymail_messagesrec WHERE email = '$word' AND identity = '$identity'))";
+
+			$w    = $db -> parse( "?s", "%".$word."%" );
+			$we   = $db -> parse( "?s", $word );
+			$sort .= " and (msg.theme LIKE $w or msg.content LIKE $w or msg.fromname LIKE $w or msg.fromm LIKE $w or msg.id IN (SELECT mid FROM {$sqlname}ymail_messagesrec WHERE email = $we AND identity = '$identity'))";
+
 		}
 
 		$sort .= " and msg.folder IN ('inbox','sended') and msg.trash != 'yes'";
 
 		if ( $da1 != '' && $da2 != '' ) {
-			$sort .= " and DATE(msg.datum) BETWEEN '$da1' AND '$da2'";
+
+			$sort .= " and DATE(msg.datum) BETWEEN ".$db -> parse( "?s", $da1 )." AND ".$db -> parse( "?s", $da2 );
+
 		}
 
 		//$set   = $db -> getOne("SELECT other FROM {$sqlname}settings WHERE id = '$identity'");
@@ -1484,8 +1498,8 @@ class Mailer {
 		$db       = $this -> db;
 		$fpath    = $this -> fpath;
 		$rootpath = $this -> rootpath;
-		$id       = $this -> id;
-		$mailID   = $this -> mailID;
+		$id       = (int)$this -> id;
+		$mailID   = (int)$this -> mailID;
 
 		$iduser = $iduser ?? $iduser1;
 
@@ -1561,6 +1575,14 @@ class Mailer {
 
 		//прикрепленные файлы из файлов карточки и общих папок
 		$xfid = $params['xfid'];
+
+		//приведем к int для подстановки в SQL
+		$xfid_s = [];
+		foreach ( (array)$xfid as $f ) {
+			if ( $f != '' ) {
+				$xfid_s[] = (int)$f;
+			}
+		}
 
 		//прикрепленные файлы из документов
 		$xfile = (array)$params['xfile'];
@@ -1720,7 +1742,7 @@ class Mailer {
 
 			//доавим файлы из файлов карточки и общих папок
 			if ( !empty( $xfid ) ) {
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '".yimplode( ",", $xfid )."' WHERE id = '$id' and identity = '$identity'" );
+				$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '".yimplode( ",", $xfid_s )."' WHERE id = '$id' and identity = '$identity'" );
 			}
 
 			else {
@@ -1818,7 +1840,7 @@ class Mailer {
 						}
 						else {
 
-							$result = $db -> getRow( "SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE '%".$t['email']."%' and identity = '$identity'" );
+							$result = $db -> getRow( "SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE ?s and identity = ?i", "%".$t['email']."%", $identity );
 							$clid   = (int)$result['clid'];
 							$client = $result['title'];
 
@@ -1927,7 +1949,7 @@ class Mailer {
 			// доавим файлы из документов
 			if ( !empty( $xfid ) ) {
 
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '".yimplode( ",", $xfid )."' WHERE id = '$id' and identity = '$identity'" );
+				$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '".yimplode( ",", $xfid_s )."' WHERE id = '$id' and identity = '$identity'" );
 
 			}
 
@@ -1977,7 +1999,8 @@ class Mailer {
 
 				if ( $f != '' ) {
 
-					$r    = $db -> getRow( "SELECT * FROM {$sqlname}ymail_files WHERE id = '$f' and identity = '$identity'" );
+					$f     = (int)$f;
+					$r     = $db -> getRow( "SELECT * FROM {$sqlname}ymail_files WHERE id = '$f' and identity = '$identity'" );
 					$name = $r['name'];
 					$file = $r['file'];
 
@@ -2014,7 +2037,7 @@ class Mailer {
 				//для свободных email попробуем найти в базе
 				if ( (int)$t['clid'] < 1 && (int)$t['pid'] < 1 ) {
 
-					$result = $db -> getRow( "SELECT pid,ptitle FROM {$sqlname}personcat WHERE mail LIKE '%".$t['email']."%' and identity = '$identity'" );
+					$result = $db -> getRow( "SELECT pid,ptitle FROM {$sqlname}personcat WHERE mail LIKE ?s and identity = ?i", "%".$t['email']."%", $identity );
 					$pid    = (int)$result['pid'];
 					$person = $result['person'];
 
@@ -2028,7 +2051,7 @@ class Mailer {
 					}
 					else {
 
-						$result = $db -> getRow( "SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE '%".$t['email']."%' and identity = '$identity'" );
+						$result = $db -> getRow( "SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE ?s and identity = ?i", "%".$t['email']."%", $identity );
 						$clid   = (int)$result['clid'];
 						$client = $result['title'];
 
@@ -2109,7 +2132,7 @@ class Mailer {
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
 		$fpath    = $this -> fpath;
-		$id       = $this -> id;
+		$id       = (int)$this -> id;
 		$otherSettings = $this -> otherSettings;
 
 		//$params['id'] = $this ->id;
@@ -2638,15 +2661,15 @@ class Mailer {
 		$rootpath = $this -> rootpath;
 
 		// id сотрудника, для которого проверяем почту
-		$iduser = $this -> iduser;
+		$iduser = (int)$this -> iduser;
 		// различные параметры в массиве
 		$params = $this -> params;
 		// проверяемая папка
 		$box = $this -> box;
 		// ограничение в днях
-		$days = $this -> days;
+		$days = (int)$this -> days;
 		// id настроек почтового ящика ( для мультиящиков )
-		$mailID = $this -> mailID;
+		$mailID = (int)$this -> mailID;
 		// загружать уже существующие письма
 		$ignoreExist = $this -> ignoreExist ?? false;
 
@@ -2668,17 +2691,6 @@ class Mailer {
 
 		//проверяем папку для загрузки и если нет, то создаем
 		createDir( $ym_fpath.'/inbody' );
-
-		if ( !file_exists( $rootpath."/cash/ymail_error.log" ) ) {
-
-			$file = fopen( $rootpath."/cash/ymail_error.log", 'wb' );
-			fclose( $file );
-
-		}
-
-		ini_set( 'log_errors', 'On' );
-		ini_set( 'error_log', $rootpath.'/cash/ymail_error.log' );
-
 
 		$db = new SafeMySQL( $opts );
 
@@ -2838,13 +2850,13 @@ class Mailer {
 			}
 
 			//количество писем в ящике
-			$all = !empty( $msguid ) ? count( $msguid ) - 1 : 0;
+			$all = !empty( $msguid ) ? count( $msguid ) - 1 : -1;
 
 			//максимум загружаем 30 писем за раз
 			$max = $all - 50;
 
 			//принимаем с последнего письма
-			for ( $i = $all; $i > $max; $i-- ) {
+			for ( $i = $all; $i > $max && $i >= 0; $i-- ) {
 
 				$attach = [];
 
@@ -3455,12 +3467,12 @@ class Mailer {
 		global $bdtimezone;
 
 		$identity = $this -> identity;
-		$iduser   = $this -> iduser;
+		$iduser   = (int)$this -> iduser;
 		$sqlname  = $this -> sqlname;
 		$fpath    = $this -> fpath;
 		$opts     = $this -> opts;
 		$rootpath = $this -> rootpath;
-		$mailID   = $this -> mailID;
+		$mailID   = (int)$this -> mailID;
 
 		$messages = $this -> Messages;
 		$box      = $this -> box;
@@ -3475,7 +3487,7 @@ class Mailer {
 		$db = new SafeMySQL( $opts );
 		$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
 
-		$db -> query( "UPDATE {$sqlname}ymail_settings SET lasttime = '".current_datumtime()."' WHERE iduser = '$iduser' and identity = '$identity'" );
+		$db -> query( "UPDATE {$sqlname}ymail_settings SET lasttime = ?s WHERE iduser = ?i and identity = ?i", current_datumtime(), $iduser, $identity );
 
 		$cUser = current_user( $iduser );
 
@@ -3527,7 +3539,7 @@ class Mailer {
 			}
 
 			//найдем аналогичные письма, чтобы исключить дубли
-			$msgid = $db -> getOne( "SELECT id FROM {$sqlname}ymail_messages WHERE messageid = '$message[messageid]' and fromm = '$message[fromAddr]' and iduser = '$iduser' and identity = '$identity'" );
+			$msgid = $db -> getOne( "SELECT id FROM {$sqlname}ymail_messages WHERE messageid = ?s and fromm = ?s and iduser = ?i and identity = ?i", $message['messageid'], $message['fromAddr'], $iduser, $identity );
 
 			//для сообщений из ящика Отправленные
 			if ( $mailbox == 'sended' ) {
@@ -3542,8 +3554,10 @@ class Mailer {
 
 			}
 
-			foreach ( $message['bodyimg'] as $bimg ) {
-				$message['html'] = str_replace( "cid:".$bimg['id'], $ymfpath."inbody/".$bimg['file'], $message['html'] );
+			if ( !empty( $message['bodyimg'] ) ) {
+				foreach ( $message['bodyimg'] as $bimg ) {
+					$message['html'] = str_replace( "cid:".$bimg['id'], $ymfpath."inbody/".$bimg['file'], $message['html'] );
+				}
 			}
 
 
@@ -3603,16 +3617,16 @@ class Mailer {
 					}
 
 					//найдем и добавим отправителя по базе и добавим его
-					$r    = $db -> getRow( "SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE '%".$message['fromAddr']."%' AND identity = '$identity' ORDER BY pid DESC LIMIT 1" );
+					$r    = $db -> getRow( "SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE ?s AND identity = ?i ORDER BY pid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity );
 					$pid  = (int)$r['pid'];
 					$clid = (int)$r['clid'];
 
 					if ( $clid == 0 && $pid == 0 ) {
 
-						$clid = (int)$db -> getOne( "SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE '%".$message['fromAddr']."%' AND identity = '$identity' ORDER BY clid DESC LIMIT 1" );
+						$clid = (int)$db -> getOne( "SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE ?s AND identity = ?i ORDER BY clid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity );
 
 						if ( $clid == 0 ) {
-							$pid = (int)$db -> getOne( "SELECT pid FROM {$sqlname}personcat WHERE mail LIKE '%".$message['fromAddr']."%' AND identity = '$identity' ORDER BY pid DESC LIMIT 1" );
+							$pid = (int)$db -> getOne( "SELECT pid FROM {$sqlname}personcat WHERE mail LIKE ?s AND identity = ?i ORDER BY pid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity );
 						}
 
 					}
@@ -3640,7 +3654,7 @@ class Mailer {
 					$db -> query( "INSERT INTO {$sqlname}ymail_messagesrec SET ?u", $msgrec );
 
 					//добавим файлы вложения
-					$attach = $message['attach'];
+					$attach = $message['attach'] ?? [];
 
 					foreach ( $attach as $att ) {
 
@@ -3767,11 +3781,11 @@ class Mailer {
 		$opts     = $this -> opts;
 
 		// id сотрудника, для которого проверяем почту
-		$iduser = $this -> iduser;
+		$iduser = (int)$this -> iduser;
 		// различные параметры в массиве
 		$params = $this -> params;
 		// id настроек почтового ящика ( для мультиящиков )
-		$mailID = $this -> mailID;
+		$mailID = (int)$this -> mailID;
 
 		// детали письма
 		$subject  = $this -> subject;
@@ -3782,7 +3796,7 @@ class Mailer {
 		$attach   = $this -> attach;
 		$files    = $this -> files;
 
-		$id = $this -> id;
+		$id = (int)$this -> id;
 
 		//print_r(get_object_vars($this));
 
@@ -4222,19 +4236,19 @@ class Mailer {
 		include_once $rootpath."/inc/func.php";
 		require_once $rootpath."/inc/dbconnector.php";
 
-		$identity = ($param['identity'] > 0) ? $param['identity'] : $GLOBALS['identity'];
-		$iduser   = ($param['iduser1'] > 0) ? $param['iduser'] : $GLOBALS['iduser1'];
+		$identity = (int)(($param['identity'] > 0) ? $param['identity'] : $GLOBALS['identity']);
+		$iduser   = (int)(($param['iduser1'] > 0) ? $param['iduser'] : $GLOBALS['iduser1']);
 		$fpath    = $GLOBALS['fpath'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
 		$tip          = $param['tip'];
-		$params['id'] = $param['id'];//id сообщения
-		$ids          = $param['multi'];
+		$params['id'] = (isset( $param['id'] )) ? (int)$param['id'] : null;//id сообщения
+		$ids          = (array)$param['multi'];
 		// если задано, то сообщение будет удалено из базы
 		$havy = $params['havy'];
 
-		$params['iduser'] = ($param['iduser'] < 1) ? $iduser : $param['iduser'];
+		$params['iduser'] = (int)(($param['iduser'] < 1) ? $iduser : $param['iduser']);
 
 		$rez      = '';
 		$err      = [];
@@ -4394,6 +4408,8 @@ class Mailer {
 
 				foreach ( $ids as $id ) {
 
+					$id = (int)$id;
+
 					$provIduser = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
 					if ( $provIduser == $params['iduser'] ) {
 
@@ -4453,14 +4469,14 @@ class Mailer {
 
 				$s = !isset( $params['id'] ) ? "iduser = '$iduser' AND" : "id IN (".yimplode( ",", (array)$params['id'] ).") AND";
 
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'reed' WHERE state = 'unread' AND $s identity = '$identity'" );
+				$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE state = 'unread' AND $s identity = '$identity'" );
 				$rez = (int)$db -> affectedRows();
 
 				if ( $ym_param['ymailOnReadSeen'] == "true" ) {
 
-					foreach ( $params['id'] as $xid ) {
+					foreach ( (array)$params['id'] as $xid ) {
 
-						self ::mailAction( $xid, 'seen' );
+						self ::mailAction( (int)$xid, 'seen' );
 						flush();
 
 					}
@@ -4473,6 +4489,8 @@ class Mailer {
 			if ( $tip == 'multidelete' ) {
 
 				foreach ( $ids as $id ) {
+
+					$id = (int)$id;
 
 					$provIduser = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
 
@@ -4584,6 +4602,8 @@ class Mailer {
 	 */
 	public static function putHistory($id, int $iduser = 0): array {
 
+		$id = (int)$id;
+
 		$rootpath = dirname( __DIR__, 2 );
 
 		require_once $rootpath."/inc/config.php";
@@ -4593,7 +4613,7 @@ class Mailer {
 		$mrez = [];
 
 		$fpath    = $GLOBALS['fpath'];
-		$identity = $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 		$opts     = $GLOBALS['opts'];
@@ -4757,6 +4777,9 @@ class Mailer {
 	 */
 	public static function getAttachmentFromEmail($uid, $mid, $file = [] | ""): array {
 
+		$uid = (int)$uid;
+		$mid = (int)$mid;
+
 		$rootpath = dirname( __DIR__, 2 );
 
 		global $error;
@@ -4768,7 +4791,7 @@ class Mailer {
 		$fpath    = $GLOBALS['fpath'];
 		$skey     = $GLOBALS['skey'];
 		$ivc      = $GLOBALS['ivc'];
-		$identity = $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
@@ -5096,7 +5119,7 @@ class Mailer {
 		require_once $rootpath."/inc/func.php";
 
 		$fpath    = $GLOBALS['fpath'];
-		$identity = $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
@@ -5125,10 +5148,10 @@ class Mailer {
 
 				if ( $hid == 0 ) {
 
-					$fidd = $db -> getOne( "SELECT id FROM {$sqlname}ymail_files WHERE mid = '$id' and name = '".$attach['name']."' and identity = '$identity'" );
+					$fidd = $db -> getOne( "SELECT id FROM {$sqlname}ymail_files WHERE mid = ?i and name = ?s and identity = ?i", $id, $attach['name'], $identity );
 
 					//запишем файл в базу
-					$db -> query( "UPDATE {$sqlname}ymail_files SET file = '".$attach['file']."' WHERE id = '$fidd'" );
+					$db -> query( "UPDATE {$sqlname}ymail_files SET file = ?s WHERE id = ?i", $attach['file'], (int)$fidd );
 
 					$uploaddir                     = $rootpath.'/files/'.$fpath;
 					$attachments[ $key ]['size']   = num_format( filesize( $uploaddir.'ymail/'.$attach['file'] ) / 1000 );
@@ -5146,7 +5169,7 @@ class Mailer {
 					//запишем файл в базу
 					try {
 
-						$db -> query( "UPDATE {$sqlname}file SET fname = '".$attach['file']."' WHERE fid = '$fidd'" );
+						$db -> query( "UPDATE {$sqlname}file SET fname = ?s WHERE fid = ?i", $attach['file'], (int)$fidd );
 
 						copyFile( $uploaddir.'ymail/'.$attach['file'], $uploaddir, 'yes' );
 						unlink( $uploaddir.'ymail/'.$attach['file'] );
@@ -5196,6 +5219,8 @@ class Mailer {
 	 */
 	public static function zipAttachmentFromEmail($uid, string $file = ""): array {
 
+		$uid = (int)$uid;
+
 		$rootpath = dirname( __DIR__, 2 );
 
 		global $error;
@@ -5207,7 +5232,7 @@ class Mailer {
 		$fpath    = $GLOBALS['fpath'];
 		$skey     = $GLOBALS['skey'];
 		$ivc      = $GLOBALS['ivc'];
-		$identity = $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
@@ -5453,6 +5478,8 @@ class Mailer {
 	 */
 	public static function zipAttachment($id): void {
 
+		$id = (int)$id;
+
 		$rootpath = dirname( __DIR__, 2 );
 
 		require_once $rootpath."/inc/config.php";
@@ -5460,7 +5487,7 @@ class Mailer {
 		require_once $rootpath."/inc/func.php";
 
 		$fpath    = $GLOBALS['fpath'];
-		$identity = $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
@@ -5734,6 +5761,8 @@ class Mailer {
 	 * @return bool
 	 */
 	public static function clearOldMessages($iduser, int $day = 90): bool {
+
+		$iduser = (int)$iduser;
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -6022,14 +6051,21 @@ class Mailer {
 		require_once $rootpath."/inc/dbconnector.php";
 		require_once $rootpath."/inc/func.php";
 
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity'];
-		$iduser   = ($params['iduser1'] > 0) ? $params['iduser'] : $GLOBALS['iduser1'];
+		$identity = (int)(($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity']);
+		$iduser   = (int)(($params['iduser1'] > 0) ? $params['iduser'] : $GLOBALS['iduser1']);
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
-		$s = !isset( $params['id'] ) ? "iduser = '$iduser' AND" : "id IN (".yimplode( ",", (array)$params['id'] ).") AND";
+		$ids = [];
+		if ( isset( $params['id'] ) ) {
+			foreach ( (array)$params['id'] as $xid ) {
+				$ids[] = (int)$xid;
+			}
+		}
 
-		$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'reed' WHERE state = 'unread' AND $s identity = '$identity'" );
+		$s = empty( $ids ) ? "iduser = '$iduser' AND" : "id IN (".yimplode( ",", $ids ).") AND";
+
+		$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE state = 'unread' AND $s identity = '$identity'" );
 
 		return (int)$db -> affectedRows();
 

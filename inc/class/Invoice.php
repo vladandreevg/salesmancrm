@@ -3414,7 +3414,7 @@ class Invoice {
 
 					$fname = 'Счет №'.$invoice.' от '.format_date_rus_name(substr($datum, 0, 10))." года";
 					header("Content-Type: application/pdf");
-					header("Content-Disposition: attachment; filename=".str_replace(" ", "_", $fname).".pdf");
+					header("Content-Disposition: attachment; filename=".safeHeaderValue( str_replace(" ", "_", $fname) ).".pdf");
 					@readfile($file);
 
 				}
@@ -3433,7 +3433,7 @@ class Invoice {
 					if ($download == "view") {
 
 						header('Content-Type: application/pdf');
-						header('Content-Disposition: inline; filename="'.$pdfname.'"');
+						header('Content-Disposition: inline; filename="'.safeHeaderValue( $pdfname ).'"');
 						header('Content-Transfer-Encoding: binary');
 						header('Accept-Ranges: bytes');
 

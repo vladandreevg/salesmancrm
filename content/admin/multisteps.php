@@ -436,10 +436,10 @@ if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_
 
 <div class="viewdiv mb15">
 	В этом разделе можно задать персональную цепочку этапов сделок для каждого Направления/Типа сделки.<br>Либо использовать функцию
-	<a href="javascript:void(0)" onclick="setSteps()" title="" class="button">Создать все</a> для автоматического создания всех возможных цепочек.
+	<a href="javascript:void(0)" onclick="setSteps()" title="" class="button dotted bluebtn">Создать все</a> для автоматического создания всех возможных цепочек.
 </div>
 
-<table id="catlist">
+<table id="catlist" class="top">
 	<thead class="hidden-iphone sticked--top">
 	<tr class="th40">
 		<th class="w250 text-left">Название</th>
@@ -474,7 +474,7 @@ if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_
 					<i class="icon-briefcase-1 gray"></i><?= current_dogtype( (int)$data['tip'] ) ?></div>
 			</td>
 			<td>
-				<div class="fs-12"><?= implode( ", ", $s ) ?></div>
+				<div class="fs-12 flh-12"><?= implode( ", ", $s ) ?></div>
 			</td>
 			<td>
 				<div class="fs-12"><?= $length ?></div>

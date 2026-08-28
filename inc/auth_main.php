@@ -26,7 +26,7 @@ global $tipuser, $iduser1, $titleuser, $identity, $usertitle;
 
 if ($_COOKIE['ses'] != '') {
 
-	$result = $db -> getRow("SELECT * FROM {$sqlname}user WHERE ses='".$_COOKIE['ses']."'");
+	$result = $db -> getRow("SELECT * FROM {$sqlname}user WHERE ses=?s", $_COOKIE['ses']);
 	$iduser1   = (int)$result["iduser"];
 	$tipuser   = $result["tip"];
 	$titleuser = $result["title"];

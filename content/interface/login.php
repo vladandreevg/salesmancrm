@@ -47,9 +47,9 @@ if($isremoval) {
 	header("Location: removal");
 }
 
-setcookie("ses", '', time() - 3600, "/");
-setcookie("old", '', time() - 3600, "/");
-setcookie("asuser", '', time() - 3600, "/");
+setSecureCookie("ses", '', time() - 3600, "/");
+setSecureCookie("old", '', time() - 3600, "/");
+setSecureCookie("asuser", '', time() - 3600, "/");
 
 /**
  * Добавление индексов
@@ -59,16 +59,15 @@ if ($count == 0) {
 	$db -> query( "ALTER TABLE ".$sqlname."dogovor ADD INDEX `note` (`iduser`, `identity`)" );
 }
 
-$rurl   = $_REQUEST['rurl'];
-$action = $_REQUEST['action'];
+$rurl   = $_REQUEST['rurl'] ?? '';
+$action = $_REQUEST['action'] ?? '';
+
+// защита от Open Redirect: допускаем только внутренние (относительные) пути
+if (preg_match('#^(https?:)?//#i', (string)$rurl) || empty($rurl)) {
+	$rurl = '';
+}
 
 $scheme = $_SERVER['HTTP_SCHEME'] ?? ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || 443 == $_SERVER['SERVER_PORT']) ? 'https://' : 'http://';
-
-//Авторизация для демо-пользователя
-$demo = [
-	"login" => "demo@isaler.ru",
-	"pass"  => "Demouser!1"
-];
 
 $template = '<html lang="ru">
 <head>
@@ -169,7 +168,7 @@ if ($action == "enter") {
 	$account  = false;
 	$activate = false;
 
-	$res      = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE login = '$_POST[logi]'");
+	$res      = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE login = ?s", $_POST['logi']);
 	$iduser2  = (int)$res["iduser"];
 	$pwd2     = $res["pwd"];
 	$salt     = $res["sole"];
@@ -193,14 +192,14 @@ if ($action == "enter") {
 
 	}
 
-	$session = (int)$db -> getOne("select session * 86400 from ".$sqlname."settings WHERE id = '$identity'");
+	$session = (int)$db -> getOne("select session * 86400 from ".$sqlname."settings WHERE id = ?i", (int)$identity);
 	if ($session < 1) {
 		$session = 10 * 86400;
 	}
 
 	if ($isCloud) {
 
-		$rest     = $db -> getRow("SELECT * FROM ".$sqlname."activate WHERE identity = '$identity'");
+		$rest     = $db -> getRow("SELECT * FROM ".$sqlname."activate WHERE identity = ?i", (int)$identity);
 		$activate = $rest["activate"];
 		$code     = $rest["code"];
 
@@ -219,7 +218,7 @@ if ($action == "enter") {
 
 				if (in_array($iduser2, $users_acsept)) {
 
-					$session = (int)$db -> getOne("select session * 86400 from ".$sqlname."settings WHERE id = '$identity'");
+					$session = (int)$db -> getOne("select session * 86400 from ".$sqlname."settings WHERE id = ?i", (int)$identity);
 					if ((int)$session == 0) {
 						$session = 10 * 86400;
 					}
@@ -227,12 +226,12 @@ if ($action == "enter") {
 					$sess = preg_replace("#[^a-zA-Z0-9]#i", "s", crypt($_POST['logi'].time(), "$2y$05$".$salt));
 					//$sess =
 
-					$db -> query("update ".$sqlname."user set ses='$sess' WHERE iduser='$iduser2'");
+					$db -> query("update ".$sqlname."user set ses=?s WHERE iduser=?i", $sess, (int)$iduser2);
 
-					setcookie("ses", $sess, time() + (int)$session, "/");
-					setcookie("sess", $sess, time() + (int)$session, "/");
-					setcookie("old", '', time() - 3600, "/");
-					setcookie("asuser", '', time() - 3600, "/");
+					setSecureCookie("ses", $sess, time() + (int)$session, "/");
+					setSecureCookie("sess", $sess, time() + (int)$session, "/");
+					setSecureCookie("old", '', time() - 3600, "/");
+					setSecureCookie("asuser", '', time() - 3600, "/");
 
 					//print "ok";
 					//exit();
@@ -264,7 +263,7 @@ if ($action == "enter") {
 		}
 		elseif ($iduser2 == 0 && !$isCloud) {
 
-			$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Пользователь <b>'.$_POST['logi'].'</b> не существует</div>';
+			$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Пользователь <b>'.htmlspecialchars($_POST['logi'], ENT_QUOTES).'</b> не существует</div>';
 			logger('0', 'Неудачная авторизация (логин не уществует) с параметрами: Логин = '.$_POST['logi'], (int)$iduser1);
 
 		}
@@ -278,12 +277,12 @@ if ($action == "enter") {
 
 					$sess = preg_replace("#[^a-zA-Z0-9]#i", "s", crypt($_POST['logi'] + time(), $pwd2));
 
-					$db -> query("update ".$sqlname."user set ses='$sess' WHERE iduser='$iduser2'");
+					$db -> query("update ".$sqlname."user set ses=?s WHERE iduser=?i", $sess, (int)$iduser2);
 
-					setcookie("ses", $sess, time() + $session, "/");
-					setcookie("old", '', time() - 3600, "/");
-					setcookie("asuser", '', time() - 3600, "/");
-					setcookie("rurl", '', time() - 3600, "/");
+					setSecureCookie("ses", $sess, time() + $session, "/");
+					setSecureCookie("old", '', time() - 3600, "/");
+					setSecureCookie("asuser", '', time() - 3600, "/");
+					setSecureCookie("rurl", '', time() - 3600, "/");
 
 					logger('0', 'Пользователь авторизовался в системе', $iduser2);
 
@@ -309,7 +308,7 @@ if ($action == "enter") {
 		}
 		elseif ($iduser2 == 0 && $isCloud) {
 
-			$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Пользователь <b>'.$_POST['logi'].'</b> не существует</div>';
+			$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Пользователь <b>'.htmlspecialchars($_POST['logi'], ENT_QUOTES).'</b> не существует</div>';
 			logger('0', 'Неудачная авторизация (логин не уществует) с параметрами: Логин = '.$_POST['logi'], (int)$iduser1);
 
 		}
@@ -323,22 +322,22 @@ if ($action == "enter") {
 }
 if ($action == "logout") {
 
-	$iduser1 = $db -> getOne("SELECT iduser FROM ".$sqlname."user WHERE ses='$_COOKIE[ses]'");
+	$iduser1 = $db -> getOne("SELECT iduser FROM ".$sqlname."user WHERE ses=?s", $_COOKIE['ses']);
 
-	$db -> query("update ".$sqlname."user set ses='' WHERE iduser='$iduser1'");
+	$db -> query("update ".$sqlname."user set ses='' WHERE iduser=?i", (int)$iduser1);
 
 	logger('1', 'Пользователь вышел из системы', (int)$iduser1);
 
-	setcookie("ses", '', time() - 3600, "/");
-	setcookie("old", '', time() - 3600, "/");
-	setcookie("asuser", '', time() - 3600, "/");
+	setSecureCookie("ses", '', time() - 3600, "/");
+	setSecureCookie("old", '', time() - 3600, "/");
+	setSecureCookie("asuser", '', time() - 3600, "/");
 
 	$reslogin = '<div class="green div-center mt15"><i class="icon-ok-circled icon-2x green"></i>&nbsp;Вы вышли из системы!</div>';
 
 }
 if ($action == "fogot" && $_REQUEST['code'] != '') {
 
-	$res = (int)$db -> getOne("SELECT COUNT(*) FROM ".$sqlname."changepass WHERE code = '$_REQUEST[code]'");
+	$res = (int)$db -> getOne("SELECT COUNT(*) FROM ".$sqlname."changepass WHERE code = ?s", $_REQUEST['code']);
 
 	if ($res == 0) {
 
@@ -351,7 +350,7 @@ if ($action == "fogot" && $_REQUEST['code'] != '') {
 if ($action == "fogot_get") {
 
 	$email = untag($_POST['email']);
-	$title = $db -> getOne("SELECT title FROM ".$sqlname."user WHERE email='$email'");
+	$title = $db -> getOne("SELECT title FROM ".$sqlname."user WHERE email=?s", $email);
 
 	$code = generateSalt(35);
 
@@ -411,11 +410,11 @@ if ($action == "changepass") {
 	$pwd  = $_REQUEST['pwd'];
 	$logi = $_REQUEST['logi'];
 
-	$useremail = $db -> getOne("SELECT useremail FROM ".$sqlname."changepass WHERE code = '$code'");
+	$useremail = $db -> getOne("SELECT useremail FROM ".$sqlname."changepass WHERE code = ?s", $code);
 
 	if ($isCloud == true) {
 
-		$res      = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE login = '$useremail'");
+		$res      = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE login = ?s", $useremail);
 		$iduser   = $res["iduser"];
 		$login    = $res["login"];
 		$title    = $res["title"];
@@ -426,7 +425,7 @@ if ($action == "changepass") {
 	}
 	if ($isCloud == false) {
 
-		$res    = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE email = '$useremail'");
+		$res    = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE email = ?s", $useremail);
 		$iduser = $res["iduser"];
 		$login  = $res["login"];
 		$title  = $res["title"];
@@ -451,20 +450,20 @@ if ($action == "changepass") {
 		$salt    = generateSalt();
 		$newpass = encodePass($pwd, $salt);
 
-		$db -> query("UPDATE ".$sqlname."user SET ?u WHERE iduser = '$iduser' and identity = '$identity'", [
+		$db -> query("UPDATE ".$sqlname."user SET ?u WHERE iduser = ?i and identity = ?i", [
 			'pwd'  => $newpass,
 			'sole' => $salt
-		]);
+		], (int)$iduser, (int)$identity);
 
-		$db -> query("DELETE FROM ".$sqlname."changepass WHERE code = '$code'");
+		$db -> query("DELETE FROM ".$sqlname."changepass WHERE code = ?s", $code);
 
 		if ($iduser > 0) {
 
 			$sess = preg_replace("#[^a-zA-Z0-9]#i", ",", crypt($login . time(), $pwd));
 
-			$db -> query("UPDATE ".$sqlname."user SET ses='$sess' WHERE iduser = '$iduser'");
+			$db -> query("UPDATE ".$sqlname."user SET ses=?s WHERE iduser = ?i", $sess, (int)$iduser);
 
-			setcookie("ses", $sess, time() + $session, "/");
+			setSecureCookie("ses", $sess, time() + $session, "/");
 			
 			/*setcookie("ses", $sess, [
 				'expires' => time() + $session,
@@ -488,12 +487,12 @@ if ($action == "changepass") {
 }
 if ($action == "getcode_on") {
 
-	$res      = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE email = '$_POST[email]'");
+	$res      = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE email = ?s", $_POST['email']);
 	$identity = $res["identity"];
 	$title    = $res["title"];
 	$to       = $res["email"];
 
-	$rest     = $db -> getRow("SELECT * FROM ".$sqlname."activate WHERE identity = '$identity'");
+	$rest     = $db -> getRow("SELECT * FROM ".$sqlname."activate WHERE identity = ?i", (int)$identity);
 	$activate = $rest["activate"];
 	$code     = $rest["code"];
 
@@ -605,7 +604,7 @@ $logo = "/assets/images/logo-white.png";
 			])) {
 				?>
 				<input type="hidden" id="action" name="action" value="enter">
-				<input type="hidden" id="rurl" name="rurl" value="<?= $rurl ?>">
+				<input type="hidden" id="rurl" name="rurl" value="<?= htmlspecialchars($rurl, ENT_QUOTES) ?>">
 
 				<div class="div-center marg3 blue">
 					<h2>Авторизация</h2>
@@ -614,12 +613,10 @@ $logo = "/assets/images/logo-white.png";
 				<div class="flex-container">
 
 					<div class="flex-string wp100 div-center">
-						<input name="logi" type="text" placeholder="Логин" id="logi" width="100%" autocomplete="on" <? if (isset($_GET['demo'])) {
-							echo ' value="'.$demo['login'].'"';
-						}; ?>>
+						<input name="logi" type="text" placeholder="Логин" id="logi" width="100%" autocomplete="on">
 					</div>
 					<div class="flex-string wp100 div-center relativ mt10">
-						<input name="pwd" type="password" placeholder="Пароль" id="pwd" width="100%" <? if (isset($_GET['demo'])) {echo ' value="'.$demo['pass'].'"';} ?>>
+						<input name="pwd" type="password" placeholder="Пароль" id="pwd" width="100%">
 						<div class="showpass">
 							<i class="icon-eye-off hand gray" title="Посмотреть пароль" id="showpass"></i>
 						</div>
@@ -666,7 +663,7 @@ $logo = "/assets/images/logo-white.png";
 				<div class="flex-container">
 
 					<div class="flex-string wp100 div-center">
-						<input name="email" type="text" id="email" placeholder="Укажите свой email адрес" width="100%" autocomplete="off" value="<?= $_POST['email'] ?>">
+						<input name="email" type="text" id="email" placeholder="Укажите свой email адрес" width="100%" autocomplete="off" value="<?= htmlspecialchars($_POST['email'], ENT_QUOTES) ?>">
 					</div>
 
 				</div>
@@ -700,10 +697,10 @@ $logo = "/assets/images/logo-white.png";
 			}
 			if ($action == "fogot" && $_REQUEST['code'] != '') {
 
-				$useremail = $db -> getOne("SELECT useremail FROM ".$sqlname."changepass WHERE code='".$_REQUEST['code']."'");
+				$useremail = $db -> getOne("SELECT useremail FROM ".$sqlname."changepass WHERE code=?s", $_REQUEST['code']);
 				?>
 				<input type="hidden" id="action" name="action" value="changepass">
-				<input type="hidden" id="code" name="code" value="<?= $_REQUEST['code'] ?>">
+				<input type="hidden" id="code" name="code" value="<?= htmlspecialchars($_REQUEST['code'], ENT_QUOTES) ?>">
 
 				<div class="div-center marg3 blue"><h2>Смена пароля</h2></div>
 
@@ -754,7 +751,7 @@ $logo = "/assets/images/logo-white.png";
 				<div class="flex-container">
 
 					<div class="flex-string wp100 div-center">
-						<input name="email" type="text" id="email" placeholder="Укажите свой email адрес" width="100%" autocomplete="off" value="<?= $_POST['email'] ?>">
+						<input name="email" type="text" id="email" placeholder="Укажите свой email адрес" width="100%" autocomplete="off" value="<?= htmlspecialchars($_POST['email'], ENT_QUOTES) ?>">
 					</div>
 					<div class="flex-string wp100 warning mt10 black text-center">
 						Ваш аккаунт еще не активирован. Чтобы <b>повторно</b> получить код активации укажите свой email.

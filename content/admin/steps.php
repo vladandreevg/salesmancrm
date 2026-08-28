@@ -318,6 +318,8 @@ if ($action == '') {
 
 	<h2>&nbsp;Раздел: "<?php echo ($fieldsNames['dogovor']['idcategory'] ?? '<b class="red">Отключено</b>');?>"</h2>
 	<h3 class="gray-dark fs-09 pl10">Стандарт: Этапы сделок</h3>
+	
+	<div class="infodiv mb10"><i class="icon-info-1 blue"></i> Справочник связан с формой Сделок, поле "Этап". Его можно переименовать в разделе "<a href="#fields.deal" title="Форма Сделки" class="Bold blue">Форма Сделки</a>"</div>
 
 	<form id="list">
 

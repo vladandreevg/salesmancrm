@@ -695,6 +695,85 @@ function untag($string): string {
 }
 
 /**
+ * Безопасная установка cookie с флагами HttpOnly/Secure/SameSite
+ *
+ * @param string $name
+ * @param string $value
+ * @param int    $expires
+ * @param string $path
+ *
+ * @return void
+ * @package  Func
+ * @category Core
+ */
+function setSecureCookie($name, $value = '', $expires = 0, $path = '/') : void {
+
+	$secure = ( !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' ) || 443 == $_SERVER['SERVER_PORT'];
+
+	setcookie( $name, $value, [
+		'expires'  => $expires,
+		'path'     => $path,
+		'secure'   => $secure,
+		'httponly' => true,
+		'samesite' => 'Lax'
+	] );
+
+}
+
+/**
+ * Проверка, что путь находится внутри заданной базовой директории.
+ * Защищает от Path Traversal: возвращает нормализованный путь или FALSE.
+ *
+ * @param string $file    - полный путь к файлу
+ * @param string $baseDir - базовая директория (реальный путь)
+ *
+ * @return string|FALSE
+ * @package  Func
+ * @category Core
+ */
+function safeFilePath( $file, $baseDir ) {
+
+	$baseDir = rtrim( (string)$baseDir, '/\\' );
+	$real    = realpath( (string)$file );
+
+	// файл должен существовать на диске
+	if ( $real === false ) {
+		return false;
+	}
+
+	// нормализуем базовую директорию (если она не существует, берем легаси-родителя)
+	$baseReal = realpath( $baseDir );
+	if ( $baseReal === false ) {
+		$baseReal = $baseDir;
+	}
+
+	$baseReal = rtrim( $baseReal, '/\\' ) . DIRECTORY_SEPARATOR;
+
+	// итоговый путь обязан лежать ВНУТРИ базы
+	if ( strpos( $real . DIRECTORY_SEPARATOR, $baseReal ) !== 0 ) {
+		return false;
+	}
+
+	return $real;
+
+}
+
+/**
+ * Удаление CR/LF и управляющих символов для безопасного вывода в HTTP-заголовки
+ *
+ * @param $string
+ *
+ * @return string
+ * @package  Func
+ * @category Core
+ */
+function safeHeaderValue( $string ): string {
+
+	return str_replace( [ "\r", "\n", "\r\n" ], '', (string)$string );
+
+}
+
+/**
  * Глубокая очистка текста от html-говна
  *
  * @param $string
