@@ -15,9 +15,10 @@ ini_set( 'display_errors', 1 );
 header( "Pragma: no-cache" );
 
 $action = $_REQUEST['action'];
+$onlymyp = $_REQUEST['onlymyp'] == "yes" ? "yes" : "no";
 
 if ( $action == 'setpparam' ) {
-	setcookie( "onlymyp", $_REQUEST['onlymyp'], time() + 31536000 );
+	setcookie( "onlymyp", $onlymyp, time() + 31536000 );
 	setcookie( "pipeline-tip", $_REQUEST['tip'], time() + 31536000 );
 	setcookie( "pipeline", implode( ",", (array)$_REQUEST['user'] ), time() + 31536000 );
 	$action = '';
@@ -25,7 +26,7 @@ if ( $action == 'setpparam' ) {
 	exit();
 }
 
-$onlymyp   = $_COOKIE['onlymyp'];
+//$onlymyp   = $_COOKIE['onlymyp'];
 
 $rootpath = dirname(__DIR__, 2);
 
@@ -328,8 +329,7 @@ $tipAll    = json_encode_cyr( array_unique( $tipAll ) );
 				<div class="flex-string wp80 flex-container inline border-box pt5" style="flex-wrap: nowrap; flex-flow: column wrap;">
 
 					<div class="flex-string w160 p5 Bold" style="flex-grow: unset;">
-						<label><input name="onlymyp" id="onlymyp" type="checkbox" <?php if ( $onlymyp == 'yes' )
-								print "checked" ?> value="yes">&nbsp;<?php echo $lang[ 'pipeline' ][ 'OnlyMy' ]; ?>&nbsp;<i class="icon-info-circled blue fs-09 info" title="Показывать только свои сделки. Остальные фильтры не работают"></i></label>
+						<label><input name="onlymyp" id="onlymyp" type="checkbox" <?php if ( $onlymyp == 'yes' ) print "checked" ?> value="yes">&nbsp;<?php echo $lang[ 'pipeline' ][ 'OnlyMy' ]; ?>&nbsp;<i class="icon-info-circled blue fs-09 info" title="Показывать только свои сделки. Остальные фильтры не работают"></i></label>
 					</div>
 
 					<?php
