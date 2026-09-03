@@ -110,6 +110,25 @@ if ($field['Field'] == '') {
 
 $settingsMore = [];
 
+// Атомарная запись кэша: временный файл + rename — без повреждения JSON
+// при параллельных запросах (torn write)
+if (!function_exists('cacheWrite')) {
+
+	function cacheWrite(string $file, string $data): void {
+
+		$tmp = $file.'.'.getmypid().'.tmp';
+
+		if (file_put_contents($tmp, $data) !== false && @rename($tmp, $file)) {
+			return;
+		}
+
+		@unlink($tmp);
+		file_put_contents($file, $data);
+
+	}
+
+}
+
 //кэшируем общие настройки
 $settingsFile = $rootpath."/cash/".$fpath."settings.all.json";
 if (file_exists($settingsFile)) {
@@ -368,7 +387,7 @@ else {
 		"themesTasks"       => $themesTasks
 	];
 
-	file_put_contents($settingsFile, json_encode((array)$settingsApp));
+	cacheWrite($settingsFile, json_encode((array)$settingsApp));
 	//fclose( $file );
 
 }
@@ -401,7 +420,7 @@ if ($iduser1 > 0) {
 
 		//print_r($pluginEnabled);
 
-		file_put_contents($rootpath."/cash/".$fpath."plugins.json", $pluginEnabled);
+		cacheWrite($rootpath."/cash/".$fpath."plugins.json", $pluginEnabled);
 
 	}
 
@@ -446,7 +465,7 @@ if ($iduser1 > 0) {
 		$dbl         = $db -> getOne("SELECT params FROM {$sqlname}customsettings WHERE tip = 'doubles' AND identity = '$identity'");
 		$dblSettings = json_decode($dbl, true);
 
-		file_put_contents($doublesFile, $dbl);
+		cacheWrite($doublesFile, (string)$dbl);
 
 	}
 
@@ -660,7 +679,7 @@ if ($iduser1 > 0 && isset($other)) {
 			"dateFieldForFreeze"     => $other[45] != 'no' ? $other[45] : ''
 		];
 
-		file_put_contents($rootpath."/cash/".$fpath."otherSettings.json", json_encode($otherSettings));
+		cacheWrite($rootpath."/cash/".$fpath."otherSettings.json", json_encode($otherSettings));
 
 	}
 	else {
@@ -717,7 +736,7 @@ if ($iduser1 > 0) {
 
 			$ym_param = json_decode($db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$iduser1."' AND identity = '".$identity."'"), true);
 
-			file_put_contents($settingsYMail, json_encode($ym_param));
+			cacheWrite($settingsYMail, json_encode($ym_param));
 
 		}
 
@@ -788,7 +807,7 @@ if ($iduser1 > 0) {
 			"userSettings"  => $userSettings
 		];
 
-		file_put_contents($settingsUser, json_encode($settingsUserr));
+		cacheWrite($settingsUser, json_encode($settingsUserr));
 
 	}
 

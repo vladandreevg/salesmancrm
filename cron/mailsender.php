@@ -17,6 +17,16 @@ error_reporting( E_ERROR );
 $ypath = realpath( __DIR__.'/../' );
 
 include $ypath."/inc/config.php";
+// защита: запуск только из CLI либо администратором
+if (PHP_SAPI !== 'cli') {
+	require_once dirname(__DIR__)."/inc/auth.php";
+	require_once dirname(__DIR__)."/inc/settings.php";
+	if ((int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор')) {
+		http_response_code(403);
+		exit('Доступ запрещен');
+	}
+}
+
 include $ypath."/inc/dbconnector.php";
 include $ypath."/inc/settings.php";
 include $ypath."/inc/func.php";

@@ -145,13 +145,19 @@ if ($action == "settings") {
 //обработка изменений натроек по модулю в панели управления
 if ($action == "settings.do") {
 
+	// изменение настроек модуля — только администратор
+	if ( $isadmin != 'on' && $tipuser != 'Администратор' ) {
+		print 'Доступ запрещен';
+		exit();
+	}
+
 	$params['MenuTip']  = $_REQUEST['MenuTip'];
 	$params['Editor']   = $_REQUEST['Editor'];
 	$params['EditorMy'] = $_REQUEST['EditorMy'];
 
 	$settings = json_encode_cyr($params);
 
-	$db -> query("UPDATE {$sqlname}modules SET content='$settings' WHERE mpath = 'corpuniver' AND identity = '$identity'");
+	$db -> query("UPDATE {$sqlname}modules SET content=?s WHERE mpath = 'corpuniver' AND identity = ?i", $settings, (int)$identity);
 
 	print "Сделано";
 

@@ -780,8 +780,15 @@ class Invoice {
 			$arg['clid'] = $resultcl["clid"];
 			$arg['pid']  = $resultcl["pid"];
 
-			//генерируем номер счета, если надо
-			$arg['invoice'] = ( $invoice == '' && $igen == 'yes' ) ? generate_num('invoice') : $invoice;
+			//генерируем номер счета, если надо (атомарно — без дублей номеров при параллельных запросах)
+			if ( $invoice == '' && $igen == 'yes' ) {
+
+				$db -> query( "UPDATE {$sqlname}settings SET inum = LAST_INSERT_ID(inum + 1) WHERE id = ?i", (int)$identity );
+				$invoice = generate_num( 'invoice', (int)$db -> insertId() );
+
+			}
+
+			$arg['invoice'] = $invoice;
 
 			$arg['identity'] = $identity;
 
@@ -802,16 +809,9 @@ class Invoice {
 			 */
 			if ($crid > 0) {
 
-				//обновим счетчик счетов
-				if ($invoice == '' && $igen == 'yes') {
-
-					$cnum = $db -> getOne("SELECT inum FROM {$sqlname}settings WHERE id = '$identity'") + 1;
-
-					$db -> query("UPDATE {$sqlname}settings SET inum = '$cnum' WHERE id = '$identity'");
-
-					unlink($rootpath."/cash/".$fpath."settings.all.json");
-
-				}
+				// счетчик счетов уже обновлен атомарно при генерации номера;
+				// сбрасываем кэш настроек
+				unlink($rootpath."/cash/".$fpath."settings.all.json");
 
 				$mes[] = "Счет добавлен в платежи";
 
@@ -1330,8 +1330,15 @@ class Invoice {
 					$arg['summa_credit'] = $summaDeal;
 				}
 
-				//генерируем номер счета, если надо
-				$arg['invoice'] = ( $invoice == '' && $igen == 'yes' ) ? generate_num('invoice') : $invoice;
+				//генерируем номер счета, если надо (атомарно)
+				if ( $invoice == '' && $igen == 'yes' ) {
+
+					$db -> query( "UPDATE {$sqlname}settings SET inum = LAST_INSERT_ID(inum + 1) WHERE id = ?i", (int)$identity );
+					$invoice = generate_num( 'invoice', (int)$db -> insertId() );
+
+				}
+
+				$arg['invoice'] = $invoice;
 
 				$arg['identity'] = $identity;
 
@@ -1386,16 +1393,9 @@ class Invoice {
 				 */
 				if ($crid > 0) {
 
-					//обновим счетчик счетов
-					if ($invoice == '' && $igen == 'yes') {
-
-						$cnum = $db -> getOne("SELECT inum FROM {$sqlname}settings WHERE id = '$identity'") + 1;
-
-						$db -> query("update {$sqlname}settings set inum = '$cnum' WHERE id = '$identity'");
-
-						unlink($rootpath."/cash/".$fpath."settings.all.json");
-
-					}
+					// счетчик счетов уже обновлен атомарно при генерации номера;
+					// сбрасываем кэш настроек
+					unlink($rootpath."/cash/".$fpath."settings.all.json");
 
 					$mes[] = "Счет добавлен в платежи";
 
@@ -1652,6 +1652,22 @@ class Invoice {
 					$invoice = $invOld['invoice'];
 				}
 
+				// валидация суммы платежа: не допускаем отрицательные значения
+				if ( $summa < 0 || $summa_credit < 0 ) {
+
+					$response['result']        = 'Error';
+					$response['error']['code'] = '400';
+					$response['error']['text'] = "Некорректная сумма платежа";
+
+					return $response;
+
+				}
+
+				// переплата не допускается — сумма не больше суммы счета
+				if ( $summa > $summa_credit ) {
+					$summa = $summa_credit;
+				}
+
 				//определяем - сервисная это сделка или нет
 				$isper = ( isServices($did) ) ? 'yes' : 'no';
 
@@ -1669,14 +1685,26 @@ class Invoice {
 
 				$delta = $summa_credit - $summa;
 
-				$db -> query("UPDATE {$sqlname}credit SET ?u WHERE crid = '$crid' and identity = '$identity'", arrayNullClean([
+				// атомарная защита от повторного проведения (двойная оплата/дубль платежного уведомления):
+				// обновляем счет только если он еще не оплачен
+				$db -> query("UPDATE {$sqlname}credit SET ?u WHERE crid = ?i and identity = ?i and do != 'on'", arrayNullClean([
 					"do"           => 'on',
 					"invoice"      => $invoice,
 					"invoice_chek" => $invoice_chek,
 					"invoice_date" => $invoice_date,
 					"summa_credit" => $summa,
 					'rs'           => $rs
-				]));
+				]), $crid, (int)$identity);
+
+				if ((int)$db -> affectedRows() < 1) {
+
+					$response['result']        = 'Error';
+					$response['error']['code'] = '409';
+					$response['error']['text'] = "Счет уже оплачен";
+
+					return $response;
+
+				}
 
 				$mes[] = "Внесена оплата по графику ".num_format($summa)." $valuta";
 
@@ -1888,10 +1916,19 @@ class Invoice {
 				$did          = (int)$invOld["did"];
 				$invoice      = $invOld["invoice"];
 
-				$db -> query("UPDATE {$sqlname}credit SET ?u WHERE crid = '$crid' and identity = '$identity'", [
-					"do"           => '',
-					"invoice_date" => NULL
-				]);
+				// атомарно снимаем отметку оплаты (только если счет был оплачен)
+				$db -> query("UPDATE {$sqlname}credit SET do = '', invoice_date = NULL WHERE crid = ?i and identity = ?i and do = 'on'", $crid, (int)$identity);
+
+				if ((int)$db -> affectedRows() < 1) {
+
+					$response['result']        = 'Error';
+					$response['error']['code'] = '409';
+					$response['error']['text'] = "Счет не был оплачен";
+
+					return $response;
+
+				}
+
 				$mes[] = "Отменена оплата по сч № ".$invoice;
 
 				//Внесем деньги на расчетный счет

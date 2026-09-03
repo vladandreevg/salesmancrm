@@ -11,7 +11,7 @@ error_reporting(E_ERROR);
 
 $rootpath = realpath( __DIR__ );
 
-//require_once $rootpath."/inc/licloader.php";
+require_once $rootpath."/inc/licloader.php";
 
 global $script;
 
@@ -35,6 +35,15 @@ if ($uri_parts[0] == "file") {
 	require_once $rootpath."/inc/auth.php";
 	require_once $rootpath."/inc/func.php";
 	require_once $rootpath."/inc/settings.php";
+
+	// выдача файлов — только авторизованным пользователям
+	if ((int)$iduser1 < 1) {
+
+		setcookie("rurl", $rurl, time()+60000);
+		header("Location: /login");
+		exit();
+
+	}
 
 	$filename = $uri_parts[1];
 

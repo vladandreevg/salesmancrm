@@ -48,22 +48,23 @@ try {
 			$tzone   = $result["tzone"];
 			$isadmin = $result["isadmin"];
 
+			// замещение (замена сотрудника) — только если целевой пользователь назначил
+			// текущего своим замещающим (zam) и не заблокирован (secrty='yes')
+			if ((int)$_COOKIE['old'] > 0 && (int)$identity > 0 && canImpersonate($db, (int)$iduser1, (int)$_COOKIE['asuser'], (int)$identity)) {
+
+				$result = (array)$db -> getRow("SELECT * FROM {$sqlname}user WHERE iduser = ?i and identity = ?i", (int)$_COOKIE['asuser'], (int)$identity);
+				$iduser1   = $result["iduser"];
+				$usertitle = $result["title"];
+				$tipuser   = $result["tip"];
+				$mid       = $result["mid"];
+				$login     = $result["login"];
+				$identity  = $result["identity"];
+				$isadmin   = $result["isadmin"];
+				$tzone     = $result["tzone"];
+
+			}
+
 		}
-
-	}
-	if( (int)$_COOKIE[ 'old' ] > 0) {
-
-		$iduser1 = (int)$_COOKIE[ 'asuser' ];
-
-		$result = (array)$db -> getRow("SELECT * FROM {$sqlname}user WHERE iduser = '$iduser1' and identity = '$identity'");
-		$iduser1   = $result["iduser"];
-		$usertitle = $result["title"];
-		$tipuser   = $result["tip"];
-		$mid       = $result["mid"];
-		$login     = $result["login"];
-		$identity  = $result["identity"];
-		$isadmin   = $result["isadmin"];
-		$tzone     = $result["tzone"];
 
 	}
 
@@ -86,5 +87,35 @@ catch (Exception $e){
 	print $err[] = 'Ошибка подключения к БД: '. $e-> getMessage() .'. Рекомендуем проверить параметры подключения к БД в файле "inc/config.php".';
 
 	exit();
+
+}
+
+/**
+ * Проверка легитимности "замещения" (подмены сотрудника).
+ * Действовать от имени $asUser может только пользователь $oldUser, которого
+ * целевой пользователь назначил своим замещающим (поле zam), при условии,
+ * что целевой аккаунт не заблокирован (secrty = 'yes').
+ *
+ * @param mixed $db
+ * @param int   $oldUser - текущий (исходный) пользователь из сессии
+ * @param int   $asUser  - пользователь, от имени которого запрошена работа
+ * @param int   $identity
+ *
+ * @return bool
+ */
+function canImpersonate($db, int $oldUser, int $asUser, int $identity): bool {
+
+	if ($oldUser < 1 || $asUser < 1 || $asUser === $oldUser || $identity < 1) {
+		return false;
+	}
+
+	$cnt = (int)$db -> getOne(
+		"SELECT COUNT(*) FROM {$GLOBALS['sqlname']}user WHERE iduser = ?i AND zam = ?i AND secrty = 'yes' AND identity = ?i",
+		$asUser,
+		$oldUser,
+		$identity
+	);
+
+	return $cnt > 0;
 
 }

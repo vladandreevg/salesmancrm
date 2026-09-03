@@ -183,6 +183,44 @@ $IconArray3 = [
 ];
 
 /**
+ * Проверка легитимности "замещения" (подмены сотрудника).
+ * Действовать от имени $asUser может только пользователь $oldUser, которого
+ * целевой пользователь назначил своим замещающим (поле zam), при условии,
+ * что целевой аккаунт не заблокирован (secrty = 'yes').
+ *
+ * Основное определение находится в inc/dbconnector.php (подключается раньше);
+ * здесь дублируется для контекстов, где func.php загружается без dbconnector
+ * (например, изолированные тесты).
+ *
+ * @param mixed $db
+ * @param int   $oldUser - текущий (исходный) пользователь из сессии
+ * @param int   $asUser  - пользователь, от имени которого запрошена работа
+ * @param int   $identity
+ *
+ * @return bool
+ */
+if (!function_exists('canImpersonate')) {
+
+	function canImpersonate($db, int $oldUser, int $asUser, int $identity): bool {
+
+		if ($oldUser < 1 || $asUser < 1 || $asUser === $oldUser || $identity < 1) {
+			return false;
+		}
+
+		$cnt = (int)$db -> getOne(
+			"SELECT COUNT(*) FROM {$GLOBALS['sqlname']}user WHERE iduser = ?i AND zam = ?i AND secrty = 'yes' AND identity = ?i",
+			$asUser,
+			$oldUser,
+			$identity
+		);
+
+		return $cnt > 0;
+
+	}
+
+}
+
+/**
  * Подключение hook
  */
 function loadIncludes(): void {
@@ -8835,7 +8873,10 @@ function sendRequestStream($url, $postdata = NULL, array $headers = NULL, string
 			'method'  => $method,
 			// Ниже задаются заголовки запроса
 			'header'  => yimplode("\n", $header),
-			'content' => $content
+			'content' => $content,
+			// таймаут соединения и чтения — защита от зависания воркера
+			'timeout' => 10,
+			'ignore_errors' => true
 		],
 		'ssl'  => [
 			'verify_peer'       => false,

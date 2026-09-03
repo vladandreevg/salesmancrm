@@ -341,7 +341,15 @@ class User {
 			"userSettings"  => $userSettings
 		];
 
-		file_put_contents( $settingsUserFile, json_encode( $settingsUser ) );
+		// атомарная запись кэша (tmp + rename) — без torn-write при параллельных запросах
+		$tmpF = $settingsUserFile.'.'.getmypid().'.tmp';
+		if ( file_put_contents( $tmpF, json_encode( $settingsUser ) ) !== false && @rename( $tmpF, $settingsUserFile ) ) {
+			// ok
+		}
+		else {
+			@unlink( $tmpF );
+			file_put_contents( $settingsUserFile, json_encode( $settingsUser ) );
+		}
 
 		return $settingsUser;
 

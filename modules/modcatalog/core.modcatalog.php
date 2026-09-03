@@ -25,6 +25,12 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
+// работа со складом/прайсом — только авторизованным пользователям
+if ((int)$iduser1 < 1) {
+	http_response_code(403);
+	exit();
+}
+
 $thisfile = basename(__FILE__);
 
 //include "mcfunc.php";
@@ -1045,9 +1051,11 @@ if ($action == "export") {
 
 }
 if ($action == "discard") {
-	$url = $rootpath.'/files/'.$fpath.$_COOKIE['url_catalog'];
+	$url = $rootpath.'/files/'.$fpath.basename((string)($_COOKIE['url_catalog'] ?? '')); // защита от path traversal
 	setcookie("url_catalog", '');
-	unlink($url);
+	if ( file_exists( $url ) ) {
+		unlink( $url );
+	}
 
 	exit();
 }

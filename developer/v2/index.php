@@ -17,10 +17,18 @@ $uri_parts = explode('/', trim($url_path, ' /'));
 $script = '';
 
 if ( !empty( $uri_parts[0] ) ) {
-	$script = $uri_parts[0];
-}
-if ( stripos( $script, 'php' ) === false ) {
-	$script = "{$script}.php";
+
+	// защита от include-траверсии: допускаем только имя существующего контроллера
+	$candidate = basename((string)$uri_parts[0]);
+	if ( stripos( $candidate, '.php' ) === false ) {
+		$candidate = $candidate.'.php';
+	}
+	if ( preg_match( '#^[a-z0-9_-]+\.php$#i', $candidate ) && file_exists( __DIR__.'/'.$candidate ) ) {
+		$script = $candidate;
+	}
+
 }
 
-include_once (string)($script);
+if ( $script !== '' ) {
+	include_once $script;
+}

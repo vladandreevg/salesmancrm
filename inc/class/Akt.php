@@ -1219,7 +1219,9 @@ class Akt {
 			if ( $id == 0 ) {
 
 				if ( $igen == 'yes' ) {
-					$akt_num = generate_num( "akt" );
+					// номер акта генерируем атомарно (без дублей при параллельных запросах)
+					$db -> query( "UPDATE {$sqlname}settings SET akt_num = LAST_INSERT_ID(akt_num + 1) WHERE id = ?i", (int)$identity );
+					$akt_num = generate_num( "akt", (int)$db -> insertId() );
 				}
 
 				//тип договора
@@ -1310,11 +1312,9 @@ class Akt {
 					}
 
 					/**
-					 * обновим счетчик актов
+					 * счетчик актов уже обновлен атомарно при генерации номера;
+					 * сбрасываем кэш настроек
 					 */
-					$cnum = $db -> getOne( "SELECT akt_num FROM {$sqlname}settings WHERE id = '$identity'" ) + 1;
-					$db -> query( "UPDATE {$sqlname}settings SET akt_num = '$cnum' WHERE id = '$identity'" );
-
 					unlink( $rootpath."/cash/".$fpath."settings.all.json" );
 
 					$oldstep = getDogData( $did, 'idcategory' );

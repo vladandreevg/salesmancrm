@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /* (C) 2018 Vladislav Andreev   */
 /*       SalesMan Project       */
@@ -17,13 +17,13 @@ require_once "../../../inc/licloader.php";
 $baseurl = "https://demo.isaler.ru/developer/v2/entry";
 
 //Адрес расположения CRM
-$baseurl = "http://sm2018.crm/developer/v2/entry";
+$baseurl = "http://sm2021.crm/developer/v2/entry";
 
 //существующий пользователь в системе
 DEFINE("LOGIN", "vladislav@isaler.ru");
 
 //получаем в Панели управления CRM
-DEFINE("KEY", "t1xdeOwWSIqgDol70CkRdK3WD4N4cm");
+DEFINE("KEY", "YOUR_API_KEY");
 
 function Send($url, $POST) {
 	$ch = curl_init();// Устанавливаем соединение

@@ -22,13 +22,26 @@ if ( $_REQUEST['action'] == "download" ) {
 	include $rootpath."/inc/settings.php";
 	include $rootpath."/inc/func.php";
 
+	// доступ к резервным копиям — только администратору
+	if ( $isadmin != 'on' && $tipuser != 'Администратор' ) {
+		http_response_code( 403 );
+		exit( 'Доступ запрещен' );
+	}
+
 	logger( '8', 'Скачан файл резервной копии БД', $iduser1 );
 
+	$file = basename( (string)$_REQUEST['file'] ); // защита от path traversal
+	$path = $rootpath."/files/backup/".$file;
+
+	if ( !file_exists( $path ) ) {
+		http_response_code( 404 );
+		exit( 'Файл не найден' );
+	}
+
 	header( "Content-Type: application/zip" );
-	header( "Content-Disposition: attachment; filename=".$_REQUEST['file'] );
-	$file = $_REQUEST['file'];
-	header( "Content-Length: ".filesize( $rootpath."/files/backup/".$file ) );
-	@readfile( $rootpath."/files/backup/".$file );
+	header( "Content-Disposition: attachment; filename=".$file );
+	header( "Content-Length: ".filesize( $path ) );
+	@readfile( $path );
 
 	exit();
 

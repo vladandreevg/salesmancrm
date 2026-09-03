@@ -105,6 +105,17 @@ switch ($action) {
 
 	case 'add':
 
+		// только администратор аккаунта может создавать пользователей
+		if ( $isadmin != 'on' && $tipuser != 'Администратор' ) {
+
+			$response['result']        = 'Error';
+			$response['error']['code'] = 403;
+			$response['error']['text'] = 'Недостаточно прав';
+
+			break;
+
+		}
+
 		$login = untag($params['user']);
 		$pwd   = $params['password'];
 
@@ -112,7 +123,9 @@ switch ($action) {
 
 		$boss = $db -> getOne("SELECT iduser FROM {$sqlname}user WHERE tip = 'Руководитель организации' and identity = '$identity' LIMIT 1");
 
-		$tip = (isset($params['tip']) && $params['tip'] != '') ? $params['tip'] : "Менеджер продаж";
+		// роль из запроса допускается только из известного набора
+		$allowedTips = [ 'Менеджер продаж', 'Руководитель организации', 'Руководитель отдела', 'Руководитель подразделения', 'Специалист', 'Администратор' ];
+		$tip = ( isset($params['tip']) && in_array( $params['tip'], $allowedTips, true ) ) ? $params['tip'] : 'Менеджер продаж';
 		$mid = (isset($params['boss']) && $params['boss'] != '') ? current_userbylogin($params['boss']) : $boss;
 
 		$mail = untag($params['email']);

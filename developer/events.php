@@ -55,7 +55,7 @@ function outSender(string $url, array $params){
 
 	$params['identity'] = $GLOBALS['identity'];
 	$params['iduser1']  = $GLOBALS['iduser1'];
-	$params['ses']      = $_COOKIE['ses'];
+	// сессионный cookie НЕ передаем и НЕ логируем (защита от утечки токена)
 
 	$ch = curl_init();// Устанавливаем соединение
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

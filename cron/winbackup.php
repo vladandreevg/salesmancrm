@@ -19,7 +19,17 @@ error_reporting(0);
 include "../inc/config.php";
 include "../inc/dbconnector.php";
 
-$litera = $_SERVER['DOCUMENT_ROOT']{0};
+// запуск только из CLI либо администратором через веб
+if (PHP_SAPI !== 'cli') {
+	include "../inc/auth.php";
+	include "../inc/settings.php";
+	if ((int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор')) {
+		http_response_code(403);
+		exit('Доступ запрещен');
+	}
+}
+
+$litera = $_SERVER['DOCUMENT_ROOT'][0];
 
 //$basepath = "d:\\SalesmanServer";
 $basepath = $litera.":";

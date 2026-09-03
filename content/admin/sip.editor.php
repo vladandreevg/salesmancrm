@@ -20,6 +20,12 @@ include $rootpath."/inc/dbconnector.php";
 include $rootpath."/inc/auth.php";
 include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
+// Доступ только для администратора
+if ($isadmin != 'on' && $tipuser != 'Администратор') {
+	print 'Доступ запрещен';
+	exit();
+}
+
 
 $thisfile = basename(__FILE__);
 
@@ -124,7 +130,8 @@ if ($action == 'getApiKey') {
 		$size  = StrLen($chars) - 1;
 		$key   = NULL;
 
-		while ($max--) $key .= $chars[rand(0, $size)];
+		// random_int вместо rand() — криптостойкий генератор
+		while ($max--) $key .= $chars[random_int(0, $size)];
 
 		if (in_array($key, $keys)) {
 			genkey();

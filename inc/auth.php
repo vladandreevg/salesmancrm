@@ -13,6 +13,8 @@
  * в скриптах, загружаемых через Ajax
  */
 
+use Salesman\User;
+
 $rurl      = $_SERVER['REQUEST_URI'];
 $ipaccesse = 'no';
 
@@ -30,18 +32,42 @@ if ($_COOKIE['ses'] != '') {
 	$titleuser = $result["title"];
 	$secrty    = $result["secrty"];
 	$identity  = (int)$result["identity"];
+	$isadmin   = $result["isadmin"];
 
 	if( (int)$_COOKIE[ 'old' ] > 0) {
 
-		$iduser1 = (int)$_COOKIE[ 'asuser' ];
+		// находим подчиненных
+		$x = User::userArray($iduser1);
+		$y = array_column(
+			array_filter($x, static function($var) {
+				return $var['secrty'] == 'yes';
+			}),
+			'id'
+		);
 
-		$result = $db -> getRow("SELECT * FROM {$sqlname}user WHERE iduser='$iduser1' and identity = '$identity'");
-		$iduser1   = (int)$result["iduser"];
-		$usertitle = $result["title"];
-		$tipuser   = $result["tip"];
-		$mid       = (int)$result["mid"];
-		$login     = $result["login"];
-		$identity  = (int)$result["identity"];
+		// замещение разрешено только если целевой пользователь назначил текущего
+		// своим замещающим (zam) и не заблокирован (secrty='yes')
+		// так же функция доступна администратору и ко всем подчиненным текущего юзера
+		if ($isadmin == 'on' || canImpersonate($db, (int)$iduser1, (int)$_COOKIE['asuser'], (int)$identity) || in_array((int)$_COOKIE['asuser'], $y)) {
+
+			$result = $db -> getRow("SELECT * FROM {$sqlname}user WHERE iduser=?i and identity=?i", (int)$_COOKIE['asuser'], (int)$identity);
+			$iduser1   = (int)$result["iduser"];
+			$usertitle = $result["title"];
+			$tipuser   = $result["tip"];
+			$mid       = (int)$result["mid"];
+			$login     = $result["login"];
+			$identity  = (int)$result["identity"];
+			$secrty    = $result["secrty"];
+			$isadmin   = $result["isadmin"];
+
+		}
+		else {
+
+			// невалидная попытка замещения — сбрасываем cookies
+			setcookie("old", '', time() - 3600, "/");
+			setcookie("asuser", '', time() - 3600, "/");
+
+		}
 
 	}
 
@@ -70,6 +96,9 @@ if ($_COOKIE['ses'] != '') {
 	}
 
 }
+// Примечание: при отсутствии cookie сессии скрипт продолжает работу с $iduser1 = 0,
+// т.к. auth.php подключается и в webhook-скриптах (PBX/API), работающих без сессии.
+// Чувствительные скрипты обязаны самостоятельно проверять (int)$iduser1 > 0.
 
 $result_set = $db -> getRow("select * from {$sqlname}settings WHERE id = '$identity'");
 $ipaccesse = $result_set["ipaccesse"];

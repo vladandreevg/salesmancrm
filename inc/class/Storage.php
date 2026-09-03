@@ -120,7 +120,7 @@ class Storage {
 		include_once $rootpath."/inc/dbconnector.php";
 		include_once $rootpath."/inc/func.php";
 
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity']; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 		$fpath    = $GLOBALS['fpath'];
@@ -302,7 +302,7 @@ class Storage {
 		require_once $rootpath."/inc/dbconnector.php";
 		require_once $rootpath."/inc/func.php";
 
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity']; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
@@ -434,8 +434,8 @@ class Storage {
 
 		$rootpath = $this -> rootpath;
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 		$fpath    = $this -> fpath;
 
@@ -476,7 +476,7 @@ class Storage {
 			$oldparams['nds']      = pre_format( $res["nds"] );
 			$oldparams['prid']     = $params['prid'];
 
-			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = '$params[prid]' and identity = '$identity'", [
+			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = ?i and identity = ?i", (int)$params['prid'], (int)$identity, [
 				"artikul"  => $params['artikul'],
 				"title"    => $params['title'],
 				"descr"    => $params['descr'],
@@ -695,7 +695,7 @@ class Storage {
 
 		$rootpath = $this -> rootpath;
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 		$fpath    = $this -> fpath;
 		$uploaddir = $rootpath.'/files/'.$fpath.'modcatalog/';
@@ -736,7 +736,7 @@ class Storage {
 	public function deletepoz(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		unset( $params['action'] );
@@ -761,8 +761,8 @@ class Storage {
 	public function editprice(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		unset( $params['action'] );
@@ -782,7 +782,7 @@ class Storage {
 			$oldparams['prid']     = $params['prid'];
 			$oldparams['price_in'] = ($params['price_in'] > 0) ? $params["price_in"] : $res['price_in'];
 
-			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = '$params[prid]' and identity = '$identity'", [
+			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = ?i and identity = ?i", (int)$params['prid'], (int)$identity, [
 				"price_1"  => ($params['price_1'] > 0) ? $params['price_1'] : $res["price_1"],
 				"price_in" => $params['price_in']
 			] );
@@ -806,7 +806,7 @@ class Storage {
 	public function editone(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		unset( $params['action'], $params['identity'], $params['iduser1'] );
@@ -853,8 +853,8 @@ class Storage {
 
 		$rootpath = $this -> rootpath;
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 		$fpath    = $this -> fpath;
 
@@ -1232,15 +1232,10 @@ class Storage {
 						//print $cSklad['count'] ."\n";
 						//print $cSklad['kol'] ."\n";
 
-						//если позиция уже есть на складе - обновляем её с добавлением количества
+						//если позиция уже есть на складе - обновляем её с добавлением количества (АТОМАРНО)
 						if ( (int)$cSklad['count'] > 0 ) {
 
-							$newkol = $cSklad['kol'] + $data['kol'];
-
-							$db -> query( "UPDATE {$sqlname}modcatalog_skladpoz SET ?u WHERE prid = '".$data['prid']."' and sklad = '$order[sklad]' and identity = '$identity'", [
-								"kol"     => $newkol,
-								"date_in" => current_datum()
-							] );
+							$db -> query( "UPDATE {$sqlname}modcatalog_skladpoz SET kol = kol + ?s, date_in = ?s WHERE prid = ?i and sklad = ?i and identity = ?i", (string)(float)$data['kol'], current_datum(), (int)$data['prid'], (int)$order['sklad'], (int)$identity );
 
 						}
 						//если такой позиции нет - добавим
@@ -1335,11 +1330,8 @@ class Storage {
 
 						$kolOstatok = $kolSklad - $data['kol'];
 
-						//обновляем количество товара на складе
-						$db -> query( "UPDATE {$sqlname}modcatalog_skladpoz SET ?u WHERE prid = '".$data['prid']."' and sklad = '$order[sklad]' and identity = '$identity'", [
-							"kol"      => $kolOstatok,
-							"date_out" => current_datum()
-						] );
+						//обновляем количество товара на складе АТОМАРНО (защита от oversell при параллельных операциях)
+						$db -> query( "UPDATE {$sqlname}modcatalog_skladpoz SET kol = kol - ?s, date_out = ?s WHERE prid = ?i and sklad = ?i and identity = ?i and kol >= ?s", (string)(float)$data['kol'], current_datum(), (int)$data['prid'], (int)$order['sklad'], (int)$identity, (string)(float)$data['kol'] );
 
 						//если настроено, то обновляем прайс
 						/*if ($settings['mcAutoPricein'] == "yes") {
@@ -1608,8 +1600,8 @@ class Storage {
 	public function move(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$settings = self ::settings( $identity );
@@ -1727,7 +1719,7 @@ class Storage {
 		require_once $rootpath."/inc/dbconnector.php";
 		require_once $rootpath."/inc/func.php";
 
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity'];
+		$identity = (int)$GLOBALS['identity']; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
@@ -1953,7 +1945,7 @@ class Storage {
 	public function editzstatus(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$settings = self ::settings( $identity );
@@ -2081,7 +2073,7 @@ class Storage {
 
 		$rootpath = $this -> rootpath;
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 		$fpath    = $this -> fpath;
 
@@ -2209,7 +2201,7 @@ class Storage {
 
 		$db       = $this -> db;
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 
 		$err = [];
 
@@ -2264,7 +2256,7 @@ class Storage {
 	public function removezayavka(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$err = [];
@@ -2300,7 +2292,7 @@ class Storage {
 	public function removeorder(array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$err = [];
@@ -2407,8 +2399,8 @@ class Storage {
 	public function SyncPoz(string $print = 'no', array $params = []): string {
 
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$settings = self ::settings( $identity );
@@ -2461,7 +2453,7 @@ class Storage {
 				$kolOrder = $db -> getOne( "SELECT kol FROM {$sqlname}modcatalog_aktpoz where prid = '".$params['prid']."' and ida = '".$params['ida']."' and identity = '$identity'" );
 
 				//компания к которой прикреплен склад, чтобы отфильтровать сделки
-				$mcid = ($params['sklad'] > 0) ? $db -> getOne( "SELECT mcid FROM {$sqlname}modcatalog_sklad WHERE id = '$params[sklad]' and  identity = '$identity' ORDER BY title" ) : 0;
+				$mcid = ($params['sklad'] > 0) ? $db -> getOne( "SELECT mcid FROM {$sqlname}modcatalog_sklad WHERE id = ?i and identity = ?i ORDER BY title", (int)$params['sklad'], (int)$identity ) : 0;
 
 				$kolOstatok = $kolOrder;
 
@@ -2972,8 +2964,8 @@ class Storage {
 	public function SyncReserv(string $print = 'no', int $did = 0, array $params = []) {
 
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$settings = self ::settings( $identity );
@@ -3199,7 +3191,7 @@ class Storage {
 	public function CompleteStatus($did, array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$kolAll    = 0;
@@ -3257,8 +3249,8 @@ class Storage {
 	public function eNotify($id, $tip, array $params = []): array {
 
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$settings = self ::settings( $identity );
@@ -3757,8 +3749,8 @@ class Storage {
 	public function mcSyncPoz(string $print = 'no', array $params = []): string {
 
 		$sqlname  = $this -> sqlname;
-		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
-		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
+		$iduser1  = (int)$this -> iduser1; // iduser только из сессии (защита от подмены)
+		$identity = (int)$this -> identity; // identity только из сессии (защита от подмены/кросс-тенанта)
 		$db       = $this -> db;
 
 		$settings            = $db -> getOne( "SELECT settings FROM {$sqlname}modcatalog_set WHERE identity = '$identity'" );
@@ -3779,7 +3771,7 @@ class Storage {
 		//склад, на который делаем приход
 		if ( (int)$params['ida'] > 0 ) {
 
-			$sklad = $db -> getOne( "SELECT sklad FROM {$sqlname}modcatalog_akt WHERE id = '$params[ida]' and identity = '$identity'" );
+			$sklad = $db -> getOne( "SELECT sklad FROM {$sqlname}modcatalog_akt WHERE id = ?i and identity = ?i", (int)$params['ida'], (int)$identity );
 
 			//если обрабатывается акт по сделке, то позиции ставим в резерв
 			//принимаем параметры ida, did
@@ -3919,17 +3911,17 @@ class Storage {
 						//если склад задан, то идем дальше, т.к. для резерва нужен склад
 						if ( $sklad > 0 ) {
 
-							$speca = $db -> getAll( "SELECT * FROM {$sqlname}speca WHERE did = '$params[did]' and identity = '$identity'" );
+							$speca = $db -> getAll( "SELECT * FROM {$sqlname}speca WHERE did = ?i and identity = ?i", (int)$params['did'], (int)$identity );
 							foreach ( $speca as $data ) {
 
 								//количество на складе
 								$kolSklad = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_skladpoz WHERE prid = '$data[prid]' and sklad = '$sklad' and identity = '$identity'" );
 
 								//количество уже зарезервированных под эту сделку
-								$kolReserve = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE prid = '$data[prid]' and did = '$params[did]' and sklad = '$sklad' and identity = '$identity'" );
+								$kolReserve = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE prid = ?i and did = ?i and sklad = ?i and identity = ?i", (int)$data['prid'], (int)$params['did'], (int)$sklad, (int)$identity );
 
 								//количество уже зарезервированных под другие сделки
-								$kolReserveOther = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE prid = '$data[prid]' and did != '$params[did]' and sklad = '$sklad' and identity = '$identity'" );
+								$kolReserveOther = (float)$db -> getOne( "SELECT SUM(kol) as kol FROM {$sqlname}modcatalog_reserv WHERE prid = ?i and did != ?i and sklad = ?i and identity = ?i", (int)$data['prid'], (int)$params['did'], (int)$sklad, (int)$identity );
 
 								//что осталось зарезервировать
 								$kolToReserve = $kolSklad - $kolReserveOther - $kolReserve;

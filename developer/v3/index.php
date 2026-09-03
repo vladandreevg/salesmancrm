@@ -99,7 +99,7 @@ $db = new SafeMysql([
 ]);
 
 //ищем аккаунт по apikey
-$result   = $db -> getRow("SELECT id, api_key, timezone FROM {$sqlname}settings WHERE api_key = '$APIKEY'");
+$result   = $db -> getRow("SELECT id, api_key, timezone FROM {$sqlname}settings WHERE api_key = ?s", $APIKEY);
 $identity = (int)$result['id'];
 $api_key  = $result['api_key'];
 $timezone = $result['timezone'];
@@ -107,7 +107,7 @@ $timezone = $result['timezone'];
 global $identity;
 
 //найдем пользователя
-$result     = $db -> getRow("SELECT title, iduser, isadmin, tip FROM {$sqlname}user WHERE login = '$LOGIN' and identity = '$identity'");
+$result     = $db -> getRow("SELECT title, iduser, isadmin, tip FROM {$sqlname}user WHERE login = ?s and identity = ?i", $LOGIN, (int)$identity);
 $iduser     = $iduser1 = (int)$result['iduser'];
 $username   = $result['title'];
 $isadmin    = $result['isadmin'];
@@ -141,6 +141,16 @@ elseif (empty($username)) {
 	$response['result']        = 'Error';
 	$response['error']['code'] = 401;
 	$response['error']['text'] = 'Неизвестный пользователь';
+
+	$Error = 'yes';
+
+}
+
+if( !file_exists($path."/methods/$method.php") ){
+
+	$response['result']        = 'Error';
+	$response['error']['code'] = 404;
+	$response['error']['text'] = 'Неизвестный метод';
 
 	$Error = 'yes';
 

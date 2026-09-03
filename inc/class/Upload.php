@@ -121,7 +121,7 @@ class Upload {
 
 						$ftitle     = $_FILES['file']['name'][$i];
 						$ext        = texttosmall(getExtention($ftitle));
-						$fname      = md5($ftitle.filesize($_FILES['files']['tmp_name'][$i]).time()).".".$ext;
+						$fname      = 'f'.bin2hex(random_bytes(16)).'.'.$ext;
 						$ftype      = $_FILES['file']['type'][$i];
 						$uploadfile = $uploaddir.$fname;
 						//$fsize      = filesize( $_FILES[ 'file' ][ 'tmp_name' ][ $i ] );
@@ -172,7 +172,7 @@ class Upload {
 
 				$ftitle     = $_FILES['file']['name'];
 				$ext        = texttosmall(getExtention($ftitle));
-				$fname      = md5($ftitle.filesize($_FILES['files']['tmp_name']).time()).".".$ext;
+				$fname      = 'f'.bin2hex(random_bytes(16)).'.'.$ext;
 				$ftype      = $_FILES['file']['type'];
 				$uploadfile = $uploaddir.$fname;
 				//$fsize      = filesize( $_FILES[ 'file' ][ 'tmp_name' ] );
@@ -223,7 +223,7 @@ class Upload {
 
 						$ftitle     = $_FILES['files']['name'][$i];
 						$ext        = texttosmall(getExtention($ftitle));
-						$fname      = md5($ftitle.filesize($_FILES['files']['tmp_name'][$i]).time()).".".$ext;
+						$fname      = 'f'.bin2hex(random_bytes(16)).'.'.$ext;
 						$ftype      = $_FILES['files']['type'][$i];
 						$uploadfile = $uploaddir.$fname;
 						//$fsize      = filesize( $_FILES[ 'file' ][ 'tmp_name' ][ $i ] );

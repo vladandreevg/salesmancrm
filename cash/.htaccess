@@ -11,3 +11,8 @@ Allow from localhost
 Deny from all
 Allow from localhost
 </Files>
+
+<Files "*.log">
+Deny from all
+Allow from localhost
+</Files>

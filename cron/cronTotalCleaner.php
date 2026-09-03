@@ -25,13 +25,28 @@ error_reporting( E_ERROR );
 ini_set( 'display_errors', 1 );
 ini_set('memory_limit', '512M');
 
-$work = $argv[1];
+$work = $argv[1] ?? '';
 
 $root = dirname( __DIR__ );
 
 require_once $root."/inc/config.php";
+// защита: запуск только из CLI либо администратором
+if (PHP_SAPI !== 'cli') {
+	require_once dirname(__DIR__)."/inc/auth.php";
+	require_once dirname(__DIR__)."/inc/settings.php";
+	if ((int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор')) {
+		http_response_code(403);
+		exit('Доступ запрещен');
+	}
+}
+
 
 function showProgressBar($percentage, int $numDecimalPlaces, $value = 0) {
+
+	// не показываем прогресс-бар при выводе в файл/крон (не терминал)
+	if (!stream_isatty(STDOUT)) {
+		return;
+	}
 
 	$percentageStringLength = 4;
 	if ($numDecimalPlaces > 0) {
@@ -91,6 +106,17 @@ $opts = [
 define('ROOT', $root);
 define('OPTS', $opts);
 
+/**
+ * Новое соединение для операций очистки.
+ * SET FOREIGN_KEY_CHECKS действует на уровне сессии, поэтому отключаем
+ * проверку внешних ключей на каждом новом подключении, а не только на $db
+ */
+function newDb2(array $opts) {
+	$db2 = new SafeMySQL( $opts );
+	$db2 -> query( "SET FOREIGN_KEY_CHECKS = 0" );
+	return $db2;
+}
+
 $day   = 90;
 $count = 0;
 $fcount = 0;
@@ -104,8 +130,7 @@ require_once $root."/inc/settings.php";
 $ym_fpath = $root.'/files/ymail/';
 
 $settingsFile = $root."/cash/settings.all.json";
-$settings = json_decode( file_get_contents( $settingsFile ), true );
-$tmzone       = $settings["tmzone"];
+$settings = json_decode( (string)@file_get_contents( $settingsFile ), true ) ?: [];
 
 // отключаем ключи
 $db -> query("SET FOREIGN_KEY_CHECKS = 0");
@@ -139,20 +164,20 @@ $result = $db -> query( "
 $total = $db -> affectedRows();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 $fsize = 0;
 
 while ($da = $db -> fetch( $result )) {
 
 	//unset( $db2 );
-	//$db2 = new SafeMySQL( $opts );
+	//$db2 = newDb2( $opts );
 
 	$res = $db2 -> getAll( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$da[id]'" );
 	foreach ($res as $data) {
 
 		//unset( $db2 );
-		//$db2 = new SafeMySQL( $opts );
+		//$db2 = newDb2( $opts );
 
 		//удалим файлы
 		if(!$isTest) {
@@ -176,7 +201,7 @@ while ($da = $db -> fetch( $result )) {
 	$count++;
 
 	//unset( $db2 );
-	//$db2 = new SafeMySQL( $opts );
+	//$db2 = newDb2( $opts );
 
 	// удаляем даресатов
 	if(!$isTest) {
@@ -197,14 +222,32 @@ print "Удалено: \033[32m$count\033[0m старых писем (старш
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 // удаляем "потерянные" файлы, у которых письма уже удалены
-//$res = $db2 -> query( "SELECT id, mid FROM {$sqlname}ymail_files WHERE (SELECT id FROM {$sqlname}ymail_messages WHERE id = mid) IS NULL" );
-//print "удаляем \"потерянные\" файлы, у которых письма уже удалены\n";
 if(!$isTest) {
-	$res = $db2 -> query( "DELETE FROM {$sqlname}ymail_files WHERE (SELECT id FROM {$sqlname}ymail_messages WHERE id = {$sqlname}ymail_files.mid) IS NULL" );
-	print "Удалено: \033[32m".$db2 -> affectedRows()."\033[0m \"потерянных\" файлов, у которых письма уже удалены\n";
+
+	$res = $db2 -> getAll( "SELECT id, file FROM {$sqlname}ymail_files WHERE (SELECT id FROM {$sqlname}ymail_messages WHERE id = {$sqlname}ymail_files.mid) IS NULL" );
+
+	$fcount2 = 0;
+	$fsize2  = 0;
+
+	foreach ($res as $data) {
+
+		if ( file_exists( $ym_fpath.$data['file'] ) ) {
+			$fsize2 += filesize($ym_fpath.$data['file']);
+			unlink( $ym_fpath.$data['file'] );
+		}
+
+		$fcount2++;
+
+	}
+
+	// удаляем записи из БД одним запросом
+	$db2 -> query( "DELETE FROM {$sqlname}ymail_files WHERE (SELECT id FROM {$sqlname}ymail_messages WHERE id = {$sqlname}ymail_files.mid) IS NULL" );
+
+	print "Удалено: \033[32m".$fcount2."\033[0m \"потерянных\" файлов, у которых письма уже удалены (размер ".(float)FileSize2Human($fsize2).")\n";
+
 }
 else{
 	$res = $db2 -> getOne( "SELECT COUNT(*) FROM {$sqlname}ymail_files WHERE (SELECT id FROM {$sqlname}ymail_messages WHERE id = {$sqlname}ymail_files.mid) IS NULL" );
@@ -248,7 +291,7 @@ else{
 }
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Очистка истории звонков
@@ -266,7 +309,7 @@ else{
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 // старые звонки, не привязанные к клиентам/контактам
 if(!$isTest) {
@@ -292,7 +335,7 @@ else{
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Чистим логи Webhook
@@ -308,7 +351,7 @@ else{
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Чистим логи API
@@ -329,7 +372,7 @@ if ( $da[0] > 0 ) {
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Удаление старых активностей > 3 лет
@@ -345,7 +388,7 @@ else{
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Удаление старых напоминаний > 1 года
@@ -361,7 +404,7 @@ else{
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Удаление лога записей уведомления пользователей > 1 месяца
@@ -382,7 +425,7 @@ if ( (int)$dap > 0 ) {
 }
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Удаление истории
@@ -399,7 +442,7 @@ else{
 flush();
 
 unset( $db2 );
-$db2 = new SafeMySQL( $opts );
+$db2 = newDb2( $opts );
 
 /**
  * Удаление активностей с неизвестным типом

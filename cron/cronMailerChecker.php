@@ -39,6 +39,9 @@ $_SERVER[ 'DOCUMENT_ROOT' ] = dirname( __DIR__ );
 $root = dirname( __DIR__ );
 
 require_once $root."/inc/config.php";
+// защита: веб-запуск запрещен — только CLI
+if (PHP_SAPI !== 'cli') { http_response_code(403); exit('CLI only'); }
+
 require_once $root."/inc/dbconnector.php";
 require_once $root."/inc/func.php";
 

@@ -39,8 +39,7 @@ $ymailSet = json_decode( (string)$ymailSet, true );
 
 //print_r($ym_param);
 
-// key: AIzaSyDYFM7-ZRx18LbiZcmGnj8_CRDN__GjJFw
-// id_app: 3137464671-ps0see5m7gtikms9sqcphvq08814r20o.apps.googleusercontent.com
+// ключ Google OAuth удален из кода — настраивается в Панели управления (Почтовик)
 
 /**
  * Настройки почтового ящика

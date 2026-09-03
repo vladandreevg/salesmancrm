@@ -1011,7 +1011,7 @@ function current_userbylogin($login): int {
 
 	if ( $login ) {
 
-		$id = $db -> getOne( "SELECT iduser FROM {$sqlname}user WHERE login = '$login' AND identity = '$identity'" );
+		$id = $db -> getOne( "SELECT iduser FROM {$sqlname}user WHERE login = ?s AND identity = ?i", (string)$login, (int)$identity );
 
 	}
 
@@ -2673,7 +2673,7 @@ function DealStepLog($did, $step): bool {
  * @category Core
  * @package  Func
  */
-function generate_num($tip) {
+function generate_num($tip, int $cnum = 0) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2682,47 +2682,64 @@ function generate_num($tip) {
 	global $cnum;
 
 	$format = '';
-	$num    = 0;
 
-	if ( !$tip ) {
-		goto a;
+	// если передан готовый номер (атомарный инкремент счетчика выполнен вызывающим кодом),
+	// то используем его; иначе — режим предпросмотра: читаем счетчик без изменения
+	if ($cnum < 1) {
+
+		if ( !$tip ) {
+			goto a;
+		}
+
+		if ( $tip == 'contract' ) {
+
+			$results = $db -> getRow( "SELECT contract_format, contract_num FROM {$sqlname}settings WHERE id = '$identity'" );
+			$format  = $results["contract_format"];
+			$cnum    = (int)$results["contract_num"] + 1;
+
+		}
+		if ( $tip == 'invoice' ) {
+
+			$results = $db -> getRow( "SELECT iformat, inum FROM {$sqlname}settings WHERE id = '$identity'" );
+			$format  = $results["iformat"];
+			$cnum    = (int)$results["inum"] + 1;
+
+		}
+		if ( $tip == 'akt' ) {
+
+			$cnum   = (int)$db -> getOne( "SELECT akt_num FROM {$sqlname}settings WHERE id = '$identity'" ) + 1;
+			$format = '{cnum}';
+
+		}
+		if ( $tip == 'dogovor' ) {
+
+			$results = $db -> getRow( "SELECT dNum, dFormat FROM {$sqlname}settings WHERE id = '$identity'" );
+			$format  = $results["dFormat"];
+			$cnum    = (int)$results["dNum"] + 1;
+
+		}
+		if ( $tip == 'namedogovor' ) {
+
+			$format = $db -> getOne( "SELECT defaultDealName FROM {$sqlname}settings WHERE id = '$identity'" );
+
+		}
+
 	}
+	elseif ( $tip == 'contract' ) {
 
-
-	if ( $tip == 'contract' ) {
-
-		$results = $db -> getRow( "SELECT contract_format, contract_num FROM {$sqlname}settings WHERE id = '$identity'" );
-		$format  = $results["contract_format"];
-		$num     = $results["contract_num"];
+		$format = $db -> getOne( "SELECT contract_format FROM {$sqlname}settings WHERE id = '$identity'" );
 
 	}
-	if ( $tip == 'invoice' ) {
+	elseif ( $tip == 'invoice' ) {
 
-		$results = $db -> getRow( "SELECT iformat, inum FROM {$sqlname}settings WHERE id = '$identity'" );
-		$format  = $results["iformat"];
-		$num     = $results["inum"];
+		$format = $db -> getOne( "SELECT iformat FROM {$sqlname}settings WHERE id = '$identity'" );
 
 	}
-	if ( $tip == 'akt' ) {
+	elseif ( $tip == 'dogovor' ) {
 
-		$num    = $db -> getOne( "SELECT akt_num FROM {$sqlname}settings WHERE id = '$identity'" );
-		$format = '{cnum}';
-
-	}
-	if ( $tip == 'dogovor' ) {
-
-		$results = $db -> getRow( "SELECT dNum, dFormat FROM {$sqlname}settings WHERE id = '$identity'" );
-		$num     = $results["dNum"];
-		$format  = $results["dFormat"];
+		$format = $db -> getOne( "SELECT dFormat FROM {$sqlname}settings WHERE id = '$identity'" );
 
 	}
-	if ( $tip == 'namedogovor' ) {
-
-		$format = $db -> getOne( "SELECT defaultDealName FROM {$sqlname}settings WHERE id = '$identity'" );
-
-	}
-
-	$cnum = (int)$num + 1;
 
 	$d11 = date( 'd' );//получим месяц в формате MM
 	$m11 = date( 'm' );//получим месяц в формате MM
@@ -2765,7 +2782,7 @@ function generate_num($tip) {
  * @category Core
  * @package  Func
  */
-function genDocsNum($id, bool $onlyNum = false) {
+function genDocsNum($id, bool $onlyNum = false, int $numOverride = 0) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2775,13 +2792,19 @@ function genDocsNum($id, bool $onlyNum = false) {
 		return false;
 	}
 
-	$result = $db -> getRow( "SELECT format, num FROM {$sqlname}contract_type where id = '$id' and identity = '".$identity."'" );
+	$result = $db -> getRow( "SELECT format, num FROM {$sqlname}contract_type where id = ?i and identity = ?i", (int)$id, (int)$identity );
 	$format = $result["format"];
-	$num    = $result["num"];
+
+	// если передан готовый номер (атомарный инкремент выполнен вызывающим кодом) — используем его;
+	// иначе — режим предпросмотра: читаем счетчик без изменения
+	if ( $numOverride > 0 ) {
+		$cnum = $numOverride;
+	}
+	else {
+		$cnum = (int)$result["num"] + 1;
+	}
 
 	if ( $format != '' ) {
-
-		$cnum = $num + 1;
 
 		$d11 = date( 'd' );//получим день в формате 01
 		$m11 = date( 'm' );//получим месяц в формате 01
@@ -8315,7 +8338,15 @@ function otherSettings(array $params = []) {
 			"invoiceTemp"          => (!isset( $other[42] ) || $other[42] == 'no') ? 'invoice.tpl' : $other[42],
 		];
 
-		file_put_contents( $rootpath."/cash/".$fpath."otherSettings.json", json_encode( $otherSettings ) );
+		// атомарная запись кэша (tmp + rename) — без torn-write при параллельных запросах
+		$tmpF = $rootpath."/cash/".$fpath."otherSettings.json.".getmypid().".tmp";
+		if ( file_put_contents( $tmpF, json_encode( $otherSettings ) ) !== false && @rename( $tmpF, $rootpath."/cash/".$fpath."otherSettings.json" ) ) {
+			// ok
+		}
+		else {
+			@unlink( $tmpF );
+			file_put_contents( $rootpath."/cash/".$fpath."otherSettings.json", json_encode( $otherSettings ) );
+		}
 
 	}
 	else {

@@ -366,7 +366,9 @@ if ( $action == "export.plan" ) {
 
 	$content = iconv( "UTF-8", "CP1251", $string2 );
 	//проходим массив и формируем csv-файл
-	$filename = 'plan'.$_REQUEST['year'].$identity.'.csv';
+	// год — только цифры (защита от path traversal в имени файла)
+	$year     = preg_replace( '/[^0-9]/', '', (string)$_REQUEST['year'] );
+	$filename = 'plan'.$year.$identity.'.csv';
 	$handle   = fopen( $rootpath."/files/".$fpath.$filename, 'wb' );
 
 	fwrite( $handle, $content );

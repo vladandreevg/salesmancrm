@@ -23,9 +23,15 @@ include $rootpath."/inc/dbconnector.php";
 include $rootpath."/inc/auth.php";
 include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
+// Доступ только для администратора
+if ($isadmin != 'on' && $tipuser != 'Администратор') {
+	print 'Доступ запрещен';
+	exit();
+}
+
 
 $action = $_REQUEST['action'];
-$file   = $_REQUEST['file'];
+$file   = basename((string)$_REQUEST['file']); // защита от path traversal
 
 
 $path = $rootpath."/files/backup/";
@@ -34,16 +40,48 @@ createDir($path);
 
 if ($action === "restore" && $file != "") {
 
-	//распакуем архив, если это архив
+	//распакуем архив, если это архив — с проверкой путей внутри (защита от zip-slip)
 	if (strpos($file, '.zip') !== false) {
 
 		$arc = new ZipArchive;
-		$arc -> open($path.$file);
+		if ($arc -> open($path.$file) !== true) {
+			print 'Ошибка: не удалось открыть архив';
+			exit();
+		}
+
+		$realBase = realpath($path);
+		if ($realBase === false) {
+			print 'Ошибка: неверный каталог бэкапов';
+			exit();
+		}
+
+		for ($i = 0; $i < $arc -> numFiles; $i++) {
+
+			$entry = $arc -> getNameIndex($i);
+			if ($entry === false) {
+				continue;
+			}
+
+			// не допускаем выход записей за пределы каталога бэкапов
+			$target = realpath($path.DIRECTORY_SEPARATOR.$entry);
+			if ($target !== false && strpos($target.DIRECTORY_SEPARATOR, $realBase.DIRECTORY_SEPARATOR) !== 0) {
+				print 'Ошибка: архив содержит недопустимый путь ('.$entry.')';
+				$arc -> close();
+				exit();
+			}
+
+		}
+
 		$arc -> extractTo($path);
 		$arc -> close();
 
 		$file = str_replace(".zip", "", $file);
 
+	}
+
+	if (!file_exists($path.$file) || !is_file($path.$file)) {
+		print 'Ошибка: файл дампа не найден';
+		exit();
 	}
 
 	$filee = fread(fopen($path.$file, "r"), filesize($path.$file));
@@ -64,9 +102,7 @@ if ($action === "restore" && $file != "") {
 
 	}
 
-	fclose($path.$file);
-
-	$file = unlink($path.$file);
+	@unlink($path.$file);
 
 	print $rez = 'Восстановление базы данных прошло успешно';
 

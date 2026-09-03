@@ -22,6 +22,12 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
+// настройки пользователя — только авторизованным
+if ((int)$iduser1 < 1) {
+	http_response_code(403);
+	exit();
+}
+
 $thisfile = basename( __FILE__ );
 
 global $userRights;
@@ -49,9 +55,16 @@ $thistime = date('G:i', mktime(date('H'), date('i'), date('s'), date('m'), date(
 function resize_image($image_from, $image_to, $width, $height): bool {
 
 	$image_vars = getimagesize($image_from);
+	if ($image_vars === false) return false;
+
 	$src_width  = $image_vars[0];
 	$src_height = $image_vars[1];
 	$src_type   = $image_vars[2];
+
+	// защита от pixel-bomb: не декодируем изображения с огромными размерами
+	if ($src_width < 1 || $src_height < 1 || $src_width > 4096 || $src_height > 4096 || ($src_width * $src_height) > 16000000) {
+		return false;
+	}
 
 	if ($width > $src_width) $width = $src_width;
 	if ($height > $src_height) $height = $src_height;
@@ -255,6 +268,18 @@ if ($action == "save") {
 
 		$tzonee = 0;
 		$mes    .= '<br>Смещение часовой зоны игнорировано - не допустимое конечное значение';
+
+	}
+
+	// проверка уникальности логина при его смене (защита от дублей и захвата чужого логина)
+	if ( $login != '' ) {
+
+		$loginExists = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}user WHERE login = ?s AND iduser != ?i AND identity = ?i", $login, (int)$iduser1, (int)$identity);
+
+		if ( $loginExists > 0 ) {
+			print '<b class="yelw">Ошибка:</b> Такой логин уже используется другим сотрудником';
+			exit();
+		}
 
 	}
 

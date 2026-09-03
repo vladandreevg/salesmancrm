@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /*         SalesMan CRM         */
 /* ============================ */
@@ -26,7 +26,7 @@ $baseurl = "http://sm2018.crm/developer/v2";
 DEFINE("LOGIN", "vladislav@isaler.ru");
 
 //получаем в Панели управления CRM
-DEFINE("KEY", "t1xdeOwWSIqgDol70CkRdK3WD4N4cm");
+DEFINE("KEY", "YOUR_API_KEY");
 
 $params = [
 	"action" => 'info',

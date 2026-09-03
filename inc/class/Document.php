@@ -1274,11 +1274,24 @@ class Document {
 
 			// если это договор
 			if ( $type == 'get_dogovor' ) {
-				$cparams['number'] = ($contract_format == '') ? untag( $params['number'] ) : generate_num( 'contract' );
+				// номер договора генерируем атомарно (без дублей при параллельных запросах)
+				if ( $contract_format == '' ) {
+					$cparams['number'] = untag( $params['number'] );
+				}
+				else {
+					$db -> query( "UPDATE {$sqlname}settings SET contract_num = LAST_INSERT_ID(contract_num + 1) WHERE id = ?i", (int)$identity );
+					$cparams['number'] = generate_num( 'contract', (int)$db -> insertId() );
+				}
 			}
 			// если это другой документ
 			else {
-				$cparams['number'] = ($format == '') ? untag( (string)$params['number'] ) : genDocsNum( $params['idtype'] );
+				if ( $format == '' ) {
+					$cparams['number'] = untag( (string)$params['number'] );
+				}
+				else {
+					$db -> query( "UPDATE {$sqlname}contract_type SET num = LAST_INSERT_ID(num + 1) WHERE id = ?i AND identity = ?i", (int)$params['idtype'], (int)$identity );
+					$cparams['number'] = genDocsNum( $params['idtype'], false, (int)$db -> insertId() );
+				}
 			}
 
 		}
@@ -1389,26 +1402,9 @@ class Document {
 				$hooks -> do_action( "document_add", $post, $cparams );
 			}
 
-			//обновим счетчик для документа
-			$contract = $db -> getRow( "select contract_num, contract_format from {$sqlname}settings WHERE id = '$identity'" );
-			$type     = $db -> getRow( "SELECT type, format FROM {$sqlname}contract_type where id = '$params[idtype]' and identity = '$identity'" );
+			//счетчики документов уже обновлены атомарно при генерации номера
 
-			if ( $type['format'] != '' ) {
-
-				$db -> query( "UPDATE {$sqlname}contract_type SET ?u WHERE id = '$params[idtype]' AND identity = '$identity'", ["num" => genDocsNum( $params['idtype'], true )] );
-
-			}
-
-			//обновим счетчик договоров
-			if ( $contract['contract_format'] != '' && $type['type'] == 'get_dogovor' ) {
-
-				$newnum = (int)$contract['contract_num'] + 1;
-
-				$db -> query( "UPDATE {$sqlname}settings SET ?u WHERE id = '$identity'", ['contract_num' => $newnum] );
-
-				unlink( $rootpath."/cash/".$fpath."settings.all.json" );
-
-			}
+			$type = $db -> getRow( "SELECT type, format FROM {$sqlname}contract_type where id = ?i and identity = ?i", (int)$params['idtype'], (int)$identity );
 
 			//привяжем к сделке, если она указана
 			if ( $cparams['did'] > 0 && $id > 0 && $type['type'] == 'get_dogovor' ) {

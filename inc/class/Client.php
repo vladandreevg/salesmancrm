@@ -684,6 +684,11 @@ class Client {
 	 * ```
 	 */
 	public function update(int $clid = 0, array $params = []): array {
+		// Проверка доступа: редактирование записи — только при наличии доступа к ней
+		if ( (int)$clid > 0 && (int)$this -> iduser1 > 0 && get_accesse( (int)$clid ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 
 		global $hooks;
 
@@ -1019,6 +1024,11 @@ class Client {
 
 		global $hooks;
 
+		// Проверка доступа: полное редактирование — только при наличии доступа к записи
+		if ( (int)$clid > 0 && (int)$this -> iduser1 > 0 && get_accesse( (int)$clid ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
 		$identity = $this -> identity;
@@ -1315,6 +1325,11 @@ class Client {
 	 * @throws Exception
 	 */
 	public function delete(int $clid): array {
+		// Проверка доступа: удаление записи — только при наличии доступа к ней
+		if ( (int)$clid > 0 && (int)$this -> iduser1 > 0 && get_accesse( (int)$clid ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 
 		global $hooks;
 

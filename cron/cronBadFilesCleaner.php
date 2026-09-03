@@ -33,6 +33,16 @@ $work = $argv[1];
 $root = dirname(__DIR__);
 
 require_once $root."/inc/config.php";
+// защита: запуск только из CLI либо администратором
+if (PHP_SAPI !== 'cli') {
+	require_once dirname(__DIR__)."/inc/auth.php";
+	require_once dirname(__DIR__)."/inc/settings.php";
+	if ((int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор')) {
+		http_response_code(403);
+		exit('Доступ запрещен');
+	}
+}
+
 
 $opts = [
 	'host'    => $dbhostname,

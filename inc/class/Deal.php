@@ -730,7 +730,16 @@ class Deal {
 			}
 
 			$deal = [];
-			$dNum = generate_num('dogovor');
+
+			//номер сделки генерируем атомарно (без дублей при параллельных запросах)
+			$dNum = '';
+			if ( $GLOBALS['dFormat'] != '' ) {
+				$db -> query( "UPDATE {$sqlname}settings SET dNum = LAST_INSERT_ID(dNum + 1) WHERE id = ?i", (int)$identity );
+				$dNum = generate_num( 'dogovor', (int)$db -> insertId() );
+			}
+			else {
+				$dNum = generate_num( 'dogovor' );
+			}
 
 
 			/**
@@ -911,13 +920,7 @@ class Deal {
 				$db -> query("INSERT INTO {$sqlname}dogovor SET ?u", $deal);
 				$did = (int)$db -> insertId();
 
-				//меняем счетчик договоров
-				if ($dNum != '') {
-
-					$cnum = (int)$db -> getOne("SELECT dNum FROM {$sqlname}settings WHERE id = '$identity'") + 1;
-					$db -> query("UPDATE {$sqlname}settings SET dNum ='$cnum' where id = '$identity'");
-
-				}
+				//счетчик договоров уже обновлен атомарно при генерации номера
 
 				$deal['did'] = $did;
 
@@ -1164,6 +1167,11 @@ class Deal {
 	 * @throws Exception
 	 */
 	public function update(int $did = 0, array $params = []): array {
+		// Проверка доступа: редактирование сделки — только при наличии доступа к ней
+		if ( (int)$did > 0 && (int)$this -> iduser1 > 0 && get_accesse( 0, 0, (int)$did ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 
 		global $hooks;
 
@@ -1710,6 +1718,11 @@ class Deal {
 
 		global $hooks;
 
+		// Проверка доступа: полное редактирование сделки — только при наличии доступа к записи
+		if ( (int)$did > 0 && (int)$this -> iduser1 > 0 && get_accesse( 0, 0, (int)$did ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
 		$identity = $this -> identity;
@@ -2212,6 +2225,11 @@ class Deal {
 	 * @throws Exception
 	 */
 	public function delete(int $did = 0): array {
+		// Проверка доступа: удаление сделки — только при наличии доступа к ней
+		if ( (int)$did > 0 && (int)$this -> iduser1 > 0 && get_accesse( 0, 0, (int)$did ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 
 		global $hooks;
 
@@ -2310,6 +2328,11 @@ class Deal {
 	 *              - text
 	 */
 	public function changeuser(int $did = 0, array $params = []): array {
+		// Проверка доступа: смена ответственного — только при наличии доступа к сделке
+		if ( (int)$did > 0 && (int)$this -> iduser1 > 0 && get_accesse( 0, 0, (int)$did ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 
 		global $hooks;
 
@@ -2654,6 +2677,11 @@ class Deal {
 	 *              - text
 	 */
 	public function changestep(int $did = 0, array $params = []): array {
+		// Проверка доступа: смена этапа — только при наличии доступа к сделке
+		if ( (int)$did > 0 && (int)$this -> iduser1 > 0 && get_accesse( 0, 0, (int)$did ) != 'yes' ) {
+			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
 
 		global $hooks;
 

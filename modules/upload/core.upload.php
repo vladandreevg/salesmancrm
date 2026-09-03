@@ -122,7 +122,7 @@ if ($action == 'edit') {
 
 	$fid        = (int)$_REQUEST['fid'];
 	$fver       = $_REQUEST['fver'];
-	$oldfile    = $_REQUEST['oldfile'];
+	$oldfile    = basename((string)$_REQUEST['oldfile']); // защита от path traversal
 	$ftag       = $_REQUEST['ftag'];
 	$iduser     = (int)$_REQUEST['iduser'];
 	$did        = (int)$_REQUEST['did'];

@@ -25,6 +25,12 @@ require_once $rootpath."/inc/func.php";
 require_once $rootpath."/inc/settings.php";
 require_once $rootpath."/inc/language/".$language.".php";
 
+// генерация документов — только авторизованным пользователям
+if ((int)$iduser1 < 1) {
+	http_response_code(403);
+	exit();
+}
+
 $thisfile = basename( __FILE__ );
 
 $action = $_REQUEST['action'];

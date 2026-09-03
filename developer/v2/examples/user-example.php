@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /* (C) 2018 Vladislav Andreev   */
 /*       SalesMan Project       */
@@ -25,7 +25,7 @@ $baseurl = "http://sm2018.crm/developer/v2/user";
 DEFINE("LOGIN", "vladislav@isaler.ru");
 
 //получаем в Панели управления CRM
-DEFINE("KEY", "t1xdeOwWSIqgDol70CkRdK3WD4N4cm");
+DEFINE("KEY", "YOUR_API_KEY");
 
 function Send($url, $POST){
 	$ch = curl_init();// Устанавливаем соединение

@@ -57,7 +57,7 @@ if ( filesize( $_FILES[ 'upload' ][ 'tmp_name' ] ) > 0 and $_FILES[ 'upload' ][ 
 
 	if ( in_array( $cur_ext, $ext_allow ) ) {
 
-		if ( ( filesize( $_FILES[ 'upload' ][ 'tmp_name' ] ) / 1000000 ) > 1000000 ) {
+		if ( ( filesize( $_FILES[ 'upload' ][ 'tmp_name' ] ) / 1000000 ) > 25 ) {
 
 			$message = 'Ошибка: Превышает размеры!';
 			$url     = '';

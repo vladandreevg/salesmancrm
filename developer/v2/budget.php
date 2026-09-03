@@ -98,7 +98,7 @@ $db = new SafeMysql([
 ]);
 
 //ищем аккаунт по apikey
-$result   = $db -> getRow("SELECT id, api_key, timezone, valuta FROM ".$sqlname."settings WHERE api_key = '$APIKEY'");
+$result   = $db -> getRow("SELECT id, api_key, timezone, valuta FROM ".$sqlname."settings WHERE api_key = ?s", $APIKEY);
 $identity = (int)$result['id'];
 $api_key  = $result['api_key'];
 $timezone = $result['timezone'];
@@ -110,7 +110,7 @@ global $identity;
 date_default_timezone_set($timezone);
 
 //найдем пользователя
-$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = '$LOGIN' and identity = '$identity'");
+$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = ?s and identity = ?i", $LOGIN, (int)$identity);
 $iduser   = $iduser1 = (int)$result['iduser'];
 $username = $result['title'];
 

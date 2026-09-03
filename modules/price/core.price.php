@@ -429,7 +429,7 @@ if ($action == "import.on") {
 	}
 	$isPrice = $i;
 
-	$url    = $rootpath.'/files/'.$fpath.$_COOKIE['url_catalog'];//файл для расшифровки
+	$url    = $rootpath.'/files/'.$fpath.basename((string)($_COOKIE['url_catalog'] ?? ''));//файл для расшифровки (защита от path traversal)
 	$fields = $_REQUEST['field'];                                //порядок полей
 
 	$date_create = current_datumtime();
@@ -738,11 +738,13 @@ if ($action == "import.on") {
 }
 if ($action == "import.discard") {
 
-	if ($_COOKIE['url_catalog'] != '') {
+	if ( $_COOKIE['url_catalog'] != '' ) {
 
-		$url = $rootpath.'/files/'.$fpath.$_COOKIE['url_catalog'];
+		$url = $rootpath.'/files/'.$fpath.basename((string)$_COOKIE['url_catalog']); // защита от path traversal
 		setcookie("url_catalog", '');
-		unlink($url);
+		if ( file_exists( $url ) ) {
+			unlink( $url );
+		}
 
 	}
 

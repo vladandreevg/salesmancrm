@@ -88,7 +88,7 @@ $db = new SafeMysql([
 ]);
 
 //ищем аккаунт по apikey
-$result   = $db -> getRow("SELECT id, api_key, timezone FROM ".$sqlname."settings WHERE api_key = '$APIKEY'");
+$result   = $db -> getRow("SELECT id, api_key, timezone FROM ".$sqlname."settings WHERE api_key = ?s", $APIKEY);
 $identity = (int)$result['id'];
 $api_key  = $result['api_key'];
 $timezone = $result['timezone'];
@@ -96,7 +96,7 @@ $timezone = $result['timezone'];
 global $identity;
 
 //найдем пользователя
-$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = '$LOGIN' and identity = '$identity'");
+$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = ?s and identity = ?i", $LOGIN, (int)$identity);
 $iduser   = (int)$result['iduser'];
 $username = $result['title'];
 $iduser1  = (int)$result['iduser'];
@@ -225,6 +225,19 @@ switch ($params['action']) {
 
 	case 'user.add': //work
 
+		// только администратор аккаунта может создавать пользователей
+		$callerIsAdmin = (string)$db -> getOne("SELECT isadmin FROM ".$sqlname."user WHERE iduser = ?i AND identity = ?i", $iduser1, (int)$identity);
+
+		if ( $callerIsAdmin != 'on' && !in_array( $tipuser, [ 'Администратор' ] ) ) {
+
+			$response['result']        = 'Error';
+			$response['error']['code'] = 403;
+			$response['error']['text'] = 'Недостаточно прав';
+
+			break;
+
+		}
+
 		$login = untag($params['user']);
 		$pwd   = $params['password'];
 
@@ -232,7 +245,9 @@ switch ($params['action']) {
 
 		$boss = $db -> getOne("SELECT iduser FROM ".$sqlname."user WHERE tip = 'Руководитель организации' and identity = '$identity' LIMIT 1");
 
-		$tip = (isset($params['tip']) && $params['tip'] != '') ? $params['tip'] : "Менеджер продаж";
+		// роль из запроса допускается только из известного набора (нельзя подделать произвольную роль)
+		$allowedTips = [ 'Менеджер продаж', 'Руководитель организации', 'Руководитель отдела', 'Руководитель подразделения', 'Специалист', 'Администратор' ];
+		$tip = ( isset($params['tip']) && in_array( $params['tip'], $allowedTips, true ) ) ? $params['tip'] : 'Менеджер продаж';
 		$mid = (isset($params['boss']) && $params['boss'] != '') ? current_userbylogin($params['boss']) : $boss;
 
 		$mail = untag($params['email']);

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /*         SalesMan CRM         */
 /* ============================ */
@@ -63,7 +63,7 @@ $rurl   = $_REQUEST['rurl'] ?? '';
 $action = $_REQUEST['action'] ?? '';
 
 // защита от Open Redirect: допускаем только внутренние (относительные) пути
-if (preg_match('#^(https?:)?//#i', (string)$rurl) || empty($rurl)) {
+if ( empty($rurl) || preg_match('#^(https?:)?//#i', (string)$rurl) || strpos((string)$rurl, '\\') !== false || (string)$rurl[0] !== '/' ) {
 	$rurl = '';
 }
 
@@ -214,7 +214,7 @@ if ($action == "enter") {
 		//Если это не облако
 		if ($iduser2 > 0 && !$isCloud) {
 
-			if (encodePass($_POST['pwd'], $salt) == $pwd2) {
+			if (hash_equals($pwd2, encodePass($_POST['pwd'], $salt))) {
 
 				if (in_array($iduser2, $users_acsept)) {
 
@@ -223,7 +223,8 @@ if ($action == "enter") {
 						$session = 10 * 86400;
 					}
 
-					$sess = preg_replace("#[^a-zA-Z0-9]#i", "s", crypt($_POST['logi'].time(), "$2y$05$".$salt));
+					// сессионный токен на основе криптостойкого случайного источника
+					$sess = 's'.bin2hex(random_bytes(32));
 					//$sess =
 
 					$db -> query("update ".$sqlname."user set ses=?s WHERE iduser=?i", $sess, (int)$iduser2);
@@ -271,11 +272,12 @@ if ($action == "enter") {
 		//для облака
 		if ($iduser2 > 0 && $isCloud) {
 
-			if (encodePass($_POST['pwd'], $salt) == $pwd2) {
+			if (hash_equals($pwd2, encodePass($_POST['pwd'], $salt))) {
 
 				if ($activate == 'true') {
 
-					$sess = preg_replace("#[^a-zA-Z0-9]#i", "s", crypt($_POST['logi'] + time(), $pwd2));
+					// сессионный токен на основе криптостойкого случайного источника
+					$sess = 's'.bin2hex(random_bytes(32));
 
 					$db -> query("update ".$sqlname."user set ses=?s WHERE iduser=?i", $sess, (int)$iduser2);
 
@@ -459,7 +461,8 @@ if ($action == "changepass") {
 
 		if ($iduser > 0) {
 
-			$sess = preg_replace("#[^a-zA-Z0-9]#i", ",", crypt($login . time(), $pwd));
+			// сессионный токен на основе криптостойкого случайного источника
+			$sess = 's'.bin2hex(random_bytes(32));
 
 			$db -> query("UPDATE ".$sqlname."user SET ses=?s WHERE iduser = ?i", $sess, (int)$iduser);
 
@@ -547,7 +550,11 @@ function display_daily_bing_wallpaper(): string {
 		
 	}
 
-	$bing_daily_image   = json_decode(file_get_contents('https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US'), true);
+	$bing_daily_image = json_decode(@file_get_contents('https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US', false, stream_context_create(['http' => ['timeout' => 5]])), true);
+	
+	if ( empty($bing_daily_image['images'][0]['urlbase']) ) {
+		return '';
+	}
 	
 	return 'https://www.bing.com'.$bing_daily_image['images'][0]['urlbase'].'_1920x1080.jpg';
 

@@ -109,8 +109,8 @@ if($params['action'] == 'login') {
 			*
 		FROM {$sqlname}settings
 		WHERE
-			{$sqlname}settings.api_key = '$token'
-	");
+			{$sqlname}settings.api_key = ?s
+	", (string)$token);
 
 	if ((int)$tokenExist['id'] > 0) {
 
@@ -130,31 +130,37 @@ if($params['action'] == 'login') {
 		//установим временну зону под настройки аккаунта
 		date_default_timezone_set($timezone);
 
-		$ures = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE login = '$login'");
+		$ures = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE login = ?s", (string)$login);
 		$UserID = $ures['id'];
 
 		if ($ures['secrty'] == 'yes') {
 
 			$salt = $ures['sole'];
 
-			if ( encodePass( $password, $salt ) == $ures['pwd'] ) {
+			if ( hash_equals( $ures['pwd'], encodePass( $password, $salt ) ) ) {
 
 				if ( in_array( $ures['id'], $users_acsept ) ) {
 
-					$session = preg_replace("#[^a-zA-Z0-9]#i", ",", crypt($login + time(), $password));
+					// сессионный токен на основе криптостойкого случайного источника
+					$session = 's'.bin2hex(random_bytes(32));
 
-					$db -> query("UPDATE ".$sqlname."user SET ses = '$session' WHERE id = '$UserID'");
+					$db -> query("UPDATE ".$sqlname."user SET ses = ?s WHERE id = ?i", $session, (int)$UserID);
 
 					logger('0', 'Пользователь авторизовался в системе', $UserID);
 
-					setcookie("ses", $session, time() + $time, "/");
-					setcookie("UserID", $UserID, time() + $time, "/");
+					// cookie с флагами HttpOnly/SameSite/Secure
+					if (function_exists('setSecureCookie')) {
+						setSecureCookie("ses", $session, time() + $time, "/");
+						setSecureCookie("UserID", $UserID, time() + $time, "/");
+					}
+					else {
+						setcookie("ses", $session, time() + $time, "/");
+						setcookie("UserID", $UserID, time() + $time, "/");
+					}
 
 					$result  = 'login';
 					$message = "Success";
 
-					header("Set-Cookie: ses=$session; Expires: ".(time() + $time)."; path=/;");
-					header("Set-Cookie: UserID=$UserID; Expires: ".(time() + $time)."; path=/;");
 					HTTPStatus("200")['error'];
 
 				}
@@ -234,7 +240,7 @@ elseif($params['action'] == 'check') {
 	if ($session != '') {
 
 		//id клиента
-		$UserID = $db -> getOne("SELECT id FROM ".$sqlname."user WHERE ses = '$session'");
+		$UserID = $db -> getOne("SELECT id FROM ".$sqlname."user WHERE ses = ?s", (string)$session);
 
 		if($UserID != 0){
 

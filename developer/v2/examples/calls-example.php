@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /* (C) 2015 Vladislav Andreev   */
 /*        Yoolla Project        */
@@ -16,7 +16,7 @@ require_once "../../../inc/licloader.php";
 $baseurl = "https://demo.isaler.ru/developer/v1/calls";//Адрес расположения CRM
 
 $params['login'] = "zaharbor@isaler.ru"; //существующий пользователь в системе
-$params['apikey'] = 'eY8VqURqbsHLtB4SOmXDjdkoz2pL5k'; //получаем в Панели управления CRM
+$params['apikey'] = 'YOUR_API_KEY'; //получаем в Панели управления CRM
 
 function Send($url, $POST){
 	$ch = curl_init();// Устанавливаем соединение

@@ -10,10 +10,9 @@
 
 error_reporting( E_ERROR );
 
-$ses = $_REQUEST['ses'];
-if ( $ses != '' ) {
-	setcookie( "ses", $ses, time() + 3600 );
-}
+// сессия принимается только из cookie — параметр ses игнорируется
+// (защита от session fixation и утечки токена через URL/логи)
+$ses = $_COOKIE['ses'];
 
 $rootpath = dirname(__DIR__, 2);
 
@@ -23,6 +22,20 @@ require_once $rootpath."/inc/auth.php";
 require_once $rootpath."/inc/func.php";
 require_once $rootpath."/inc/settings.php";
 require_once $rootpath."/inc/language/".$language.".php";
+
+// выдача файлов — только авторизованным пользователям
+if ((int)$iduser1 < 1) {
+
+	print '
+	<div class="warning text-left">
+		<span><i class="icon-attention red icon-5x pull-left"></i></span>
+		<b class="red uppercase">Внимание:</b><br><br>Сбой авторизации. Авторизуйтесь заново <a href="/login" class="button">здесь</a>.<br>
+	</div>
+	';
+
+	exit();
+
+}
 
 $thisfile = basename( __FILE__ );
 
@@ -45,7 +58,7 @@ if ( $filename != '' ) {
 	if ( stripos( $filename, 'ymail' ) !== false ) {
 
 		$f        = str_replace( 'ymail/', '', $filename );
-		$filename = $db -> getOne( "SELECT name FROM ".$sqlname."ymail_files WHERE file = '$f' and identity = '$identity'" );
+		$filename = $db -> getOne( "SELECT name FROM ".$sqlname."ymail_files WHERE file = ?s and identity = ?i", $f, (int)$identity );
 
 	}
 
@@ -62,7 +75,10 @@ if ( $filename != '' ) {
 		""
 	], $filename );
 
-	if ( file_exists( $file ) ) {
+	// защита от Path Traversal: файл обязан лежать внутри /files/
+	$file = safeFilePath( $rootpath."/files/".$fpath.$filename, $rootpath."/files/".$fpath );
+
+	if ( $file !== false && file_exists( $file ) ) {
 
 		// попытаемся посмотреть файл
 		// функция не работает. основная причина - невозможно сохранить форматирование
@@ -112,7 +128,7 @@ if ( $filename != '' ) {
 		else {
 
 			header( 'Content-Type: '.$mime );
-			header( 'Content-Disposition: '.$disp.'; filename="'.trim( str_replace( ",", "", $filename ) ).'"' );
+			header( 'Content-Disposition: '.$disp.'; filename="'.safeHeaderValue( trim( str_replace( ",", "", $filename ) ) ).'"' );
 			header( 'Content-Transfer-Encoding: binary' );
 			header( 'Accept-Ranges: bytes' );
 
@@ -129,20 +145,21 @@ if ( $filename != '' ) {
 }
 if ( $fid > 0 ) {
 
-	$res = $db -> getRow( "select fname, ftitle from ".$sqlname."file where fid='".$fid."' and identity = '$identity'" );
+	$res = $db -> getRow( "select fname, ftitle from ".$sqlname."file where fid=?i and identity = ?i", (int)$fid, (int)$identity );
 
 	$fname  = $res["fname"];
 	$ftitle = str_replace( " ", "_", trim( $res["ftitle"] ) );
 
-	$file = $rootpath."/files/".$fpath.$fname;
+	// защита от Path Traversal: файл обязан лежать внутри /files/
+	$file = safeFilePath( $rootpath."/files/".$fpath.$fname, $rootpath."/files/".$fpath );
 	$mime = get_mimetype( $fname );
 
 	$extention = texttosmall( getExtention( $fname) );
 
-	if ( file_exists( $file ) ) {
+	if ( $file !== false && file_exists( $file ) ) {
 
 		header( 'Content-Type: '.$mime );
-		header( 'Content-Disposition: '.$disp.'; filename="'.str_replace( ",", "", $ftitle ).'"' );
+		header( 'Content-Disposition: '.$disp.'; filename="'.safeHeaderValue( str_replace( ",", "", $ftitle ) ).'"' );
 		header( 'Content-Transfer-Encoding: binary' );
 		header( 'Accept-Ranges: bytes' );
 
@@ -162,21 +179,37 @@ if ( $_REQUEST['attach'] != '' ) {
 	$attach = $_REQUEST['attach'];
 	$name = $_REQUEST['name'];
 
-	if(filter_var($attach, FILTER_VALIDATE_URL)){
+	// внешняя ссылка (например, изображение из чата, хранимое на внешнем CDN)
+	$parsed = parse_url( $attach );
+	$isExternal = isset( $parsed['scheme'] ) && $parsed['scheme'] != '';
 
-		header("Location: $attach");
+	if( $isExternal ) {
+
+		// допускаем только http/https ссылки (изображения из чата, размещенные на внешнем CDN).
+		// Блокируем javascript:, data:, file: и CR/LF (защита от open-redirect и header injection).
+		if ( !in_array( strtolower( (string)$parsed['scheme'] ), [ 'http', 'https' ] ) ) {
+			$notExist = true;
+		}
+		elseif ( preg_match( '#[\r\n]#', $attach ) ) {
+			$notExist = true;
+		}
+		else {
+			header( "Location: ".$attach );
+			exit();
+		}
 
 	}
 	else {
 
-		$file      = $rootpath.$attach;
-		$mime      = get_mimetype( $file );
-		$extension = getExtention( $file );
+		// внутренний путь - ограничиваем каталогом /files/
+		$file = safeFilePath( $rootpath.$attach, $rootpath."/files/" );
+		$mime = get_mimetype( $file === false ? $attach : $file );
+		$extension = getExtention( $file === false ? $attach : $file );
 
-		if ( file_exists( $file ) ) {
+		if ( $file !== false && file_exists( $file ) ) {
 
 			header( 'Content-Type: '.$mime );
-			header( 'Content-Disposition: '.$disp.'; filename="'.trim( str_replace( ",", "", $name ) ).'"' );
+			header( 'Content-Disposition: '.$disp.'; filename="'.safeHeaderValue( trim( str_replace( ",", "", $name ) ) ).'"' );
 			header( 'Content-Transfer-Encoding: binary' );
 			header( 'Accept-Ranges: bytes' );
 

@@ -153,10 +153,12 @@ if ($action == "contract.edit") {
 		}
 
 		if ($type == 'get_dogovor') {
-			$number = ($GLOBALS['contract_format'] == '') ? untag( $_REQUEST['dnumber'] ) : generate_num( 'contract' );
+			// при автоматической нумерации номер сформирует Document::add (атомарно)
+			$number = ($GLOBALS['contract_format'] == '') ? untag( $_REQUEST['dnumber'] ) : '';
 		}
 		else {
-			$number = ($format == '') ? untag( $_REQUEST['dnumber'] ) : genDocsNum( $idtype );
+			// при автоматической нумерации номер сформирует Document::add (атомарно)
+			$number = ($format == '') ? untag( $_REQUEST['dnumber'] ) : '';
 		}
 
 		//добавим сообщения

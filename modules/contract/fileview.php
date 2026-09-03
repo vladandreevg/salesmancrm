@@ -20,16 +20,18 @@ include $rootpath."/inc/language/".$language.".php";
 
 $thisfile = basename( __FILE__ );
 
-$deid   = $_REQUEST['deid'];
+$deid   = (int)$_REQUEST['deid'];
 $action = $_REQUEST['action'];
 
 if ( $action == "delete" ) {
 
-	$fname_del = $_REQUEST['fname'];
-	$result    = $db -> getRow( "select * from ".$sqlname."contract WHERE deid='".$deid."' and identity = '$identity'" );
+	$fname_del = basename((string)$_REQUEST['fname']); // защита от path traversal
+	$result    = $db -> getRow( "select * from ".$sqlname."contract WHERE deid=?i and identity = ?i", $deid, (int)$identity );
 	$fname     = yexplode( ";", $result["fname"] );
 	$ftitle    = yexplode( ";", $result["ftitle"] );
 	$ftype     = yexplode( ";", $result["ftype"] );
+
+	$fname_orig = $fname; // исходный список файлов — для проверки удаляемого имени
 
 	$j = 0;
 
@@ -52,14 +54,16 @@ if ( $action == "delete" ) {
 	$ftitle = implode( ";", $ftitle1 );
 	$ftype  = implode( ";", $ftype1 );
 
-	$db -> query( "UPDATE ".$sqlname."contract SET ?u WHERE deid = '$deid' and identity = '$identity'", [
+	$db -> query( "UPDATE ".$sqlname."contract SET ?u WHERE deid = ?i and identity = ?i", [
 		'ftitle' => $ftitle,
 		'fname'  => $fname,
 		'ftype'  => $ftype
-	] );
+	], $deid, (int)$identity );
 
-	//удалим указанный файл
-	@unlink( $rootpath.'/files/'.$fpath.$fname_del );
+	//удалим указанный файл — только если он действительно был в списке договора
+	if ( in_array( $fname_del, $fname_orig, true ) ) {
+		@unlink( $rootpath.'/files/'.$fpath.$fname_del );
+	}
 
 	exit();
 }

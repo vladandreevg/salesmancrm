@@ -31,6 +31,17 @@ $root = realpath( __DIR__.'/../' );
 
 require_once $root."/inc/config.php";
 
+// запуск только из CLI либо администратором через веб (скрипт удаляет данные)
+if (PHP_SAPI !== 'cli') {
+	require_once $root."/inc/dbconnector.php";
+	require_once $root."/inc/auth.php";
+	require_once $root."/inc/settings.php";
+	if ((int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор')) {
+		http_response_code(403);
+		exit('Доступ запрещен');
+	}
+}
+
 
 /**
  * Данные для отладки
@@ -187,8 +198,9 @@ function badFiles() {
 
 			foreach ( $fileList as $file ) {
 
-				if ( $file == '' || $file == '.gitignore' )
-					goto ext1;
+				if ( $file == '' || $file == '.gitignore' ){
+					continue;
+				}
 
 				//ищем в файлах
 				$fid = $db -> getOne( "select fid from ".$sqlname."file WHERE fname = '$file' and identity = '".$data['id']."'" ) + 0;
@@ -220,8 +232,6 @@ function badFiles() {
 
 				}
 
-				ext1:
-
 			}
 
 		}
@@ -243,8 +253,9 @@ function badFiles() {
 
 			foreach ( $fileList as $file ) {
 
-				if ( $file == '' || $file == '.gitignore' )
-					goto ext2;
+				if ( $file == '' || $file == '.gitignore' ){
+					continue;
+				}
 
 				$yfid = $db -> getOne( "select id from ".$sqlname."ymail_files WHERE file = '$file' and identity = '".$data['id']."'" ) + 0;
 
@@ -258,8 +269,6 @@ function badFiles() {
 						unlink( ROOT."/".$path.$file );
 
 				}
-
-				ext2:
 
 			}
 
@@ -352,7 +361,7 @@ if ( $alert ) {
 /**
  * Чистим логи Webhook
  */
-$db -> query( "DELETE FROM {$sqlname}webhooklog WHERE datum < (NOW() - INTERVAL 10 DAY)" );
+$db -> query( "DELETE FROM {$sqlname}webhooklog WHERE datum < DATE(NOW() - INTERVAL 10 DAY)" );
 $c = $db -> affectedRows();
 
 if ( $alert ) {
@@ -365,7 +374,7 @@ if ( $alert ) {
 /**
  * Чистим логи API
  */
-$db -> query( "DELETE FROM {$sqlname}logapi WHERE datum < (NOW() - INTERVAL 30 DAY)" );
+$db -> query( "DELETE FROM {$sqlname}logapi WHERE datum < DATE(NOW() - INTERVAL 30 DAY)" );
 $c = $db -> affectedRows();
 
 if ( $alert ) {

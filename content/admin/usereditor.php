@@ -23,6 +23,12 @@ include $rootpath."/inc/auth.php";
 include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 
+// Доступ только для администратора
+if ($isadmin != 'on' && $tipuser != 'Администратор') {
+	print 'Доступ запрещен';
+	exit();
+}
+
 include $rootpath."/inc/language/".$language.".php";
 
 $thisfile = basename(__FILE__);
@@ -76,6 +82,12 @@ function candelete(int $id = 0): int {
 function resize_image($image_from, $image_to, $width, $height): bool {
 
 	$image_vars = getimagesize($image_from);
+	if ($image_vars === false) return false;
+
+	// защита от pixel-bomb: не декодируем изображения с огромными размерами
+	if ($image_vars[0] < 1 || $image_vars[1] < 1 || $image_vars[0] > 4096 || $image_vars[1] > 4096 || ($image_vars[0] * $image_vars[1]) > 16000000) {
+		return false;
+	}
 
 	[
 		$src_width,
@@ -470,7 +482,7 @@ if ($action == "edit.do") {
 	}
 
 	//проверка на существующий емейл
-	$iduser2 = (int)$db -> getOne("SELECT iduser FROM {$sqlname}user WHERE login = '$login2'");
+	$iduser2 = (int)$db -> getOne("SELECT iduser FROM {$sqlname}user WHERE login = ?s", (string)$login2);
 
 	if ($iduser2 > 0 && $iduser != $iduser2) {
 

@@ -643,7 +643,11 @@ class Budget {
 
 			if ($bid > 0) {
 
-				if ($do != 'on') {
+				// атомарно "занимаем" запись: помечаем проведенной только если еще не проведена
+				// (защита от двойного проведения при параллельных запросах/повторе уведомления)
+				$db -> query("UPDATE {$sqlname}budjet SET do = 'on' WHERE id = ?i and identity = ?i and do != 'on'", $id, (int)$identity);
+
+				if ((int)$db -> affectedRows() > 0) {
 
 					//поймем - расход это или поступление
 					$tip      = $db -> getOne("SELECT tip FROM {$sqlname}budjet_cat WHERE id = '$cat' and identity = '$identity'");
@@ -689,6 +693,9 @@ class Budget {
 
 					}
 					else {
+
+						// средств недостаточно — возвращаем отметку проведения
+						$db -> query("UPDATE {$sqlname}budjet SET do = '' WHERE id = ?i and identity = ?i", $id, (int)$identity);
 
 						$response['result']        = 'Error';
 						$response['error']['code'] = '406';
@@ -775,7 +782,10 @@ class Budget {
 
 			if ($rs > 0) {
 
-				if ($do == 'on') {
+				// атомарно снимаем отметку проведения (только если была проведена)
+				$db -> query("UPDATE {$sqlname}budjet SET do = '' WHERE id = ?i and identity = ?i and do = 'on'", $id, (int)$identity);
+
+				if ((int)$db -> affectedRows() > 0) {
 
 					//поймем - расход это или поступление
 					$tip = (string)$db -> getOne("SELECT tip FROM {$sqlname}budjet_cat WHERE id = '$cat' and identity = '$identity'");
@@ -784,8 +794,6 @@ class Budget {
 
 					//сделаем вычет со счета
 					self ::rsadd($rs, (float)$summa, $operacia);
-
-					$db -> query("UPDATE {$sqlname}budjet SET do = '' WHERE id = '$id' and identity = '$identity'");
 
 					// лог статуса
 					self ::logStatus($bid, 'correct', sprintf('Отменено проведение расхода на сумму %s', $summa));
@@ -2356,29 +2364,22 @@ class Budget {
 
 		if ($rs > 0) {
 
-			//найдем сумму, имеющуюся на р/счете
-			$ostatok1 = $db -> getOne("SELECT ostatok FROM {$sqlname}mycomps_recv WHERE id = '$rs' AND identity = '$identity'");
-
+			// остаток обновляем АТОМАРНО (без потерянных обновлений при параллельных операциях)
 			if (in_array($operacia, [
 				'plus',
 				'minus'
 			])) {
 
-				//добавим платеж на р/счет
-				$new_summ = ( $operacia == 'plus' ) ? ( (float)pre_format($ostatok1) + (float)pre_format($summa) ) : ( pre_format($ostatok1) - pre_format($summa) );
+				$sign = ( $operacia == 'plus' ) ? '+' : '-';
 
-				$db -> query("UPDATE {$sqlname}mycomps_recv SET ostatok = '$new_summ' WHERE id = '$rs' and identity = '$identity'");
+				$db -> query("UPDATE {$sqlname}mycomps_recv SET ostatok = ostatok ".$sign." ?s WHERE id = ?i and identity = ?i", (string)(float)pre_format($summa), $rs, (int)$identity);
 
 			}
 			elseif ($operacia == 'move') {
 
-				$ostatok2 = $db -> getOne("SELECT ostatok FROM {$sqlname}mycomps_recv WHERE id = '$rs_move' AND identity = '$identity'");
-
-				$sum1 = pre_format($ostatok1) - pre_format($summa);              //с этого счета снимаем
-				$sum2 = (float)pre_format($ostatok2) + (float)pre_format($summa);//на этот счет получаем
-
-				$db -> query("UPDATE {$sqlname}mycomps_recv SET ostatok = '$sum1' WHERE id = '$rs' and identity = '$identity'");
-				$db -> query("UPDATE {$sqlname}mycomps_recv SET ostatok = '$sum2' WHERE id = '$rs_move' and identity = '$identity'");
+				// списываем с одного счета и зачисляем на другой — каждое обновление атомарно
+				$db -> query("UPDATE {$sqlname}mycomps_recv SET ostatok = ostatok - ?s WHERE id = ?i and identity = ?i", (string)(float)pre_format($summa), $rs, (int)$identity);
+				$db -> query("UPDATE {$sqlname}mycomps_recv SET ostatok = ostatok + ?s WHERE id = ?i and identity = ?i", (string)(float)pre_format($summa), (int)$rs_move, (int)$identity);
 
 			}
 

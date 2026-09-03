@@ -96,7 +96,7 @@ $db = new SafeMysql([
 	'charset' => 'utf8'
 ]);
 
-$res      = $db -> getRow("SELECT id, api_key, timezone FROM {$sqlname}settings WHERE api_key = '$APIKEY'");
+$res      = $db -> getRow("SELECT id, api_key, timezone FROM {$sqlname}settings WHERE api_key = ?s", $APIKEY);
 $apikey   = $res['api_key'];
 $identity = (int)$res['id'];
 $timezone = $result['timezone'];
@@ -108,7 +108,7 @@ if ($user == '') {
 }
 
 //параметры проверки
-$result   = $db -> getRow("SELECT * FROM {$sqlname}user WHERE login = '$LOGIN' and identity = '$identity'");
+$result   = $db -> getRow("SELECT * FROM {$sqlname}user WHERE login = ?s and identity = ?i", $LOGIN, (int)$identity);
 $iduser   = (int)$result['iduser'];
 $username = $result['title'];
 $iduser1  = (int)$result['iduser'];

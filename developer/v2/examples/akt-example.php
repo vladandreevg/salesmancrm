@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /* (C) 2018 Vladislav Andreev   */
 /*       SalesMan Project       */
@@ -19,13 +19,13 @@ require_once "../../../inc/licloader.php";
 $baseurl = "https://demo.isaler.ru/developer/v2/akt";
 
 //Адрес расположения CRM
-$baseurl = "http://sm2018.crm/developer/v2/akt";
+$baseurl = "http://sm2021.crm/developer/v2/akt";
 
 //существующий пользователь в системе
 DEFINE("LOGIN", "vladislav@isaler.ru");
 
 //получаем в Панели управления CRM
-DEFINE("KEY", "t1xdeOwWSIqgDol70CkRdK3WD4N4cm");
+DEFINE("KEY", "YOUR_API_KEY");
 
 function Send($url, $POST) {
 	$ch = curl_init();// Устанавливаем соединение
@@ -100,7 +100,7 @@ $params3 = [
 	// указываем метод
 	"action"      => 'add',
 	//дата счета
-	"date"        => "2018-07-01",
+	"date"        => "2023-01-21",
 	//номер акта, если не указано - будет сгенерирова по порядку
 	"number"      => '',
 	// шаблон Акта: имя файла или ID шаблона
@@ -111,7 +111,7 @@ $params3 = [
 	// id статуса документа
 	"status"      => 1,
 	// сделка
-	"did"         => 920,//913,
+	"did"         => 953,//913,
 	// login пользователя
 	//"user"      => 'marand@omadaru.ru',
 ];
@@ -196,7 +196,7 @@ $params9 = [
 ];
 
 // Создаем подпись к параметрам
-$urlparams = http_build_query($params2);
+$urlparams = http_build_query($params3);
 
 // Устанавливаем соединение
 $res = Send($baseurl, $urlparams);
