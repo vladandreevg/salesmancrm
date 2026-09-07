@@ -20,6 +20,13 @@ include $rootpath."/inc/auth.php";
 include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 
+// универсальный поиск — только авторизованным
+// (без сессии $identity подменяется дефолтом в settings.php, поиск отдал бы чужие данные)
+if ((int)$iduser1 < 1) {
+	http_response_code(403);
+	exit();
+}
+
 $thisfile = basename( __FILE__ );
 
 $start = true;
