@@ -13,8 +13,6 @@
  * Используется в основном интерфейсе
  */
 
-use Salesman\User;
-
 $rurl    = $_SERVER['REQUEST_URI'];
 $iduser1 = 0;
 
@@ -41,19 +39,12 @@ if ($_COOKIE['ses'] != '') {
 
 	if( (int)$_COOKIE[ 'old' ] > 0) {
 
-		// находим подчиненных
-		$x = User::userArray($iduser1);
-		$y = array_column(
-			array_filter($x, static function($var) {
-				return $var['secrty'] == 'yes';
-			}),
-			'id'
-		);
-
 		// замещение разрешено только если целевой пользователь назначил текущего
 		// своим замещающим (zam) и не заблокирован (secrty='yes')
-		// так же функция доступна администратору и ко всем подчиненным текущего юзера
-		if ($isadmin == 'on' || canImpersonate($db, (int)$iduser1, (int)$_COOKIE['asuser'], (int)$identity) || in_array((int)$_COOKIE['asuser'], $y)) {
+		// так же функция доступна администратору и ко всем подчиненным текущего юзера.
+		// NB: проверка подчиненности выполняется без класса \Salesman\User, т.к. этот
+		// файл подключается раньше inc/func.php, регистрирующего автозагрузчик классов
+		if ($isadmin == 'on' || canImpersonate($db, (int)$iduser1, (int)$_COOKIE['asuser'], (int)$identity) || canImpersonateSubordinate($db, (int)$iduser1, (int)$_COOKIE['asuser'], (int)$identity)) {
 
 			$result = $db -> getRow("SELECT * FROM {$sqlname}user WHERE iduser = ?i and identity = ?i", (int)$_COOKIE['asuser'], (int)$identity);
 			$iduser1   = (int)$result["iduser"];

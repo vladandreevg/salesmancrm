@@ -34,7 +34,9 @@ $opts = [
 
 try {
 
-	$db = new SafeMySQL($opts);
+	// если объект подключения уже задан (напр., заглушка в тестах) — используем его,
+	// иначе создаём реальное подключение
+	$db = ( isset( $GLOBALS[ 'db' ] ) && is_object( $GLOBALS[ 'db' ] ) ) ? $GLOBALS[ 'db' ] : new SafeMySQL( $opts );
 
 	if ($_COOKIE['ses']) {
 
@@ -47,22 +49,6 @@ try {
 			$login   = $result["login"];
 			$tzone   = $result["tzone"];
 			$isadmin = $result["isadmin"];
-
-			// замещение (замена сотрудника) — только если целевой пользователь назначил
-			// текущего своим замещающим (zam) и не заблокирован (secrty='yes')
-			if ((int)$_COOKIE['old'] > 0 && (int)$identity > 0 && canImpersonate($db, (int)$iduser1, (int)$_COOKIE['asuser'], (int)$identity)) {
-
-				$result = (array)$db -> getRow("SELECT * FROM {$sqlname}user WHERE iduser = ?i and identity = ?i", (int)$_COOKIE['asuser'], (int)$identity);
-				$iduser1   = $result["iduser"];
-				$usertitle = $result["title"];
-				$tipuser   = $result["tip"];
-				$mid       = $result["mid"];
-				$login     = $result["login"];
-				$identity  = $result["identity"];
-				$isadmin   = $result["isadmin"];
-				$tzone     = $result["tzone"];
-
-			}
 
 		}
 
@@ -117,5 +103,66 @@ function canImpersonate($db, int $oldUser, int $asUser, int $identity): bool {
 	);
 
 	return $cnt > 0;
+
+}
+
+/**
+ * Проверка, что целевой пользователь $asUser — это сам текущий пользователь $oldUser
+ * или один из его подчиненных (по цепочке mid, любой глубины) и при этом не заблокирован
+ * (secrty = 'yes'). Проверка выполняется в рамках одной identity.
+ *
+ * Эквивалент проверки in_array($asUser, $y) по результату User::userArray($oldUser),
+ * но без зависимости от класса \Salesman\User: auth_main.php/auth.php подключаются
+ * раньше inc/func.php, который регистрирует автозагрузчик классов \Salesman\*.
+ *
+ * @param mixed $db
+ * @param int   $oldUser - текущий (исходный) пользователь из сессии
+ * @param int   $asUser  - пользователь, от имени которого запрошена работа
+ * @param int   $identity
+ *
+ * @return bool
+ */
+function canImpersonateSubordinate($db, int $oldUser, int $asUser, int $identity): bool {
+
+	if ($oldUser < 1 || $asUser < 1 || $identity < 1) {
+		return false;
+	}
+
+	$sqlname = $GLOBALS['sqlname'];
+
+	// целевой пользователь должен существовать и быть активным
+	// (в исходной проверке $y фильтровался по secrty = 'yes')
+	$row = $db -> getRow("SELECT mid, secrty FROM {$sqlname}user WHERE iduser = ?i AND identity = ?i", $asUser, $identity);
+
+	if (empty($row) || (string)$row['secrty'] !== 'yes') {
+		return false;
+	}
+
+	// сам пользователь входит в набор userArray($oldUser) — сохраняем исходную семантику
+	if ($asUser === $oldUser) {
+		return true;
+	}
+
+	// поднимаемся по цепочке руководителей (mid) от asUser вверх;
+	// если встречаем $oldUser — значит asUser у него в подчинении
+	$seen = [ $asUser => true ];
+	$u    = (int)$row['mid'];
+
+	while ($u > 0) {
+
+		if ($u === $oldUser) {
+			return true;
+		}
+
+		// защита от зацикливания в mid-дереве
+		if (isset($seen[$u])) {
+			return false;
+		}
+		$seen[$u] = true;
+
+		$u = (int)$db -> getOne("SELECT mid FROM {$sqlname}user WHERE iduser = ?i AND identity = ?i", $u, $identity);
+	}
+
+	return false;
 
 }
