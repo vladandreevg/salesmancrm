@@ -41,43 +41,43 @@ $action = $_REQUEST['action'];
 $modulesPay  = [
 	"moddaycontrol" => [
 		"name"        => "Узлы и приборы учета",
-		"image"       => "https://salesman.pro/docs.img/docs/ppu_main.png",
-		"url"         => "https://salesman.pro/docs/113",
+		"image"       => "https://isaler.ru/docs.img/docs/ppu_main.png",
+		"url"         => "https://isaler.ru/docs/113",
 		"description" => "Модуль предназначен для компаний, которые занимаются продажей и обслуживанием каких-либо объектов (оборудование, здания и пр.) и им необходимо контролировать сроки проведения различных проверок/поверок данного оборудования.",
 		"pay"         => true
 	],
 	"modworkplan"   => [
 		"name"        => "План работ",
-		"image"       => "https://salesman.pro/docs.img/docs/mwp_gantt2.png",
-		"url"         => "https://salesman.pro/docs/114",
+		"image"       => "https://isaler.ru/docs.img/docs/mwp_gantt2.png",
+		"url"         => "https://isaler.ru/docs/114",
 		"description" => "Модуль позволяет вести учет выполнения работ по заказчикам с указанием исполнителей работ, формирование ежедневных заданий по бригадам/исполнителям, а также вести расчет з/пл исполнителей.",
 		"pay"         => true
 	],
 	"callcenter"    => [
 		"name"        => "Центр исходящих звонков",
-		"image"       => "https://salesman.pro/docs.img/docs/cc_main_task_with_comment_2.png",
-		"url"         => "https://salesman.pro/docs/112",
+		"image"       => "https://isaler.ru/docs.img/docs/cc_main_task_with_comment_2.png",
+		"url"         => "https://isaler.ru/docs/112",
 		"description" => "Модуль «ЦИЗ» предназначен для работы в отделе телемаркетинга или в небольшом колл-центре и позволяет назначать операторам задания для исходящих звонков, а также контролировать их выполнение.",
 		"pay"         => true
 	],
 	"soiskatel"     => [
 		"name"        => "Соискатель",
-		"image"       => "https://salesman.pro/docs.img/docs/soiskatel_vacancy_soiskatel_list.png",
-		"url"         => "https://salesman.pro/docs/126",
+		"image"       => "https://isaler.ru/docs.img/docs/soiskatel_vacancy_soiskatel_list.png",
+		"url"         => "https://isaler.ru/docs/126",
 		"description" => "Модуль предназначен для облегчения и систематизации работы с вакансиями компании и подбора персонала в небольших компаниях.",
 		"pay"         => true
 	],
 	"projects"      => [
 		"name"        => "Проекты",
-		"image"       => "https://salesman.pro/docs.img/docs/prj_gantt.png",
-		"url"         => "https://salesman.pro/docs/144",
+		"image"       => "https://isaler.ru/docs.img/docs/prj_gantt.png",
+		"url"         => "https://isaler.ru/docs/144",
 		"description" => "Модуль позволяет управлять проектами (в т.ч. по сделкам), связанными задачами с назначением ответственных и контролем сроков выполнения.",
 		"pay"         => true
 	],
 	"corpuniver"      => [
 		"name"        => "Корпоративный университет",
-		"image"       => "https://salesman.pro/docs.img/docs/cu_course.png",
-		"url"         => "https://salesman.pro/docs/149",
+		"image"       => "https://isaler.ru/docs.img/docs/cu_course.png",
+		"url"         => "https://isaler.ru/docs/149",
 		"description" => "Модуль позволяет организовать обучение и проверку знаний сотрудников компании.",
 		"pay"         => false
 	],

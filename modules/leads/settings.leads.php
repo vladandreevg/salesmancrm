@@ -149,6 +149,12 @@ if ($action == 'listedit_do') {
 }
 
 if ($action == "settings_do") {
+	// изменение настроек модуля - только администратор
+	if ( $isadmin != 'on' && $tipuser != 'Администратор' ) {
+		print 'Доступ запрещен';
+		exit();
+	}
+
 
 	$params['leadСoordinator']           = $_REQUEST['leadСoordinator'];
 	$params['leadMethod']                = $_REQUEST['leadMethod'];
@@ -166,7 +172,7 @@ if ($action == "settings_do") {
 
 	$newsettings = json_encode_cyr($params);
 
-	$db -> query("update ".$sqlname."modules set content = '".$newsettings."', secret = '$apikey' WHERE mpath = 'leads' and identity = '$identity'");
+	$db -> query("update ".$sqlname."modules set content = ?s, secret = ?s WHERE mpath = 'leads' and identity = ?i", $newsettings, $apikey, (int)$identity);
 
 	//todo: добавим шаблон в таблицу tpl
 	$tpl  = htmlspecialchars($_REQUEST['leadClientNotifyTemp']);
@@ -1179,9 +1185,9 @@ if ($action == 'list') {
 		<div class="attention">
 
 			<ul>
-				<li>Рекомендуется использовать плагин <a href="https://salesman.pro/docs/155" target="_blank" title="Планировщик заданий" class="Bold blue">Планировщик заданий</a></li>
-				<li>Возможна интеграция с любым сайтом с помощью <a href="https://salesman.pro/api2/lead" target="_blank" title="API" class="Bold blue">API</a></li>
-				<li>Можно использовать плагин для Wordpress - <a href="https://salesman.pro/docs/151" target="_blank" title="SalesMan CF7 to CRM Connector" class="Bold blue">SalesMan CF7 to CRM Connector</a></li>
+				<li>Рекомендуется использовать плагин <a href="https://isaler.ru/docs/155" target="_blank" title="Планировщик заданий" class="Bold blue">Планировщик заданий</a></li>
+				<li>Возможна интеграция с любым сайтом с помощью <a href="https://isaler.ru/api2/lead" target="_blank" title="API" class="Bold blue">API</a></li>
+				<li>Можно использовать плагин для Wordpress - <a href="https://isaler.ru/docs/151" target="_blank" title="SalesMan CF7 to CRM Connector" class="Bold blue">SalesMan CF7 to CRM Connector</a></li>
 			</ul>
 
 		</div>
@@ -1561,7 +1567,7 @@ if ($action == "") {
 		<!--<div id="tab-form-5"></div>-->
 	</DIV>
 
-	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/62')" title="Документация"><i class="icon-help"></i></div>
+	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://isaler.ru/docs/62')" title="Документация"><i class="icon-help"></i></div>
 
 	<div class="space-100"></div>
 

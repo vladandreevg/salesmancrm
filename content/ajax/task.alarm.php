@@ -44,7 +44,7 @@ if ((int)$count > 0) {
 	$template = '
 	<DIV style="height: 100vh;overflow-y: auto;">
 		<div style="background : linear-gradient(rgba(59, 110, 170, 0.5), rgba(59, 110, 170, 0.7)), url(/assets/images/bg/bluelight.png) repeat, rgba(59, 110, 170, 1.0);" class="menu--block sticked--top">
-			<a href="https://salesman.pro">
+			<a href="https://isaler.ru">
 				<img src="/assets/images/alarm.png" style="padding: 5px; height: 30px">
 			</a>
 			<div class="fs-14 white Bold ml10 pt15">Ближайшие дела</div>
