@@ -374,7 +374,7 @@ if ( $action == 'account' ) {
 			<div class="flex-string wp40 infodiv bgwhite">
 
 				<div class="attention mb10">
-					Как настроить свою почту? Почитай <a href="https://salesman.pro/docs/100" title="">справку</a>
+					Как настроить свою почту? Почитай <a href="https://isaler.ru/docs/100" title="">справку</a>
 				</div>
 
 				<hr>

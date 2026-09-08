@@ -38,7 +38,7 @@ foreach ( $result as $data_array ) {
 }
 
 //Подключаем или загружаем базу отчетов
-$rURL = "https://salesman.pro/docs/reports/";
+$rURL = "https://isaler.ru/docs/reports/";
 
 //файл кэша
 $cash = $rootpath."/cash/reports.json";
@@ -672,7 +672,7 @@ if ( $action == "" ) {
 
 	<div class="pagerefresh refresh--icon admn red" onclick="doLoad('/content/admin/<?php echo $thisfile; ?>?action=edit');" title="Добавить">
 		<i class="icon-plus-circled"></i></div>
-	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://salesman.pro/docs/17')" title="Документация">
+	<div class="pagerefresh refresh--icon admn orange" onclick="openlink('https://isaler.ru/docs/17')" title="Документация">
 		<i class="icon-help"></i></div>
 
 	<div class="button--group1 box--child" style="position: fixed; bottom: 40px; left: 380px; z-index: 100;">
