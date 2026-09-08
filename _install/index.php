@@ -27,7 +27,7 @@ if ( file_exists( $filename ) ) {
 }
 
 
-$actual = json_decode( file_get_contents( "https://salesman.pro/download/repo/version.json" ), true );
+$actual = json_decode( file_get_contents( "https://isaler.ru/download/repo/version.json" ), true );
 
 $ver = json_decode( file_get_contents( $rootpath."/_whatsnew/version.json" ), true );
 
@@ -219,7 +219,7 @@ $button = $ibutton = '';
 					</div>
 					';
 
-					$button = '<a href="https://salesman.pro/download/" class="button brounbtn" title="Скачать обновление">Скачать обновление</a>';
+					$button = '<a href="https://isaler.ru/download/" class="button brounbtn" title="Скачать обновление">Скачать обновление</a>';
 
 				}
 				else {

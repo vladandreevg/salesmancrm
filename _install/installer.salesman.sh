@@ -5,7 +5,7 @@
 
 # Скачиваем файл
 echo "Скачиваем дистрибутив из репозитория..."
-curl -L https://salesman.pro/download/getfile.php -o install.zip
+curl -L https://isaler.ru/download/getfile.php -o install.zip
 
 # Проверяю статус скачивания
 if [ $? -ne 0 ]; then

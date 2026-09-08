@@ -1431,44 +1431,6 @@ $mhtml = $m -> render($mtemplate, $menu);
 						<?= $trialCounterSub ?>
 
 						<?php
-						if ($isCloud && $isadmin == 'on') {
-
-							print '
-									<div class="title noborder pb0">Биллинг</div>
-								';
-
-							include $root."/billing/balance.php";
-
-							if ($balance_trial_left >= 0) {
-								print '
-									<div class="string two noborder cursor-default">
-										<span>Пробный период</span>
-										<span class="text-right"><b>'.$balance_trial_left.' дн.</b></span>
-									</div>';
-							}
-
-							if ($balance_bonuses > 0) {
-								print '
-									<div class="string two noborder cursor-default">
-										<span>Бонусные баллы</span>
-										<span class="text-right"><b>'.$balance_bonuses.'<i class="icon-gift"></i></b></span>
-									</div>';
-							}
-
-							print '
-								<div class="string two cursor-default">
-									<span>Текущий баланс</span>
-									<span class="text-right"><b>'.$balance_rub.'<i class="icon-rouble"></i></b></span>
-								</div>';
-
-							print '
-								<a href="/billing.php" class="string">
-									<i class="icon-rouble green"></i>&nbsp;Панель Биллинга&nbsp;
-								</a>
-								';
-
-						}
-
 						//массив сотрудников, которых замещает текущий сотрудник
 						$zamm = $db -> getCol("SELECT iduser FROM {$sqlname}user WHERE zam = '$iduser1' and identity = '$identity'");
 

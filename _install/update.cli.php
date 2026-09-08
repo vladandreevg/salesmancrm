@@ -48,7 +48,7 @@ unlink($rootpath.$qfile);
 
 //скачиваем файл обновления через curl
 $file = "files/update.zip";
-$src  = "https://salesman.pro/download/getfile.php?v=update";
+$src  = "https://isaler.ru/download/getfile.php?v=update";
 
 $res = exec('curl -k -# "'.$src.'" -o '.$rootpath.'/'.$file, $output, $exit);
 
@@ -77,8 +77,8 @@ unlink($file);
 
 /**
  * Примеры для работы из консоли:
- * curl -k -# "https://salesman.pro/download/getfile.php?v=update&p=php5.3" -o G:\update.zip
- * wget "https://salesman.pro/download/getfile.php?v=update&p=php5.3" -O G:\update.zip
+ * curl -k -# "https://isaler.ru/download/getfile.php?v=update&p=php5.3" -o G:\update.zip
+ * wget "https://isaler.ru/download/getfile.php?v=update&p=php5.3" -O G:\update.zip
  */
 
 $sapi = PHP_SAPI;

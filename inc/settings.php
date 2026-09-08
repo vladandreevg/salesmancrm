@@ -35,7 +35,7 @@ error_reporting(E_ERROR);
 if (!isset($productInfo)) {
 	$productInfo = [
 		"name"      => "SalesMan CRM",
-		"site"      => "https://salesman.pro",
+		"site"      => "https://isaler.ru",
 		"crmurl"    => "",
 		"email"     => "info@isaler.ru",
 		"support"   => "support@isaler.ru",

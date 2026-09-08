@@ -82,8 +82,23 @@ if ( !in_array( getVersion(), ['7.75', '2017.3'] ) ) {
 	include $root."/inc/auth.php";
 	include $root."/inc/settings.php";
 
+	// обновление БД доступно только администратору
+	if ( (int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор') ) {
+		print 'Доступ запрещен';
+		exit();
+	}
+
 }
 else {
+
+	include $root."/inc/auth.php";
+	include $root."/inc/settings.php";
+
+	// обновление БД доступно только администратору
+	if ( (int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор') ) {
+		print 'Доступ запрещен';
+		exit();
+	}
 
 	$identity = 1;
 
@@ -205,7 +220,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = ($sapi == 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro';
+			$message = ($sapi == 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru';
 
 		}
 		else {
@@ -297,7 +312,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru';
 
 		}
 		else {
@@ -477,7 +492,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru';
 
 		}
 		else {
@@ -877,7 +892,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru';
 
 		}
 		else {
@@ -954,7 +969,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
 
 		}
 		else {
@@ -1014,7 +1029,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
 
 		}
 
@@ -1116,7 +1131,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
 
 		}
 
@@ -1148,7 +1163,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
 
 		}
 
@@ -1196,7 +1211,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
 
 		}
 
@@ -1274,7 +1289,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 
 		if ( $currentVer == $lastVer ) {
 
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
 
 		}
 
@@ -1306,7 +1321,7 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 		
 		if ( $currentVer == $lastVer ) {
 			
-			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - salesman.pro<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
 			
 		}
 		

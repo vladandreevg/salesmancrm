@@ -35,29 +35,26 @@ $sysVersion = json_decode(str_replace([
 
 $root = realpath(__DIR__.'/');
 
-if (!isset($step)) {
-
-	$filename = $rootpath."/inc/config.php";
-
-	if (file_exists($filename)) {
-		print '
-			<LINK rel="stylesheet" type="text/css" href="/assets/css/app.css">
-			<LINK rel="stylesheet" href="/assets/css/fontello.css">
-			<div class="warning mt20 p20 flex-container" style="width:600px; margin: 0 auto;">
-				<div class="flex-string wp15">
-					<i class="icon-attention red icon-3x"></i>
-				</div>
-				<div class="flex-string wp85">
-					<p class="red uppercase Bold mb20">Ошибка:</p>
-					<p>Имеется Конфигурационный файл (<b class="red">/inc/config.php</b>).</p> 
-					<p>Сначала удалите его (не забывайте сделать резервную копию файла).</p>
-					<p><a href="/" class="button" title="На Рабочий стол">На Рабочий стол</a></p>
-				</div>
+// защита от повторного запуска установки на установленной системе:
+// пока существует inc/config.php, любые шаги установки (в т.ч. перезапись
+// конфига) недоступны — это исключает перезапись конфигурации и PHP-инъекцию
+if (file_exists($rootpath."/inc/config.php")) {
+	print '
+		<LINK rel="stylesheet" type="text/css" href="/assets/css/app.css">
+		<LINK rel="stylesheet" href="/assets/css/fontello.css">
+		<div class="warning mt20 p20 flex-container" style="width:600px; margin: 0 auto;">
+			<div class="flex-string wp15">
+				<i class="icon-attention red icon-3x"></i>
 			</div>
-		';
-		exit();
-	}
-
+			<div class="flex-string wp85">
+				<p class="red uppercase Bold mb20">Ошибка:</p>
+				<p>Имеется Конфигурационный файл (<b class="red">/inc/config.php</b>).</p> 
+				<p>Сначала удалите его (не забывайте сделать резервную копию файла).</p>
+				<p><a href="/" class="button" title="На Рабочий стол">На Рабочий стол</a></p>
+			</div>
+		</div>
+	';
+	exit();
 }
 
 if ($step == 3) {
@@ -65,11 +62,13 @@ if ($step == 3) {
 	$fp = fopen($rootpath."/inc/config.php", 'wb');
 	flock($fp, LOCK_EX);
 	fwrite($fp, '<?php'."\n");
-	fwrite($fp, '$dbhostname = '.'"'.$_POST['host'].'";'."\n");
-	fwrite($fp, '$dbusername = '.'"'.$_POST['username'].'";'."\n");
-	fwrite($fp, '$dbpassword = '.'"'.$_POST['password'].'";'."\n");
-	fwrite($fp, '$database = '.'"'.$_POST['dbname'].'";'."\n");
-	fwrite($fp, '$sqlname = '.'"'.$_POST['prefix'].'";'."\n");
+	// var_export гарантирует корректное экранирование значений: содержимое POST
+	// не может выйти за пределы строкового литерала (защита от PHP-инъекции)
+	fwrite($fp, '$dbhostname = '.var_export((string)$_POST['host'], true).';'."\n");
+	fwrite($fp, '$dbusername = '.var_export((string)$_POST['username'], true).';'."\n");
+	fwrite($fp, '$dbpassword = '.var_export((string)$_POST['password'], true).';'."\n");
+	fwrite($fp, '$database = '.var_export((string)$_POST['dbname'], true).';'."\n");
+	fwrite($fp, '$sqlname = '.var_export((string)$_POST['prefix'], true).';'."\n");
 
 	flock($fp, LOCK_UN);
 	fclose($fp);
@@ -125,8 +124,19 @@ if ($step == 4) {
 		'errmode' => 'exception',
 		'charset' => 'UTF8'
 	];
-
-	$db = new SafeMySQL($opts);
+	
+	try {
+		
+		$db = new SafeMySQL($opts);
+		
+	}
+	catch (Exception $e) {
+		
+		$err++;
+		$errmes[] = "Ошибка: ".$query;
+		$errmes[] = $e -> getTraceAsString();
+		
+	}
 
 
 	//$db -> query( "SET NAMES 'utf8', collation_connection='utf8_general_ci', character_set_client='utf8', character_set_database='utf8', character_set_server='utf8', character_set_results='utf8'" );
@@ -673,7 +683,7 @@ if ($step == 0) {
 
 			<div class="main_div fs-12">
 
-				<a href="?step=2" class="button greenbtn"><span><b>ДА</b>, я Принимаю Условия</span></a>&nbsp; <a href="https://salesman.pro" class="button redbtn"><span><b>НЕТ</b>, я хочу подумать</span></a>
+				<a href="?step=2" class="button greenbtn"><span><b>ДА</b>, я Принимаю Условия</span></a>&nbsp; <a href="https://isaler.ru" class="button redbtn"><span><b>НЕТ</b>, я хочу подумать</span></a>
 
 			</div>
 
@@ -790,9 +800,9 @@ if ($step == 3) {
 						'charset' => 'UTF8'
 					];
 
-					$db = new SafeMySQL($opts);
-
 					try {
+						
+						$db = new SafeMySQL($opts);
 
 						$test2 = '<B class="green">Пользователь/Пароль валидны</B> <i class="icon-ok-circled green"></i>';
 						$g2    = "good";
@@ -1036,7 +1046,7 @@ if ($step == 5) {
 					<div class="main_div text-center">
 
 						<a href="/login" class="button">Авторизация</a>&nbsp;&nbsp;
-						<a href="https://salesman.pro" target="_blank" class="blue">Сайт производителя<i class="icon-right-open"></i></a>
+						<a href="https://isaler.ru" target="_blank" class="blue">Сайт производителя<i class="icon-right-open"></i></a>
 
 					</div>
 					<?php

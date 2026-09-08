@@ -2709,7 +2709,7 @@ function DClose() {
 		editor.destroy();
 		editor = null;
 
-		$('.nano').css('height', '100%');
+		//$('.nano').css('height', '100%');
 
 	}
 
@@ -3099,8 +3099,10 @@ function goodlink(url) {
 }
 
 function openlink(url) {
+	
+	var newUrl = url.replace("salesman.pro", "isaler.ru");
 
-	window.open(url, '_blank');
+	window.open(newUrl, '_blank');
 
 }
 

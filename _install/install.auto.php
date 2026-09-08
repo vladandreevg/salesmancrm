@@ -27,7 +27,7 @@ $rootpath = realpath( __DIR__ );
 $br = ( PHP_SAPI != 'cli' ) ? "<br>" : "\n";
 
 //скачиваем файл обновления через curl
-$src = "https://salesman.pro/download/getfile.php";
+$src = "https://isaler.ru/download/getfile.php";
 
 flushPrint("Начинаю загрузку дистрибутива$br");
 
