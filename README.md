@@ -1,34 +1,34 @@
-![SalesMan CRM](https://salesman.pro/docs.img/salesman-48x.png)
+![SalesMan CRM](https://isaler.ru/docs.img/salesman-48x.png)
 
 SalesMan CRM - бесплатная профессиональная OpenSource система управления продажами
 ======
 
 SalesMan CRM является универсальной системой управления продажами для компаний малого и среднего бизнеса. Это веб-приложение для ведения и безопасного хранения клиентской базы, истории взаимоотношений с клиентами и управления продажами, в том числе и с удаленных компьютеров (через Интернет), работает через браузер. Разработка ведется с 2007 года.
 
-![SalesMan CRM](https://salesman.pro/docs.img/big-transparent-monitors.png)
+![SalesMan CRM](https://isaler.ru/docs.img/big-transparent-monitors.png)
 
 ## Основные возможности / Features
 
-- [Единая база Клиентов и Контактов](https://salesman.pro/docs/44) с настраиваемыми параметрами
-- Учет продаж с помощью [Сделок](https://salesman.pro/docs/67) - от получения заявок, выставления КП, счетов, до закрывающих документов
-- Любые типы [дел и напоминаний](https://salesman.pro/docs/27) с фиксацией результатов выполнения
-- Супер-удобный [Рабочий стол](https://salesman.pro/docs/25) с виджетами основной информации + Более 60 различных отчетов
-- [Финансовый учет](https://salesman.pro/docs/78) и планирование
-- [Генератор документов](https://salesman.pro/docs/52) на основе word- и excel-шаблонов
-- [Почтовый клиент](https://salesman.pro/docs/100) для полученияи написания писем из CRM
-- Интеграция с [IP-телефонией](https://salesman.pro/docs/59)
+- [Единая база Клиентов и Контактов](https://isaler.ru/docs/44) с настраиваемыми параметрами
+- Учет продаж с помощью [Сделок](https://isaler.ru/docs/67) - от получения заявок, выставления КП, счетов, до закрывающих документов
+- Любые типы [дел и напоминаний](https://isaler.ru/docs/27) с фиксацией результатов выполнения
+- Супер-удобный [Рабочий стол](https://isaler.ru/docs/25) с виджетами основной информации + Более 60 различных отчетов
+- [Финансовый учет](https://isaler.ru/docs/78) и планирование
+- [Генератор документов](https://isaler.ru/docs/52) на основе word- и excel-шаблонов
+- [Почтовый клиент](https://isaler.ru/docs/100) для полученияи написания писем из CRM
+- Интеграция с [IP-телефонией](https://isaler.ru/docs/59)
 - Хранилище файлов
 - Хранилище прайсов
-- Внутренние коммуникации по клиентам и сделкам - [Обсуждения](https://salesman.pro/docs/51)
-- [База знаний](https://salesman.pro/docs/53)
-- [Корпоративный университет](https://salesman.pro/docs/149)
-- И многое другое описано в [Документации](https://salesman.pro/docs/51)
+- Внутренние коммуникации по клиентам и сделкам - [Обсуждения](https://isaler.ru/docs/51)
+- [База знаний](https://isaler.ru/docs/53)
+- [Корпоративный университет](https://isaler.ru/docs/149)
+- И многое другое описано в [Документации](https://isaler.ru/docs/51)
 
 ## Возможности для разработчиков / Features for Developers
 
-- [API](https://salesman.pro/api2/)
-- [Система фильтров и хуков](https://salesman.pro/api2/hooks)
-- [Система плагинов](https://salesman.pro/docs/115)
+- [API](https://isaler.ru/api2/)
+- [Система фильтров и хуков](https://isaler.ru/api2/hooks)
+- [Система плагинов](https://isaler.ru/docs/115)
 
 ## Системные требования / System requirements
 
@@ -91,11 +91,11 @@ SalesMan CRM является универсальной системой упр
 
 ### Ручное развертывание
 
-1. Скачать дистрибутив с сайта https://salesman.pro/download
+1. Скачать дистрибутив с сайта https://isaler.ru/download
 2. Распаковать в папку, к которой подключен домен
 3. Передать права на все папки/файлы пользователю веб-сервера (например apache)
 4. Перейти в браузере по заданному адресу
-5. Провести [установку](https://salesman.pro/docs/2)
+5. Провести [установку](https://isaler.ru/docs/2)
 
 
 ### Развертывание с помощью командной строки
@@ -106,7 +106,7 @@ SalesMan CRM является универсальной системой упр
 # Переходим в каталог, подготовленный под установку CRM
 cd /var/www/
 # Скачиваем дистрибутив
-curl -k -# "https://salesman.pro/download/getfile.php" -o salesman.zip
+curl -k -# "https://isaler.ru/download/getfile.php" -o salesman.zip
 # Распаковываем
 unzip salesman.zip
 # Удаляем архив
@@ -118,7 +118,7 @@ rm salesman.zip
 
 ### Развертывание с помощью скрипта установки (из браузера)
 
-1. Скачать [скрипт](https://salesman.pro/download/repo/install.auto.zip) авторазвертывания
+1. Скачать [скрипт](https://isaler.ru/download/repo/install.auto.zip) авторазвертывания
     - скрипт скачивает дистрибутив и распаковывает его в текущей папке
 2. Распаковать в папку на сервере, в которой будет развернут дистрибутив SalesMan CRM
 3. Выполнить скрипт в браузере - https://youcrm/install.auto.php
@@ -157,7 +157,7 @@ git clone https://github.com/vladandreevg/salesmancrm.git ./
     - возможно обновить дистрибутив командами:
    ```shell
    cd /var/www/
-   curl -k -# "https://salesman.pro/download/getfile.php?v=update" -o update.zip
+   curl -k -# "https://isaler.ru/download/getfile.php?v=update" -o update.zip
    unzip update.zip
    rm update.zip
    ```
@@ -219,7 +219,7 @@ git clone https://github.com/vladandreevg/salesmancrm.git ./
 
 ## Ссылки / Links
 
-- [Сайт](https://salesman.pro/)
+- [Сайт](https://isaler.ru/)
 - [Группа vk.com](https://vk.com/salesmancrm)
 - [Канал Telegram](https://t.me/salesman_channel)
 - [Канал Youtube](https://www.youtube.com/c/smancrm)
