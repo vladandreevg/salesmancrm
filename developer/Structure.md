@@ -38,6 +38,7 @@
         - clients_columns_{iduser}.txt - колонки раздела Клиенты
         - dogs_columns_{iduser}.txt - колонки раздела Сделки
         - persons_columns_{iduser}.txt - колонки раздела Контакты
+        - todos_columns_{iduser}.txt - колонки раздела Напоминания (Все)
         - settings.user.{iduser}.json - настройки пользователя
         - settings.ymail.{iduser}.json - настройки почтового ящика (Почтовик)
         - signature.ymail.{iduser}.json - настройки подписей (Почтовик)

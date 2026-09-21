@@ -183,26 +183,11 @@ if ($action == "enter") {
 	//print_r($res);
 
 	//Составим список всех активных сотрудников
-	$users_acsept = [];
-	if ( !$isCloud ) {
-
-		$users_acsept = $db -> getCol("SELECT iduser FROM ".$sqlname."user WHERE secrty = 'yes' ORDER by iduser $userlim");
-
-		//print $db -> lastQuery();
-
-	}
-
+	$users_acsept = $db -> getCol("SELECT iduser FROM ".$sqlname."user WHERE secrty = 'yes' ORDER by iduser $userlim");
+	
 	$session = (int)$db -> getOne("select session * 86400 from ".$sqlname."settings WHERE id = ?i", (int)$identity);
 	if ($session < 1) {
 		$session = 10 * 86400;
-	}
-
-	if ($isCloud) {
-
-		$rest     = $db -> getRow("SELECT * FROM ".$sqlname."activate WHERE identity = ?i", (int)$identity);
-		$activate = $rest["activate"];
-		$code     = $rest["code"];
-
 	}
 
 	if ($sec == 'yes') {//если пользователь активен
@@ -210,9 +195,8 @@ if ($action == "enter") {
 		if ($_POST['logi'] == '') {
 			$reslogin = "Не указан Логин";
 		}
-
-		//Если это не облако
-		if ($iduser2 > 0 && !$isCloud) {
+		
+		if ($iduser2 > 0) {
 
 			if (hash_equals($pwd2, encodePass($_POST['pwd'], $salt))) {
 
@@ -262,53 +246,7 @@ if ($action == "enter") {
 
 			}
 		}
-		elseif ($iduser2 == 0 && !$isCloud) {
-
-			$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Пользователь <b>'.htmlspecialchars($_POST['logi'], ENT_QUOTES).'</b> не существует</div>';
-			logger('0', 'Неудачная авторизация (логин не уществует) с параметрами: Логин = '.$_POST['logi'], (int)$iduser1);
-
-		}
-
-		//для облака
-		if ($iduser2 > 0 && $isCloud) {
-
-			if (hash_equals($pwd2, encodePass($_POST['pwd'], $salt))) {
-
-				if ($activate == 'true') {
-
-					// сессионный токен на основе криптостойкого случайного источника
-					$sess = 's'.bin2hex(random_bytes(32));
-
-					$db -> query("update ".$sqlname."user set ses=?s WHERE iduser=?i", $sess, (int)$iduser2);
-
-					setSecureCookie("ses", $sess, time() + $session, "/");
-					setSecureCookie("old", '', time() - 3600, "/");
-					setSecureCookie("asuser", '', time() - 3600, "/");
-					setSecureCookie("rurl", '', time() - 3600, "/");
-
-					logger('0', 'Пользователь авторизовался в системе', $iduser2);
-
-					if (!$rurl || $rurl = 'billing.php') {
-						header( "Location: /" );
-					}
-
-					else {
-						header( "Location: ".$rurl );
-					}
-
-				}
-				else {
-					$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Ваш аккаунт еще не активирован.</div>';
-					$action   = 'getcode';
-				}
-			}
-			else {
-				$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Не правильный логин/пароль</div>';
-				logger('0', 'Неудачная авторизация (неверный Логин/Пароль) с параметрами: Логин = '.$_POST['logi'], $iduser1);
-			}
-
-		}
-		elseif ($iduser2 == 0 && $isCloud) {
+		elseif ($iduser2 == 0) {
 
 			$reslogin = '<div class="red div-center mt15"><i class="icon-attention icon-2x red"></i>&nbsp;Пользователь <b>'.htmlspecialchars($_POST['logi'], ENT_QUOTES).'</b> не существует</div>';
 			logger('0', 'Неудачная авторизация (логин не уществует) с параметрами: Логин = '.$_POST['logi'], (int)$iduser1);
@@ -413,28 +351,13 @@ if ($action == "changepass") {
 	$logi = $_REQUEST['logi'];
 
 	$useremail = $db -> getOne("SELECT useremail FROM ".$sqlname."changepass WHERE code = ?s", $code);
-
-	if ($isCloud == true) {
-
-		$res      = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE login = ?s", $useremail);
-		$iduser   = $res["iduser"];
-		$login    = $res["login"];
-		$title    = $res["title"];
-		$salt     = $res["sole"];
-		$sec      = $res["sec"];
-		$identity = $res["identity"];
-
-	}
-	if ($isCloud == false) {
-
-		$res    = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE email = ?s", $useremail);
-		$iduser = $res["iduser"];
-		$login  = $res["login"];
-		$title  = $res["title"];
-		$salt   = $res["sole"];
-		$sec    = $res["sec"];
-
-	}
+	
+	$res    = $db -> getRow("SELECT * FROM ".$sqlname."user WHERE email = ?s", $useremail);
+	$iduser = $res["iduser"];
+	$login  = $res["login"];
+	$title  = $res["title"];
+	$salt   = $res["sole"];
+	$sec    = $res["sec"];
 
 	if (!$useremail) {
 
@@ -646,14 +569,9 @@ $logo = "/assets/images/logo-white.png";
 
 					<div class="column grid-5 pt35">
 						<a href="/login?action=fogot" class="blue"><i class="icon-arrows-cw"></i>Восстановить пароль</a>
-						<?php if ( $isCloud ) { ?>
-							<div class="paddtop5">
-								<a href="<?= $productInfo['register'] ?>" class="blue"><i class="icon-doc-text"></i>&nbsp;Регистрация</a>&nbsp;<span class="gray3">|</span>&nbsp;<a href="/login?demo" class="blue"><i class="icon-upload-cloud"></i>&nbsp;Демо</a>
-							</div>
-						<?php } ?>
 					</div>
 					<div class="column grid-5">
-						<a href="javascript:void(0)" onClick="$('#loginform').submit()" class="loginbutton">Войти</a>
+						<a href="javascript:void(0)" onClick="$('#loginform').trigger('submit')" class="loginbutton">Войти</a>
 					</div>
 
 				</div>
@@ -687,14 +605,9 @@ $logo = "/assets/images/logo-white.png";
 
 					<div class="column grid-5 pt35">
 						<a href="/login" class="blue"><i class="icon-lock"></i>Войти</a>
-						<?php if ( $isCloud ) { ?>
-							<div class="paddtop5">
-								<a href="<?= $productInfo['register'] ?>" class="blue"><i class="icon-doc-text"></i>&nbsp;Регистрация</a>&nbsp;<span class="gray3">|</span>&nbsp;<a href="/login.php?demo" class="blue"><i class="icon-upload-cloud"></i>&nbsp;Демо</a>
-							</div>
-						<?php } ?>
 					</div>
 					<div class="column grid-5">
-						<a href="javascript:void(0)" onClick="$('#loginform').submit()" class="loginbutton">Напомнить</a>
+						<a href="javascript:void(0)" onClick="$('#loginform').trigger('submite')" class="loginbutton">Напомнить</a>
 					</div>
 
 				</div>
@@ -741,7 +654,7 @@ $logo = "/assets/images/logo-white.png";
 						<a href="/login" class="blue"><i class="icon-lock"></i>Войти</a>
 					</div>
 					<div class="column grid-5">
-						<a href="javascript:void(0)" onClick="$('#loginform').submit()" class="loginbutton">Сохранить</a>
+						<a href="javascript:void(0)" onClick="$('#loginform').trigger('submite')" class="loginbutton">Сохранить</a>
 					</div>
 
 				</div>
@@ -770,14 +683,9 @@ $logo = "/assets/images/logo-white.png";
 
 					<div class="column grid-4 pt35">
 						<a href="/login" class="blue"><i class="icon-lock"></i>Войти</a>
-						<?php if ( $isCloud ) { ?>
-							<div class="paddtop5">
-								<a href="<?= $productInfo['register'] ?>" class="blue"><i class="icon-doc-text"></i>&nbsp;Регистрация</a>&nbsp;<span class="gray3">|</span>&nbsp;<a href="/login.php?demo" class="blue"><i class="icon-upload-cloud"></i>&nbsp;Демо</a>
-							</div>
-						<?php } ?>
 					</div>
 					<div class="column grid-6">
-						<a href="javascript:void(0)" onClick="$('#loginform').submit()" class="loginbutton w140">Получить&nbsp;код</a>
+						<a href="javascript:void(0)" onClick="$('#loginform').trigger('submite')" class="loginbutton w140">Получить&nbsp;код</a>
 					</div>
 
 				</div>

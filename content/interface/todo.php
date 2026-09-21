@@ -59,6 +59,7 @@ flush();
 			<div class="column flex-column wp50 text-right">
 
 				<a href="javascript:void(0)" onclick="getTaskCSV()" title="Скачать в формате CSV" class="hidden-ipad"><i class="icon-download blue"></i>Экспорт</a>&nbsp;&nbsp;
+				<a href="javascript:void(0)" onclick="getColumnEditorTodo()" title="Настроить колонки" class="hidden-ipad"><i class="icon-th blue"></i><span class="hidden-ipad">Колонки</span></a>&nbsp;&nbsp;
 				<a href="javascript:void(0)" title="Обновить представление" onclick="page_refresh();"><i class="icon-arrows-cw blue"></i><span class="hidden-ipad">Обновить</span></a>&nbsp;
 
 			</div>
@@ -108,6 +109,9 @@ if(isMobile || $(window).width() < 767){
 $.Mustache.load('/content/tpl/tpl.tasks.mustache');
 
 $( function() {
+
+	includeJS("/assets/js/dragtable-master/jquery.dragtable.js");
+	includeCSS("/assets/js/dragtable-master/dragtable.css");
 
 	$hash = window.location.hash.substring(1);
 	if($hash === '') $hash = 'my';
@@ -311,6 +315,13 @@ function configpage(){
 
 			$(".nano").nanoScroller();
 
+			//перемещаемые столбцы
+			$('#list_header').dragtable({
+				persistState: '/content/helpers/todo.columneditor.php?action=columnOrderSave',
+				dragaccept: '.drag--accept',
+				dragHandle: '.thandler'
+			});
+
 			$('tr[data-type="task"] td:first-child')
 				.on('mousedown', function(){
 
@@ -402,6 +413,15 @@ function getTaskCSV(){
 
 	var st = $('#pageform').serialize();
 	window.open('/content/lists/list.todo.php?action=export&'+st);
+
+}
+
+/**
+ * Настройка колонок списка (состав, ширина, порядок)
+ */
+function getColumnEditorTodo(){
+
+	doLoad('/content/helpers/todo.columneditor.php?action=columneditor');
 
 }
 
