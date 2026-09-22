@@ -648,7 +648,7 @@ class Akt {
 
 		//print_r($spekaAkt);
 
-		$result = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY spid" );
+		$result = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY sort, spid" );
 		while ($data = $db -> fetch( $result )) {
 
 			//если позиций вообще нет или такая позиция есть в позициях акта

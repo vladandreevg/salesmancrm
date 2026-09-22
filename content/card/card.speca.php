@@ -75,9 +75,146 @@ if ($isCatalog == 'on' && $speca['calculate'] && count($speca['speca']) > 0) {
 }
 ?>
 <script>
+
 	if (isMobile) {
 
-		$('#spekaTable').rtResponsiveTables();
+		$('.spekaTable').rtResponsiveTables();
 
 	}
+
+	/* ------------------------------------------------------------------
+	 * Ручная сортировка позиций спецификации
+	 * ------------------------------------------------------------------ */
+
+	//стили sortable - инжектим один раз, чтобы не плодить дубли при перезагрузке вкладки
+	if (!$('#spekaSortStyle').length) {
+
+		$('<style id="spekaSortStyle">' +
+			'.speka-dragcell{cursor:move}' +
+			'.speka-drag{cursor:move;color:#9aa7b4}' +
+			'.speka-drag:hover{color:#2b6cb0}' +
+			'.speka-placeholder{height:38px;background:#f2f6fa;border:1px dashed #b9c9d8}' +
+			'tr.speka-dragging{opacity:.6}' +
+			'</style>').appendTo('head');
+
+	}
+
+	//полный порядок позиций: основная спецификация + материалы
+	function spekaOrder() {
+
+		var ids = [];
+
+		$('.spekaTable').each(function () {
+
+			$(this).find('tbody > tr[data-spid]').each(function () {
+				ids.push($(this).data('spid'));
+			});
+
+		});
+
+		return ids.join(',');
+
+	}
+
+	//пересчет нумерации строк без перезагрузки вкладки
+	function spekaRenumber() {
+
+		$('.spekaTable').each(function () {
+
+			var i = 1;
+
+			$(this).find('tbody > tr[data-spid]').each(function () {
+				$(this).find('td.speka-num span').text(i++);
+			});
+
+		});
+
+	}
+
+	//сохранение порядка на сервере
+	function spekaSave($table) {
+
+		var did = $table.data('did');
+
+		if (!did)
+			return;
+
+		$.post('/content/core/core.speca.php?action=sort&did=' + did, {spids: spekaOrder()}, function (data) {
+
+			if (data.error !== undefined && data.error !== '' && data.error !== null) {
+
+				Swal.fire('Ошибка', data.error, 'error');
+
+				if (typeof settab === 'function')
+					settab('7', false);
+
+				return;
+
+			}
+
+			spekaRenumber();
+
+		}, 'json')
+			.fail(function () {
+
+				//не сохранилось - вернем прежний порядок перерисовкой вкладки
+				if (typeof settab === 'function')
+					settab('7', false);
+
+			});
+
+	}
+
+	//перетаскивание строк (десктоп)
+	if (!isMobile) {
+
+		$('.spekaSortable').each(function () {
+
+			if ($(this).hasClass('ui-sortable'))
+				return;
+
+			$(this).sortable({
+				handle: '.speka-drag',
+				items: '> tr',
+				axis: 'y',
+				cursor: 'move',
+				helper: 'clone',
+				opacity: 0.8,
+				tolerance: 'pointer',
+				forcePlaceholderSize: true,
+				placeholder: 'speka-placeholder',
+				start: function (event, ui) {
+					ui.item.addClass('speka-dragging');
+				},
+				stop: function (event, ui) {
+					ui.item.removeClass('speka-dragging');
+				},
+				update: function () {
+					spekaSave($(this).closest('table'));
+				}
+			}).disableSelection();
+
+		});
+
+	}
+
+	//кнопки "выше"/"ниже" - работают и на мобильных
+	$(document)
+		.off('click.spekaMove', '.speka-move')
+		.on('click.spekaMove', '.speka-move', function () {
+
+			var $tr = $(this).closest('tr');
+
+			if ($(this).data('dir') === 'up')
+				$tr.prev('tr').before($tr);
+			else
+				$tr.next('tr').after($tr);
+
+			spekaRenumber();
+			spekaSave($tr.closest('table'));
+
+			return false;
+
+		});
+
 </script>

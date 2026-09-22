@@ -868,7 +868,7 @@ if ( $action == 'export' ) {
 			$err      = 0;
 			$num      = 0;
 			$sum_in   = 0;
-			$result_s = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' and identity = '$identity' ORDER BY spid" );
+			$result_s = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' and identity = '$identity' ORDER BY sort, spid" );
 			while ($data = $db -> fetch( $result_s )) {
 
 				$delta           = 0;

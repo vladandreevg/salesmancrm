@@ -2078,6 +2078,7 @@ CREATE TABLE `app_speca` (
     `artikul` VARCHAR(100) NULL  DEFAULT  NULL,
     `title` VARCHAR(255) NULL  DEFAULT  NULL,
     `tip` INT NULL  DEFAULT '0',
+    `sort` INT(20) NULL  DEFAULT  NULL COMMENT 'Порядок вывода',
     `price` DOUBLE(20,2) NULL  DEFAULT '0.00',
     `price_in` DOUBLE(20,2) NULL  DEFAULT '0.00',
     `kol` DOUBLE(20,2) NULL  DEFAULT '0.00',
@@ -2087,7 +2088,8 @@ CREATE TABLE `app_speca` (
     `dop` INT NULL  DEFAULT '1',
     `comments` VARCHAR(250) NULL  DEFAULT  NULL,
     `identity` INT NULL  DEFAULT '1',
-   PRIMARY KEY (`spid`)
+   PRIMARY KEY (`spid`),
+   INDEX `did_sort` (`did`, `sort`)
 )  COMMENT='Позиции спецификаций к сделкам'  ENGINE=MyISAM DEFAULT CHARSET='utf8';#%%
 
 

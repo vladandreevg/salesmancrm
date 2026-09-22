@@ -142,7 +142,7 @@ if ( $action == "edit.new" ) {
 				"\t"   => ""
 			] );
 
-			$resp = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$odid' and tip != '2' and identity = '$identity' ORDER BY spid" );
+			$resp = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$odid' and tip != '2' and identity = '$identity' ORDER BY sort, spid" );
 			while ($datap = $db -> fetch( $resp )) {
 
 				$speca[] = [

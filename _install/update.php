@@ -1374,6 +1374,29 @@ if (  ($step == 1 || PHP_SAPI == 'cli') && getVersion() == $lastVer ) {
 
 	}
 
+	/**
+	 * Ручная сортировка позиций спецификации.
+	 *
+	 * backfill `sort` = `spid` сохраняет текущий порядок вывода (ORDER BY spid),
+	 * поэтому до первой ручной перестановки ни один счет/акт не меняет порядок позиций.
+	 */
+	$field = $db -> getRow( "SHOW COLUMNS FROM {$sqlname}speca LIKE 'sort'" );
+	if ( empty( $field['Field'] ) ) {
+
+		$db -> query( "ALTER TABLE {$sqlname}speca ADD COLUMN `sort` INT(20) NULL DEFAULT NULL COMMENT 'Порядок вывода' AFTER `tip`" );
+
+		// первичное заполнение: сохраняем текущий порядок вывода
+		$db -> query( "UPDATE {$sqlname}speca SET `sort` = `spid` WHERE `sort` IS NULL" );
+
+	}
+
+	$keys = $db -> getRow( "SHOW KEYS FROM `{$sqlname}speca` WHERE Key_name = 'did_sort'" );
+	if ( empty( $keys ) ) {
+
+		$db -> query( "ALTER TABLE `{$sqlname}speca` ADD INDEX `did_sort` (`did`, `sort`)" );
+
+	}
+
 	$db -> query( "ALTER TABLE {$sqlname}contract_status CHANGE `title` `title` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'название статуса'" );
 	$db -> query( "ALTER TABLE {$sqlname}contract_statuslog CHANGE `des` `des` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'комментарий'" );
 

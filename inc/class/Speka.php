@@ -166,6 +166,7 @@ class Speka {
 			'artikul',
 			'title',
 			'tip',
+			'sort',
 			'price_in',
 			'price',
 			'edizm',
@@ -226,6 +227,8 @@ class Speka {
 						'artikul'  => $artikul,
 						'title'    => $title,
 						'tip'      => ( $tip != '' ) ? $tip : 0,
+						//новая позиция встает в конец спецификации
+						'sort'     => (int)$db -> getOne("SELECT IFNULL(MAX(sort), 0) + 1 FROM {$sqlname}speca WHERE did = '$did' and identity = '$identity'"),
 						'price'    => pre_format($price),
 						'price_in' => pre_format($price_in),
 						'kol'      => $kol,
@@ -536,6 +539,113 @@ class Speka {
 	}
 
 	/**
+	 * Изменение порядка позиций спецификации
+	 *
+	 * Принимает желаемый порядок позиций сделки и нормализует поле `sort` в значения 1..N.
+	 * Позиции, которых нет в переданном списке (или которые принадлежат другой сделке),
+	 * сохраняют свой относительный порядок и дописываются в конец - это защищает
+	 * от потери порядка при неполном или подмененном списке.
+	 *
+	 * @param int          $did   - id сделки
+	 * @param array|string $order - порядок позиций: массив spid или строка "12,5,7"
+	 *
+	 * @return array - массив с результатом
+	 *      - result - Успешно|Error
+	 *      - data - id сделки
+	 *      - text - массив сообщений
+	 */
+	public function sort(int $did, $order = []): array {
+
+		global $hooks;
+
+		$sqlname  = $this -> sqlname;
+		$db       = $this -> db;
+		$identity = $this -> identity;
+
+		if ($did == 0) {
+
+			$response['result']        = 'Error';
+			$response['error']['code'] = '403';
+			$response['error']['text'] = "Отсутствуют параметры - id сделки (did)";
+
+			goto ext;
+
+		}
+
+		//приводим входной список к массиву целых - защита от инъекции
+		$incoming = is_array($order) ? $order : explode(",", (string)$order);
+		$incoming = array_values(array_unique(array_filter(array_map('intval', $incoming))));
+
+		if (empty($incoming)) {
+
+			$response['result']        = 'Error';
+			$response['error']['code'] = '406';
+			$response['error']['text'] = "Отсутствуют параметры - порядок позиций";
+
+			goto ext;
+
+		}
+
+		//текущий порядок позиций сделки
+		$current = array_map('intval', (array)$db -> getCol("SELECT spid FROM {$sqlname}speca WHERE did = '$did' and identity = '$identity' ORDER BY sort, spid"));
+
+		if (empty($current)) {
+
+			$response['result']        = 'Error';
+			$response['error']['code'] = '406';
+			$response['error']['text'] = "В спецификации нет позиций";
+
+			goto ext;
+
+		}
+
+		//целевой порядок: присланные позиции этой сделки, затем недостающие в текущем относительном порядке
+		$target = array_values(array_intersect($incoming, $current));
+
+		foreach ($current as $spid) {
+
+			if (!in_array($spid, $target, true)) {
+				$target[] = $spid;
+			}
+
+		}
+
+		//если порядок не изменился, то ничего не пишем
+		if ($target === $current) {
+
+			$response['result'] = 'Успешно';
+			$response['data']   = $did;
+			$response['text']   = ["Порядок не изменился"];
+
+			goto ext;
+
+		}
+
+		//MyISAM: транзакций нет, поэтому применяем одним запросом
+		$case = [];
+		$n    = 1;
+
+		foreach ($target as $spid) {
+			$case[] = "WHEN ".(int)$spid." THEN ".$n++;
+		}
+
+		$db -> query("UPDATE {$sqlname}speca SET sort = CASE spid ".implode(" ", $case)." END WHERE did = '$did' and identity = '$identity'");
+
+		if ($hooks) {
+			$hooks -> do_action("speka_sort", $did, $target);
+		}
+
+		$response['result'] = 'Успешно';
+		$response['data']   = $did;
+		$response['text']   = ["Порядок позиций изменен"];
+
+		ext:
+
+		return $response;
+
+	}
+
+	/**
 	 * Выдает информацию по спеке
 	 *
 	 * @param $did
@@ -574,7 +684,7 @@ class Speka {
 		$summaInTotal = 0;
 		$summaTotal   = 0;
 
-		$sp = $db -> query("SELECT * FROM {$sqlname}speca WHERE did = '$did' AND tip!='2' and identity = '$identity' ORDER BY spid");
+		$sp = $db -> query("SELECT * FROM {$sqlname}speca WHERE did = '$did' AND tip!='2' and identity = '$identity' ORDER BY sort, spid");
 		while ($da = $db -> fetch($sp)) {
 
 			//если у компании Налог = 0, то она его не платит
@@ -665,7 +775,7 @@ class Speka {
 		$i            = 1;
 		$pozition     = $tovar = $usluga = $material = [];
 
-		$result = $db -> query("SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY spid");
+		$result = $db -> query("SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY sort, spid");
 		while ($data = $db -> fetch($result)) {
 
 			$s = '';
@@ -963,6 +1073,13 @@ class Speka {
 
 		$daccesse = get_accesse(0, 0, $did);
 
+		/**
+		 * Сортировка не меняет значения позиции (цену, количество, НДС), поэтому доступна
+		 * там же, где добавление позиции: сделка не закрыта и есть доступ к сделке.
+		 * Внимание: $deal['close'] - массив, сравнение со строкой всегда истинно.
+		 */
+		$rightsSort = ( $deal['close']['close'] != 'yes' && ( $daccesse == 'yes' || $isadmin == 'on' ) );
+
 		$nalogComment = '(с учетом налога)';
 		if ($ndsRaschet == 'yes' && $nalogScheme['nalog'] > 0) {
 			$nalogComment = '(без учета налога)';
@@ -1074,7 +1191,8 @@ class Speka {
 				"tip"         => $tip,
 				"msg"         => $show_marga == 'yes' && $otherSettings['marga'] ? $msg : '',
 				"akts"        => $akts,
-				"edit"        => ( $dallow == 2 || $isadmin == 'on' ) && ( $daccesse == 'yes' || $isadmin == 'on' ) ? true : NULL
+				"edit"        => ( $dallow == 2 || $isadmin == 'on' ) && ( $daccesse == 'yes' || $isadmin == 'on' ) ? true : NULL,
+				"sortable"    => $rightsSort ? true : NULL
 			];
 
 			$i++;
@@ -1094,7 +1212,8 @@ class Speka {
 			"message"      => !empty($message) ? $message : NULL,
 			"messagestring" => !empty($message) ? yimplode("<br>", $message) : NULL,
 			"rights"       => [
-				"add" => $deal['close'] != 'yes' && ( $daccesse == 'yes' || $isadmin == 'on' ),
+				"add"  => $deal['close'] != 'yes' && ( $daccesse == 'yes' || $isadmin == 'on' ),
+				"sort" => $rightsSort
 			],
 			"nalogComment" => $nalogComment,
 			"speca"        => $rows,

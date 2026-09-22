@@ -3474,7 +3474,7 @@ function getNewTag(int $deid = 0, int $did = 0, int $clid = 0, int $mcid = 0, in
 
 	if ( $did > 0 ) {
 
-		$res = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY spid" );
+		$res = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY sort, spid" );
 		while ($da = $db -> fetch( $res )) {
 
 			$description = '';
@@ -4755,7 +4755,7 @@ function addProviderRashod($did, $summa): string {
 			$sum = $sum_in = 0;
 
 			//найдем сумму по спецификации, если она включена
-			$result1 = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY spid" );
+			$result1 = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY sort, spid" );
 			while ($data = $db -> fetch( $result1 )) {
 
 				$nds    = 1;
@@ -4854,7 +4854,7 @@ function getSpecaSum($did) {
 	$sum = $sum_in = 0;
 
 	//найдем сумму по спецификации, если она включена
-	$result = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND tip!=2 AND identity = '$identity' ORDER BY spid" );
+	$result = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND tip!=2 AND identity = '$identity' ORDER BY sort, spid" );
 	while ($data = $db -> fetch( $result )) {
 
 		$nds = 1;
@@ -8388,7 +8388,7 @@ function getMargaSum($did) {
 		$sum = $sum_in = 0;
 
 		//найдем сумму по спецификации, если она включена
-		$result1 = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY spid" );
+		$result1 = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' AND identity = '$identity' ORDER BY sort, spid" );
 		while ($data = $db -> fetch( $result1 )) {
 
 			$nds    = 1;

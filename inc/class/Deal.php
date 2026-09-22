@@ -422,7 +422,7 @@ class Deal {
 		];
 
 		$response['speca'] = [];
-		$ress              = $db -> getAll("SELECT * FROM {$sqlname}speca WHERE did='".$did."' and identity = '$identity' ORDER BY spid");
+		$ress              = $db -> getAll("SELECT * FROM {$sqlname}speca WHERE did='".$did."' and identity = '$identity' ORDER BY sort, spid");
 		foreach ($ress as $da) {
 
 			$response['speca'][] = [

@@ -892,7 +892,7 @@ switch ($params['action']) {
 
 				if ($params['speka'] == 'yes') {
 
-					$ress = $db -> query("SELECT * FROM ".$sqlname."speca WHERE did = '$did' and identity = '$identity' ORDER BY spid");
+					$ress = $db -> query("SELECT * FROM ".$sqlname."speca WHERE did = '$did' and identity = '$identity' ORDER BY sort, spid");
 					while ($da = $db -> fetch($ress)) {
 
 						$deal['speka'][] = [

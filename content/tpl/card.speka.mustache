@@ -23,9 +23,12 @@
 
 <div style="overflow-y:auto; max-height: 70vh;">
 
-	<table class="bgwhite top" id="spekaTable">
+	<table class="bgwhite top spekaTable" id="spekaTable{{#isPositions}}-main{{/isPositions}}{{^isPositions}}-material{{/isPositions}}" data-did="{{did}}">
 		<thead class="sticked--top">
 		<tr class="header_contaner">
+			{{#rights.sort}}
+			<th class="w20 text-center hidden-iphone" title="Перетащите строку, чтобы изменить порядок">&nbsp;</th>
+			{{/rights.sort}}
 			<th class="w10 text-center">№ п.п.</th>
 			<th class="text-center">Номенклатура</th>
 			<th class="w30 text-center">Ед.изм.</th>
@@ -40,10 +43,13 @@
 			<th class="w60">&nbsp;</th>
 		</tr>
 		</thead>
-		<tbody>
+		<tbody{{#rights.sort}} class="spekaSortable"{{/rights.sort}}>
 		{{#speca}}
-		<tr class="ha">
-			<td class="text-center hidden-iphone"><span>{{number}}</span></td>
+		<tr class="ha" data-spid="{{spid}}">
+			{{#sortable}}
+			<td class="text-center speka-dragcell hidden-iphone"><i class="icon-menu hand speka-drag" title="Перетащить"></i></td>
+			{{/sortable}}
+			<td class="text-center hidden-iphone speka-num"><span>{{number}}</span></td>
 			<td>
 				<span>
 					<div class="Bold uppercase fs-07 mb5">{{#artikul}}{{artikul}}: {{/artikul}}<span class="deepblue">{{tip}}</span></div>
@@ -87,6 +93,13 @@
 			<td class="text-center">
 				<div class="mob-pull-right">
 
+					{{#sortable}}
+					<span class="visible-iphone">
+						<a href="javascript:void(0)" class="speka-move" data-dir="up" title="Переместить выше"><i class="icon-up-open blue"></i></a>&nbsp;
+						<a href="javascript:void(0)" class="speka-move" data-dir="down" title="Переместить ниже"><i class="icon-down-open blue"></i></a>&nbsp;&nbsp;
+					</span>
+					{{/sortable}}
+
 					{{#edit}}
 					<a href="javascript:void(0)" onclick="editSpeca('{{spid}}','edit','{{did}}');" title="Редактировать"><i class="icon-pencil blue"></i></a>&nbsp;&nbsp;
 					<a href="javascript:void(0)" onclick="cf=confirm('Вы действительно хотите удалить запись?');if (cf)editSpeca('{{spid}}','delete','{{did}}');" title="Удалить позицию"><i class="icon-cancel-circled red"></i></a>
@@ -100,6 +113,9 @@
 		{{#haveSpeca}}
 		<tfoot class="graybg-sub sticked--bottom">
 		<tr>
+			{{#rights.sort}}
+			<td></td>
+			{{/rights.sort}}
 			<td class="text-center hidden-iphone"></td>
 			<td class="text-right"><span class="Bold">ИТОГО:</span></td>
 			<td class="text-center"></td>

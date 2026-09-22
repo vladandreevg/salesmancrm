@@ -77,6 +77,42 @@ if ( $action == "delete" ) {
 
 }
 
+if ( $action == "sort" ) {
+
+	$params = $_REQUEST;
+
+	/**
+	 * Сортировка не меняет значения позиции (цену, количество, НДС), поэтому доступна
+	 * там же, где добавление позиции: сделка не закрыта и есть доступ к сделке.
+	 */
+	$closed  = $db -> getOne( "SELECT close FROM {$sqlname}dogovor WHERE did = '$did' and identity = '$identity'" );
+	$daccess = get_accesse( 0, 0, $did );
+
+	if ( $closed == 'yes' || ( $daccess != 'yes' && $GLOBALS['isadmin'] != 'on' ) ) {
+
+		print json_encode_cyr( [
+			"result" => "Error",
+			"error"  => "Нет прав на изменение порядка позиций"
+		] );
+
+		exit();
+
+	}
+
+	$speka = new Speka();
+	$rez   = $speka -> sort( $did, $params['spids'] );
+
+	$error = ( !empty( $rez['error'] ) && is_array( $rez['error'] ) ) ? $rez['error']['text'] : '';
+
+	print json_encode_cyr( [
+		"result" => $rez['result']."<br>".yimplode( "<br>", (array)$rez['text'] ),
+		"error"  => $error
+	] );
+
+	exit();
+
+}
+
 if ( $action == "change.calculate" ) {
 
 	$db -> query( "UPDATE {$sqlname}dogovor SET calculate = 'yes' WHERE did = '$did' and identity = '$identity'" );
@@ -120,7 +156,7 @@ if ( $action == "export" ) {
 	}
 	$string[] = $s;
 
-	$result_s = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' and identity = '$identity' ORDER BY spid" );
+	$result_s = $db -> query( "SELECT * FROM {$sqlname}speca WHERE did = '$did' and identity = '$identity' ORDER BY sort, spid" );
 	while ($data = $db -> fetch( $result_s )) {
 
 		$dop = '';
