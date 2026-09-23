@@ -50,33 +50,45 @@ if ( $filename != '' ) {
 
 	$filename = str_replace( "../", "", $filename );
 
-	$file      = $rootpath."/files/".$fpath.$filename;
+	// путь к файлу на диске строится ТОЛЬКО из параметра file (физическое имя)
+	// и обязан лежать внутри /files/ — защита от Path Traversal
+	$file      = safeFilePath( $rootpath."/files/".$fpath.$filename, $rootpath."/files/".$fpath );
 	$mime      = get_mimetype( $filename );
 	$extension = texttosmall( substr( strrchr( $filename, "." ), 1 ) );
+
+	// имя, под которым файл отдается пользователю (Content-Disposition).
+	// по умолчанию — физическое имя, далее может быть заменено отображаемым:
+	// из почты (ymail_files.name) или из документов (параметр oname)
+	$dname = $filename;
 
 	//если мы смотрим файл из почты
 	if ( stripos( $filename, 'ymail' ) !== false ) {
 
-		$f        = str_replace( 'ymail/', '', $filename );
-		$filename = $db -> getOne( "SELECT name FROM ".$sqlname."ymail_files WHERE file = ?s and identity = ?i", $f, (int)$identity );
+		$f         = str_replace( 'ymail/', '', $filename );
+		$ymailname = $db -> getOne( "SELECT name FROM ".$sqlname."ymail_files WHERE file = ?s and identity = ?i", $f, (int)$identity );
+
+		if ( $ymailname != '' ) {
+			$dname = $ymailname;
+		}
 
 	}
 
 	//из документов
 	if ( $oname != '' ) {
-		$filename = str_replace( "/", "--", $oname );
+		$dname = str_replace( "/", "--", $oname );
 	}
 
-	$filename = str_replace( [
+	if ( trim( (string)$dname ) == '' ) {
+		$dname = $filename;
+	}
+
+	$dname = str_replace( [
 		" ",
 		","
 	], [
 		"_",
 		""
-	], $filename );
-
-	// защита от Path Traversal: файл обязан лежать внутри /files/
-	$file = safeFilePath( $rootpath."/files/".$fpath.$filename, $rootpath."/files/".$fpath );
+	], $dname );
 
 	if ( $file !== false && file_exists( $file ) ) {
 
@@ -114,7 +126,7 @@ if ( $filename != '' ) {
 
 			$template = file_get_contents( $rootpath."/content/tpl/docx.view.mustache" );
 			$tags     = [
-				"title"   => str_replace( "_", " ", trim( $filename ) ),
+				"title"   => str_replace( "_", " ", trim( $dname ) ),
 				"content" => $html
 			];
 
@@ -128,7 +140,7 @@ if ( $filename != '' ) {
 		else {
 
 			header( 'Content-Type: '.$mime );
-			header( 'Content-Disposition: '.$disp.'; filename="'.safeHeaderValue( trim( str_replace( ",", "", $filename ) ) ).'"' );
+			header( 'Content-Disposition: '.$disp.'; filename="'.safeHeaderValue( trim( str_replace( ",", "", $dname ) ) ).'"' );
 			header( 'Content-Transfer-Encoding: binary' );
 			header( 'Accept-Ranges: bytes' );
 
