@@ -7231,8 +7231,11 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 			//$ar      = [];
 
 			//определим доступ к чужим сделкам
+			//некоррелированный IN, а не коррелированный COUNT(...) по dogovor.did: подзапрос
+			//считается один раз, а не для каждой строки таблицы сделок (иначе на больших
+			//таблицах список «Мои сделки» упирается в лимиты хостинга и в время ответа)
 			if ( !$params['excludeDostup'] ) {
-				$dos = " OR (SELECT COUNT({$sqlname}dostup.did) FROM {$sqlname}dostup WHERE did = {$sqlname}dogovor.did and {$sqlname}dostup.iduser = '$iduser1') > 0";
+				$dos = " OR {$sqlname}dogovor.did IN (SELECT {$sqlname}dostup.did FROM {$sqlname}dostup WHERE {$sqlname}dostup.iduser = '$iduser1')";
 			}
 
 			$xusers = (array)get_people( $iduser1, "yes" );

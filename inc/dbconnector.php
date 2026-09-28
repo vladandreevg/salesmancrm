@@ -67,6 +67,34 @@ try {
 
 	$db -> query('SET wait_timeout=100');
 
+	/*
+	 * Снимаем хостинговый барьер max_join_size для этой сессии.
+	 *
+	 * На хостинге max_join_size конечен (при этом сервер сам сбрасывает SQL_BIG_SELECTS
+	 * в 0), и MySQL отказывается выполнять запрос, если оценка числа просматриваемых
+	 * строк больше лимита — даже когда запрос корректен:
+	 *
+	 *   The SELECT would examine more than MAX_JOIN_SIZE rows; check your WHERE and
+	 *   use SET SQL_BIG_SELECTS=1 or SET MAX_JOIN_SIZE=# if the SELECT is okay
+	 *
+	 * Так падал список сделок (content/lists/list.deals.php): условие фильтра
+	 * «Мои сделки» (iduser = X OR доступ через dostup) не позволяет использовать
+	 * индекс, оптимизатор сканирует всю таблицу сделок, и его оценка растёт вместе
+	 * с её размером, а не с числом строк в выдаче.
+	 *
+	 * SQL_BIG_SELECTS=1 — то, что предлагает сама СУБД: «запрос корректен, выполняй».
+	 * Действует только в рамках соединения, не меняет ни текст, ни результат
+	 * запросов. Ставить его нужно после любых SET max_join_size — тот сбрасывает флаг.
+	 */
+	try {
+
+		$db -> query( 'SET SESSION SQL_BIG_SELECTS=1' );
+
+	}
+	catch (Exception $e) {
+
+	}
+
 }
 catch (Exception $e){
 
