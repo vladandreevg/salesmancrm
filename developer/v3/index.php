@@ -107,6 +107,38 @@ $timezone = $result['timezone'];
 global $identity;
 
 //найдем пользователя
+
+// Ключ API может быть ограничен одним сотрудником (app_settings.api_key_login):
+// иначе ключ действует от имени любого логина, включая администратора
+// (AUDIT, раунд 1/9). Пустой логин в запросе — работаем от имени привязанного.
+$ncApiBound = '';
+
+try {
+	$ncApiBound = trim((string)$db -> getOne( "SELECT api_key_login FROM ".$sqlname."settings WHERE id = ?i", (int)$identity ));
+}
+catch (\Throwable $e) {
+	$ncApiBound = '';
+}
+
+if ($ncApiBound !== '') {
+
+	// логин нормализуем строкой: без параметра login он равен null, и строгое
+	// сравнение null !== '' дало бы отказ вместо работы от имени привязанного
+	$LOGIN = trim((string)$LOGIN);
+	$LOGIN = ($LOGIN !== '') ? $LOGIN : $ncApiBound;
+
+	if ($LOGIN !== $ncApiBound) {
+
+		http_response_code(403);
+
+		print json_encode(['result' => 'error', 'message' => 'Ключ API выдан для другого сотрудника'], JSON_UNESCAPED_UNICODE);
+
+		exit();
+
+	}
+
+}
+
 $result     = $db -> getRow("SELECT title, iduser, isadmin, tip FROM {$sqlname}user WHERE login = ?s and identity = ?i", $LOGIN, (int)$identity);
 $iduser     = $iduser1 = (int)$result['iduser'];
 $username   = $result['title'];

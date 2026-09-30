@@ -8,6 +8,8 @@
 /*        ver. 2017.x           */
 /* ============================ */
 
+use Salesman\Upload;
+
 error_reporting( 0 );
 header( "Pragma: no-cache" );
 
@@ -20,51 +22,58 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
+// Анонимный запрос: inc/auth.php без cookie сессии продолжает работу с iduser1 = 0
+// (так задумано для вебхуков), поэтому обработчик карточки отказывает сам.
+if ((int)$iduser1 <= 0) {
+
+	http_response_code(403);
+
+	print 'Доступ запрещен';
+
+	exit();
+
+}
+
 $thisfile = basename( __FILE__ );
+
+// Read/Write-IDOR (AUDIT, раунд 5/8): файл и его удаление доступны только тем, кому
+// доступна запись, к которой файл приложен. Номер файла перебирается тривиально.
+$ncFid  = (int)($_REQUEST['fid'] ?? 0);
+$ncFile = $ncFid > 0
+	? (array)$db -> getRow( "SELECT clid, pid, did FROM {$sqlname}file WHERE fid = ?i and identity = ?i", $ncFid, (int)$identity )
+	: [];
+
+$ncClid = (int)($ncFile['clid'] ?? 0);
+$ncPid  = (int)($ncFile['pid'] ?? 0);
+$ncDid  = (int)($ncFile['did'] ?? 0);
+
+if ( ( $ncClid > 0 || $ncPid > 0 || $ncDid > 0 ) && !can_read_record( $ncClid, $ncPid, $ncDid ) ) {
+
+	http_response_code( 403 );
+
+	print 'Доступ запрещен';
+
+	exit();
+
+}
 
 $cid    = (int)$_REQUEST['cid'];
 $action = $_REQUEST['action'];
 
 if ( $action == "delete" ) {
 
-	$fid = $_GET['fid'];
+	// fid — только числом: раньше строка из $_GET уходила в SQL как есть, а гейт доступа
+	// выше считает (int)$_REQUEST['fid'] — то есть проверялся один файл, а удалиться
+	// могли другие (вплоть до всех файлов аккаунта через fid=1' OR '1'='1).
+	$fid = (int)$_GET['fid'];
 
-	$fname = $db -> getOne( "select fname from ".$sqlname."file where fid='".$fid."' and identity = '$identity'" );
-
-	@unlink( "../files/".$fpath.$fname );
-
-	//удалим запись о файле
-	$db -> query( "delete from ".$sqlname."file where fid = '".$fid."' and identity = '$identity'" );
-
-	//удалим запись о файле в истории
-
-	//составим массив файлов в записи
-	$fid_old = $db -> getOne( "select fid from ".$sqlname."history WHERE cid='".$cid."' and identity = '$identity'" );
-
-	//если есть файлы, то преобразуем в массив
-	if ( $fid_old != '' )
-		$fidd = explode( ";", $fid_old );
-
-	//если файлов нет, то создадим пустой
-	else $fidd = [];
-
-	//соберем новый массив
-	if ( count( $fidd ) > 0 ) {
-
-		$j = 0;
-		for ( $i = 0, $iMax = count( $fidd ); $i < $iMax; $i++ ) {
-			//если fid не равен удаляемому файлу, то включим в новый массив
-			if ( $fidd[ $i ] != $fid ) {
-				$fid2[ $j ] = $fidd[ $i ];
-				$j++;
-			}
-		}
-	}
-
-	$fid_new = implode( ";", $fid2 );
-
-	//запишем новый массив файлов, уже без удаляемого
-	$db -> query( "update ".$sqlname."history set fid = '".$fid_new."' where cid = '".$cid."' and identity = '$identity'" );
+	// Удаление — общим методом класса, как в файловом блоке карточки и в комментариях.
+	// Свой разбор, который здесь был, ошибался трижды: путь к файлу считался от каталога
+	// скрипта ("../files/..." → content/files/...), поэтому физический файл оставался на
+	// диске; файл удалялся с диска, даже если на него ссылались другие записи; список
+	// файлов в истории собирался через неинициализированный $fid2 — в PHP 8 это фатальная
+	// ошибка уже ПОСЛЕ удаления строки, поэтому клиент получал 500.
+	Upload ::delete( $fid );
 
 }
 

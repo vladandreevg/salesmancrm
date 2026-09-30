@@ -36,7 +36,7 @@ $thisfile = basename( __FILE__ );
 $ypath = $rootpath."/content/pbx/zadarma/";
 
 //Найдем identity по настройкам
-$res      = $db -> getRow("SELECT id, timezone FROM {$sqlname}settings WHERE api_key = '$_GET[crmkey]'");
+$res      = $db -> getRow("SELECT id, timezone FROM {$sqlname}settings WHERE api_key = ?s", $_GET['crmkey']);
 $tmzone   = $res['timezone'];
 $identity = (int)$res['id'];
 

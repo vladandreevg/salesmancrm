@@ -24,7 +24,7 @@ include $rootpath."/inc/settings.php";
 $thisfile = basename( __FILE__ );
 
 if ($identity == '') {
-	$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = '$_GET[apkey]'" ) + 0;
+	$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = ?s", $_GET['apkey'] ) + 0;
 }
 
 if ($identity == 0) {

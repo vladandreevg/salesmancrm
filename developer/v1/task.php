@@ -96,7 +96,7 @@ $fields     = array(
 );
 
 //ищем аккаунт по apikey
-$result   = $db -> getRow("SELECT id, api_key, timezone FROM ".$sqlname."settings WHERE api_key = '".$params['apikey']."'");
+$result   = $db -> getRow("SELECT id, api_key, timezone FROM ".$sqlname."settings WHERE api_key = ?s", $params['apikey']);
 $identity = $result['id'];
 $api_key  = $result['api_key'];
 $timezone = $result['timezone'];
@@ -105,7 +105,7 @@ $timezone = $result['timezone'];
 date_default_timezone_set($timezone);
 
 //найдем пользователя
-$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = '".$params['login']."' AND identity = '".$identity."'");
+$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = ?s AND identity = ?i", $params['login'], (int)$identity);
 $iduser   = $result['iduser'];
 $username = $result['title'];
 

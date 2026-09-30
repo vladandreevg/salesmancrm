@@ -32,7 +32,7 @@ if ( !$apkey ) {
 }
 
 //проверим ключ
-$identity = (int)$db -> getOne( "SELECT id FROM ".$sqlname."settings WHERE api_key = '$apkey'" );
+$identity = (int)$db -> getOne( "SELECT id FROM ".$sqlname."settings WHERE api_key = ?s", $apkey );
 
 if ( $identity == 0 ) {
 

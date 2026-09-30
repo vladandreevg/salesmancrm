@@ -1172,6 +1172,13 @@ class Deal {
 			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
 		}
 
+		// закрытую сделку правит только тот, у кого есть право на это
+		$closed = $this -> closedGuard( (int)$did );
+
+		if ($closed !== NULL) {
+			return $closed;
+		}
+
 
 		global $hooks;
 
@@ -1714,6 +1721,66 @@ class Deal {
 	 *              - text
 	 * @throws Exception
 	 */
+	/**
+	 * Можно ли менять закрытую сделку.
+	 *
+	 * Право «Редактирование закрытых сделок» (`acs_import[23]`) проверялось только
+	 * при отрисовке карточки (`card.deal.php`), поэтому правку закрытой сделки
+	 * можно было отправить запросом напрямую (AUDIT, раунд 5 — «closed-deal
+	 * editing server-side»). Здесь то же правило, что в интерфейсе: администратор
+	 * или право `editclosed`.
+	 *
+	 * Контекст без пользователя (`iduser1 <= 0` — cron, cli) не блокируется: это
+	 * системный вызов, а анонимный HTTP-запрос отсекает гейт в обработчике.
+	 *
+	 * @param int $did
+	 *
+	 * @return bool
+	 */
+	private function canEditClosed(int $did): bool {
+
+		if ((int)$this -> iduser1 <= 0) {
+			return true;
+		}
+
+		$isadmin    = (string)($GLOBALS['isadmin'] ?? '');
+		$userRights = (array)($GLOBALS['userRights'] ?? []);
+
+		if ($isadmin === 'on' || (string)($GLOBALS['tipuser'] ?? '') === 'Администратор') {
+			return true;
+		}
+
+		return !empty($userRights['deal']['editclosed']);
+
+	}
+
+	/**
+	 * Отказ, если сделка закрыта, а права на её правку нет.
+	 *
+	 * @param int $did
+	 *
+	 * @return array|null - ответ об ошибке или null, если менять можно
+	 */
+	private function closedGuard(int $did): ?array {
+
+		if ((int)$did <= 0) {
+			return NULL;
+		}
+
+		$close = (string)$this -> db -> getOne(
+			"SELECT close FROM {$this -> sqlname}dogovor WHERE did = ?i and identity = ?i",
+			(int)$did,
+			(int)$this -> identity
+		);
+
+		if ($close !== 'yes' || $this -> canEditClosed( $did )) {
+			return NULL;
+		}
+
+		return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Сделка закрыта: нет права на редактирование закрытых сделок' ] ];
+
+	}
+
 	public function fullupdate(int $did = 0, array $params = []): array {
 
 		global $hooks;
@@ -1721,6 +1788,13 @@ class Deal {
 		// Проверка доступа: полное редактирование сделки — только при наличии доступа к записи
 		if ( (int)$did > 0 && (int)$this -> iduser1 > 0 && get_accesse( 0, 0, (int)$did ) != 'yes' ) {
 			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+		}
+
+		// закрытую сделку правит только тот, у кого есть право на это
+		$closed = $this -> closedGuard( (int)$did );
+
+		if ($closed !== NULL) {
+			return $closed;
 		}
 
 		$sqlname  = $this -> sqlname;
@@ -2682,6 +2756,13 @@ class Deal {
 			return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
 		}
 
+		// перевести закрытую сделку на другой этап (в том числе «переоткрыть» ею)
+		// может только тот, у кого есть право на правку закрытых сделок
+		$closed = $this -> closedGuard( (int)$did );
+
+		if ($closed !== NULL) {
+			return $closed;
+		}
 
 		global $hooks;
 

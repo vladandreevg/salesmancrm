@@ -1,5 +1,5 @@
 {
-	"name": "Novofon (форк Zadarma)",
+	"name": "Novofon (Zadarma)",
 	"type": "novofon",
 	"functions":["events","cdr","originate","play"],
 	"docs": "https://salesman.pro/docs/128",

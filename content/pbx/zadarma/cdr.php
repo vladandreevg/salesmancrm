@@ -41,7 +41,7 @@ require_once dirname( __DIR__)."/zadarma/sipparams.php";
 require_once dirname( __DIR__)."/zadarma/mfunc.php";
 
 if ($identity == '') {
-	$identity = $db -> getOne("SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'");
+	$identity = $db -> getOne("SELECT id FROM {$sqlname}settings WHERE api_key = ?s", $apkey);
 }
 
 if ((int)$identity == 0) {

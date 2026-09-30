@@ -47,6 +47,8 @@ $ipend           = $result_set[ "ipend" ];
 $ipmask          = $result_set[ "ipmask" ];
 $iplist          = $result_set[ "iplist" ];
 $api_key         = $result_set[ "api_key" ];
+// логин, от имени которого действует ключ API (пусто — ключ не ограничен)
+$api_key_login   = $result_set[ "api_key_login" ] ?? '';
 $coordinator     = $result_set[ "coordinator" ];
 $dNum            = $result_set[ "dNum" ];
 $dFormat         = $result_set[ "dFormat" ];
@@ -1617,6 +1619,22 @@ if ( $action == 'getValuta' ) {
 				<input name="api_key" type="text" id="api_key" value="<?= $api_key ?>" style="width:350px"/>&nbsp;<a href="javascript:void(0)" onclick="getKey()"><b class="blue"><i class="icon-key white"></i> Получить новый</b></a><br>
 				<div class="infodiv">Используется для связи с внешними приложениями.
 					<b>При смене сохраните настройки</b>
+				</div>
+				<div class="mt10">
+					<div class="fs-12 gray2">Ключ действует от имени сотрудника:</div>
+					<input name="api_key_login" type="text" id="api_key_login" value="<?= htmlspecialchars((string)$api_key_login, ENT_QUOTES, 'UTF-8') ?>" style="width:350px" placeholder="логин сотрудника"/>
+					<div class="infodiv">
+						API-запросы передают логин сотрудника, от имени которого выполняется действие. Если логин указан здесь,
+						ключ работает <b>только</b> от имени этого сотрудника — остальные логины получат отказ.
+						<?php if (trim((string)$api_key_login) === '') { ?>
+							<div class="red mt5">
+								<b>Сейчас ключ не ограничен:</b> любой, кто его знает, может действовать от имени любого сотрудника,
+								включая администратора. Укажите логин (например, логин интеграции), чтобы ограничить ключ.
+							</div>
+						<?php } else { ?>
+							<div class="green mt5">Ключ ограничен сотрудником <b><?= htmlspecialchars((string)$api_key_login, ENT_QUOTES, 'UTF-8') ?></b>.</div>
+						<?php } ?>
+					</div>
 				</div>
 			</td>
 		</tr>

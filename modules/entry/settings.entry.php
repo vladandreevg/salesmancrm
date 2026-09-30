@@ -26,6 +26,12 @@ $action = $_REQUEST['action'];
 $id     = $_REQUEST['id'];
 
 if ( $action == "settings_do" ) {
+	// изменение настроек модуля - только администратор
+	if ( $isadmin != 'on' && $tipuser != 'Администратор' ) {
+		print 'Доступ запрещен';
+		exit();
+	}
+
 
 	$params['enShowButtonLeft'] = $_REQUEST['enShowButtonLeft'];
 	$params['enShowButtonCall'] = $_REQUEST['enShowButtonCall'];

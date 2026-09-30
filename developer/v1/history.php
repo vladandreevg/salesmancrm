@@ -45,7 +45,7 @@ $fieldsname = array("сid","datum","des","title","des","tip","iduser","clid","pi
 $fields = array("cid" => "Идентификатор записи","datum" => "Дата","des" => "Содержание","tip" => "Тип напоминания","iduser" => "Ответственный", "clid" => "ID клиента", "pid" => "ID контакта (массив)", "did" => "ID сделки");
 
 //ищем аккаунт по apikey
-$result = $db -> getRow("SELECT id, api_key, timezone FROM ".$sqlname."settings WHERE api_key = '".$params['apikey']."'");
+$result = $db -> getRow("SELECT id, api_key, timezone FROM ".$sqlname."settings WHERE api_key = ?s", $params['apikey']);
 $identity = $result['id'];
 $api_key = $result['api_key'];
 $timezone= $result['timezone'];
@@ -54,7 +54,7 @@ $timezone= $result['timezone'];
 date_default_timezone_set($timezone);
 
 //найдем пользователя
-$result = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = '".$params['login']."' and identity = '".$identity."'");
+$result = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = ?s and identity = ?i", $params['login'], (int)$identity);
 $iduser = $result['iduser'];
 $username = $result['title'];
 
@@ -176,9 +176,9 @@ if($Error != 'yes'){
 				$response['error']['text'] = "Запись не найдена в пределах аккаунта указанного пользователя.";
 
 			}
-			elseif($cid > 0 and $params['cid'] != ''){
+			elseif($cid > 0 && $params['cid'] != ''){
 
-				$cdata = get_historyinfo($params['cid']);
+				$cdata = get_historyinfo((int)$params['cid']);
 				if(count($cdata) > 0){
 					for($i=0;$i < count($fieldsname);$i++){
 

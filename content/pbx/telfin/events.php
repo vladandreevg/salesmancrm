@@ -38,7 +38,7 @@ $apikey = $_REQUEST['crm_token'];
 
 if( $isCloud ){
 
-	$result = $db -> getRow("SELECT id, api_key FROM ".$sqlname."settings WHERE api_key = '$apikey'");
+	$result = $db -> getRow("SELECT id, api_key FROM ".$sqlname."settings WHERE api_key = ?s", $apikey);
 	$identity = (int)$result['id'];
 	$api_key  = $result['api_key'];
 

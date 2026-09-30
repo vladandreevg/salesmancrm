@@ -555,6 +555,10 @@ class Upload {
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
+		// id — только числом: в запросы ниже он подставляется строкой, а вызывающие
+		// передают его прямо из $_REQUEST (modules/upload/core.upload.php)
+		$id = (int)$id;
+
 		//получаем имя айла
 		$fname = $db -> getOne("SELECT fname FROM {$sqlname}file WHERE fid = '$id' and identity = '$identity'");
 
@@ -568,6 +572,10 @@ class Upload {
 			$f = yexplode(";", $da['fid']);
 			if (( $key = array_search($id, $f) ) !== false) {
 				unset($f[$key]);
+				// yimplode идёт по индексам 0..count-1, поэтому после unset список надо
+				// переиндексировать: иначе хвост списка теряется (файлы пропадают из
+				// истории) и появляется лишний разделитель в начале
+				$f = array_values($f);
 			}
 
 			//запишем новое значение

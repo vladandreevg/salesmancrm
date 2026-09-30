@@ -1390,6 +1390,21 @@ if (  ($step == 1 || PHP_SAPI == 'cli') && getVersion() == $lastVer ) {
 
 	}
 
+	/**
+	 * Привязка ключа API к сотруднику (аудит, раунд 9).
+	 *
+	 * Без этой колонки сохранение настроек падает на «Unknown column 'api_key_login'»
+	 * (content/admin/settings_save.php), а контроллеры API v2/v3 читают её в try/catch
+	 * и считают ключ неограниченным. Пустое значение сохраняет прежнее поведение:
+	 * ключ действует от имени любого логина.
+	 */
+	$field = $db -> getRow( "SHOW COLUMNS FROM {$sqlname}settings LIKE 'api_key_login'" );
+	if ( empty( $field['Field'] ) ) {
+
+		$db -> query( "ALTER TABLE `{$sqlname}settings` ADD COLUMN `api_key_login` VARCHAR(255) NULL DEFAULT NULL COMMENT 'логин, от имени которого действует ключ API (пусто — любой сотрудник)' AFTER `api_key`" );
+
+	}
+
 	$keys = $db -> getRow( "SHOW KEYS FROM `{$sqlname}speca` WHERE Key_name = 'did_sort'" );
 	if ( empty( $keys ) ) {
 

@@ -81,7 +81,7 @@ function getNumberFromSIP($string) {
 
 
 //Найдем identity по настройкам
-$identity = $db -> getOne("SELECT identity FROM {$sqlname}services WHERE user_key = '$xID'") + 0;
+$identity = $db -> getOne("SELECT identity FROM {$sqlname}services WHERE user_key = ?s", $xID) + 0;
 //$identity = $db -> getOne("SELECT identity FROM {$sqlname}customsettings WHERE params LIKE '%\"domain\":\"$xDomain\"%'") + 0;
 $res      = $db -> getRow("SELECT id, timezone FROM {$sqlname}settings WHERE id = '$identity'");
 $tmzone   = $res['timezone'];

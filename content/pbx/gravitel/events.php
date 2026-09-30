@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /*         SalesMan CRM         */
 /* ============================ */
@@ -72,7 +72,7 @@ if ( $headers["Content-Type"] == "application/json" || $headers["content-type"] 
 	//NotAvailable - мы получили ответ Абонент недоступен
 	//NotAllowed - мы получили ответ Звонки на это направление запрещены
 
-	"crm_token" => "gCG01Q5MA8msP1jXuQUC",//ключ (token) от CRM, установленный в веб-кабинете
+	"crm_token" => "YOUR_CRM_TOKEN",//ключ (token) от CRM, установленный в веб-кабинете (реальный ключ удален)
 ];*/
 
 /**
@@ -96,14 +96,14 @@ $response = [
 	"ext" => "702", //внутренний номер пользователя облачной АТС, если есть
 	"telnum", //прямой телефонный номер пользователя облачной АТС, если есть
 	"callid" => "34875897893", // уникальный id звонка, совпадает для всех связанных string да звонков
-	"crm_token" => "t1xdeOwWSIqgDol70CkRdK3WD4N4cm",// ключ (token) от CRM, установленный в веб-кабинете string да
+	"crm_token" => "YOUR_CRM_KEY",// ключ (token) от CRM, установленный в веб-кабинете string да
 ];
 */
 /*
 $response = [
 	"callid"    => "bfee28e5-8d54-40b8-a1f8-b10dcde604d4",
 	"cmd"       => "event",
-	"crm_token" => "t1xdeOwWSIqgDol70CkRdK3WD4N4cm",
+	"crm_token" => "YOUR_CRM_KEY",
 	"phone"     => "79323328683",
 	"type"      => "ACCEPTED",
 	"user"      => "telefon771@dupad.megapbx.ru",
@@ -114,7 +114,7 @@ $response = [
 $response = [
 	"callid"        => "1ce30f7a-0a0a-40c7-a621-0db97a8d70ggb",
 	"cmd"           => "event",
-	"crm_token"     => "t1xdeOwWSIqgDol70CkRdK3WD4N4cm",
+	"crm_token"     => "YOUR_CRM_KEY",
 	"diversion"     => "79223562839",
 	"ext"           => "702",
 	"groupRealName" => "CallCenter затем Евгений",
@@ -137,7 +137,7 @@ $results = [
 ];
 
 //Найдем identity по настройкам
-$res      = $db -> getRow( "SELECT id, timezone FROM {$sqlname}settings WHERE api_key = '$response[crm_token]'" );
+$res      = $db -> getRow( "SELECT id, timezone FROM {$sqlname}settings WHERE api_key = ?s", $response['crm_token'] );
 $tmzone   = $res['timezone'];
 $identity = (int)$res['id'];
 

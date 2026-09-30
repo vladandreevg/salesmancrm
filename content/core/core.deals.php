@@ -29,6 +29,20 @@ require_once $rootpath."/inc/dbconnector.php";
 require_once $rootpath."/inc/auth.php";
 require_once $rootpath."/inc/settings.php";
 require_once $rootpath."/inc/func.php";
+
+// Анонимный запрос: inc/auth.php при отсутствии сессии продолжает работу с iduser1 = 0
+// (так задумано для вебхуков, которые его подключают), а проверки доступа к записям
+// рассчитаны на iduser1 > 0 и потому не срабатывают — обработчик отказывает сам.
+// См. AUDIT: «обработчики действий без гейта на пользователя».
+if ((int)$iduser1 <= 0) {
+
+	http_response_code(403);
+
+	print 'Доступ запрещен';
+
+	exit();
+
+}
 require_once $rootpath."/developer/events.php";
 
 

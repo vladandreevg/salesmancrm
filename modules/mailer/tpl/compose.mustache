@@ -134,7 +134,7 @@
 								<div id="iuploads" style="max-height:100px; overflow: auto;">
 
 									<div class="fileboxx relativ ha wp100 p5 border-box">
-										<input name="file[]" id="file[]" type="file" class="file wp100" onchange="addfile();" multiple>
+										<input name="file[]" type="file" class="file wp100" onchange="addfile(this);" multiple>
 										<div class="dfileboxx hand clearUploadbox mt5" title="Очистить">
 											<i class="icon-cancel-circled red"></i>
 										</div>
@@ -167,8 +167,8 @@
 								{{#attach}}
 									<div class="fileboxx ellipsis wp100 relativ" style="display: block;">
 
-										<input name="fid[]" type="hidden" class="file" id="fid[]" value="{{id}}">
-										<a href="getfile.php?file=ymail/{{file}}" target="blank" title="Открыть"><i class="{{icon}}"></i>{{name}}
+										<input name="fid[]" type="hidden" value="{{id}}">
+										<a href="/content/helpers/get.file.php?file=ymail/{{file}}" target="blank" title="Открыть"><i class="{{icon}}"></i>{{name}}
 										</a>
 
 										<div class="dfileboxx hand mini deleteFilebox" title="Удалить">

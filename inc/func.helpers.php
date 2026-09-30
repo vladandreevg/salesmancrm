@@ -454,6 +454,224 @@ function get_accesse(int $clidd = NULL, int $pidd = NULL, int $didd = NULL): str
 }
 
 /**
+ * Логин, от имени которого разрешено действовать ключу API (пусто — любой).
+ *
+ * Ключ API в этой CRM — секрет **аккаунта**: контроллеры v2/v3 находят аккаунт по
+ * ключу, а сотрудника — по параметру `login`, без пароля. Значит владелец ключа
+ * может действовать от имени любого сотрудника, включая администратора (AUDIT,
+ * раунд 1 — «API v2 key+login model»). Настройка `app_settings.api_key_login`
+ * ограничивает ключ одним сотрудником: интеграция получает права только его.
+ *
+ * Пустое значение сохраняет прежнее поведение (ключ действует от имени любого
+ * логина) — это осознанный режим для существующих интеграций, и он виден в
+ * настройках предупреждением.
+ *
+ * @param object $db
+ * @param string $sqlname
+ * @param int    $identity
+ *
+ * @return string - логин или пустая строка
+ */
+function apiKeyBoundLogin($db, string $sqlname, int $identity): string {
+
+	if ($identity <= 0) {
+		return '';
+	}
+
+	try {
+
+		return trim((string)$db -> getOne( "SELECT api_key_login FROM {$sqlname}settings WHERE id = ?i", $identity ));
+
+	}
+	catch (\Throwable $e) {
+
+		// колонки ещё нет (установка не обновлена) — считаем ключ неограниченным
+		return '';
+
+	}
+
+}
+
+/**
+ * Может ли текущий пользователь читать карточку клиента.
+ *
+ * `get_accesse()` закрывает доступ к записи для правки, но чтение карточек шло без
+ * проверки: обработчики `content/card/card.*.php` считали доступ и лишь скрывали
+ * кнопки, а данные отдавали (AUDIT, раунд 5 — отложенный HIGH «card/file read-IDOR»).
+ *
+ * Кроме собственного доступа к клиенту учитывается доступ, выданный **по сделке**
+ * этого клиента (`app_dostup.did`): менеджер, которому открыли сделку, должен видеть
+ * и клиента, иначе карточка перестала бы открываться из сделки. Обратное правило —
+ * в `can_read_deal()`.
+ *
+ * @param int $clid
+ *
+ * @return bool
+ */
+function can_read_client(int $clid): bool {
+
+	$identity = $GLOBALS['identity'];
+	$sqlname  = $GLOBALS['sqlname'];
+	$db       = $GLOBALS['db'];
+	$iduser1  = (int)$GLOBALS['iduser1'];
+
+	// нет пользователя (cron, cli) — не наше дело, вход закрыт обработчиками
+	if ($iduser1 <= 0) {
+		return true;
+	}
+
+	if ($clid <= 0) {
+		return false;
+	}
+
+	// записи нет — читать нечего (get_accesse для неизвестного id отвечает «да»)
+	if ((int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}clientcat WHERE clid = ?i AND identity = ?i", $clid, (int)$identity ) === 0) {
+		return false;
+	}
+
+	if (get_accesse( $clid ) === 'yes') {
+		return true;
+	}
+
+	// доступ, выданный по сделке этого клиента
+	return (int)$db -> getOne(
+		"SELECT COUNT(*) FROM {$sqlname}dostup
+		  WHERE identity = ?i AND iduser = ?i AND did IN (SELECT did FROM {$sqlname}dogovor WHERE clid = ?i AND identity = ?i)",
+		(int)$identity,
+		$iduser1,
+		$clid,
+		(int)$identity
+	) > 0;
+
+}
+
+/**
+ * Может ли текущий пользователь читать сделку.
+ *
+ * Доступ к клиенту открывает его сделки: список сделок клиента и карточку сделки
+ * менеджер видит, если клиент ему доступен.
+ *
+ * @param int $did
+ *
+ * @return bool
+ */
+function can_read_deal(int $did): bool {
+
+	$identity = $GLOBALS['identity'];
+	$sqlname  = $GLOBALS['sqlname'];
+	$db       = $GLOBALS['db'];
+	$iduser1  = (int)$GLOBALS['iduser1'];
+
+	if ($iduser1 <= 0) {
+		return true;
+	}
+
+	if ($did <= 0) {
+		return false;
+	}
+
+	$deal = (array)$db -> getRow( "SELECT clid FROM {$sqlname}dogovor WHERE did = ?i AND identity = ?i", $did, (int)$identity );
+
+	// записи нет — читать нечего (get_accesse для неизвестного id отвечает «да»)
+	if ($deal === []) {
+		return false;
+	}
+
+	// сделка без клиента (clid = 0) — не повод отказывать владельцу: сначала право
+	// на саму сделку, и только потом распространение доступа через клиента
+	if (get_accesse( 0, 0, $did ) === 'yes') {
+		return true;
+	}
+
+	$clid = (int)$deal['clid'];
+
+	if ($clid <= 0) {
+		return false;
+	}
+
+	return can_read_client( $clid );
+
+}
+
+/**
+ * Может ли текущий пользователь читать контакт (person).
+ *
+ * @param int $pid
+ *
+ * @return bool
+ */
+function can_read_person(int $pid): bool {
+
+	$identity = $GLOBALS['identity'];
+	$sqlname  = $GLOBALS['sqlname'];
+	$db       = $GLOBALS['db'];
+	$iduser1  = (int)$GLOBALS['iduser1'];
+
+	if ($iduser1 <= 0) {
+		return true;
+	}
+
+	if ($pid <= 0) {
+		return false;
+	}
+
+	$person = (array)$db -> getRow( "SELECT clid FROM {$sqlname}personcat WHERE pid = ?i AND identity = ?i", $pid, (int)$identity );
+
+	// записи нет — читать нечего (get_accesse для неизвестного id отвечает «да»)
+	if ($person === []) {
+		return false;
+	}
+
+	// контакт без клиента (clid = 0) — право на сам контакт, а не через клиента
+	if (get_accesse( 0, $pid ) === 'yes') {
+		return true;
+	}
+
+	$clid = (int)$person['clid'];
+
+	if ($clid <= 0) {
+		return false;
+	}
+
+	return can_read_client( $clid );
+
+}
+
+/**
+ * Может ли текущий пользователь читать запись по её идентификаторам.
+ *
+ * Обработчики карточек принимают clid/pid/did в разных сочетаниях: право считается
+ * по тому, что передано. Ни одного идентификатора — читать нечего, отказ.
+ *
+ * @param int $clid
+ * @param int $pid
+ * @param int $did
+ *
+ * @return bool
+ */
+function can_read_record(int $clid = 0, int $pid = 0, int $did = 0): bool {
+
+	if ($clid <= 0 && $pid <= 0 && $did <= 0) {
+		return false;
+	}
+
+	if ($clid > 0 && can_read_client( $clid )) {
+		return true;
+	}
+
+	if ($pid > 0 && can_read_person( $pid )) {
+		return true;
+	}
+
+	if ($did > 0 && can_read_deal( $did )) {
+		return true;
+	}
+
+	return false;
+
+}
+
+/**
  * Доступ текущего пользователя iduser1 к данным пользователя id
  *
  * @param $id

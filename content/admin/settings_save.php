@@ -52,6 +52,8 @@ if ($action == "save") {
 	$pogoda_code   = $_POST['pogoda_code'];
 	$valuta        = $_POST['valuta'];
 	$api_key       = $_POST['api_key'];
+	// ограничение ключа API одним сотрудником (пусто — ключ действует от имени любого)
+	$api_key_login = trim((string)($_POST['api_key_login'] ?? ''));
 	$ipaccesse     = $_POST['ipaccesse'];
 	$ipstart       = $_POST['ipstart'];
 	$ipend         = $_POST['ipend'];
@@ -193,6 +195,7 @@ if ($action == "save") {
 		'iplist'          => $iplist,
 		'maxupload'       => $maxupload,
 		'api_key'         => $api_key,
+		'api_key_login'   => $api_key_login,
 		'ext_allow'       => $ext_allow,
 		'mailme'          => $mailme,
 		'mailout'         => $mailout,

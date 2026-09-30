@@ -30,7 +30,7 @@ $apkey = $_REQUEST['apkey'];
 $isforce = (int)$_REQUEST['force'] == 1;
 
 if ( $identity == '' ) {
-	$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'" );
+	$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = ?s", $apkey );
 }
 
 if ( (int)$identity == 0 ) {
@@ -54,7 +54,7 @@ if ( PHP_SAPI == 'cli' ) {
 	$isforce = (int)$force == 1;
 
 	if ( $identity == '' ) {
-		$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = '$apkey'" );
+		$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = ?s", $apkey );
 	}
 
 	if ( (int)$identity == 0 ) {

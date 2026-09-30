@@ -21,6 +21,17 @@ include $rootpath."/inc/settings.php";
 include $rootpath."/developer/events.php";
 include $rootpath."/inc/language/".$language.".php";
 
+// Анонимный запрос: inc/auth.php без cookie сессии продолжает работу с iduser1 = 0
+// (так задумано для вебхуков), поэтому обработчик карточки отказывает сам.
+if ((int)$iduser1 <= 0) {
+
+	http_response_code(403);
+
+	print 'Доступ запрещен';
+
+	exit();
+
+}
 $thisfile = basename( __FILE__ );
 
 

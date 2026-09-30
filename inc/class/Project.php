@@ -886,6 +886,104 @@ class Project {
 	}
 	
 	/**
+	 * Может ли текущий пользователь менять проект (и его работы/задания).
+	 *
+	 * Правила повторяют ту видимость, по которой модуль показывает проекты
+	 * (`projectsView` в Project::list и `card.php`): администратор, координатор
+	 * проекта, ответственный или автор проекта, исполнитель работы, владелец
+	 * связанной сделки и руководитель ответственного. Иначе пользователь видел бы
+	 * проект в списке, но не мог его открыть — или, наоборот, менял бы чужой по id,
+	 * как это было до этой проверки (AUDIT, раунд 5: «projects/workplan module
+	 * actions keyed by id with zero access checks»).
+	 *
+	 * Контекст без пользователя (iduser1 = 0 — cron, cli, вебхуки) не блокируется:
+	 * проверка защищает от чужой руки, а не от системного вызова. Для HTTP это
+	 * закрыто гейтом в самом обработчике (анонимный запрос не доходит до класса).
+	 *
+	 * @param int $id     - id проекта
+	 * @param int $iduser - id пользователя (0 — взять текущего)
+	 *
+	 * @return bool
+	 */
+	public static function canEdit(int $id = 0, int $iduser = 0): bool {
+
+		$rootpath = dirname( __DIR__ );
+
+		require_once $rootpath."/config.php";
+		require_once $rootpath."/dbconnector.php";
+		require_once $rootpath."/func.php";
+
+		$identity = $GLOBALS['identity'];
+		$sqlname  = $GLOBALS['sqlname'];
+		$db       = $GLOBALS['db'];
+		$isadmin  = $GLOBALS['isadmin'];
+		$tipuser  = $GLOBALS['tipuser'];
+
+		if ($iduser <= 0) {
+			$iduser = (int)$GLOBALS['iduser1'];
+		}
+
+		if ($iduser <= 0) {
+			return true;
+		}
+
+		if ($id <= 0) {
+			return false;
+		}
+
+		if ($isadmin === 'on' || in_array( $tipuser, [ "Администратор", "Руководитель организации", "Поддержка продаж", "Руководитель с доступом" ], true )) {
+			return true;
+		}
+
+		//настройки модуля: координаторы проектов
+		$mdcset      = $db -> getRow( "SELECT * FROM {$sqlname}modules WHERE mpath = 'projects' and identity = '$identity'" );
+		$mdcsettings = (array)json_decode( (string)$mdcset['content'], true );
+
+		if (in_array( $iduser, (array)$mdcsettings['projCoordinator'], true )) {
+			return true;
+		}
+
+		$project = (array)$db -> getRow( "SELECT id, iduser, author, did FROM {$sqlname}projects WHERE id = '$id' and identity = '$identity'" );
+
+		if (empty( $project )) {
+			return false;
+		}
+
+		// ответственный проекта — сам пользователь или его подчинённый
+		$people = array_map( 'intval', (array)get_people( $iduser, "yes" ) );
+
+		if (in_array( (int)$project['iduser'], $people, true )) {
+			return true;
+		}
+
+		if ((int)$project['author'] === $iduser) {
+			return true;
+		}
+
+		// исполнитель работы в проекте
+		if ((int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}projects_work WHERE idproject = '$id' and identity = '$identity' AND FIND_IN_SET('$iduser', REPLACE(workers, ' ', ''))" ) > 0) {
+			return true;
+		}
+
+		// владелец связанной сделки
+		if ((int)$project['did'] > 0 && (int)$iduser === (int)$db -> getOne( "SELECT iduser FROM {$sqlname}dogovor WHERE did = '".(int)$project['did']."' and identity = '$identity'" )) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Ответ «доступ запрещён» в формате модуля.
+	 *
+	 * @return array
+	 */
+	private static function deny(): array {
+		return [ 'result' => 'Error', 'error' => [ 'code' => 403, 'text' => 'Доступ запрещен' ] ];
+	}
+
+	/**
 	 * Добавление/изменение проекта
 	 *
 	 * @param int   $id     - идентификатор записи проекта
@@ -915,7 +1013,7 @@ class Project {
 	 *
 	 * code:
 	 *
-	 *          403 - Проект с указанным id не найден в пределах аккаунта
+	 *          403 - Проект с указанным id не найден в пределах аккаунта, либо нет прав
 	 *          405 - Отсутствуют параметры - id проекта
 	 *
 	 * @throws Exception
@@ -937,6 +1035,11 @@ class Project {
 		$iduser1     = $GLOBALS['iduser1'];
 		$db          = $GLOBALS['db'];
 		$productInfo = $GLOBALS['productInfo'];
+
+		// редактирование чужого проекта по id — только при праве на него
+		if ($id > 0 && !self::canEdit( $id )) {
+			return self::deny();
+		}
 		
 		$mes = '';
 		
@@ -1408,6 +1511,11 @@ class Project {
 		$identity = $GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
+
+		// удаление проекта уносит его работы и задания: без права на проект — отказ
+		if ($id > 0 && !self::canEdit( $id )) {
+			return self::deny();
+		}
 		
 		if ($id > 0) {
 			
@@ -1777,6 +1885,15 @@ class Project {
 		$iduser1     = $GLOBALS['iduser1'];
 		$db          = $GLOBALS['db'];
 		$productInfo = $GLOBALS['productInfo'];
+
+		// работа принадлежит проекту: право проверяется по проекту
+		$workProject = $id > 0
+			? (int)$db -> getOne( "SELECT idproject FROM {$sqlname}projects_work WHERE id = '$id' and identity = '$identity'" )
+			: (int)($params['idproject'] ?? 0);
+
+		if ($workProject > 0 && !self::canEdit( $workProject )) {
+			return self::deny();
+		}
 		
 		$params['identity'] = $identity;
 		
@@ -2160,6 +2277,15 @@ class Project {
 		$identity = $GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
+
+		// право проверяется по проекту, которому принадлежит работа
+		$workProject = $id > 0
+			? (int)$db -> getOne( "SELECT idproject FROM {$sqlname}projects_work WHERE id = '$id' and identity = '$identity'" )
+			: 0;
+
+		if ($workProject > 0 && !self::canEdit( $workProject )) {
+			return self::deny();
+		}
 		
 		if ($id > 0) {
 			

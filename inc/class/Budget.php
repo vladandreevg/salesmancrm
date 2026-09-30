@@ -87,6 +87,15 @@ class Budget {
 		$iduser1  = $GLOBALS['iduser1'];
 		$db       = $GLOBALS['db'];
 
+		// Отрицательная сумма статьи бюджета — ошибка ввода, а не «расход наоборот»:
+		// знак задаётся типом категории. Раньше pre_format пропускала такое значение
+		// (AUDIT, раунд 5 — «negatives pass»).
+		if (isset($params['summa']) && $params['summa'] !== '' && pre_format($params['summa']) < 0) {
+
+			return [ 'result' => 'Error', 'error' => [ 'code' => '405', 'text' => 'Сумма не может быть отрицательной' ] ];
+
+		}
+
 		$post = $params;
 
 		$fid = $params['fid'] ?? [];
@@ -1225,6 +1234,15 @@ class Budget {
 
 		$summa   = pre_format($params['summa']);
 		$datum   = current_datumtime();
+
+		// Перемещение нуля или отрицательной суммы переворачивает операцию: деньги
+		// ушли бы в обратную сторону или никуда (AUDIT, раунд 5 — «negatives pass»)
+		if ($summa <= 0) {
+
+			return [ 'result' => 'Error', 'error' => [ 'code' => '405', 'text' => 'Сумма перемещения должна быть больше нуля' ] ];
+
+		}
+
 		$title   = ( !isset($params['title']) || $params['title'] == '' ) ? 'Перемещение '.$datum : $params['title'];
 		$bmon    = ( !isset($params['bmon']) || $params['bmon'] == '' ) ? getMonth($datum) : $params['bmon'];
 		$byear   = ( !isset($params['byear']) || $params['byear'] == '' ) ? get_year($datum) : $params['byear'];

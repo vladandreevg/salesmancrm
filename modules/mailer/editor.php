@@ -1388,7 +1388,10 @@ if ( $action == 'compose' ) {
 		var isDraft = false;
 		var ymailAutoSaveTimer = parseInt('<?=$ym_param['ymailAutoSaveTimer']?>');
 		var priority = '<?=$msg['priority']?>';
-		var maxSize = '<?=$maxupload?>';
+		var maxSize = '<?=$maxupload?>';// максимально допустимый размер файла, Mb
+
+		//шаблон блока выбора файла с компьютера
+		var yfileBox = '<div class="fileboxx relativ ha wp100 p5 border-box"><input name="file[]" type="file" class="file wp100" onchange="addfile(this);" multiple style="display:block"><div class="dfileboxx hand clearUploadbox mt5" title="Очистить"><i class="icon-cancel-circled red"></i></div></div>';
 
 		/*tooltips*/
 		$('#dialog .tooltips').append("<span></span>");
@@ -1519,7 +1522,7 @@ if ( $action == 'compose' ) {
 
 						for (var i in fi) {
 
-							si = si + '<div class="fileboxx ellipsis relativ wp97 block"><input name="fid[]" type="hidden" class="file" id="fid[]" value="' + fi[i].fid + '"><a href="/content/helpers/get.file.php?file=ymail/' + fi[i].file + '" target="blank" title="Открыть"><i class="' + fi[i].icon + '"></i>' + fi[i].name + '</a><div class="dfileboxx hand mini deleteFilebox" title="Удалить"><i class="icon-cancel-circled red"></i></div></div>';
+							si = si + '<div class="fileboxx ellipsis relativ wp97 block"><input name="fid[]" type="hidden" value="' + fi[i].fid + '"><a href="/content/helpers/get.file.php?file=ymail/' + fi[i].file + '" target="blank" title="Открыть"><i class="' + fi[i].icon + '"></i>' + fi[i].name + '</a><div class="dfileboxx hand mini deleteFilebox" title="Удалить"><i class="icon-cancel-circled red"></i></div></div>';
 
 						}
 
@@ -1532,14 +1535,17 @@ if ( $action == 'compose' ) {
 						}
 
 						$('#duploads .xtemp').remove();
-						$('#iuploads').empty().append('<div class="fileboxx relativ wp97"><input name="file[]" id="file[]" type="file" class="file wp90" multiple onchange="addfile1();"><div class="dfileboxx hand clearUploadbox" title="Очистить"><i class="icon-cancel-circled red"></i></div></div>');
 
-						$('.description').empty().addClass('hidden');
+						//заново создаем блок выбора файлов с компьютера и очищаем поля выбора
+						//очищать нужно только input[type=file], иначе теряются fid[] уже прикрепленных файлов
+						$('#iuploads').empty().append(yfileBox);
+						$('#iuploads input[type="file"]').val('');
+
+						yfileSummary();
 
 						//if (typeof configmpage === 'function') configmpage();
 
 						$('#isDraft').val('');
-						$('.file').empty().val('');
 						isDraft = false;
 
 						yNotifyMe("Сохранение сообщения, " + data.result + ",good.png");
@@ -1609,38 +1615,196 @@ if ( $action == 'compose' ) {
 		$(document).on('click', '.delItem', function () {
 			$(this).closest('.tags').remove();
 		});
-		$(document).on('click', '.clearUploadbox', function () {//удаление из блока загрузки новых файлов
+		/**
+		 * Поля выбора файлов с компьютера.
+		 * Выбираем только input[type=file], т.к. у прикрепленных файлов (fid[]) тоже есть класс file
+		 */
+		function yfileInputs() {
+			return $('#iuploads').find('input[type="file"]');
+		}
 
-			var count = $('#iuploads .fileboxx').length;
+		/**
+		 * Признак файла (для поиска дублей)
+		 */
+		function yfileSign(f) {
+			return f.name + '|' + f.size + '|' + (f.lastModified || 0);
+		}
+
+		/**
+		 * Записываем в поле выбора новый список файлов (используется, чтобы убрать дубли)
+		 */
+		function ysetFiles(input, files) {
+
+			try {
+
+				var dt = new DataTransfer();
+
+				for (var i = 0; i < files.length; i++)
+					dt.items.add(files[i]);
+
+				input.files = dt.files;
+
+				return true;
+
+			}
+			catch (e) {
+				return false;
+			}
+
+		}
+
+		/**
+		 * Убираем из выбранных файлов те, что уже прикреплены в других полях
+		 * @param input - поле, в котором произошло изменение
+		 * @returns {Array} - имена пропущенных файлов
+		 */
+		function yfileDedupe(input) {
+
+			var dropped = [];
+			var signs = {};
+			var keep = [];
+			var i, sign;
+
+			//подписи файлов, выбранных в других полях - повторно их прикрепить нельзя
+			yfileInputs().not(input).each(function () {
+
+				for (i = 0; i < this.files.length; i++)
+					signs[yfileSign(this.files[i])] = true;
+
+			});
+
+			for (i = 0; i < input.files.length; i++) {
+
+				sign = yfileSign(input.files[i]);
+
+				if (signs[sign]) {
+					dropped.push(input.files[i].name);
+					continue;
+				}
+
+				signs[sign] = true;
+				keep.push(input.files[i]);
+
+			}
+
+			if (dropped.length > 0) {
+
+				//если убрать отдельные файлы нельзя - очищаем поле целиком
+				if (!ysetFiles(input, keep))
+					$(input).val('');
+
+			}
+
+			return dropped;
+
+		}
+
+		/**
+		 * В контейнере должно остаться одно свободное поле выбора файла, и оно должно быть сверху.
+		 * Иначе при выборе файла в уже заполненном поле появлялись лишние пустые поля
+		 */
+		function yfileNormalize() {
+
+			var $iup = $('#iuploads');
+			var $empty = $();
+
+			$iup.find('.fileboxx').each(function () {
+
+				var field = $(this).find('input[type="file"]').get(0);
+
+				if (field && field.files.length === 0)
+					$empty = $empty.add(this);
+
+			});
+
+			if ($empty.length === 0)
+				$iup.prepend(yfileBox);
+
+			else {
+
+				$empty.slice(1).remove();
+
+				if ($empty[0] !== $iup.find('.fileboxx').get(0))
+					$iup.prepend($empty[0]);
+
+			}
+
+			$('#dialog').center();
+
+		}
+
+		/**
+		 * Сводка по выбранным файлам: размер, дубли, превышение лимита
+		 * @param skipped - имена файлов, пропущенных как дубли
+		 */
+		function yfileSummary(skipped) {
 
 			var string = '';
-			var size = '';
-			var color = '';
+			var signs = {};
+			var i;
 
-			if (count > 1) $(this).parent('.fileboxx').remove();
-			else $(this).val('');
+			if (skipped === undefined) skipped = [];
 
-			$('.file').each(function () {
+			yfileInputs().each(function () {
 
-				for (var x = 0; x < this.files.length; x++) {
+				for (i = 0; i < this.files.length; i++) {
 
-					size = this.files[x].size / 1024;
+					var f = this.files[i];
+					var sign = yfileSign(f);
+					var note = '';
 
-					if (parseInt(size) > parseInt(<?=$max?>)) color = 'red';
-					else color = 'gray';
+					if (signs[sign])
+						note = ' <span class="red">уже добавлен</span>';
+					else
+						signs[sign] = true;
 
-					string = string + '<li style="word-break: break-all">' + this.files[x].name + ' <span class="' + color + '">[' + setNumFormat(size.toFixed(2)) + ' kb]</span> </li>';
+					if (parseFloat(maxSize) > 0 && (f.size / 1048576) > parseFloat(maxSize))
+						note += ' <span class="red">больше ' + maxSize + ' Mb</span>';
+
+					string = string + '<li style="word-break: break-all">' + f.name + ' <span class="' + (note === '' ? 'gray' : 'red') + '">[' + setNumFormat((f.size / 1024).toFixed(2)) + ' kb]</span>' + note + '</li>';
 
 				}
 
 			});
 
-			//console.log(string);
+			if (skipped.length > 0)
+				string = string + '<li class="red" style="word-break: break-all">Пропущены уже прикрепленные файлы: ' + skipped.join(', ') + '</li>';
 
-			if (count > 1)
-				$('.description').empty().append('<b>Выбраны файлы:</b> <ul class="pad3 marg0 ml15">' + string + '</ul>').removeClass('hidden');
+			var $d = $('#dialog .description');
+
+			if (string === '')
+				$d.empty().addClass('hidden');
 			else
-				$('.description').empty().addClass('hidden');
+				$d.empty().removeClass('hidden').append('<b>Выбраны файлы:</b> <ul class="pad3 marg0 ml15">' + string + '</ul>');
+
+			$('#dialog').center();
+
+		}
+
+		/**
+		 * Обработка выбора файла с компьютера (onchange в поле выбора файла)
+		 */
+		function addfile(input) {
+
+			input = input || (window.event ? window.event.target : null);
+
+			if (!input || !input.files)
+				return;
+
+			var skipped = yfileDedupe(input);
+
+			yfileNormalize();
+			yfileSummary(skipped);
+
+		}
+
+		$(document).on('click', '#iuploads .clearUploadbox', function () {//удаление из блока загрузки новых файлов
+
+			//значение хранится в input, а не в div - очищаем само поле выбора файла
+			$(this).closest('.fileboxx').find('input[type="file"]').val('');
+
+			yfileNormalize();
+			yfileSummary();
 
 		});
 		$(document).on('click', '.deleteFilebox', function () {
@@ -1674,34 +1838,6 @@ if ( $action == 'compose' ) {
 			//igetFiles("docs");
 
 		});
-		$(document).on('change', '.file', function () {
-
-			var string = '';
-			var size = '';
-			var color = '';
-
-			$('.file').each(function () {
-
-				for (var x = 0; x < this.files.length; x++) {
-
-					size = this.files[x].size / 1024;
-
-					if (parseInt(size) > parseInt(<?=$max?>)) color = 'red';
-					else color = 'gray';
-
-					string = string + '<li style="word-break: break-all">' + this.files[x].name + ' <span class="' + color + '">[' + setNumFormat(size.toFixed(2)) + ' kb]</span> </li>';
-
-				}
-
-			});
-
-			//console.log(string);
-
-			$('.description').empty().append('<b>Выбраны файлы:</b> <ul class="pad3 marg0 ml15">' + string + '</ul>').removeClass('hidden');
-			$('#dialog').center();
-
-		});
-
 		// сохраняем сообщение как черновик
 		function saveDraft() {
 
@@ -1890,15 +2026,6 @@ if ( $action == 'compose' ) {
 				$('#adresTo').val('');
 
 			}
-
-		}
-
-		function addfile() {
-
-			var htmltr = '<div class="fileboxx relativ ha wp100 p5 border-box"><input name="file[]" type="file" class="file wp100" id="file[]" onchange="addfile();" multiple style="display:block"><div class="dfileboxx hand clearUploadbox mt5" title="Очистить"><i class="icon-cancel-circled red"></i></div></div>';
-
-			$('#iuploads').prepend(htmltr);
-			$('#dialog').center();
 
 		}
 

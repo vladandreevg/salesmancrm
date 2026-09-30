@@ -2011,6 +2011,7 @@ CREATE TABLE `app_settings` (
     `akt_num` VARCHAR(20) NULL  DEFAULT '0',
     `akt_step` INT NULL ,
     `api_key` VARCHAR(255) NULL  DEFAULT  NULL,
+    `api_key_login` VARCHAR(255) NULL  DEFAULT  NULL COMMENT 'логин, от имени которого действует ключ API (пусто — любой сотрудник)',
     `coordinator` INT NULL ,
     `timezone` VARCHAR(255) NULL  DEFAULT 'Asia/Yekaterinburg' COMMENT 'Временная зона',
     `ivc` VARCHAR(255) NULL  DEFAULT  NULL,

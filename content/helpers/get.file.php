@@ -26,6 +26,8 @@ require_once $rootpath."/inc/language/".$language.".php";
 // выдача файлов — только авторизованным пользователям
 if ((int)$iduser1 < 1) {
 
+	http_response_code( 403 );
+
 	print '
 	<div class="warning text-left">
 		<span><i class="icon-attention red icon-5x pull-left"></i></span>
@@ -45,6 +47,37 @@ $fid      = (int)$_REQUEST['fid'];
 $oname    = $_REQUEST['oname'];
 
 $disp = ($download == 'yes') ? 'attachment' : 'inline';
+
+// Read-IDOR (AUDIT, раунд 5/8): файл отдаётся только тем, кому доступна запись, к
+// которой он приложен. Номер файла (`fid`) перебирается тривиально, поэтому права
+// проверяются по самой записи файла, а не по имени. Файлы без записи (clid/pid/did
+// пусты — общие и служебные) отдаются как раньше: скрывать в них нечего.
+$ncFile = [];
+
+if ( $fid > 0 ) {
+
+	$ncFile = (array)$db -> getRow( "SELECT clid, pid, did FROM {$sqlname}file WHERE fid = ?i and identity = ?i", $fid, (int)$identity );
+
+}
+elseif ( $filename != '' ) {
+
+	$ncFile = (array)$db -> getRow( "SELECT clid, pid, did FROM {$sqlname}file WHERE fname = ?s and identity = ?i LIMIT 1", basename( $filename ), (int)$identity );
+
+}
+
+$ncClid = (int)($ncFile['clid'] ?? 0);
+$ncPid  = (int)($ncFile['pid'] ?? 0);
+$ncDid  = (int)($ncFile['did'] ?? 0);
+
+if ( ( $ncClid > 0 || $ncPid > 0 || $ncDid > 0 ) && !can_read_record( $ncClid, $ncPid, $ncDid ) ) {
+
+	http_response_code( 403 );
+
+	print 'Доступ запрещен';
+
+	exit();
+
+}
 
 if ( $filename != '' ) {
 

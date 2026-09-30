@@ -53,7 +53,7 @@ if( !empty($_GET) ) {
 }
 
 //Найдем identity по настройкам
-$res      = $db -> getRow("SELECT id, timezone FROM {$sqlname}settings WHERE api_key = '$crmkey'");
+$res      = $db -> getRow("SELECT id, timezone FROM {$sqlname}settings WHERE api_key = ?s", $crmkey);
 $tmzone   = $res['timezone'];
 $identity = (int)$res['id'];
 

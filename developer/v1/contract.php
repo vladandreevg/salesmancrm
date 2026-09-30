@@ -6,6 +6,8 @@
 /*           ver. 8.15          */
 /* ============================ */
 
+use Salesman\Budget;
+
 header('Access-Control-Allow-Origin: *');// Устанавливаем возможность отправлять ответ для любого домена или для указанных
 header('Content-Type: text/html; charset=utf-8');
 
@@ -49,7 +51,7 @@ $aceptedActions = array("fields","steplist","direction","contracttipe","list","i
 $db = new SafeMysql(array('host' => $dbhostname, 'user' => $dbusername, 'pass' => $dbpassword,'db' => $database, 'charset' => 'utf8', 'errmode' => 'exception'));
 
 //ищем аккаунт по apikey
-$result   = $db -> getRow("SELECT id, api_key, timezone, valuta FROM ".$sqlname."settings WHERE api_key = '".$params['apikey']."'");
+$result   = $db -> getRow("SELECT id, api_key, timezone, valuta FROM ".$sqlname."settings WHERE api_key = ?s", $params['apikey']);
 $identity = $result['id'];
 $api_key  = $result['api_key'];
 $timezone = $result['timezone'];
@@ -59,7 +61,7 @@ $valuta   = $result['valuta'];
 date_default_timezone_set($timezone);
 
 //найдем пользователя
-$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = '".$params['login']."' and identity = '".$identity."'");
+$result   = $db -> getRow("SELECT title, iduser FROM ".$sqlname."user WHERE login = ?s and identity = ?i", $params['login'], (int)$identity);
 $iduser   = $result['iduser'];
 $username = $result['title'];
 
@@ -1131,7 +1133,7 @@ if($Error != 'yes'){
 							$mes[] = "Счет отмечен оплаченным";
 
 							//Внесем деньги на расчетный счет
-							rsadd($rs, $summa_credit, 'plus');
+							Budget::rsadd($rs, $summa_credit, 'plus');
 
 						}
 						catch (Exception $e){
@@ -1191,7 +1193,7 @@ if($Error != 'yes'){
 					$mes[] = "Счет отмечен оплаченным";
 
 					//Внесем деньги на расчетный счет
-					rsadd($rs, $summa_credit, 'plus');
+					Budget::rsadd($rs, $summa_credit, 'plus');
 
 				}
 				catch (Exception $e){
@@ -1252,7 +1254,7 @@ if($Error != 'yes'){
 						$mes[] = "Внесена оплата по графику ".num_format($summa)." ".$valuta;
 
 						//Внесем деньги на расчетный счет
-						rsadd($rs, $summa, 'plus');
+						Budget::rsadd($rs, $summa, 'plus');
 
 						$rtitle = $db -> getOne("SELECT title FROM ".$sqlname."mycomps_recv WHERE id='".$rs."' and identity = '$identity'");
 						if($rtitle != ''){

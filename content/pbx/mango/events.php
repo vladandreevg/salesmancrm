@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /*         SalesMan CRM         */
 /* ============================ */
@@ -27,7 +27,22 @@ $thisfile = basename( __FILE__ );
 
 $ypath = $rootpath."/content/pbx/mango/";
 
-$response = json_decode( str_replace( "\\", "", $_POST['json'] ), true );
+if(empty($_POST)){
+	$_POST = file_get_contents('php://input');
+}
+
+/*
+$f = fopen( $rootpath."/cash/mango-worker-post.log", 'ab');
+fwrite( $f, current_datumtime()." :::\r".$_POST."\r" );
+fwrite( $f, "========================\r\r" );
+fclose( $f );
+*/
+
+if(isJson($_POST)){
+	$_POST = json_decode( $_POST, true );
+}
+
+$response = json_decode( $_POST['json'], true );
 
 /**типы location
  *
@@ -55,7 +70,7 @@ $response = json_decode( str_replace( "\\", "", $_POST['json'] ), true );
 
 //отладочные данные
 /*
-$_GET['crmkey'] = 'gCG01Q5MA8msP1jXuQUC';
+$_GET['crmkey'] = 'YOUR_CRM_KEY';
 $response = [
 	"call_id"    => "100:500:256",
 	"entry_id"   => "232wc3e3w3s222",
@@ -88,7 +103,7 @@ $response = [
  */
 
 //Найдем identity по настройкам
-$res      = $db -> getRow( "SELECT id, timezone FROM {$sqlname}settings WHERE api_key = '$_GET[crmkey]'" );
+$res      = $db -> getRow( "SELECT id, timezone FROM {$sqlname}settings WHERE api_key = ?s", $_GET['crmkey'] );
 $tmzone   = $res['timezone'];
 $identity = (int)$res['id'];
 
@@ -127,12 +142,12 @@ $bdtimezone = ($bdtimezone > 0) ? "+".abs( $bdtimezone ) : "-".abs( $bdtimezone 
 
 $db -> query( "SET time_zone = '".$bdtimezone.":00'" );
 
-$f = fopen( $rootpath."/cash/mango-worker.log", "a" );
-fwrite( $f, current_datumtime()." :::\r".array2string( $_POST )."\r" );
+/*
+$f = fopen( $rootpath."/cash/mango-worker.log", 'ab');
+fwrite( $f, current_datumtime()." :::\r".array2string( $response )."\r" );
 fwrite( $f, "========================\r\r" );
 fclose( $f );
-
-//print_r($response);
+*/
 
 /**
  * разберем ответ по косточкам
@@ -140,7 +155,7 @@ fclose( $f );
  */
 
 //если extension пуст, то это входящий звонок и нам нужен number
-if ( $response['from']['extension'] == '' ) {
+if ( empty($response['from']['extension']) ) {
 
 	$phone     = $response['from']['number'];
 	$extension = $response['to']['extension'];

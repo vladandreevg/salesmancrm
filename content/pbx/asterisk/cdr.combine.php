@@ -29,7 +29,7 @@ include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
 
 if(isset($_REQUEST['apkey'])) {
-	$identity = $db -> getOne( "SELECT id FROM ".$sqlname."settings WHERE api_key = '$apkey'" ) + 0;
+	$identity = $db -> getOne( "SELECT id FROM ".$sqlname."settings WHERE api_key = ?s", $apkey ) + 0;
 }
 
 include $rootpath."/inc/func.php";

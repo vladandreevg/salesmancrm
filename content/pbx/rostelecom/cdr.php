@@ -27,7 +27,7 @@ $thisfile = basename( __FILE__ );
 $putInHistory = false;
 
 if ($identity == '') {
-	$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = '$_GET[apkey]'" );
+	$identity = $db -> getOne( "SELECT id FROM {$sqlname}settings WHERE api_key = ?s", $_GET['apkey'] );
 }
 
 if ($identity == 0) {

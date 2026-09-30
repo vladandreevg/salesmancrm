@@ -21,6 +21,20 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
+// Анонимный запрос: inc/auth.php при отсутствии сессии продолжает работу с iduser1 = 0
+// (так задумано для вебхуков, которые его подключают), а проверки доступа к записям
+// рассчитаны на iduser1 > 0 и потому не срабатывают — обработчик отказывает сам.
+// См. AUDIT: «обработчики действий без гейта на пользователя».
+if ((int)$iduser1 <= 0) {
+
+	http_response_code(403);
+
+	print 'Доступ запрещен';
+
+	exit();
+
+}
+
 $action     = $_REQUEST['action'];
 $idcategory = (int)$_REQUEST['idcategory'];
 

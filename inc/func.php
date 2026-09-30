@@ -1097,63 +1097,65 @@ function xnum_format($string, string $class = NULL): string {
 
 }
 
+function pre_format(string $string = NULL): float {
+
+	if (is_null($string)) {
+		return 0.00;
+	}
+
+	return parseNumber(untag($string));
+
+}
+
 /**
- * Функция, обратная num_format
+ * Разбор числа из строки: убирает мусор и понимает оба порядка разделителей.
  *
- * @param string|NULL $string
+ * Раньше `pre_format` заменяла **каждую** запятую точкой, поэтому «1,234.56»
+ * превращалось в 1.234, а «2´586.04» — в 2: суммы, пришедшие из интеграций или
+ * вставленные из другого документа, молча занижались в тысячу раз (AUDIT, раунд 5
+ * — «pre_format locale/negative parsing mismatch»). Разделитель тысяч здесь
+ * определяется по последнему разделителю в строке: «1,234.56» и «1.234,56»
+ * читаются одинаково верно, «3 850,25» и «3147,71» — как раньше.
+ *
+ * @param string $string
  *
  * @return float
  * @category Core
  * @package  Func
  */
-function pre_format(string $string = NULL): float {
+function parseNumber(string $string = ''): float {
 
-	if (!is_null($string)) {
+	// мусор: апострофы, неразрывные пробелы, обозначения рублей
+	$string = str_replace(["`", "´", "'", "\xC2\xA0", " ", "р.", "руб.", "руб"], "", trim($string));
 
-		$string = str_replace(" ", "", $string);
+	$lastComma = strrpos($string, ',');
+	$lastDot   = strrpos($string, '.');
 
-		return (float)str_replace([
-			",",
-			" "
-		], [
-			".",
-			""
-		], trim(untag($string)));
+	if ($lastComma !== false && $lastDot !== false) {
+
+		if ($lastComma > $lastDot) {
+			// 1.234,56 — точка разделяет тысячи
+			$string = str_replace('.', '', $string);
+			$string = str_replace(',', '.', $string);
+		}
+		else {
+			// 1,234.56 — запятая разделяет тысячи
+			$string = str_replace(',', '', $string);
+		}
 
 	}
+	elseif ($lastComma !== false) {
+		// 3 850,25 — запятая как десятичный разделитель
+		$string = str_replace(',', '.', $string);
+	}
 
-	return 0.00;
+	return (float)$string;
 
 }
 
-/**
- * Преобразование сложных форматов чисел, содержащих много мусора
- * 1,861.37р., 2,666.52 руб., 3´966.70руб, 2´586.04р., 3 850,25р.
- * @param string $string
- * @return float
- */
 function prepareSumma(string $string = ''): float {
 
-	if (!is_null($string)) {
-
-		// убираем мусор из строки
-		$string = str_replace(["`", "´", " ", " ", "р.", "руб.", "руб"], "", trim($string));
-
-		// если в строке есть и точка и запятая (3,147.71р.)
-		if(str_contains($string, ".") && str_contains($string, ","))  {
-			$string = str_replace(",", "", trim($string));
-		}
-
-		// если в строке есть только запятая (3147,71р.)
-		if(!str_contains($string, ".") && str_contains($string, ","))  {
-			$string = str_replace(",", ".", trim($string));
-		}
-
-		return (float)$string;
-
-	}
-
-	return 0.00;
+	return parseNumber($string);
 
 }
 
