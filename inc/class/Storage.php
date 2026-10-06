@@ -454,6 +454,7 @@ class Storage {
 		$params['price_5']  = (float)pre_format( $params['price_5'] );
 		$params['pr_cat']   = (int)$params['category'];
 		$params['nds']      = pre_format( $params['nds'] );
+		$originalid = (int)$params['original_id'];
 
 		$errors = $fileuploaded = $oldparams = [];
 
@@ -645,19 +646,39 @@ class Storage {
 			//если значение заполнено
 			if ( $afields[ $data['pole'] ] != '' ) {
 
-				if ( $ef == 0 )
-					$db -> query( "INSERT INTO {$sqlname}modcatalog_field SET ?u", [
+				if ( $ef == 0 ) {
+					$db -> query("INSERT INTO {$sqlname}modcatalog_field SET ?u", [
 						"pfid"     => $data['id'],
 						"n_id"     => $params['prid'],
-						"value"    => $afields[ $data['pole'] ],
+						"value"    => $afields[$data['pole']],
 						"identity" => $identity
-					] );
-
-				else $db -> query( "UPDATE {$sqlname}modcatalog_field SET ?u WHERE id = '".$ef."'", ["value" => $afields[ $data['pole'] ]] );
+					]);
+				}
+				else {
+					$db -> query("UPDATE {$sqlname}modcatalog_field SET ?u WHERE id = '".$ef."'", ["value" => $afields[$data['pole']]]);
+				}
 
 			}
-			elseif ( $ef > 0 )
-				$db -> query( "UPDATE {$sqlname}modcatalog_field SET ?u WHERE id = '".$ef."'", ["value" => ""] );
+			elseif ( $ef > 0 ) {
+				$db -> query("UPDATE {$sqlname}modcatalog_field SET ?u WHERE id = '".$ef."'", ["value" => ""]);
+			}
+
+		}
+
+		// для клонированния берем поля в оригинале
+		if($params['subaction'] == 'clone' && $originalid > 0){
+
+			$xfields = $db -> getAll("SELECT * FROM {$sqlname}modcatalog_field WHERE n_id = '$originalid' and identity = '$identity'");
+			foreach ($xfields as $xfield) {
+
+				$db -> query("INSERT INTO {$sqlname}modcatalog_field SET ?u", [
+					"pfid"     => $xfield['id'],
+					"n_id"     => $params['prid'],
+					"value"    => $xfield['value'],
+					"identity" => $identity
+				]);
+
+			}
 
 		}
 
@@ -676,8 +697,9 @@ class Storage {
 
 		$log = $this -> logger( 'catalog', $identity, $iduser1, $params, $oldparams );
 
-		if ( $log != '' )
+		if ( $log != '' ) {
 			$errors[] = $log;
+		}
 
 		return [
 			'result' => "Сделано",

@@ -89,7 +89,7 @@ if ($action == "edit") {
 					<div class="column12 grid-12">
 
 						<?php
-						include $rootpath."/ajax/check_disk.php";
+						include $rootpath."/content/ajax/check_disk.php";
 						if ($diskLimit > 0) {
 							?>
 							<div class="infodiv pad10" align="center">
@@ -107,7 +107,7 @@ if ($action == "edit") {
 						<div id="filelist" class="viewdiv pad10 wp100"></div>
 
 						<DIV id="uploads" style="width:100%; max-height:99%; overflow-x:hidden; overflow-y:auto !important">
-							<?php if ($diskLimit == 0 or $diskUsage['percent'] < 100) { ?>
+							<?php if ($diskLimit == 0 || $diskUsage['percent'] < 100) { ?>
 
 								<div class="viewdiv pad10 wp100">
 									<b class="red">Информация:</b> максимальный размер файла = <?= $maxupload ?>mb
@@ -119,8 +119,11 @@ if ($action == "edit") {
 										<i class="icon-cancel-circled red"></i></div>
 								</div>
 
-							<?php }
-							else print '<div class="warning" align="center" style="width: 98%"><b class="red">Превышен лимит использования диска</b></div>';
+							<?php
+							}
+							else {
+								print '<div class="warning" align="center" style="width: 98%"><b class="red">Превышен лимит использования диска</b></div>';
+							}
 							?>
 						</DIV>
 
@@ -212,7 +215,7 @@ if ($action == "edit") {
 
 						<div class="ydropDown border">
 							<span>Территория</span>
-							<span class="ydropCount"><?= count($territory) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+							<span class="ydropCount"><?= count((array)$territory) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 							<div class="yselectBox" style="height: 200px;">
 								<div class="yunSelect"><i class="icon-cancel-circled2"></i>Снять выделение</div>
 								<div class="ydropString ellipsis">
@@ -240,12 +243,12 @@ if ($action == "edit") {
 
 						<div class="ydropDown border">
 							<span>По Типу отношений</span>
-							<span class="ydropCount"><?= count($tip_cmr) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+							<span class="ydropCount"><?= count((array)$tip_cmr) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 							<div class="yselectBox" style="height: 200px;">
 								<div class="yunSelect"><i class="icon-cancel-circled2"></i>Снять выделение</div>
 								<div class="ydropString ellipsis">
 									<label>
-										<input class="taskss" name="tip_cmr[]" type="checkbox" id="tip_cmr[]" value="0" <?php if (in_array("0", $tip_cmr)) print 'checked'; ?> onchange="SeachClients()">&nbsp;Не указано
+										<input class="taskss" name="tip_cmr[]" type="checkbox" id="tip_cmr[]" value="0" <?php if (in_array("0", (array)$tip_cmr)) print 'checked'; ?> onchange="SeachClients()">&nbsp;Не указано
 									</label>
 								</div>
 								<?php
@@ -267,7 +270,7 @@ if ($action == "edit") {
 
 						<div class="ydropDown border">
 							<span>По Отрасли</span>
-							<span class="ydropCount"><?= count($prcat) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+							<span class="ydropCount"><?= count((array)$prcat) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 							<div class="yselectBox" style="height: 200px;">
 								<div class="yunSelect"><i class="icon-cancel-circled2"></i>Снять выделение</div>
 								<?php
@@ -289,7 +292,7 @@ if ($action == "edit") {
 					<div class="column12 grid-4">
 
 						<div class="ydropDown border">
-							<span>По Источнику клиента</span><span class="ydropCount"><?= count($cpath) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+							<span>По Источнику клиента</span><span class="ydropCount"><?= count((array)$cpath) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 							<div class="yselectBox" style="height: 200px;">
 								<div class="yunSelect"><i class="icon-cancel-circled2"></i>Снять выделение</div>
 								<div class="ydropString ellipsis">

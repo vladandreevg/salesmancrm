@@ -151,6 +151,8 @@ if ( $action == "edit" ) {
 
 	$idz = (int)$_REQUEST['idz'];
 	$ido = (int)$_REQUEST['ido'];
+	
+	$original_id = $n_id;
 
 	if ( $n_id > 0 ) {
 
@@ -252,7 +254,9 @@ if ( $action == "edit" ) {
 	<DIV class="zagolovok"><?=$htitle?></DIV>
 	<FORM action="/modules/modcatalog/core.modcatalog.php" method="post" enctype="multipart/form-data" name="priceForm" id="priceForm">
 		<INPUT type="hidden" name="action" id="action" value="edit_on">
-		<INPUT name="n_id" type="hidden" id="n_id" value="<?= $n_id ?>">
+		<INPUT type="hidden" name="subaction" id="subaction" value="<?=$subaction?>">
+		<INPUT type="hidden" name="n_id" id="n_id" value="<?= $n_id ?>">
+		<INPUT type="hidden" name="original_id" id="n_id" value="<?= $original_id ?>">
 		<INPUT type="hidden" name="idz" id="idz" value="<?= $idz ?>">
 		<INPUT type="hidden" name="ido" id="ido" value="<?= $ido ?>">
 
@@ -372,6 +376,7 @@ if ( $action == "edit" ) {
 						$variant = explode( ';', $data['value'] );
 
 						$pole = '';
+						$n_id = $original_id;
 
 						//это ввыбранные варианты в профиле конкретного клиента
 						$value = $db -> getOne( "SELECT value FROM {$sqlname}modcatalog_field WHERE n_id = '".$n_id."' and pfid = '".$data['id']."' and identity = '$identity'" );
@@ -435,15 +440,16 @@ if ( $action == "edit" ) {
 							$w = "width:".$w."%";
 
 							print '
-				<div class="row mb10">
-					<div class="column12 grid-3 fs-12 pt10 right-text gray2">'.$data['name'].':</div>
-					<div class="column12 grid-9">'.$pole.'</div>
-				</div>
-				';
+							<div class="row mb10">
+								<div class="column12 grid-3 fs-12 pt10 right-text gray2">'.$data['name'].':</div>
+								<div class="column12 grid-9">'.$pole.'</div>
+							</div>
+							';
 
 						}
-						if ( $data['tip'] == 'divider' )
+						if ( $data['tip'] == 'divider' ) {
 							print '<div id="divider" class="wp100 mt10 mb10" align="center"><b class="smalltxt">'.$data['name'].'</b></div>';
+						}
 
 						$i++;
 						$v = '';

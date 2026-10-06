@@ -1079,7 +1079,7 @@ if ($action == "discard") {
  */
 if ($action == "edit_on") {
 
-	$params = $_REQUEST;
+	$params = (array)$_REQUEST;
 
 	$sklad  = new Storage();
 	$result = $sklad -> edit($params);
