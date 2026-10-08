@@ -104,93 +104,105 @@ catch (Exception $e){
 
 }
 
-/**
- * Проверка легитимности "замещения" (подмены сотрудника).
- * Действовать от имени $asUser может только пользователь $oldUser, которого
- * целевой пользователь назначил своим замещающим (поле zam), при условии,
- * что целевой аккаунт не заблокирован (secrty = 'yes').
- *
- * @param mixed $db
- * @param int   $oldUser - текущий (исходный) пользователь из сессии
- * @param int   $asUser  - пользователь, от имени которого запрошена работа
- * @param int   $identity
- *
- * @return bool
- */
-function canImpersonate($db, int $oldUser, int $asUser, int $identity): bool {
+// ВАЖНО: этот файл подключается по коду через include (не *_once), в том числе
+// повторно в одном запросе (content/admin/users.table.php: верхний уровень + вызов
+// внутри getUserCatalogg()). Объявления функций поэтому защищены function_exists(),
+// иначе повторный include падает с "Cannot redeclare ..." (E_COMPILE_ERROR → HTTP 500).
+if (!function_exists('canImpersonate')) {
 
-	if ($oldUser < 1 || $asUser < 1 || $asUser === $oldUser || $identity < 1) {
-		return false;
+	/**
+	 * Проверка легитимности "замещения" (подмены сотрудника).
+	 * Действовать от имени $asUser может только пользователь $oldUser, которого
+	 * целевой пользователь назначил своим замещающим (поле zam), при условии,
+	 * что целевой аккаунт не заблокирован (secrty = 'yes').
+	 *
+	 * @param mixed $db
+	 * @param int   $oldUser - текущий (исходный) пользователь из сессии
+	 * @param int   $asUser  - пользователь, от имени которого запрошена работа
+	 * @param int   $identity
+	 *
+	 * @return bool
+	 */
+	function canImpersonate($db, int $oldUser, int $asUser, int $identity): bool {
+
+		if ($oldUser < 1 || $asUser < 1 || $asUser === $oldUser || $identity < 1) {
+			return false;
+		}
+
+		$cnt = (int)$db -> getOne(
+			"SELECT COUNT(*) FROM {$GLOBALS['sqlname']}user WHERE iduser = ?i AND zam = ?i AND secrty = 'yes' AND identity = ?i",
+			$asUser,
+			$oldUser,
+			$identity
+		);
+
+		return $cnt > 0;
+
 	}
-
-	$cnt = (int)$db -> getOne(
-		"SELECT COUNT(*) FROM {$GLOBALS['sqlname']}user WHERE iduser = ?i AND zam = ?i AND secrty = 'yes' AND identity = ?i",
-		$asUser,
-		$oldUser,
-		$identity
-	);
-
-	return $cnt > 0;
 
 }
 
-/**
- * Проверка, что целевой пользователь $asUser — это сам текущий пользователь $oldUser
- * или один из его подчиненных (по цепочке mid, любой глубины) и при этом не заблокирован
- * (secrty = 'yes'). Проверка выполняется в рамках одной identity.
- *
- * Эквивалент проверки in_array($asUser, $y) по результату User::userArray($oldUser),
- * но без зависимости от класса \Salesman\User: auth_main.php/auth.php подключаются
- * раньше inc/func.php, который регистрирует автозагрузчик классов \Salesman\*.
- *
- * @param mixed $db
- * @param int   $oldUser - текущий (исходный) пользователь из сессии
- * @param int   $asUser  - пользователь, от имени которого запрошена работа
- * @param int   $identity
- *
- * @return bool
- */
-function canImpersonateSubordinate($db, int $oldUser, int $asUser, int $identity): bool {
+if (!function_exists('canImpersonateSubordinate')) {
 
-	if ($oldUser < 1 || $asUser < 1 || $identity < 1) {
-		return false;
-	}
+	/**
+	 * Проверка, что целевой пользователь $asUser — это сам текущий пользователь $oldUser
+	 * или один из его подчиненных (по цепочке mid, любой глубины) и при этом не заблокирован
+	 * (secrty = 'yes'). Проверка выполняется в рамках одной identity.
+	 *
+	 * Эквивалент проверки in_array($asUser, $y) по результату User::userArray($oldUser),
+	 * но без зависимости от класса \Salesman\User: auth_main.php/auth.php подключаются
+	 * раньше inc/func.php, который регистрирует автозагрузчик классов \Salesman\*.
+	 *
+	 * @param mixed $db
+	 * @param int   $oldUser - текущий (исходный) пользователь из сессии
+	 * @param int   $asUser  - пользователь, от имени которого запрошена работа
+	 * @param int   $identity
+	 *
+	 * @return bool
+	 */
+	function canImpersonateSubordinate($db, int $oldUser, int $asUser, int $identity): bool {
 
-	$sqlname = $GLOBALS['sqlname'];
+		if ($oldUser < 1 || $asUser < 1 || $identity < 1) {
+			return false;
+		}
 
-	// целевой пользователь должен существовать и быть активным
-	// (в исходной проверке $y фильтровался по secrty = 'yes')
-	$row = $db -> getRow("SELECT mid, secrty FROM {$sqlname}user WHERE iduser = ?i AND identity = ?i", $asUser, $identity);
+		$sqlname = $GLOBALS['sqlname'];
 
-	if (empty($row) || (string)$row['secrty'] !== 'yes') {
-		return false;
-	}
+		// целевой пользователь должен существовать и быть активным
+		// (в исходной проверке $y фильтровался по secrty = 'yes')
+		$row = $db -> getRow("SELECT mid, secrty FROM {$sqlname}user WHERE iduser = ?i AND identity = ?i", $asUser, $identity);
 
-	// сам пользователь входит в набор userArray($oldUser) — сохраняем исходную семантику
-	if ($asUser === $oldUser) {
-		return true;
-	}
+		if (empty($row) || (string)$row['secrty'] !== 'yes') {
+			return false;
+		}
 
-	// поднимаемся по цепочке руководителей (mid) от asUser вверх;
-	// если встречаем $oldUser — значит asUser у него в подчинении
-	$seen = [ $asUser => true ];
-	$u    = (int)$row['mid'];
-
-	while ($u > 0) {
-
-		if ($u === $oldUser) {
+		// сам пользователь входит в набор userArray($oldUser) — сохраняем исходную семантику
+		if ($asUser === $oldUser) {
 			return true;
 		}
 
-		// защита от зацикливания в mid-дереве
-		if (isset($seen[$u])) {
-			return false;
+		// поднимаемся по цепочке руководителей (mid) от asUser вверх;
+		// если встречаем $oldUser — значит asUser у него в подчинении
+		$seen = [ $asUser => true ];
+		$u    = (int)$row['mid'];
+
+		while ($u > 0) {
+
+			if ($u === $oldUser) {
+				return true;
+			}
+
+			// защита от зацикливания в mid-дереве
+			if (isset($seen[$u])) {
+				return false;
+			}
+			$seen[$u] = true;
+
+			$u = (int)$db -> getOne("SELECT mid FROM {$sqlname}user WHERE iduser = ?i AND identity = ?i", $u, $identity);
 		}
-		$seen[$u] = true;
 
-		$u = (int)$db -> getOne("SELECT mid FROM {$sqlname}user WHERE iduser = ?i AND identity = ?i", $u, $identity);
+		return false;
+
 	}
-
-	return false;
 
 }

@@ -18,6 +18,7 @@ include $rootpath."/inc/dbconnector.php";
 include $rootpath."/inc/auth.php";
 include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
+
 // Доступ только для администратора
 if ($isadmin != 'on' && $tipuser != 'Администратор') {
 	print 'Доступ запрещен';

@@ -76,8 +76,16 @@ if ( $field['Field'] == '' ) {
 	$db -> query( "ALTER TABLE `{$sqlname}user` ADD COLUMN `identity` INT(10) NOT NULL DEFAULT '1' AFTER `subscription`" );
 }
 
-//Закрыть при обновлении со старых версий системы
-if ( !in_array( getVersion(), ['7.75', '2017.3'] ) ) {
+/**
+ * Скрипт запускается двумя способами:
+ *   - из браузера: обязательна авторизация администратора;
+ *   - из консоли (`php _install/update.php`): сессии нет, проверка не выполняется.
+ *
+ * inc/auth.php при отсутствии cookie сессии намеренно продолжает работу с
+ * $iduser1 = 0 (это нужно webhook-скриптам), поэтому гейт ниже обязателен,
+ * но только для веб-запуска.
+ */
+if ( PHP_SAPI !== 'cli' ) {
 
 	include $root."/inc/auth.php";
 	include $root."/inc/settings.php";
@@ -91,17 +99,16 @@ if ( !in_array( getVersion(), ['7.75', '2017.3'] ) ) {
 }
 else {
 
-	include $root."/inc/auth.php";
+	// сессии в консоли нет; inc/settings.php выставляет $identity = 1 (основная база)
 	include $root."/inc/settings.php";
 
-	// обновление БД доступно только администратору
-	if ( (int)$iduser1 < 1 || ($isadmin != 'on' && $tipuser != 'Администратор') ) {
-		print 'Доступ запрещен';
-		exit();
-	}
+	print "Запуск из консоли: проверка авторизации не выполняется\n";
 
+}
+
+//Закрыть при обновлении со старых версий системы
+if ( in_array( getVersion(), ['7.75', '2017.3'] ) ) {
 	$identity = 1;
-
 }
 
 /**
@@ -1623,19 +1630,30 @@ if (  ($step == 1 || PHP_SAPI == 'cli') && getVersion() == $lastVer ) {
 
 			/**
 			 * Переведем существующие статусы в БД
+			 *
+			 * Константы вынесены в переменные: обращение по индексу к константе-массиву
+			 * класса (Project::COLORSPROJECT[ $index ]) понимает не каждый PHP,
+			 * а $var[ $index ] верен всегда.
 			 */
+			$statusesProject = Project::STATUSPROJECT;
+			$colorsProject   = Project::COLORSPROJECT;
+			$iconsProject    = Project::ICONSPROJECT;
+			$statusesWork    = Project::STATUSWORK;
+			$colorsWork      = Project::COLORSWORK;
+			$iconsWork       = Project::ICONSWORK;
+
 			$result = $db -> query( "SELECT * FROM {$sqlname}settings ORDER BY id" );
 			while ($data = $db -> fetch( $result )) {
 
 				$sort   = 0;
 				$exists = [];
-				foreach ( Project::STATUSPROJECT as $index => $status ) {
+				foreach ( $statusesProject as $index => $status ) {
 
 					$db -> query( "INSERT INTO {$sqlname}projects_status SET ?u", [
 						"type"     => "prj",
 						"name"     => $status,
-						"color"    => Project::COLORSPROJECT[ $index ],
-						"icon"     => Project::ICONSPROJECT[ $index ],
+						"color"    => $colorsProject[ $index ],
+						"icon"     => $iconsProject[ $index ],
 						"sort"     => $sort,
 						"control"  => in_array( $index, [
 							2,
@@ -1680,13 +1698,13 @@ if (  ($step == 1 || PHP_SAPI == 'cli') && getVersion() == $lastVer ) {
 
 				$sort   = 0;
 				$exists = [];
-				foreach ( Project::STATUSWORK as $index => $status ) {
+				foreach ( $statusesWork as $index => $status ) {
 
 					$db -> query( "INSERT INTO {$sqlname}projects_status SET ?u", [
 						"type"     => "wrk",
 						"name"     => $status,
-						"color"    => Project::COLORSWORK[ $index ],
-						"icon"     => Project::ICONSWORK[ $index ],
+						"color"    => $colorsWork[ $index ],
+						"icon"     => $iconsWork[ $index ],
 						"sort"     => $sort,
 						"control"  => in_array( $index, [
 							4,

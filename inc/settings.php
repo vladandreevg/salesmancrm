@@ -30,7 +30,11 @@ if (!file_exists($rootpath."/cash/salesman_error.log")) {
 ini_set('log_errors', 'On');
 ini_set('error_log', $rootpath.'/cash/salesman_error.log');
 
-error_reporting(E_ERROR);
+// E_ERROR мало: ошибки времени компиляции (E_PARSE, E_COMPILE_ERROR, E_CORE_ERROR)
+// в него не входят, поэтому фатальный 500 (напр. "Cannot redeclare ..." при повторном
+// include) не попадал ни в этот журнал, ни в лог PHP/Apache. Эти уровни всегда
+// фатальны, так что шума в журнале они не добавят.
+error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR);
 
 if (!isset($productInfo)) {
 	$productInfo = [
