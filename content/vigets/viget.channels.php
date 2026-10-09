@@ -38,7 +38,7 @@ $queryArray = getFilterQuery( 'client', $param = [
 	'iduser'     => $iduser,
 	'iduser1'    => $iduser1,
 	'filter'     => 'otdel',
-	'filterplus' => "and {$sqlname}clientcat.date_create between '$da1' and '$da2'",
+	'filterplus' => "and {$sqlname}clientcat.date_create between '$da1 00:00:00' and '$da2 23:59:59'",
 	'type'       => 'client',
 	'fields'     => [
 		'clid',
@@ -50,15 +50,29 @@ $queryArray = getFilterQuery( 'client', $param = [
 
 $list = [];
 
+$q = "
+	SELECT 
+		COUNT(DISTINCT(cc.clid)) as count,
+		cp.name as clientpath
+	FROM {$sqlname}clientcat `cc`
+		LEFT JOIN {$sqlname}clientpath `cp` ON cp.id = cc.clientpath
+	WHERE 
+		DATE(cc.date_create) >= '$da1' and DATE(cc.date_create) <= '$da2' and 
+		cc.creator IN (".yimplode( ",", (array)get_people( $iduser1, "yes" ) ).") and
+		cc.identity = '$identity'
+	GROUP BY 2
+	";
+
 //формируем массив
-$query  = $queryArray['query'];
+$query  = $q;//$queryArray['query'];
 $result = $db -> query( $query );
 while ($data = $db -> fetch( $result )) {
 
-	if ( $data['clientpath'] == '' )
+	if ( $data['clientpath'] == '' ) {
 		$data['clientpath'] = 'Не указано';
+	}
 
-	$list[ $data['clientpath'] ]++;
+	$list[ $data['clientpath'] ] = $data['count'];
 
 }
 

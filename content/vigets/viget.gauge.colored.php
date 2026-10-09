@@ -268,7 +268,7 @@ if ( $iduser1 == $coordinator ) {
 
 </div>
 
-<script src="/assets/js/gauge.min.js"></script>
+<script src="/assets/js/canvas-gauges/gauge.min.js"></script>
 <script>
 
 	$(document).ready(function () {

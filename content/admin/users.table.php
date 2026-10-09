@@ -57,12 +57,12 @@ if ( $adate == '' ) {
 
 function candelete($id, $db): array {
 	
-	global $rootpath;
+	global $rootpath, $identity, $sqlname, $db;
 
 	require $rootpath."/inc/config.php";
 
-	$identity = $GLOBALS['identity'];
-	$sqlname  = $GLOBALS['sqlname'];
+	//$identity = $GLOBALS['identity'];
+	//$sqlname  = $GLOBALS['sqlname'];
 
 	$responce = [];
 
@@ -128,15 +128,15 @@ define('SORT', $sort);
 
 function getUserCatalogg($id = NULL, $level = 0, $res = []) {
 
-	global $rootpath;
+	global $rootpath, $identity, $sqlname, $db;
 
-	include $rootpath."/inc/config.php";
-	include $rootpath."/inc/dbconnector.php";
+	//include $rootpath."/inc/config.php";
+	//include $rootpath."/inc/dbconnector.php";
 
-	$identity = $GLOBALS['identity'];
+	//$identity = $GLOBALS['identity'];
 	$sort     = SORT;
-	$sqlname  = $GLOBALS['sqlname'];
-	$db       = $GLOBALS['db'];
+	//$sqlname  = $GLOBALS['sqlname'];
+	//$db       = $GLOBALS['db'];
 
 	global $res;
 
@@ -162,19 +162,6 @@ function getUserCatalogg($id = NULL, $level = 0, $res = []) {
 			$act2 = '<i class="icon-lock red" title="Блокирован. Активировать"></i>';
 
 		}
-
-		/*if ( $da['adate'] != '0000-00-00' ) {
-			$dd = abs(diffDate2($da['adate']));
-		}
-
-		if ( $dd >= 3 || $da['adate'] == NULL ) {
-			$icon = '<a href="javascript:void(0)" onclick="deActivate(\''.$da['iduser'].'\',\''.$atip.'\')">'.$act2.'</a>';
-		}
-		else {
-
-			$icon = ($da['secrty'] == 'yes') ? '<i class="icon-lock-open gray2" title="Активен. Действие не доступно 3 дня. Прошло - '.$dd.' дней"></i>' : '<i class="icon-lock gray2" title="Блокирован. Действие не доступно 3 дня. Прошло - '.$dd.' дней"></i>';
-
-		}*/
 
 		$icon = '<a href="javascript:void(0)" onclick="deActivate(\''.$da['iduser'].'\',\''.$atip.'\')">'.$act2.'</a>';
 
