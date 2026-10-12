@@ -710,13 +710,27 @@ function setSecureCookie($name, $value = '', $expires = 0, $path = '/') : void {
 
 	$secure = ( !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' ) || 443 == $_SERVER['SERVER_PORT'];
 
-	setcookie( $name, $value, [
-		'expires'  => $expires,
-		'path'     => $path,
-		'secure'   => $secure,
-		'httponly' => true,
-		'samesite' => 'Lax'
-	] );
+	// setcookie() понимает массив опций (в т.ч. ключ samesite) только с PHP 7.3.
+	// На PHP 7.2 такой вызов дает Warning "expects parameter 3 to be integer, array given"
+	// и НЕ выставляет заголовок Set-Cookie - сессионная cookie не доходила до браузера,
+	// из-за чего вход зацикливался на /login.
+	if ( PHP_VERSION_ID >= 70300 ) {
+
+		setcookie( $name, $value, [
+			'expires'  => $expires,
+			'path'     => $path,
+			'secure'   => $secure,
+			'httponly' => true,
+			'samesite' => 'Lax'
+		] );
+
+	}
+	else {
+
+		// для PHP < 7.3 SameSite передается суффиксом к path - отдельного параметра там нет
+		setcookie( $name, $value, $expires, $path.'; samesite=Lax', '', $secure, true );
+
+	}
 
 }
 
