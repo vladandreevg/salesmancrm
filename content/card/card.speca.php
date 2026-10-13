@@ -176,34 +176,51 @@ if ($isCatalog == 'on' && $speca['calculate'] && count($speca['speca']) > 0) {
 
 	}
 
+	//событие, которым браузер сообщает о начале выделения - так же определяет его jQuery UI
+	var spekaSelectEvent = ('onselectstart' in document.createElement('div')) ? 'selectstart' : 'mousedown';
+
 	//перетаскивание строк (десктоп)
 	if (!isMobile) {
 
 		$('.spekaSortable').each(function () {
 
-			if ($(this).hasClass('ui-sortable'))
-				return;
+			if (!$(this).hasClass('ui-sortable')) {
 
-			$(this).sortable({
-				handle: '.speka-drag',
-				items: '> tr',
-				axis: 'y',
-				cursor: 'move',
-				helper: 'clone',
-				opacity: 0.8,
-				tolerance: 'pointer',
-				forcePlaceholderSize: true,
-				placeholder: 'speka-placeholder',
-				start: function (event, ui) {
-					ui.item.addClass('speka-dragging');
-				},
-				stop: function (event, ui) {
-					ui.item.removeClass('speka-dragging');
-				},
-				update: function () {
-					spekaSave($(this).closest('table'));
-				}
-			}).disableSelection();
+				$(this).sortable({
+					handle: '.speka-drag',
+					items: '> tr',
+					axis: 'y',
+					cursor: 'move',
+					helper: 'clone',
+					opacity: 0.8,
+					tolerance: 'pointer',
+					forcePlaceholderSize: true,
+					placeholder: 'speka-placeholder',
+					start: function (event, ui) {
+						ui.item.addClass('speka-dragging');
+					},
+					stop: function (event, ui) {
+						ui.item.removeClass('speka-dragging');
+					},
+					update: function () {
+						spekaSave($(this).closest('table'));
+					}
+				});
+
+			}
+
+			//jQuery UI .disableSelection() гасит selectstart/mousedown на всей таблице, а CSS
+			//user-select:text (класс .enable--select) это не перебивает - текст становится
+			//невыделяемым. Поэтому блокируем выделение сами и оставляем его в .enable--select.
+			//Гейт вешается на каждую таблицу и всегда: sortable мог быть создан на этом же tbody раньше.
+			$(this)
+				.off(spekaSelectEvent + '.spekaSelect')
+				.on(spekaSelectEvent + '.spekaSelect', function (event) {
+
+					if (!$(event.target).closest('.enable--select').length)
+						event.preventDefault();
+
+				});
 
 		});
 
