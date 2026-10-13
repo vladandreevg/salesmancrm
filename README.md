@@ -223,3 +223,4 @@ git clone https://github.com/vladandreevg/salesmancrm.git ./
 - [Группа vk.com](https://vk.com/salesmancrm)
 - [Канал Telegram](https://t.me/salesman_channel)
 - [Канал Youtube](https://www.youtube.com/c/smancrm)
+- [Канал Rutube](https://rutube.ru/channel/25022183/)

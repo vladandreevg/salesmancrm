@@ -444,7 +444,8 @@ class Storage {
 		//настройки модуля
 		//$settings = self::settings($identity);
 
-		$params['prid']     = (int)$params['prid'] > 0 ? : (int)$params['n_id'];
+		// сокращённый тернарный оператор вернул бы bool (результат сравнения), а не prid
+		$params['prid']     = ((int)$params['prid'] > 0) ? (int)$params['prid'] : (int)$params['n_id'];
 		$params['content']  = htmlspecialchars( $params['content'] );
 		$params['price_in'] = (float)pre_format( $params['price_in'] );
 		$params['price_1']  = (float)pre_format( $params['price_1'] );
@@ -477,7 +478,8 @@ class Storage {
 			$oldparams['nds']      = pre_format( $res["nds"] );
 			$oldparams['prid']     = $params['prid'];
 
-			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = ?i and identity = ?i", (int)$params['prid'], (int)$identity, [
+			// порядок аргументов = порядок плейсхолдеров: сначала массив для ?u, затем ?i
+			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = ?i and identity = ?i", [
 				"artikul"  => $params['artikul'],
 				"title"    => $params['title'],
 				"descr"    => $params['descr'],
@@ -489,8 +491,8 @@ class Storage {
 				"price_5"  => (float)$params['price_5'],
 				"edizm"    => $params['edizm'],
 				"pr_cat"   => (int)$params['pr_cat'],
-				"nds"      => $params['nds']
-			] );
+				"nds"      => (float)$params['nds']
+			], (int)$params['prid'], (int)$identity );
 
 			//print $db -> lastQuery();
 
@@ -804,10 +806,11 @@ class Storage {
 			$oldparams['prid']     = $params['prid'];
 			$oldparams['price_in'] = ($params['price_in'] > 0) ? $params["price_in"] : $res['price_in'];
 
-			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = ?i and identity = ?i", (int)$params['prid'], (int)$identity, [
+			// порядок аргументов = порядок плейсхолдеров: сначала массив для ?u, затем ?i
+			$db -> query( "UPDATE {$sqlname}price SET ?u WHERE n_id = ?i and identity = ?i", [
 				"price_1"  => ($params['price_1'] > 0) ? $params['price_1'] : $res["price_1"],
 				"price_in" => $params['price_in']
-			] );
+			], (int)$params['prid'], (int)$identity );
 
 		}
 
