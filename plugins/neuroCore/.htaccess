@@ -1,0 +1,25 @@
+AddDefaultCharset UTF-8
+
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php
+
+</IfModule>
+
+# Внутренние каталоги плагина не должны отдаваться по HTTP
+<IfModule mod_authz_core.c>
+	<FilesMatch "\.(log|json|md|prompt)$">
+		Require all denied
+	</FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+	<FilesMatch "\.(log|json|md|prompt)$">
+		Order allow,deny
+		Deny from all
+	</FilesMatch>
+</IfModule>

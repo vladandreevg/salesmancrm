@@ -1,0 +1,514 @@
+/* ============================ */
+/*         SalesMan CRM         */
+/* ============================ */
+/* (C) 2026 Vladislav Andreev   */
+/*       SalesMan Project       */
+/*        www.isaler.ru         */
+/* ============================ */
+
+/**
+ * Оформление окна «Инструкция для разработчиков» (plugins/neuroCore/docs.php).
+ *
+ * Это не страница CRM, а отдельное окно с длинным техническим текстом, поэтому
+ * стили здесь свои, а не из /assets/css/app.css:
+ *
+ *  - app.css держит html/body с height: 100% и overflow: hidden — для окна
+ *    документа это означало бы обрезанный текст без прокрутки;
+ *  - справочник читают подряд, а не «просматривают»: нужны ширина строки около
+ *    80 символов, крупный межстрочный интервал и заметные заголовки;
+ *  - сбоку — оглавление, по нему переходят к нужному разделу, не листая вниз;
+ *  - примеры кода подписаны языком и копируются одной кнопкой (в документации для
+ *    разработчика код не читают, а вставляют в свой плагин).
+ */
+
+:root {
+	--nc-blue   : #1e88e5;
+	--nc-text   : #2b3243;
+	--nc-gray   : #6b7688;
+	--nc-light  : #f5f6f8;
+	--nc-border : #e3e6ec;
+	--nc-code-bg: #f7f8fa;
+}
+
+* {
+	box-sizing : border-box;
+}
+
+html {
+	/* плавная прокрутка нужна переходам по оглавлению на длинном документе */
+	scroll-behavior : smooth;
+	/* якорь не должен упираться в верх окна: заголовку нужен воздух */
+	scroll-padding-top : 20px;
+}
+
+body {
+	margin      : 0;
+	background  : var(--nc-light);
+	color       : var(--nc-text);
+	font-family : -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-size   : 15px;
+	line-height : 1.7;
+}
+
+.nc-doc {
+	display    : flex;
+	align-items: flex-start;
+	max-width  : 1440px;
+	margin     : 0 auto;
+	padding    : 24px;
+	gap        : 24px;
+}
+
+/* --- Боковая колонка: оглавление ------------------------------------------ */
+
+.nc-doc-side {
+	position      : sticky;
+	top           : 24px;
+	flex          : 0 0 300px;
+	width         : 300px;
+	max-height    : calc(100vh - 48px);
+	overflow-y    : auto;
+	background    : #fff;
+	border        : 1px solid var(--nc-border);
+	border-radius : 10px;
+	padding       : 16px;
+	font-size     : 13px;
+}
+
+.nc-doc-side-head {
+	font-weight   : 600;
+	font-size     : 13px;
+	margin-bottom : 10px;
+	color         : var(--nc-gray);
+	text-transform: uppercase;
+	letter-spacing: .04em;
+}
+
+.nc-doc-filter {
+	width         : 100%;
+	padding       : 7px 9px;
+	border        : 1px solid var(--nc-border);
+	border-radius : 6px;
+	font-size     : 13px;
+	margin-bottom : 12px;
+}
+
+.nc-doc-filter:focus {
+	outline      : none;
+	border-color : var(--nc-blue);
+}
+
+.nc-toc,
+.nc-toc-sub {
+	list-style : none;
+	margin     : 0;
+	padding    : 0;
+}
+
+.nc-toc-sub {
+	margin-left : 10px;
+}
+
+.nc-toc li {
+	margin : 0;
+}
+
+.nc-toc a {
+	display       : block;
+	padding       : 3px 8px;
+	color         : var(--nc-gray);
+	text-decoration : none;
+	border-radius : 5px;
+	border-left   : 2px solid transparent;
+}
+
+.nc-toc a:hover {
+	background : var(--nc-light);
+	color      : var(--nc-text);
+}
+
+/* текущий раздел: в длинном документе иначе непонятно, где ты находишься */
+.nc-toc a.current {
+	color        : var(--nc-blue);
+	background   : #eef5fd;
+	border-left  : 2px solid var(--nc-blue);
+	font-weight  : 600;
+}
+
+.nc-toc-sub a {
+	font-size : 12px;
+	padding-left : 14px;
+}
+
+/* --- Основная колонка ------------------------------------------------------ */
+
+.nc-doc-main {
+	flex      : 1 1 auto;
+	min-width : 0;
+}
+
+.nc-doc-top {
+	display         : flex;
+	align-items     : center;
+	justify-content : space-between;
+	gap             : 15px;
+	flex-wrap       : wrap;
+	background      : #fff;
+	border          : 1px solid var(--nc-border);
+	border-radius   : 10px;
+	padding         : 14px 20px;
+	margin-bottom   : 20px;
+}
+
+.nc-doc-top .nc-doc-top-title {
+	font-size   : 15px;
+	font-weight : 600;
+}
+
+.nc-doc-top .nc-doc-top-meta {
+	font-size : 12px;
+	color     : var(--nc-gray);
+}
+
+.nc-doc-actions {
+	display : flex;
+	gap     : 8px;
+}
+
+.nc-doc-btn {
+	display         : inline-block;
+	padding         : 7px 14px;
+	border          : 1px solid var(--nc-border);
+	border-radius   : 8px;
+	background      : #fff;
+	color           : var(--nc-text);
+	font-size       : 13px;
+	text-decoration : none;
+	cursor          : pointer;
+}
+
+.nc-doc-btn:hover {
+	border-color : var(--nc-blue);
+	color        : var(--nc-blue);
+}
+
+.nc-doc-body {
+	background    : #fff;
+	border        : 1px solid var(--nc-border);
+	border-radius : 10px;
+	padding       : 30px 40px 40px;
+	/* ширина строки: длиннее — глаз теряет начало следующей строки */
+	max-width     : 900px;
+}
+
+/* --- Типографика документа ------------------------------------------------- */
+
+.nc-doc-body h1 {
+	font-size     : 27px;
+	line-height   : 1.3;
+	margin        : 0 0 20px;
+	padding-bottom: 14px;
+	border-bottom : 2px solid var(--nc-border);
+}
+
+.nc-doc-body h2 {
+	font-size     : 21px;
+	line-height   : 1.35;
+	margin        : 42px 0 14px;
+	padding-top   : 12px;
+	border-top    : 1px solid var(--nc-border);
+}
+
+.nc-doc-body h3 {
+	font-size   : 17px;
+	line-height : 1.4;
+	margin      : 28px 0 10px;
+}
+
+.nc-doc-body h4 {
+	font-size : 15px;
+	margin    : 22px 0 8px;
+}
+
+.nc-doc-body p,
+.nc-doc-body li {
+	/* текст читают подряд: перенос по словам, а не «как получится» */
+	overflow-wrap : break-word;
+}
+
+.nc-doc-body ul,
+.nc-doc-body ol {
+	padding-left : 24px;
+}
+
+.nc-doc-body li {
+	margin-bottom : 5px;
+}
+
+.nc-doc-body a {
+	color : var(--nc-blue);
+}
+
+.nc-doc-body a:hover {
+	color : #1565c0;
+}
+
+.nc-doc-body hr {
+	border    : none;
+	border-top: 1px solid var(--nc-border);
+	margin    : 34px 0;
+}
+
+/* Ссылка-якорь у заголовка: видна при наведении, чтобы не мешать чтению,
+   но позволяла скопировать ссылку на раздел */
+.nc-doc-anchor {
+	margin-left     : 10px;
+	color           : #c3cad6;
+	text-decoration : none;
+	font-weight     : 400;
+	opacity         : 0;
+	transition      : opacity .15s;
+}
+
+.nc-doc-body h1:hover .nc-doc-anchor,
+.nc-doc-body h2:hover .nc-doc-anchor,
+.nc-doc-body h3:hover .nc-doc-anchor,
+.nc-doc-anchor:focus {
+	opacity : 1;
+}
+
+.nc-doc-body blockquote {
+	margin        : 18px 0;
+	padding       : 12px 18px;
+	border-left   : 3px solid var(--nc-blue);
+	background    : #f4f9ff;
+	border-radius : 0 8px 8px 0;
+	color         : #3d4759;
+}
+
+.nc-doc-body blockquote p:first-child {
+	margin-top : 0;
+}
+
+.nc-doc-body blockquote p:last-child {
+	margin-bottom : 0;
+}
+
+/* --- Таблицы --------------------------------------------------------------- */
+
+.nc-doc-table {
+	overflow-x    : auto;
+	margin        : 18px 0;
+	border        : 1px solid var(--nc-border);
+	border-radius : 8px;
+}
+
+.nc-doc-table table {
+	width           : 100%;
+	border-collapse : collapse;
+	font-size       : 13.5px;
+}
+
+.nc-doc-table th {
+	text-align : left;
+	background : #f7f8fa;
+	color      : #46506a;
+	font-weight: 600;
+	padding    : 9px 12px;
+	border-bottom : 1px solid var(--nc-border);
+	white-space : nowrap;
+}
+
+.nc-doc-table td {
+	padding       : 9px 12px;
+	border-bottom : 1px solid #f0f1f4;
+	vertical-align: top;
+}
+
+.nc-doc-table tr:last-child td {
+	border-bottom : none;
+}
+
+/* --- Примеры кода ---------------------------------------------------------- */
+
+.nc-code {
+	position      : relative;
+	margin        : 18px 0;
+	background    : var(--nc-code-bg);
+	border        : 1px solid var(--nc-border);
+	border-radius : 8px;
+	overflow      : hidden;
+}
+
+.nc-code-head {
+	display         : flex;
+	align-items     : center;
+	justify-content : space-between;
+	padding         : 6px 12px;
+	background      : #eef0f4;
+	border-bottom   : 1px solid var(--nc-border);
+	font-size       : 11px;
+	color           : var(--nc-gray);
+}
+
+.nc-code-lang {
+	font-weight    : 600;
+	letter-spacing : .04em;
+	text-transform : uppercase;
+}
+
+.nc-code-copy {
+	/* без работающего скрипта кнопка бесполезна: показываем её только с JS */
+	display       : none;
+	border        : 1px solid var(--nc-border);
+	background    : #fff;
+	border-radius : 5px;
+	padding       : 2px 9px;
+	font-size     : 11px;
+	color         : var(--nc-gray);
+	cursor        : pointer;
+}
+
+.nc-js .nc-code-copy {
+	display : inline-block;
+}
+
+.nc-code-copy:hover {
+	color        : var(--nc-blue);
+	border-color : var(--nc-blue);
+}
+
+.nc-code-copy.done {
+	color        : #1b8a4b;
+	border-color : #1b8a4b;
+}
+
+.nc-code pre {
+	margin      : 0;
+	padding     : 14px 16px;
+	overflow-x  : auto;
+	font-size   : 13px;
+	line-height : 1.6;
+	tab-size    : 4;
+}
+
+.nc-code code {
+	font-family : "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	background  : none;
+	color       : inherit;
+	/* переносить код по строкам нельзя: ломается читаемость отступов */
+	white-space : pre;
+}
+
+/* строчный код в тексте — тот же шрифт, но с подложкой */
+.nc-doc-body p code,
+.nc-doc-body li code,
+.nc-doc-body td code,
+.nc-doc-body th code,
+.nc-doc-body h2 code,
+.nc-doc-body h3 code {
+	font-family   : "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-size     : 0.9em;
+	background    : #f0f2f6;
+	border-radius : 4px;
+	padding       : 1px 5px;
+	white-space   : nowrap;
+}
+
+/* Тема Prism (assets/css/prism.css) задаёт фон и отступы своему блоку —
+   приводим её к виду карточки примера, чтобы не было двух рамок */
+.nc-code pre[class*="language-"],
+.nc-code code[class*="language-"] {
+	margin     : 0;
+	padding    : 14px 16px;
+	background : transparent;
+	font-size  : 13px;
+	line-height: 1.6;
+	text-shadow: none;
+}
+
+.nc-doc-foot {
+	margin-top  : 20px;
+	font-size   : 12px;
+	color       : var(--nc-gray);
+	text-align  : center;
+}
+
+/* --- Сообщение об ошибке вместо документа ---------------------------------- */
+
+.nc-doc-error {
+	max-width     : 700px;
+	margin        : 60px auto;
+	background    : #fff;
+	border        : 1px solid var(--nc-border);
+	border-left   : 3px solid #c62828;
+	border-radius : 10px;
+	padding       : 24px 28px;
+}
+
+.nc-doc-error .nc-doc-error-title {
+	font-weight   : 600;
+	margin-bottom : 10px;
+}
+
+/* --- Узкое окно ------------------------------------------------------------ */
+
+@media (max-width : 1000px) {
+
+	.nc-doc {
+		padding : 14px;
+	}
+
+	/* оглавление в узком окне занимало бы пол-экрана: его скрываем, разделы
+	   и так идут по порядку */
+	.nc-doc-side {
+		display : none;
+	}
+
+	.nc-doc-body {
+		padding : 20px 18px 26px;
+	}
+
+}
+
+/* --- Печать ---------------------------------------------------------------- */
+
+@media print {
+
+	body {
+		background : #fff;
+		font-size  : 12px;
+	}
+
+	.nc-doc {
+		display : block;
+		padding : 0;
+		max-width: none;
+	}
+
+	.nc-doc-side,
+	.nc-doc-top,
+	.nc-code-copy,
+	.nc-doc-anchor {
+		display : none !important;
+	}
+
+	.nc-doc-body {
+		border  : none;
+		padding : 0;
+		max-width: none;
+	}
+
+	/* пример кода не должен разрываться между страницами */
+	.nc-code,
+	.nc-doc-table,
+	.nc-doc-body blockquote {
+		page-break-inside : avoid;
+	}
+
+	.nc-doc-body h2,
+	.nc-doc-body h3 {
+		page-break-after : avoid;
+	}
+
+}

@@ -1,0 +1,12 @@
+# Каталог для файла мастер-ключа шифрования (secret.key).
+# Наружу не отдаётся ничего: ключ не должен быть доступен по HTTP.
+
+Options -Indexes
+
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
