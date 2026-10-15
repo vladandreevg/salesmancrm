@@ -3940,7 +3940,7 @@ class Mailer {
 			$fromname = iconv( "utf-8", $charset, $fromname );
 		}
 
-		$mail -> SetFrom( $settings['ymailUser'], $fromname );
+		$mail -> SetFrom( $settings['ymailFrom'], $fromname );
 
 		//print $param['from'];
 

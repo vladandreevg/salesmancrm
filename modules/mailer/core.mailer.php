@@ -711,7 +711,7 @@ if ( $action == 'account.check' ) {
 		$mail -> CharSet = 'utf8';
 		$mail -> setLanguage( 'ru', $rootpath.'/vendor/phpmailer/phpmailer/language/' );
 		$mail -> IsHTML( false );
-		$mail -> SetFrom( $param['ymailUser'], "Тест CRM" );
+		$mail -> SetFrom( $param['ymailFrom'], "Тест CRM" );
 		$mail -> AddAddress( $param['ymailFrom'], current_user( $iduser1 ) );
 		$mail -> Subject = "Проверка отправки сообщений из CRM";
 		$mail -> Body    = "Это тест";
