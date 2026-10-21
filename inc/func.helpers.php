@@ -2897,7 +2897,9 @@ function generate_num($tip, int $cnum = 0) {
 	$sqlname  = $GLOBALS['sqlname'];
 	$db       = $GLOBALS['db'];
 
-	global $cnum;
+	// здесь НЕЛЬЗЯ объявлять global $cnum: имя совпадает с аргументом функции,
+	// и global затирает переданное значение — номер, выданный вызывающим кодом
+	// (результат LAST_INSERT_ID), терялся и функция перечитывала счётчик из БД +1
 
 	$format = '';
 
@@ -2995,7 +2997,7 @@ function generate_num($tip, int $cnum = 0) {
  *
  * @param      $id
  * @param bool $onlyNum
- *
+ * @param int $numOverride
  * @return mixed|string
  * @category Core
  * @package  Func

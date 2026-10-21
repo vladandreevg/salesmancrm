@@ -129,7 +129,7 @@ class Budget {
 				"mon"          => (int)$result['mon'],
 				"summa"        => (float)$result['summa'],
 				"datum"        => $result['datum'],
-				"do"           => $result['do'],
+				"do"           => (string)$result['do'],
 				"rs"           => (int)$result['rs'],
 				"did"          => (int)$result['did'],
 				"conid"        => (int)$result['conid'],
@@ -242,11 +242,11 @@ class Budget {
 			//$budget['iduser'] = (int)$iduser1;
 
 			// Проверка на существование в БД
-			$bid = (int)$db -> getOne("SELECT count(*) FROM {$sqlname}budjet WHERE id='$id' and identity = '$identity'");
+			$bid = (int)$db -> getOne("SELECT count(*) FROM {$sqlname}budjet WHERE id = '{$id}' and identity = '$identity'");
 
 			$diffData = self ::getDiff($oldParams, $budget);
 
-			/*file_put_contents(dirname(__DIR__, 2)."/cash/budjet-edit-{$bid}.json", json_encode_cyr([
+			/*file_put_contents($rootpath."/cash/budjet-edit-{$bid}.json", json_encode_cyr([
 				"old"  => $oldParams,
 				"new"  => $budget,
 				"diff" => $diffData
@@ -285,6 +285,8 @@ class Budget {
 
 					$do = self ::doit($id, $forsed);
 
+					//print_r($do);
+
 					if ($do['error']['code'] == '406') {
 
 						$response['result'] = 'Запись о расходе изменена.<br> Расход не проведен, так как недостаточно средств на счете';
@@ -292,7 +294,7 @@ class Budget {
 					}
 					else {
 
-						$response['result'] = 'Успешно обновлено';
+						$response['result'] = 'Успешно обновлено и проведено';
 
 					}
 
@@ -351,7 +353,7 @@ class Budget {
 
 					//обновим старый расход в части суммы и привязки к бюджету
 					//$db -> query("UPDATE {$sqlname}dogprovider SET bid = '$id', summa = '".$arg['summa']."' WHERE id = '".$dogproviderid."' AND identity = '".$identity."'");
-					$db -> query("UPDATE {$sqlname}dogprovider SET ?u WHERE id = '".$dogproviderid."' AND identity = '$identity'", $arg);
+					$db -> query("UPDATE {$sqlname}dogprovider SET ?u WHERE id = '{$dogproviderid}' AND identity = '$identity'", $arg);
 
 					//если создан доп.расход, то добавим его в расходы по сделке
 					if ($bidSecond > 0) {
@@ -654,7 +656,7 @@ class Budget {
 
 				// атомарно "занимаем" запись: помечаем проведенной только если еще не проведена
 				// (защита от двойного проведения при параллельных запросах/повторе уведомления)
-				$db -> query("UPDATE {$sqlname}budjet SET do = 'on' WHERE id = ?i and identity = ?i and do != 'on'", $id, (int)$identity);
+				$db -> query("UPDATE {$sqlname}budjet SET do = 'on' WHERE id = ?i and identity = ?i and COALESCE(`do`, 'off') != 'on'", $id, (int)$identity);
 
 				if ((int)$db -> affectedRows() > 0) {
 
@@ -704,7 +706,7 @@ class Budget {
 					else {
 
 						// средств недостаточно — возвращаем отметку проведения
-						$db -> query("UPDATE {$sqlname}budjet SET do = '' WHERE id = ?i and identity = ?i", $id, (int)$identity);
+						$db -> query("UPDATE {$sqlname}budjet SET do = 'NULL' WHERE id = ?i and identity = ?i", $id, (int)$identity);
 
 						$response['result']        = 'Error';
 						$response['error']['code'] = '406';
@@ -792,7 +794,7 @@ class Budget {
 			if ($rs > 0) {
 
 				// атомарно снимаем отметку проведения (только если была проведена)
-				$db -> query("UPDATE {$sqlname}budjet SET do = '' WHERE id = ?i and identity = ?i and do = 'on'", $id, (int)$identity);
+				$db -> query("UPDATE {$sqlname}budjet SET do = 'NULL' WHERE id = ?i and identity = ?i and COALESCE(`do`, 'off') = 'on'", $id, (int)$identity);
 
 				if ((int)$db -> affectedRows() > 0) {
 
@@ -1713,7 +1715,7 @@ class Budget {
 		}
 
 		if ($userSettings['dostup']['budjet']['chart'] != 'yes') {
-			$sort .= "bdj.iduser = '$iduser1' AND";
+			$sort .= " bdj.iduser = '$iduser1' AND";
 		}
 
 		$query   = "
@@ -1827,7 +1829,7 @@ class Budget {
 				SUM(cr.summa_credit) as summa
 			FROM {$sqlname}credit `cr`
 			WHERE
-			    cr.do = 'on' AND
+			    COALESCE(`cr.do`, 'off') = 'on' AND
 			    YEAR(cr.invoice_date) = '$year' AND
 			    $csort
 			    cr.identity = '$identity'
@@ -1851,7 +1853,7 @@ class Budget {
 				SUM(cr.summa_credit) as summa
 			FROM {$sqlname}credit `cr`
 			WHERE
-			    cr.do != 'on' AND
+			    COALESCE(`cr.do`, 'off') != 'on' AND
 			    YEAR(cr.datum_credit) = '$year' AND
 			    $csort
 			    cr.identity = '$identity'
@@ -1929,10 +1931,10 @@ class Budget {
 		$year     = $params['year'] ? : date('Y');
 
 		if ($doo == 'do') {
-			$sort .= " bdj.do = 'on' AND";
+			$sort .= " COALESCE(bdj.do, 'off') = 'on' AND";
 		}
 		elseif ($doo == 'nodo') {
-			$sort .= " COALESCE(bdj.do, '') != 'on' AND";
+			$sort .= " COALESCE(bdj.do, 'off') != 'on' AND";
 		}
 
 		if (isset($params['month']) && $params['month'] > 0) {
@@ -2154,7 +2156,7 @@ class Budget {
 
 		//выполненные
 		if (in_array('do', $filter)) {
-			$fsort[] = "(bj.do = 'on' AND bj.year = '$year')";
+			$fsort[] = "(COALESCE(bj.do, 'off') = 'on' AND bj.year = '$year')";
 		}
 
 		//не запланированные
@@ -2164,7 +2166,7 @@ class Budget {
 
 		//запланированные
 		if (in_array('plan', $filter)) {
-			$fsort[] = "(COALESCE(bj.do, '') != 'on' AND dp.bid > 0)";
+			$fsort[] = "( COALESCE(bj.do, '') != 'on' AND dp.bid > 0 )";
 		}
 
 		if (!empty($fsort)) {

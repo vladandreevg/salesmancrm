@@ -490,6 +490,39 @@ class Deal {
 	}
 
 	/**
+	 * Выдаёт следующий номер сделки и атомарно двигает счётчик settings.dNum
+	 *
+	 * Шаблон номера — в settings.dFormat. Читаем его запросом, а не из глобала:
+	 * settings.php настройки dFormat/dNum не экспортирует, поэтому прежний гейт
+	 * `$GLOBALS['dFormat'] != ''` был всегда ложен — инкремент не выполнялся, и
+	 * все новые сделки получали один и тот же номер.
+	 *
+	 * Инкремент одним UPDATE ... SET dNum = LAST_INSERT_ID(dNum + 1): каждый
+	 * параллельный запрос получает собственное значение счётчика.
+	 *
+	 * @return string готовый номер или '' если автонумерация отключена (пустой dFormat)
+	 * @throws Exception
+	 */
+	protected function mintDealNumber(): string {
+
+		$db       = $this -> db;
+		$sqlname  = $this -> sqlname;
+		$identity = (int)$this -> identity;
+
+		$dFormat = (string)$db -> getOne( "SELECT dFormat FROM {$sqlname}settings WHERE id = ?i", $identity );
+
+		//автонумерация выключена — номер не формируем и счётчик не трогаем
+		if ( $dFormat == '' ) {
+			return '';
+		}
+
+		$db -> query( "UPDATE {$sqlname}settings SET dNum = LAST_INSERT_ID(dNum + 1) WHERE id = ?i", $identity );
+
+		return generate_num( 'dogovor', (int)$db -> insertId() );
+
+	}
+
+	/**
 	 * Добавление новой сделки
 	 *
 	 * @param array $params - параметры
@@ -732,15 +765,7 @@ class Deal {
 			$deal = [];
 
 			//номер сделки генерируем атомарно (без дублей при параллельных запросах)
-			$dNum = '';
-			if ( $GLOBALS['dFormat'] != '' ) {
-				$db -> query( "UPDATE {$sqlname}settings SET dNum = LAST_INSERT_ID(dNum + 1) WHERE id = ?i", (int)$identity );
-				$dNum = generate_num( 'dogovor', (int)$db -> insertId() );
-			}
-			else {
-				$dNum = generate_num( 'dogovor' );
-			}
-
+			$dNum = $this -> mintDealNumber();
 
 			/**
 			 * Если mcid всё-таки не указан, то возьмем последний использованный

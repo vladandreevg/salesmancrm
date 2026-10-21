@@ -52,7 +52,7 @@ SalesMan CRM является универсальной системой упр
 
 ### База данных: MySQL / MariaDB
 
-- версия 5.6+ (рекомендуем MySQL 8.x / MariaDB 10.x),
+- версия MySQL 8.x / MariaDB 10.x,
 - кодировка utf8
 - отсутствие записей в директиве sql-mode:
   - STRICT_TRANS_TABLES
