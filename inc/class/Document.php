@@ -1430,7 +1430,7 @@ class Document {
 				}
 
 				else {
-					$etype = "document";
+					$etype = "contract";
 				}
 
 				event ::fire( $etype.'.add', [
@@ -1547,7 +1547,7 @@ class Document {
 			}
 
 			else {
-				$etype = "document";
+				$etype = "contract";
 			}
 
 			event ::fire( $etype.'.add', [

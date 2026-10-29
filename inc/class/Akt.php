@@ -16,6 +16,7 @@ use Exception;
 use Mustache_Autoloader;
 use Mustache_Engine;
 use SafeMySQL;
+use event;
 
 /**
  * Класс для управления актами
@@ -1310,6 +1311,19 @@ class Akt {
 					if ( $hooks ) {
 						$hooks -> do_action( "akt_add", $post, $adata );
 					}
+
+					/* webhook: акт создан */
+					event ::fire( 'akt.add', [
+						"id"     => $id,
+						"deid"   => $id,
+						"number" => $akt_num,
+						"datum"  => $akt_date,
+						"did"    => $did,
+						"payer"  => $payer,
+						"clid"   => $clid,
+						"pid"    => $pid,
+						"autor"  => $iduser1
+					] );
 
 					/**
 					 * счетчик актов уже обновлен атомарно при генерации номера;
