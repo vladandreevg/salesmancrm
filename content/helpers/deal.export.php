@@ -822,7 +822,7 @@ if ($action == 'get_xml') {
 		$fp       = fopen($rootpath.'/files/'.$filename, 'w');
 
 		foreach ($deals as $fields) {
-			fputcsv($fp, $fields, ";");
+			fputcsv($fp, $fields, ";", '"', '\\');
 		}
 
 		fclose($fp);

@@ -25,9 +25,9 @@ interface Canvas
      * @param string|float[] $paper       The paper size to use as either a standard paper size (see {@link Dompdf\Adapter\CPDF::$PAPER_SIZES})
      *                                    or an array of the form `[x1, y1, x2, y2]` (typically `[0, 0, width, height]`).
      * @param string         $orientation The paper orientation, either `portrait` or `landscape`.
-     * @param Dompdf         $dompdf      The Dompdf instance.
+     * @param Dompdf|null    $dompdf      The Dompdf instance.
      */
-    public function __construct($paper = "letter", $orientation = "portrait", ?Dompdf $dompdf = null);
+    public function __construct($paper = "letter", string $orientation = "portrait", ?Dompdf $dompdf = null);
 
     /**
      * @return Dompdf
@@ -364,6 +364,16 @@ interface Canvas
      * @param string $value The text to set
      */
     public function add_info(string $label, string $value): void;
+
+    /**
+     * Determines if the font supports the given character
+     *
+     * @param string $font The font file to use
+     * @param string $char The character to check
+     *
+     * @return bool
+     */
+    function font_supports_char(string $font, string $char): bool;
 
     /**
      * Calculates text size, in points

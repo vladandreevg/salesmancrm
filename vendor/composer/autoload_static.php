@@ -7,299 +7,230 @@ namespace Composer\Autoload;
 class ComposerStaticInit7e6baea3819d508fef48ce2cecf08c70
 {
     public static $files = array (
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '5897ea0ac4cccf14d323035e65887801' => __DIR__ . '/..' . '/symfony/polyfill-php82/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '0174385c3be07e86008907d06ee66531' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Rule/Rule.php',
+        '98aea6e41b9cb79b379b10f37ba1f0b7' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/RuleSet/RuleContainer.php',
         '7b4ea634fa5bd1ccea7e5ca039562961' => __DIR__ . '/..' . '/colshrapnel/safemysql/safemysql.class.php',
         '547f39254e5312c66b30c9b6a7d3570f' => __DIR__ . '/..' . '/eleirbag89/telegrambotphp/Telegram.php',
         '221a7c0887f892e44dd08191321d3815' => __DIR__ . '/..' . '/eleirbag89/telegrambotphp/TelegramErrorLogger.php',
+        '6417c431d8a4b9056b479d2c5d32e8a4' => __DIR__ . '/../..' . '/inc/class/SpreadsheetReader.php',
+        '1b9056b6f951c38af23cb1146d60c27a' => __DIR__ . '/../..' . '/inc/class/QrCode.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'v' => 
+        'v' =>
         array (
             'voku\\helper\\' => 12,
         ),
-        'i' => 
+        'i' =>
         array (
             'icircle\\tests\\' => 14,
             'icircle\\' => 8,
         ),
-        'a' => 
+        'f' =>
         array (
-            'andreskrey\\Readability\\' => 23,
+            'fivefilters\\Readability\\' => 24,
         ),
-        'S' => 
+        'S' =>
         array (
+            'Symfony\\Polyfill\\Php82\\' => 23,
             'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Php73\\' => 23,
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Contracts\\Service\\' => 26,
-            'Symfony\\Contracts\\EventDispatcher\\' => 34,
-            'Symfony\\Component\\EventDispatcher\\' => 34,
-            'Symfony\\Component\\Console\\' => 26,
             'Svg\\' => 4,
             'Sabberworm\\CSS\\' => 15,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
-            'Psr\\Container\\' => 14,
-            'Psr\\Cache\\' => 10,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'M' => 
+        'M' =>
         array (
-            'Monolog\\' => 8,
             'Masterminds\\' => 12,
         ),
-        'L' => 
+        'L' =>
         array (
+            'League\\Uri\\' => 11,
             'League\\OAuth2\\Client\\' => 21,
-            'League\\Event\\' => 13,
         ),
-        'G' => 
+        'G' =>
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
             'Gumlet\\' => 7,
         ),
-        'F' => 
+        'F' =>
         array (
             'FontLib\\' => 8,
         ),
-        'D' => 
+        'D' =>
         array (
             'Dompdf\\' => 7,
+            'Detection\\' => 10,
             'DASPRiD\\Enum\\' => 13,
         ),
-        'C' => 
-        array (
-            'Comodojo\\Zip\\' => 13,
-            'Comodojo\\Foundation\\' => 20,
-            'Comodojo\\Exception\\' => 19,
-        ),
-        'B' => 
+        'B' =>
         array (
             'BaconQrCode\\' => 12,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'voku\\helper\\' => 
+        'voku\\helper\\' =>
         array (
             0 => __DIR__ . '/..' . '/voku/php-hooks/src/voku/helper',
         ),
-        'icircle\\tests\\' => 
+        'icircle\\tests\\' =>
         array (
             0 => __DIR__ . '/..' . '/icircle/docx-template-in-php/tests',
         ),
-        'icircle\\' => 
+        'icircle\\' =>
         array (
             0 => __DIR__ . '/..' . '/icircle/docx-template-in-php/src',
         ),
-        'andreskrey\\Readability\\' => 
+        'fivefilters\\Readability\\' =>
         array (
-            0 => __DIR__ . '/..' . '/andreskrey/readability.php/src',
+            0 => __DIR__ . '/..' . '/fivefilters/readability.php/src',
         ),
-        'Symfony\\Polyfill\\Php80\\' => 
+        'Symfony\\Polyfill\\Php82\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php82',
+        ),
+        'Symfony\\Polyfill\\Php80\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Php73\\' => 
+        'Svg\\' =>
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
+            0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
-        'Symfony\\Contracts\\Service\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/service-contracts',
-        ),
-        'Symfony\\Contracts\\EventDispatcher\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts',
-        ),
-        'Symfony\\Component\\EventDispatcher\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
-        ),
-        'Symfony\\Component\\Console\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/console',
-        ),
-        'Svg\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
-        ),
-        'Sabberworm\\CSS\\' => 
+        'Sabberworm\\CSS\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
         ),
-        'Psr\\SimpleCache\\' => 
+        'Psr\\SimpleCache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+            0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' => 
+        'Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'Psr\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/container/src',
-        ),
-        'Psr\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/cache/src',
-        ),
-        'PHPMailer\\PHPMailer\\' => 
+        'PHPMailer\\PHPMailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'Monolog\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
-        ),
-        'Masterminds\\' => 
+        'Masterminds\\' =>
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
-        'League\\OAuth2\\Client\\' => 
+        'League\\Uri\\' =>
         array (
-            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            0 => __DIR__ . '/..' . '/league/uri',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
-        'League\\Event\\' => 
+        'League\\OAuth2\\Client\\' =>
         array (
-            0 => __DIR__ . '/..' . '/league/event/src',
+            0 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Gumlet\\' => 
+        'Gumlet\\' =>
         array (
             0 => __DIR__ . '/..' . '/gumlet/php-image-resize/lib',
         ),
-        'FontLib\\' => 
+        'FontLib\\' =>
         array (
-            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+            0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
         ),
-        'Dompdf\\' => 
+        'Dompdf\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
-        'DASPRiD\\Enum\\' => 
+        'Detection\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/src',
+        ),
+        'DASPRiD\\Enum\\' =>
         array (
             0 => __DIR__ . '/..' . '/dasprid/enum/src',
         ),
-        'Comodojo\\Zip\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/comodojo/zip/src/Comodojo/Zip',
-        ),
-        'Comodojo\\Foundation\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/comodojo/foundation/src/Comodojo/Foundation',
-        ),
-        'Comodojo\\Exception\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/comodojo/exceptions/src/Comodojo/Exception',
-        ),
-        'BaconQrCode\\' => 
+        'BaconQrCode\\' =>
         array (
             0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'P' => 
+        'P' =>
         array (
-            'ParsedownExtra' => 
+            'ParsedownExtra' =>
             array (
                 0 => __DIR__ . '/..' . '/erusev/parsedown-extra',
             ),
-            'Parsedown' => 
+            'Parsedown' =>
             array (
                 0 => __DIR__ . '/..' . '/erusev/parsedown',
             ),
         ),
-        'N' => 
+        'M' =>
         array (
-            'Numbers' => 
-            array (
-                0 => __DIR__ . '/..' . '/pear/numbers_words',
-            ),
-        ),
-        'M' => 
-        array (
-            'Mustache' => 
+            'Mustache' =>
             array (
                 0 => __DIR__ . '/..' . '/mustache/mustache/src',
             ),
-            'Math_' => 
-            array (
-                0 => __DIR__ . '/..' . '/pear/math_biginteger',
-            ),
         ),
-        'F' => 
+        'F' =>
         array (
-            'FtpClient' => 
+            'FtpClient' =>
             array (
                 0 => __DIR__ . '/..' . '/nicolab/php-ftp-client/src',
-            ),
-        ),
-        'D' => 
-        array (
-            'Detection' => 
-            array (
-                0 => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/namespaced',
             ),
         ),
     );
 
     public static $classMap = array (
+        'AllowDynamicProperties' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/AllowDynamicProperties.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
-        'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
-        'Mobile_Detect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
-        'OLERead' => __DIR__ . '/..' . '/nuovo/spreadsheet-reader/php-excel-reader/excel_reader2.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Random\\BrokenRandomEngineError' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/BrokenRandomEngineError.php',
+        'Random\\CryptoSafeEngine' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/CryptoSafeEngine.php',
+        'Random\\Engine' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/Engine.php',
+        'Random\\Engine\\Secure' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/Engine/Secure.php',
+        'Random\\RandomError' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/RandomError.php',
+        'Random\\RandomException' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/RandomException.php',
+        'SensitiveParameter' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/SensitiveParameter.php',
+        'SensitiveParameterValue' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/SensitiveParameterValue.php',
         'Shuchkin\\SimpleXLS' => __DIR__ . '/..' . '/shuchkin/simplexls/src/SimpleXLS.php',
         'Shuchkin\\SimpleXLSX' => __DIR__ . '/..' . '/shuchkin/simplexlsx/src/SimpleXLSX.php',
         'Shuchkin\\SimpleXLSXGen' => __DIR__ . '/..' . '/shuchkin/simplexlsxgen/src/SimpleXLSXGen.php',
-        'SpreadsheetReader' => __DIR__ . '/..' . '/nuovo/spreadsheet-reader/SpreadsheetReader.php',
-        'SpreadsheetReader_CSV' => __DIR__ . '/..' . '/nuovo/spreadsheet-reader/SpreadsheetReader_CSV.php',
-        'SpreadsheetReader_ODS' => __DIR__ . '/..' . '/nuovo/spreadsheet-reader/SpreadsheetReader_ODS.php',
-        'SpreadsheetReader_XLS' => __DIR__ . '/..' . '/nuovo/spreadsheet-reader/SpreadsheetReader_XLS.php',
-        'SpreadsheetReader_XLSX' => __DIR__ . '/..' . '/nuovo/spreadsheet-reader/SpreadsheetReader_XLSX.php',
-        'Spreadsheet_Excel_Reader' => __DIR__ . '/..' . '/nuovo/spreadsheet-reader/php-excel-reader/excel_reader2.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',

@@ -19,10 +19,6 @@
 
 require_once dirname(__DIR__).'/vendor/strip_tags_smart/strip_tags_smart.php';
 
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Salesman\Speka;
@@ -426,7 +422,7 @@ spl_autoload_register(static function ($class) {
  * @category Core
  * @package  Func
  */
-function getModules(string $module = NULL): array {
+function getModules(?string $module = NULL): array {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -465,7 +461,7 @@ function getModules(string $module = NULL): array {
  * @category Core
  * @package  Func
  */
-function customSettings(string $name = NULL, string $action = 'get', array $params = []) {
+function customSettings(?string $name = NULL, string $action = 'get', array $params = []) {
 
 	$identity = ( $params['identity'] > 0 ) ? $params['identity'] : $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -901,7 +897,7 @@ function clean($string): string {
  * @category Core
  * @package  Func
  */
-function clean_format(float $string = NULL): string {
+function clean_format(?float $string = NULL): string {
 
 	$string = pre_format($string);
 
@@ -1038,7 +1034,7 @@ function cleanTotal($string): string {
  * @category Core
  * @package  Func
  */
-function stripWhitespaces(string $string = NULL): string {
+function stripWhitespaces(?string $string = NULL): string {
 
 	$old_string = $string;
 	$string     = strip_tags($string);
@@ -1091,7 +1087,7 @@ function num_format($string = NULL, int $num = 2): string {
  * @category Core
  * @package  Func
  */
-function xnum_format($string, string $class = NULL): string {
+function xnum_format($string, ?string $class = NULL): string {
 
 	if (!$string) {
 		$string = 0.00;
@@ -1111,7 +1107,7 @@ function xnum_format($string, string $class = NULL): string {
 
 }
 
-function pre_format(string $string = NULL): float {
+function pre_format(?string $string = NULL): float {
 
 	if (is_null($string)) {
 		return 0.00;
@@ -1184,7 +1180,7 @@ function prepareSumma(string $string = ''): float {
  * @category Core
  * @package  Func
  */
-function getMorph(string $str = NULL, string $tip = 'year'): string {
+function getMorph(?string $str = NULL, string $tip = 'year'): string {
 
 	if ($tip == 'year') {
 
@@ -1228,7 +1224,7 @@ function getMorph(string $str = NULL, string $tip = 'year'): string {
  * @category Core
  * @package  Func
  */
-function getMorph2($str, array $morf = NULL) {
+function getMorph2($str, ?array $morf = NULL) {
 
 	//(((substr($likes,-1,1)==1)&&(substr($likes,-2,2)!=11))?'голос':(((substr($likes,-1,1)==2)&&($l!=12)||(substr($likes,-1,1)==3)&&(substr($likes,-2,2)!=13)||(substr($likes,-1,1)==4)&&(substr($likes,-2,2)!=14))?'голоса':'голосов'))
 
@@ -1393,7 +1389,7 @@ function smonth($month) {
  * @category Core
  * @package  Func
  */
-function calculate_age(string $birthday = NULL): string {
+function calculate_age(?string $birthday = NULL): string {
 
 	$birthday_timestamp = strtotime($birthday);
 	$age                = date('Y') - date('Y', $birthday_timestamp);
@@ -1502,7 +1498,7 @@ function gmtOffset($date): int {
 function unix_to_date($date_orig): string {
 
 	if ($date_orig != NULL && $date_orig != '0000-00-00') {
-		return strftime('%Y-%m-%d', $date_orig);
+		return date('Y-m-d', $date_orig);
 	}
 
 	return '';
@@ -1800,7 +1796,7 @@ function current_date(): string {
  * @category Core
  * @package  Func
  */
-function modifyDatetime(string $date = NULL, array $params = NULL): string {
+function modifyDatetime(?string $date = NULL, ?array $params = NULL): string {
 
 	if ( ($date == '' && !is_null($date)) || is_null($date)) {
 		$date = current_datumtime();
@@ -2199,7 +2195,7 @@ function get_unhist($date_orig) {
  * @category Core
  * @package  Func
  */
-function getDateTimeArray(string $date = NULL): array {
+function getDateTimeArray(?string $date = NULL): array {
 
 	$date_orig = explode(" ", (string)$date);
 	$datum     = explode("-", $date_orig[0]);
@@ -2335,7 +2331,7 @@ function UTCtoDateTime($string) {
  * @category Core
  * @package  Func
  */
-function link_it(string $text = NULL): string {
+function link_it(?string $text = NULL): string {
 
 	$text = preg_replace("/(^|[\n ])(\w*?)((ht|f)tp(s)?:\/\/\w+[^ ,\"\n\r\t<]*)/i", "$1$2<a href=\"$3\" target='_blank' >$3</a>", $text);
 	$text = preg_replace("/(^|[\n ])(\w*?)((www|ftp)\.[^ ,\"\t\n\r<]*)/i", "$1$2<a href=\"https://$3\" target='_blank'>$3</a>", $text);
@@ -2437,12 +2433,12 @@ function getPeriod(string $type = 'today'): array {
 			$d2 = current_datum();
 			break;
 		case "yestoday":
-			$d1 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 1, (int)date('Y')));
-			$d2 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 1, (int)date('Y')));
+			$d1 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 1, (int)date('Y')));
+			$d2 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 1, (int)date('Y')));
 			break;
 		case "week":
-			$d1 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d'), (int)date('Y')));
-			$d2 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d') + 6, (int)date('Y')));
+			$d1 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d'), (int)date('Y')));
+			$d2 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d') + 6, (int)date('Y')));
 			break;
 		case "calendarweek":
 
@@ -2456,8 +2452,8 @@ function getPeriod(string $type = 'today'): array {
 
 				$first = strtotime("last Monday");//monday
 
-				$d1 = strftime('%Y-%m-%d', $first);
-				$d2 = strftime('%Y-%m-%d', $first + 6 * 86400);
+				$d1 = date('Y-m-d', $first);
+				$d2 = date('Y-m-d', $first + 6 * 86400);
 
 			}
 			break;
@@ -2478,10 +2474,10 @@ function getPeriod(string $type = 'today'): array {
 			}
 
 			//дата текущего понедельника
-			$prevMon = date_to_unix(strftime('%Y-%m-%d', $first)) - 7 * 86400;
+			$prevMon = date_to_unix(date('Y-m-d', $first)) - 7 * 86400;
 
-			$d1 = strftime('%Y-%m-%d', $prevMon);
-			$d2 = strftime('%Y-%m-%d', $prevMon + 6 * 86400);
+			$d1 = date('Y-m-d', $prevMon);
+			$d2 = date('Y-m-d', $prevMon + 6 * 86400);
 
 			break;
 		case "calendarweeknext":
@@ -2500,36 +2496,36 @@ function getPeriod(string $type = 'today'): array {
 			}
 
 			//дата текущего понедельника
-			$nextMon = (int)date_to_unix(strftime('%Y-%m-%d', $first)) + 7 * 86400;
+			$nextMon = (int)date_to_unix(date('Y-m-d', $first)) + 7 * 86400;
 
-			$d1 = strftime('%Y-%m-%d', $nextMon);
-			$d2 = strftime('%Y-%m-%d', $nextMon + 6 * 86400);
+			$d1 = date('Y-m-d', $nextMon);
+			$d2 = date('Y-m-d', $nextMon + 6 * 86400);
 
 			break;
 		case "prevweek":
 		case "weekprev":
-			$d1 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 7, (int)date('Y')));
-			$d2 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 1, (int)date('Y')));
+			$d1 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 7, (int)date('Y')));
+			$d2 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d') - 1, (int)date('Y')));
 			break;
 		case "nextweek":
-			$d1 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d') + 1, (int)date('Y')));
-			$d2 = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)date('d') + 7, (int)date('Y')));
+			$d1 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d') + 1, (int)date('Y')));
+			$d2 = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)date('d') + 7, (int)date('Y')));
 			break;
 		case "month":
 			$dsf = (int)date("t", mktime(1, 0, 0, (int)date('m'), 1, (int)date('Y')));
-			$d1  = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), 1, (int)date('Y')));
-			$d2  = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m'), (int)$dsf, (int)date('Y')));
+			$d1  = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), 1, (int)date('Y')));
+			$d2  = date('Y-m-d', mktime(1, 0, 0, (int)date('m'), (int)$dsf, (int)date('Y')));
 			break;
 		case "prevmonth":
 		case "monthprev":
 			$dsf = (int)date("t", mktime(1, 0, 0, date('m') - 1, 1, date('Y')));
-			$d1  = strftime('%Y-%m-%d', mktime(1, 0, 0, date('m') - 1, 1, date('Y')));
-			$d2  = strftime('%Y-%m-%d', mktime(1, 0, 0, date('m') - 1, $dsf, date('Y')));
+			$d1  = date('Y-m-d', mktime(1, 0, 0, date('m') - 1, 1, date('Y')));
+			$d2  = date('Y-m-d', mktime(1, 0, 0, date('m') - 1, $dsf, date('Y')));
 			break;
 		case "nextmonth":
 			$dsf = (int)date("t", mktime(1, 0, 0, (int)date('m') + 1, 1, (int)date('Y')));
-			$d1  = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m') + 1, 1, (int)date('Y')));
-			$d2  = strftime('%Y-%m-%d', mktime(1, 0, 0, (int)date('m') + 1, $dsf, (int)date('Y')));
+			$d1  = date('Y-m-d', mktime(1, 0, 0, (int)date('m') + 1, 1, (int)date('Y')));
+			$d2  = date('Y-m-d', mktime(1, 0, 0, (int)date('m') + 1, $dsf, (int)date('Y')));
 			break;
 		case "quart":
 		case "quartal":
@@ -2659,7 +2655,7 @@ function getPeriodByWeekOfMonth($month = NULL, $year = NULL): array {
  * @category Core
  * @package  Func
  */
-function get_ticon(string $tip = NULL, string $color = NULL, bool $textonly = false): string {
+function get_ticon(?string $tip = NULL, ?string $color = NULL, bool $textonly = false): string {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2753,7 +2749,7 @@ function get_ticon(string $tip = NULL, string $color = NULL, bool $textonly = fa
  * @category Core
  * @package  Func
  */
-function get_activtip(string $tip = NULL): string {
+function get_activtip(?string $tip = NULL): string {
 
 	setlocale(LC_ALL, 'ru_RU.CP1251');
 	$tipa = texttosmall($tip);
@@ -2793,7 +2789,7 @@ function get_activtip(string $tip = NULL): string {
  * @category Core
  * @package  Func
  */
-function texttosmall(string $string = NULL): string {
+function texttosmall(?string $string = NULL): string {
 
 	return mb_strtolower($string, mb_detect_encoding($string));
 
@@ -2809,7 +2805,7 @@ function texttosmall(string $string = NULL): string {
  * @category Core
  * @package  Func
  */
-function getHtmlBody(string $text = NULL): string {
+function getHtmlBody(?string $text = NULL): string {
 
 	$html = htmlspecialchars_decode($text);
 	$pre  = '';
@@ -2854,7 +2850,7 @@ function getHtmlBody(string $text = NULL): string {
  * @category Core
  * @package  Func
  */
-function removeChild($text, array $params = NULL): string {
+function removeChild($text, ?array $params = NULL): string {
 
 	//идея - очистить тэг от мусора
 	//$text = preg_replace('<blockquote(*?)>|sei', "<blockquote>", $text);
@@ -3042,8 +3038,8 @@ function linkFromHtml($html): array {
 		$href = $hrefs -> item($i);
 
 		$url   = $href -> getAttribute('href');
-		$title = utf8_decode($href -> getAttribute('title'));
-		$text  = utf8_decode($href -> textContent);
+		$title = mb_convert_encoding($href -> getAttribute('title'), 'ISO-8859-1', 'UTF-8');
+		$text  = mb_convert_encoding($href -> textContent, 'ISO-8859-1', 'UTF-8');
 
 		if ($title == '' && $text != '') {
 			$title = $text;
@@ -3253,7 +3249,7 @@ function hidePhone($phone) {
  * @category Core
  * @package  Func
  */
-function getEmailFromText(string $text = NULL): array {
+function getEmailFromText(?string $text = NULL): array {
 
 	$email = [];
 
@@ -3284,7 +3280,7 @@ function getEmailFromText(string $text = NULL): array {
  * @category Core
  * @package  Func
  */
-function getPhoneFromText(string $text = NULL): array {
+function getPhoneFromText(?string $text = NULL): array {
 
 	$phone = [];
 
@@ -3315,7 +3311,7 @@ function getPhoneFromText(string $text = NULL): array {
  * @category Core
  * @package  Func
  */
-function getUrlFromText(string $text = NULL): array {
+function getUrlFromText(?string $text = NULL): array {
 
 	$url = [];
 
@@ -3343,7 +3339,7 @@ function getUrlFromText(string $text = NULL): array {
  * @category Core
  * @package  Func
  */
-function isHTML(string $string = NULL): bool {
+function isHTML(?string $string = NULL): bool {
 
 	return $string != strip_tags(htmlspecialchars_decode($string));
 
@@ -3358,7 +3354,7 @@ function isHTML(string $string = NULL): bool {
  * @category Core
  * @package  Func
  */
-function get_icon2(string $filename = NULL): string {
+function get_icon2(?string $filename = NULL): string {
 
 	global $IconArray2;
 
@@ -3397,7 +3393,7 @@ function get_icon2(string $filename = NULL): string {
  * @category Core
  * @package  Func
  */
-function get_icon3(string $filename = NULL): string {
+function get_icon3(?string $filename = NULL): string {
 
 	global $IconArray3;
 
@@ -3436,7 +3432,7 @@ function get_icon3(string $filename = NULL): string {
  * @category Core
  * @package  Func
  */
-function get_mimetype(string $filename = NULL): string {
+function get_mimetype(?string $filename = NULL): string {
 
 	global $MIMEtypes;
 
@@ -3503,7 +3499,7 @@ function isViewable($file): bool {
  * @category Core
  * @package  Func
  */
-function getExtention(string $file = NULL): string {
+function getExtention(?string $file = NULL): string {
 
 	return texttosmall(substr(strrchr($file, "."), 1));
 
@@ -4585,7 +4581,7 @@ function sendMassNotify($tip, $params): string {
  * @package  Func
  * @category Core
  */
-function mailer(string $to, string $toname, string $from, string $fromname, string $subject, string $html, array $files = NULL, array $cc = NULL): string {
+function mailer(string $to, string $toname, string $from, string $fromname, string $subject, string $html, ?array $files = NULL, ?array $cc = NULL): string {
 
 	global $mailsender_rez;
 
@@ -5179,7 +5175,7 @@ function pretty_json(string $json, string $indentStr = '    '): string {
  * @category Core
  * @package  Func
  */
-function yimplode(string $divider, $array, string $format = NULL, string $xformat = NULL): string {
+function yimplode(string $divider, $array, ?string $format = NULL, ?string $xformat = NULL): string {
 
 	$string = '';
 
@@ -5232,7 +5228,7 @@ function yimplode(string $divider, $array, string $format = NULL, string $xforma
  * @category Core
  * @package  Func
  */
-function yexplode(string $divider, string $str = NULL, int $num = -1) {
+function yexplode(string $divider, ?string $str = NULL, int $num = -1) {
 
 	$arr = [];
 
@@ -5289,7 +5285,7 @@ function arrayMoveToIndex(array $array = [], int $indexFrom = 0, int $move = 1):
  * @category Core
  * @package  Func
  */
-function arraysum(array $arr, string $element = NULL, bool $isMoney = false) {
+function arraysum(array $arr, ?string $element = NULL, bool $isMoney = false) {
 
 	$summ = 0;
 
@@ -5315,7 +5311,7 @@ function arraysum(array $arr, string $element = NULL, bool $isMoney = false) {
  * @category Core
  * @package  Func
  */
-function arraydel(array $arr = [], string $element = NULL): array {
+function arraydel(array $arr = [], ?string $element = NULL): array {
 
 	if (( $key = array_search($element, $arr) ) !== false) {
 		unset($arr[$key]);
@@ -5359,7 +5355,7 @@ function array_diff_ext($array1, $array2): array {
  * @category Core
  * @package  Func
  */
-function arrayMax(array $arr = [], string $element = NULL): stdClass {
+function arrayMax(array $arr = [], ?string $element = NULL): stdClass {
 
 	$max    = 0;
 	$index  = 0;
@@ -5403,7 +5399,7 @@ function arrayMax(array $arr = [], string $element = NULL): stdClass {
  * @category Core
  * @package  Func
  */
-function arrayMin(array $arr = NULL, string $element = ''): stdClass {
+function arrayMin(?array $arr = NULL, string $element = ''): stdClass {
 
 	$min    = 1000000000;
 	$index  = 0;
@@ -5525,7 +5521,7 @@ function arraySubSearch($array, $key): array {
  * @category Core
  * @package  Func
  */
-function arrayFindInSet(string $string = NULL, array $array = []): bool {
+function arrayFindInSet(?string $string = NULL, array $array = []): bool {
 
 	setlocale(LC_ALL, 'ru_RU.CP1251');
 
@@ -5625,7 +5621,7 @@ function arrayNext($value, array $array = []) {
  * @category Core
  * @package  Func
  */
-function arrayElements($currentValue, array $array = [], string $key = NULL) {
+function arrayElements($currentValue, array $array = [], ?string $key = NULL) {
 
 	if (is_array($array[0]) && $key == '') {
 
@@ -5898,7 +5894,7 @@ function prepareStringSmart($string, string $divider = ",", bool $isarray = fals
  * @category Core
  * @package  Func
  */
-function toShort(string $string = NULL): string {
+function toShort(?string $string = NULL): string {
 
 	$p = yexplode(" ", (string)$string);
 
@@ -5915,7 +5911,7 @@ function toShort(string $string = NULL): string {
  * @category Core
  * @package  Func
  */
-function current_datum(int $day = NULL) {
+function current_datum(?int $day = NULL) {
 
 	$tzone = $GLOBALS['tzone'];
 
@@ -5934,7 +5930,7 @@ function current_datum(int $day = NULL) {
  * @category Core
  * @package  Func
  */
-function current_datumtime(int $hours = NULL, int $minutes = NULL) {
+function current_datumtime(?int $hours = NULL, ?int $minutes = NULL) {
 
 	$tzone = $GLOBALS['tzone'];
 
@@ -6080,7 +6076,7 @@ function difftimefull($date_orig): float {
  * @category Core
  * @package  Func
  */
-function diffDate(string $date_1 = NULL, string $date_2 = NULL) {
+function diffDate(?string $date_1 = NULL, ?string $date_2 = NULL) {
 
 	$tmzone = $GLOBALS['settingsApp']['tmzone'];
 
@@ -6129,7 +6125,7 @@ function diffDate(string $date_1 = NULL, string $date_2 = NULL) {
  * @category Core
  * @package  Func
  */
-function diffDate2($date_1, string $date_2 = NULL) {
+function diffDate2($date_1, ?string $date_2 = NULL) {
 
 	$tmzone = $GLOBALS['settingsApp']['tmzone'];
 
@@ -6172,7 +6168,7 @@ function diffDate2($date_1, string $date_2 = NULL) {
  * @category Core
  * @package  Func
  */
-function diffDateTime($date_1, string $date_2 = NULL) {
+function diffDateTime($date_1, ?string $date_2 = NULL) {
 
 	$tmzone = $GLOBALS['settingsApp']['tmzone'];
 
@@ -6261,7 +6257,7 @@ function diffDateTime($date_1, string $date_2 = NULL) {
  * @category Core
  * @package  Func
  */
-function diffDateTime2($date_1, string $date_2 = NULL, bool $format = true) {
+function diffDateTime2($date_1, ?string $date_2 = NULL, bool $format = true) {
 
 	$tmzone = $GLOBALS['settingsApp']['tmzone'];
 
@@ -6445,7 +6441,7 @@ function diffDateTime3($date_1, $date_2 = NULL, bool $format = true) {
  * @category Core
  * @package  Func
  */
-function diffDateTimeSeq($date_1, string $date_2 = NULL) {
+function diffDateTimeSeq($date_1, ?string $date_2 = NULL) {
 
 	$tmzone = $GLOBALS['settingsApp']['tmzone'];
 
@@ -6501,7 +6497,7 @@ function monthData($date, string $type = 'first'): string {
 	//число дней в месяце
 	$dsf = (int)date("t", mktime(1, 0, 0, (int)$d['m'], 1, (int)$d['Y']));
 
-	return ( $type == 'first' ) ? strftime('%Y-%m-%d', mktime(1, 0, 0, (int)$d['m'], 1, (int)$d['Y'])) : strftime('%Y-%m-%d', mktime(1, 0, 0, $d['m'], $dsf, $d['Y']));
+	return ( $type == 'first' ) ? date('Y-m-d', mktime(1, 0, 0, (int)$d['m'], 1, (int)$d['Y'])) : date('Y-m-d', mktime(1, 0, 0, $d['m'], $dsf, $d['Y']));
 
 }
 
@@ -7096,7 +7092,7 @@ function formatPhone2($phone) {
  * @category Core
  * @package  Func
  */
-function formatPhoneUrl($phone, int $clid = NULL, int $pid = NULL): string {
+function formatPhoneUrl($phone, ?int $clid = NULL, ?int $pid = NULL): string {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -7168,7 +7164,7 @@ function formatPhoneUrl($phone, int $clid = NULL, int $pid = NULL): string {
  * @category Core
  * @package  Func
  */
-function formatPhoneUrl2($phone, int $clid = NULL, int $pid = NULL) {
+function formatPhoneUrl2($phone, ?int $clid = NULL, ?int $pid = NULL) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -7234,7 +7230,7 @@ function formatPhoneUrl2($phone, int $clid = NULL, int $pid = NULL) {
  * @category Core
  * @package  Func
  */
-function formatPhoneUrlIcon($phone, int $clid = NULL, int $pid = NULL) {
+function formatPhoneUrlIcon($phone, ?int $clid = NULL, ?int $pid = NULL) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -7300,7 +7296,7 @@ function formatPhoneUrlIcon($phone, int $clid = NULL, int $pid = NULL) {
  * @param bool $hide
  * @return array
  */
-function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL, bool $hide = false): array {
+function preparePhoneData($xphone, ?int $clid = NULL, ?int $pid = NULL, bool $hide = false): array {
 
 	global $isadmin, $acs_prava;
 
@@ -7336,7 +7332,7 @@ function preparePhoneData($xphone, int $clid = NULL, int $pid = NULL, bool $hide
  * @param bool $hide
  * @return array
  */
-function prepareEmailData($xmail, int $clid = NULL, int $pid = NULL, bool $hide = false): array {
+function prepareEmailData($xmail, ?int $clid = NULL, ?int $pid = NULL, bool $hide = false): array {
 
 	global $isadmin, $ymEnable, $acs_prava;
 
@@ -7428,7 +7424,7 @@ function isPhoneMobile($phone): bool {
  * @category Core
  * @package  Func
  */
-function getCallUrl(string $phone = NULL): string {
+function getCallUrl(?string $phone = NULL): string {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -8779,7 +8775,7 @@ function arrayClean($arr, array $rule = []) {
  *
  * @return void
  */
-function data2dbtypes(array $array = [], string $dbtable = NULL): array {
+function data2dbtypes(array $array = [], ?string $dbtable = NULL): array {
 
 	if (empty($dbtable)) {
 		return $array;
@@ -8816,7 +8812,7 @@ function data2dbtypes(array $array = [], string $dbtable = NULL): array {
  * @category Core
  * @package  Func
  */
-function sendRequestStream($url, $postdata = NULL, array $headers = NULL, string $format = 'json', string $method = 'POST') {
+function sendRequestStream($url, $postdata = NULL, ?array $headers = NULL, string $format = 'json', string $method = 'POST') {
 
 	$header  = [];
 	$content = "";
@@ -8892,7 +8888,7 @@ function sendRequestStream($url, $postdata = NULL, array $headers = NULL, string
  * @category Core
  * @package  Func
  */
-function SendRequestCurl($url, $postdata = NULL, array $header = NULL, string $format = 'json', string $method = 'POST'): stdClass {
+function SendRequestCurl($url, $postdata = NULL, ?array $header = NULL, string $format = 'json', string $method = 'POST'): stdClass {
 
 	$result = new stdClass();
 
@@ -9019,10 +9015,6 @@ function generateCustomQR(array $tags, int $size = 400, string $file = ''): stri
 
 	$rootpath = dirname(__DIR__, 2);
 
-	// qrcode
-	$renderer = new ImageRenderer(new RendererStyle($size), new ImagickImageBackEnd());
-	$writer   = new Writer($renderer);
-
 	$strings = ['ST00012'];
 
 	foreach ($tags as $name => $tag) {
@@ -9033,13 +9025,13 @@ function generateCustomQR(array $tags, int $size = 400, string $file = ''): stri
 
 	if (!isset($file) || $file == '') {
 
-		$writer -> writeFile(implode("|", $strings), $rootpath.$file, "UTF-8");
+		\Salesman\QrCode::writeFile(implode("|", $strings), $rootpath.$file, $size);
 
 		return $rootpath.$file;
 
 	}
 
-	return base64_encode($writer -> writeString(implode("|", $strings), "UTF-8"));
+	return base64_encode(\Salesman\QrCode::render(implode("|", $strings), $size));
 
 }
 
@@ -9368,9 +9360,13 @@ function parse_argv(array $argv): array {
  */
 function getPhpInfo(): array {
 
-	exec("php -v", $php, $exit);
+	$php = [];
 
-	$cliPHP = substr($php[0], 4, 3);
+	if (function_exists('exec')) {
+		exec("php -v", $php, $exit);
+	}
+
+	$cliPHP = !empty($php[0]) ? substr($php[0], 4, 3) : '';
 	$webPHP = substr(PHP_VERSION, 0, 3);
 
 	return [

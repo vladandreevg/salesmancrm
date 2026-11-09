@@ -174,7 +174,7 @@ if ( $count == 0 ) {
 /*YMailer*/
 
 //версия, на которую будем обновлять БД
-$lastVer = '2025.4';
+$lastVer = '2026.4';
 $step    = (int)$_REQUEST['step'];
 $currentVersion = getVersion();
 
@@ -189,7 +189,8 @@ $seria = [
 	'2024.2',
 	'2024.3',
 	'2025.2',
-	'2025.4'
+	'2025.4',
+	'2026.4'
 ];
 
 //printf("Step: %s; Sapi: %s; Ver: %s; LastVer: %s; IsLast: %s\n", $step, PHP_SAPI, getVersion(), $lastVer, getVersion() == $lastVer);
@@ -1349,6 +1350,41 @@ if ( $step == 1 || PHP_SAPI == 'cli' ) {
 		}
 		
 	}
+	
+	/*2026*/
+	
+	if ( getVersion() == '2025.4' && in_array( '2026.4', $seria)) {
+		
+		/**
+		 * Обновим версию
+		 */
+		$db -> query( "INSERT INTO {$sqlname}ver SET ?u", ["current" => '2026.4']);
+		
+		$currentVer = getVersion();
+		
+		if ( $currentVer == $lastVer ) {
+			
+			$message = (PHP_SAPI === 'cli') ? 'Обновление до версии '.$currentVer.' установлено' : 'Обновление до версии '.$currentVer.' установлено. Вернитесь на <a href="/"><b class="red">главную страницу</b></a> или Перезагрузите её. Подробности об обновлении смотрите в новостях на сайте проекта - isaler.ru<div class="main_div div-center"><A href="/" class="button"><b>К рабочему столу</b></A></div>';
+			
+		}
+		
+		if (PHP_SAPI != 'cli') {
+			
+			$message = 'Обновление до версии '.$currentVer.' установлено.<br>
+			<div class="main_div div-center">
+				<A href="update.php?step=1" class="button"><b>Продолжить</b> установку</A>
+			</div>
+			';
+			
+		}
+		
+		if ( PHP_SAPI === 'cli' ) {
+			
+			print $message."\n";
+			
+		}
+		
+	}
 
 }
 
@@ -1419,8 +1455,8 @@ if (  ($step == 1 || PHP_SAPI == 'cli') && getVersion() == $lastVer ) {
 
 	}
 
-	$db -> query( "ALTER TABLE {$sqlname}contract_status CHANGE `title` `title` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'название статуса'" );
-	$db -> query( "ALTER TABLE {$sqlname}contract_statuslog CHANGE `des` `des` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'комментарий'" );
+	$db -> query( "ALTER TABLE {$sqlname}contract_status CHANGE `title` `title` VARCHAR(100) NULL COMMENT 'название статуса'" );
+	$db -> query( "ALTER TABLE {$sqlname}contract_statuslog CHANGE `des` `des` TEXT NULL COMMENT 'комментарий'" );
 
 	$da = $db -> getOne( "SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}modworkplan'" );
 	if ( $da != 0 ) {

@@ -22,6 +22,7 @@ use VK\VKException;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     v.1.0 (21/11/2019)
  */
+#[\AllowDynamicProperties]
 class VkProvider {
 
 	/**

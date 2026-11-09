@@ -8,9 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'ParsedownExtra' => array($vendorDir . '/erusev/parsedown-extra'),
     'Parsedown' => array($vendorDir . '/erusev/parsedown'),
-    'Numbers' => array($vendorDir . '/pear/numbers_words'),
     'Mustache' => array($vendorDir . '/mustache/mustache/src'),
-    'Math_' => array($vendorDir . '/pear/math_biginteger'),
     'FtpClient' => array($vendorDir . '/nicolab/php-ftp-client/src'),
-    'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
 );

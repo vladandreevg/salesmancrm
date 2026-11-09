@@ -14,7 +14,7 @@
 
 //Для того, чтобы система приняла ссылку, необходимо добавить проверочный код вначале скрипта.
 if (isset($_GET['zd_echo'])) {
-	exit( $_GET['zd_echo'] );
+	exit( (string)$_GET['zd_echo'] );
 }
 
 error_reporting(E_ERROR);

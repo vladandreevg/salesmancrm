@@ -24,3 +24,7 @@ DirectoryIndex index.php
 RewriteRule ^(.*)$ index.php [L]
 
 </IfModule>
+
+<Files "*.js">
+ForceType text/javascript
+</Files>

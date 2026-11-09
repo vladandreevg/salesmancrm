@@ -716,7 +716,7 @@ if ($action == "edit.do") {
 }
 
 //блокируем прямое подключение к формам
-if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) != 'xmlhttprequest') {
 
 	print '<div class="bad text-center"><br>Доступ запрещен.<br>Обратитесь к администратору.<br><br></div>';
 	exit();

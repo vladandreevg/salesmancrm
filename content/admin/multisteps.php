@@ -429,7 +429,7 @@ if ( $action == "edit" ) {
 	exit();
 }
 
-if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) != 'xmlhttprequest' ) {
+if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) != 'xmlhttprequest' ) {
 
 	print '<div class="warning text-center"><br>Доступ запрещен.<br>Обратитесь к администратору.<br><br></div>';
 

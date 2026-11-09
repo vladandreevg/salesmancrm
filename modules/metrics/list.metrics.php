@@ -217,15 +217,15 @@ if ( $action == 'user.kpido' ) {
 		case 'day':
 
 			$count = (int)date( "t", mktime( 1, 0, 0, (int)$month, 1, (int)$year ) );
-			$d1    = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$month, 1, (int)$year ) );
-			$d2    = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$month, $count, (int)$year ) );
+			$d1    = date( 'Y-m-d', mktime( 1, 0, 0, (int)$month, 1, (int)$year ) );
+			$d2    = date( 'Y-m-d', mktime( 1, 0, 0, (int)$month, $count, (int)$year ) );
 
 			// применяем сезонный коэффициент
 			$userKPI['value'] *= pre_format( $kpiSeason[ $month ] );
 
 			for ( $day = 1; $day <= $count; $day++ ) {
 
-				$d = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$month, (int)$day, (int)$year ) );
+				$d = date( 'Y-m-d', mktime( 1, 0, 0, (int)$month, (int)$day, (int)$year ) );
 
 				$calc    = $KPI -> calculateKPI( $iduser, $kpi, '', $d );
 				$percent = $kpiSeason[ $month ] > 0 ? round( 100 * ($calc / $userKPI['value']), 2 ) : 0;
@@ -327,8 +327,8 @@ if ( $action == 'user.kpido' ) {
 				$userKPI['value'] *= (float)pre_format( $kpiSeason[ $month ] );
 
 				$dsf = (int)date( "t", mktime( 1, 0, 0, (int)$month, 1, (int)$year ) );
-				$d1  = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$month, 1, (int)$year ) );
-				$d2  = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$month, $dsf, (int)$year ) );
+				$d1  = date( 'Y-m-d', mktime( 1, 0, 0, (int)$month, 1, (int)$year ) );
+				$d2  = date( 'Y-m-d', mktime( 1, 0, 0, (int)$month, $dsf, (int)$year ) );
 
 				$calc    = $KPI -> calculateKPI( $iduser, $kpi, '', [
 					$d1,

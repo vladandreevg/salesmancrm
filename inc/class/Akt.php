@@ -528,7 +528,7 @@ class Akt {
 	 *
 	 * @return float|int
 	 */
-	public static function getAktComplect($did) {
+	public static function getAktComplect($did): float|int|null {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -825,7 +825,7 @@ class Akt {
 	 *
 	 * @return float|int
 	 */
-	public static function getComplect($id) {
+	public static function getComplect($id): float|int {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -1563,6 +1563,14 @@ class Akt {
 				$hooks -> do_action( "akt_delete", $id );
 			}
 
+			/* webhook: акт удалён */
+			event ::fire( 'akt.delete', [
+				"id"    => $id,
+				"deid"  => $id,
+				"did"   => (int)$akt['did'],
+				"autor" => (int)$this -> iduser1
+			] );
+
 		}
 		else {
 
@@ -2229,7 +2237,7 @@ class Akt {
 	 * ```
 	 * @throws Exception
 	 */
-	public function getAkt(int $id, array $params = []) {
+	public function getAkt(int $id, array $params = []): true|array|string {
 
 		global $pdfname, $hooks;
 
@@ -2967,6 +2975,10 @@ class Akt {
 			}
 
 			//генерируем PDF
+			// кэш шрифтов dompdf 3 — в writable-каталоге установки (cash/dompdf),
+			// vendor/dompdfFontsCastom только источник .ttf/.ufm и может быть read-only
+			$fontDir = DompdfFonts::ensure($rootpath);
+
 			$options = new Options();
 
 			/*$options = new Options();
@@ -3011,7 +3023,7 @@ class Akt {
 			$options -> set( 'rootDir', $rootpath.'/vendor/dompdf/dompdf/' );
 			$options -> set( 'chroot', $rootpath.'/cash/dompdf/' );
 			$options -> set( 'fontCache', $rootpath.'/cash/dompdf/' );
-			$options -> set( 'fontDir', $rootpath.'/vendor/dompdfFontsCastom/' );
+			$options -> set( 'fontDir', $fontDir );
 			$options -> set( 'tempDir', $rootpath.'/cash/' );
 			$options -> set( 'dpi', 100 );
 

@@ -34,7 +34,7 @@ $action = $_REQUEST['action'];
 $iduser = (int)$_REQUEST['iduser'];
 $word   = $_REQUEST['word'];
 
-if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) != 'xmlhttprequest') {
 
 	print '<div class="bad text-center"><br>Доступ запрещен.<br>Обратитесь к администратору.<br><br></div>';
 	exit();

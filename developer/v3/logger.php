@@ -69,6 +69,9 @@ $db -> query( "INSERT INTO ".$sqlname."logapi SET ?u", [
 ] );
 $id = $db ->insertId();
 
+// очистим старые логи (старше 7 дней)
+$db -> query("DELETE FROM {$sqlname}logapi WHERE DATE(datum) > DATE(NOW() - INTERVAL 7 DAY)");
+
 $msg = [
 	"time"     => $thistime,
 	"method"   => $params['method'],

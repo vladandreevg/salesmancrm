@@ -19,6 +19,7 @@ use Imap\ImapUtf7;
 use PHPMailer\PHPMailer\PHPMailer;
 use RuntimeException;
 use SafeMySQL;
+use event;
 
 
 /**
@@ -30,6 +31,7 @@ use SafeMySQL;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     5.2 (06/09/2019)
  */
+#[\AllowDynamicProperties]
 class Mailer {
 
 	/**
@@ -282,7 +284,7 @@ class Mailer {
 	 */
 	public function __construct() {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -292,34 +294,34 @@ class Mailer {
 		$params = $this -> params;
 
 		$this -> rootpath = $rootpath;
-		$this -> identity = (int)(($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity']);
-		$this -> iduser1  = (int)(($this -> iduser > 0) ? $this -> iduser : $GLOBALS['iduser1']);
+		$this -> identity = (int)( ( $params['identity'] > 0 ) ? $params['identity'] : $GLOBALS['identity'] );
+		$this -> iduser1  = (int)( ( $this -> iduser > 0 ) ? $this -> iduser : $GLOBALS['iduser1'] );
 		$this -> sqlname  = $GLOBALS['sqlname'];
 		$this -> db       = $GLOBALS['db'];
 		$this -> fpath    = $GLOBALS['fpath'];
 		$this -> opts     = $GLOBALS['opts'];
-		$this -> skey     = ($this -> skey != '') ? $this -> skey : $GLOBALS['skey'];
-		$this -> ivc      = ($this -> ivc != '') ? $this -> ivc : $GLOBALS['ivc'];
+		$this -> skey     = ( $this -> skey != '' ) ? $this -> skey : $GLOBALS['skey'];
+		$this -> ivc      = ( $this -> ivc != '' ) ? $this -> ivc : $GLOBALS['ivc'];
 		$this -> tmzone   = $GLOBALS['tmzone'];
-		$this -> iduser   = (int)($params['iduser'] ?? $this -> iduser1);
+		$this -> iduser   = (int)( $params['iduser'] ?? $this -> iduser1 );
 
 		// тут почему-то не срабатывает
-		if ( !empty( $params ) ) {
-			foreach ( $params as $key => $val ) {
+		if (!empty($params)) {
+			foreach ($params as $key => $val) {
 				$this ->{$key} = $val;
 			}
 		}
 
-		date_default_timezone_set( $this -> tmzone );
+		date_default_timezone_set($this -> tmzone);
 
-		if ( file_exists( $rootpath."/cash/".$this -> fpath."otherSettings.json" ) ) {
+		if (file_exists($rootpath."/cash/".$this -> fpath."otherSettings.json")) {
 
-			$this -> otherSettings = json_decode( file_get_contents( $rootpath."/cash/".$this -> fpath."otherSettings.json" ), true );
+			$this -> otherSettings = json_decode(file_get_contents($rootpath."/cash/".$this -> fpath."otherSettings.json"), true);
 
 		}
 		else {
 
-			$other                 = explode( ";", $this -> db -> getOne( "SELECT other FROM ".$this -> sqlname."settings WHERE id = '".$this -> identity."'" ) );
+			$other                 = explode(";", $this -> db -> getOne("SELECT other FROM ".$this -> sqlname."settings WHERE id = '".$this -> identity."'"));
 			$this -> otherSettings = [
 				"partner"              => $other[0] == 'yes',
 				"concurent"            => $other[1] == 'yes',
@@ -360,10 +362,10 @@ class Mailer {
 				"mailerMsgUnion"       => $other[36] == 'yes',
 				"stepControlInHealth"  => $other[37] == 'yes',
 				"budjetDayIsNow"       => $other[38],
-				"aktTempService"       => (!isset( $other[39] ) || $other[39] == 'no') ? 'akt_full.tpl' : $other[39],
-				"invoiceTempService"   => (!isset( $other[40] ) || $other[40] == 'no') ? 'invoice.tpl' : $other[40],
-				"aktTemp"              => (!isset( $other[41] ) || $other[41] == 'no') ? 'akt_full.tpl' : $other[41],
-				"invoiceTemp"          => (!isset( $other[42] ) || $other[42] == 'no') ? 'invoice.tpl' : $other[42],
+				"aktTempService"       => ( !isset($other[39]) || $other[39] == 'no' ) ? 'akt_full.tpl' : $other[39],
+				"invoiceTempService"   => ( !isset($other[40]) || $other[40] == 'no' ) ? 'invoice.tpl' : $other[40],
+				"aktTemp"              => ( !isset($other[41]) || $other[41] == 'no' ) ? 'akt_full.tpl' : $other[41],
+				"invoiceTemp"          => ( !isset($other[42]) || $other[42] == 'no' ) ? 'invoice.tpl' : $other[42],
 			];
 
 		}
@@ -372,21 +374,21 @@ class Mailer {
 		//читаем настройки
 		$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$this -> iduser.".json";
 
-		if ( file_exists( $settingsYMail ) ) {
-			$this -> boxSettings = json_decode( file_get_contents( $settingsYMail ), true );
+		if (file_exists($settingsYMail)) {
+			$this -> boxSettings = json_decode(file_get_contents($settingsYMail), true);
 		}
-		elseif ( $this -> iduser > 0 ) {
+		elseif ($this -> iduser > 0) {
 
-			$x = (string)$db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$this -> iduser."' AND identity = '$identity'" );
+			$x = (string)$db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$this -> iduser."' AND identity = '$identity'");
 
-			if ( !empty( $x ) ) {
-				$this -> boxSettings = json_decode( $x, true );
+			if (!empty($x)) {
+				$this -> boxSettings = json_decode($x, true);
 			}
 
 		}
 
-		$this -> boxSettings['ymailUser'] = self ::decrypt( $this -> boxSettings['ymailUser'], $this -> skey, $this -> ivc );
-		$this -> boxSettings['ymailPass'] = self ::decrypt( $this -> boxSettings['ymailPass'], $this -> skey, $this -> ivc );
+		$this -> boxSettings['ymailUser'] = self::decrypt($this -> boxSettings['ymailUser'], $this -> skey, $this -> ivc);
+		$this -> boxSettings['ymailPass'] = self::decrypt($this -> boxSettings['ymailPass'], $this -> skey, $this -> ivc);
 
 	}
 
@@ -407,50 +409,50 @@ class Mailer {
 		$db       = $this -> db;
 		$id       = (int)$this -> id;
 
-		if ( $id > 0 ) {
+		if ($id > 0) {
 
 			//общие параметры сообщения
-			$resultm         = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
-			$html            = htmlspecialchars_decode( $resultm['content'] );
+			$resultm         = $db -> getRow("SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
+			$html            = htmlspecialchars_decode($resultm['content']);
 			$msg['id']       = (int)$resultm['id'];
 			$msg['uid']      = $resultm['uid'];
 			$msg['date']     = $resultm['datum'];
 			$msg['folder']   = $resultm['folder'];
 			$msg['status']   = $resultm['state'];
 			$msg['subject']  = $resultm['theme'];
-			$msg['html']     = str_replace( '{html}', $html, self::TEMPLATE );
+			$msg['html']     = str_replace('{html}', $html, self::TEMPLATE);
 			$msg['priority'] = $resultm['priority'];
 			$did             = (int)$resultm['did'];
-			$xfid            = str_replace( ";", ",", $resultm['fid'] );
+			$xfid            = str_replace(";", ",", $resultm['fid']);
 			$msg['iduser']   = (int)$resultm['iduser'];
 			//$msg['from']     = current_user( $resultm['iduser'] );
 			//$msg['fromname'] = current_user( $resultm['iduser'] );
 			$msg['isTrash'] = $resultm['trash'] != 'no';
 
-			preg_match( '/(?<=\[D#)[0-9.\/]*(?=]$)/', $msg['subject'], $d );
+			preg_match('/(?<=\[D#)[0-9.\/]*(?=]$)/', $msg['subject'], $d);
 
-			if ( $did > 0 && empty( $d ) ) {
+			if ($did > 0 && empty($d)) {
 
 				$msg['subject'] .= " [D#".$did."]";
 
 				$msg['did']  = $did;
-				$msg['clid'] = getDogData( $did, 'clid' );
+				$msg['clid'] = getDogData($did, 'clid');
 
 			}
 
 			$too = [];
 
-			$ymailSet = $db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$resultm['iduser']."' and identity = '$identity'" );
-			$ymailSet = json_decode( $ymailSet, true );
+			$ymailSet = $db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$resultm['iduser']."' and identity = '$identity'");
+			$ymailSet = json_decode($ymailSet, true);
 
-			if ( $msg['folder'] == 'inbox' ) {
+			if ($msg['folder'] == 'inbox') {
 
 				$msg['from']     = $resultm['fromm'];
 				$msg['fromname'] = $resultm['fromname'];
 
 				$too[] = [
 					"email"  => $ymailSet['ymailFrom'],
-					"name"   => current_user( $resultm['iduser'] ),
+					"name"   => current_user($resultm['iduser']),
 					"iduser" => $resultm['iduser']
 				];
 
@@ -458,11 +460,11 @@ class Mailer {
 			else {
 
 				$msg['from']     = $ymailSet['ymailFrom'];
-				$msg['fromname'] = current_user( $resultm['iduser'] );
+				$msg['fromname'] = current_user($resultm['iduser']);
 
 				//список адресатов
-				$resultm = $db -> query( "SELECT * FROM {$sqlname}ymail_messagesrec where mid = '$id' and identity = '$identity'" );
-				while ($data = $db -> fetch( $resultm )) {
+				$resultm = $db -> query("SELECT * FROM {$sqlname}ymail_messagesrec where mid = '$id' and identity = '$identity'");
+				while ($data = $db -> fetch($resultm)) {
 
 					//активируем, когда подключим класс Mailer
 					$too[] = [
@@ -482,19 +484,19 @@ class Mailer {
 			$filess = [];
 
 			//вложения
-			$xf = yexplode( ",", (string)$xfid );
-			if ( !empty( $xf ) ) {
+			$xf = yexplode(",", (string)$xfid);
+			if (!empty($xf)) {
 
 				$s = " and fid IN (".$xfid.")";
 
-				$result = $db -> query( "SELECT * FROM {$sqlname}file WHERE fid > 0 $s and identity = '$identity' GROUP BY ftitle ORDER BY fid DESC" );
-				while ($da = $db -> fetch( $result )) {
+				$result = $db -> query("SELECT * FROM {$sqlname}file WHERE fid > 0 $s and identity = '$identity' GROUP BY ftitle ORDER BY fid DESC");
+				while ($da = $db -> fetch($result)) {
 
 					$filess[] = [
 						"fid"  => (int)$da['fid'],
 						"file" => $da['fname'],
 						"name" => $da['ftitle'],
-						"icon" => get_icon3( $da['fname'] )
+						"icon" => get_icon3($da['fname'])
 					];
 
 					$exists[] = $da['fname'];
@@ -507,15 +509,15 @@ class Mailer {
 			$attachs      = [];
 
 			//вложения
-			$resultf = $db -> query( "SELECT * FROM {$sqlname}ymail_files where mid = '$id' and identity = '$identity'" );
-			while ($data = $db -> fetch( $resultf )) {
+			$resultf = $db -> query("SELECT * FROM {$sqlname}ymail_files where mid = '$id' and identity = '$identity'");
+			while ($data = $db -> fetch($resultf)) {
 
-				if ( !in_array( $data['file'], $exists ) ) {
+				if (!in_array($data['file'], $exists)) {
 					$attachs[] = [
 						"id"   => (int)$data['id'],
 						"file" => $data['file'],
 						"name" => $data['name'],
-						"icon" => get_icon3( $data['file'] )
+						"icon" => get_icon3($data['file'])
 					];
 				}
 
@@ -558,7 +560,7 @@ class Mailer {
 
 		$page   = $params['page'];
 		$folder = $params['folder'];
-		$word   = str_replace( " ", "%", trim( $params['word'] ) );
+		$word   = str_replace(" ", "%", trim($params['word']));
 		$da1    = $params['date1'];
 		$da2    = $params['date2'];
 		$clid   = (int)$params['clid'];
@@ -568,16 +570,16 @@ class Mailer {
 		$dos    = '';
 		$list   = [];
 
-		if ( $word != '' ) {
+		if ($word != '') {
 
-			$w    = $db -> parse( "?s", "%".$word."%" );
+			$w    = $db -> parse("?s", "%".$word."%");
 			$sort .= " and ({$sqlname}ymail_messages.theme LIKE $w or {$sqlname}ymail_messages.content LIKE $w or {$sqlname}ymail_messages.fromname LIKE $w or {$sqlname}ymail_messages.fromm LIKE $w)";
 
 		}
 
-		if ( $folder != 'trash' ) {
+		if ($folder != 'trash') {
 
-			$f    = $db -> parse( "?s", $folder );
+			$f    = $db -> parse("?s", $folder);
 			$sort .= " and COALESCE({$sqlname}ymail_messages.folder, '') = $f and COALESCE({$sqlname}ymail_messages.trash, '') != 'yes'";
 
 		}
@@ -585,29 +587,29 @@ class Mailer {
 			$sort .= " and COALESCE({$sqlname}ymail_messages.trash, '') = 'yes'";
 		}
 
-		if ( $da1 != '' && $da2 != '' ) {
+		if ($da1 != '' && $da2 != '') {
 
-			$sort .= " and DATE(datum) BETWEEN ".$db -> parse( "?s", $da1 )." AND ".$db -> parse( "?s", $da2 );
+			$sort .= " and DATE(datum) BETWEEN ".$db -> parse("?s", $da1)." AND ".$db -> parse("?s", $da2);
 
 		}
 
 		//$set   = $db -> getOne("SELECT other FROM {$sqlname}settings WHERE id = '$identity'");
 		//$other = explode(";", $set);
 
-		if ( $otherSettings['mailerMsgUnion'] ) {
+		if ($otherSettings['mailerMsgUnion']) {
 
 			/*if(in_array($tipuser, ['Руководитель организации','Руководитель отдела']) || $isadmin == 'on'){
 				$dos .= " or iduser IN (".yimplode(",", get_people($iduser, "yes")).")";
 			}
 			else {*/
 
-			$dostup_array = $db -> getCol( "SELECT clid FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'" );
-			if ( !empty( (array)$dostup_array ) ) {
+			$dostup_array = $db -> getCol("SELECT clid FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'");
+			if (!empty((array)$dostup_array)) {
 				$dos .= " or ({$sqlname}ymail_messagesrec.clid IN (SELECT {$sqlname}dostup.clid FROM {$sqlname}dostup WHERE {$sqlname}dostup.iduser = '$iduser' and {$sqlname}dostup.identity = '$identity'))";
 			}
 
-			$dostup_array = $db -> getCol( "SELECT did FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'" );
-			if ( !empty( (array)$dostup_array ) ) {
+			$dostup_array = $db -> getCol("SELECT did FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'");
+			if (!empty((array)$dostup_array)) {
 				$dos .= " or ({$sqlname}ymail_messages.did IN (SELECT {$sqlname}dostup.did FROM {$sqlname}dostup WHERE {$sqlname}dostup.iduser = '$iduser' and {$sqlname}dostup.identity = '$identity'))";
 			}
 
@@ -617,32 +619,32 @@ class Mailer {
 
 		//$shared = (($folder == 'sended' || $folder == 'inbox')) ? "({$sqlname}ymail_messages.iduser = '$iduser' $dos) and " : $sqlname."ymail_messages.iduser = '$iduser' and ";
 
-		$shared = (in_array( $folder, [
+		$shared = ( in_array($folder, [
 			'sended',
 			'inbox',
 			'conversation'
-		] )) ? "({$sqlname}ymail_messages.iduser = '$iduser' $dos) and " : $sqlname."ymail_messages.iduser = '$iduser' and ";
+		]) ) ? "({$sqlname}ymail_messages.iduser = '$iduser' $dos) and " : $sqlname."ymail_messages.iduser = '$iduser' and ";
 
-		if ( $clid > 0 ) {
+		if ($clid > 0) {
 
 			//получаем массив контактов
-			$pids = $db -> getCol( "SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid' and identity = '$identity' ORDER BY person" );
+			$pids = $db -> getCol("SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid' and identity = '$identity' ORDER BY person");
 
-			$si = (!empty( $pids )) ? " or {$sqlname}ymail_messagesrec.pid IN (".yimplode( ",", $pids ).")" : "";
+			$si = ( !empty($pids) ) ? " or {$sqlname}ymail_messagesrec.pid IN (".yimplode(",", $pids).")" : "";
 
 			$sort .= " and ({$sqlname}ymail_messagesrec.clid = '$clid' $si)";
 
 		}
-		elseif ( $pid > 0 ) {
+		elseif ($pid > 0) {
 			$sort .= " and {$sqlname}ymail_messagesrec.pid = '$pid'";
 		}
 
-		if ( $did > 0 ) {
+		if ($did > 0) {
 			$sort .= " and {$sqlname}ymail_messages.did = '$did'";
 		}
 
 
-		$all_lines = $db -> getOne( "
+		$all_lines = $db -> getOne("
 			SELECT 
 				COUNT(DISTINCT {$sqlname}ymail_messages.id)
 			FROM {$sqlname}ymail_messages 
@@ -654,17 +656,17 @@ class Mailer {
 				{$sqlname}ymail_messages.identity = '$identity'
 				$sort
 				-- GROUP BY {$sqlname}ymail_messages.id
-		" );
+		");
 
 		//print $db -> lastQuery();
 
 		$lines_per_page = 30;
-		$page           = (empty( $page ) || $page <= 0) ? 1 : (int)$page;
+		$page           = ( empty($page) || $page <= 0 ) ? 1 : (int)$page;
 
 		$page_for_query = $page - 1;
 		$lpos           = $page_for_query * $lines_per_page;
-		$count_pages    = ceil( $all_lines / $lines_per_page );
-		if ( $count_pages == 0 ) {
+		$count_pages    = ceil($all_lines / $lines_per_page);
+		if ($count_pages == 0) {
 			$count_pages = 1;
 		}
 
@@ -672,8 +674,8 @@ class Mailer {
 			SELECT 
 				DISTINCT {$sqlname}ymail_messages.id as id,
 				{$sqlname}ymail_messages.iduser as iduser,
-				".($otherSettings['mailerMsgUnion'] ? $sqlname."ymail_messagesrec.clid as clid," : "")."
-				".($otherSettings['mailerMsgUnion'] ? $sqlname."ymail_messagesrec.pid as pid," : "")."
+				".( $otherSettings['mailerMsgUnion'] ? $sqlname."ymail_messagesrec.clid as clid," : "" )."
+				".( $otherSettings['mailerMsgUnion'] ? $sqlname."ymail_messagesrec.pid as pid," : "" )."
 				{$sqlname}ymail_messages.did as did,
 				{$sqlname}ymail_messages.datum as datum,
 				{$sqlname}ymail_messages.folder as folder,
@@ -687,7 +689,7 @@ class Mailer {
 				{$sqlname}ymail_messages.fromname as fromname,
 				{$sqlname}ymail_messages.fromm as fromm
 			FROM {$sqlname}ymail_messages 
-				".($otherSettings['mailerMsgUnion'] ? "LEFT JOIN {$sqlname}ymail_messagesrec ON {$sqlname}ymail_messagesrec.mid = {$sqlname}ymail_messages.id" : "")."
+				".( $otherSettings['mailerMsgUnion'] ? "LEFT JOIN {$sqlname}ymail_messagesrec ON {$sqlname}ymail_messagesrec.mid = {$sqlname}ymail_messages.id" : "" )."
 			WHERE 
 				$shared
 				{$sqlname}ymail_messages.id > 0 and 
@@ -698,11 +700,11 @@ class Mailer {
 			ORDER BY {$sqlname}ymail_messages.datum
 			";
 
-		$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+		$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
 		$query  .= " DESC LIMIT $lpos,$lines_per_page";
-		$result = $db -> query( $query );
-		while ($data = $db -> fetch( $result )) {
+		$result = $db -> query($query);
+		while ($data = $db -> fetch($result)) {
 
 			$from = $to = '';
 
@@ -712,30 +714,30 @@ class Mailer {
 
 			// время получения/отправки в констексте количества прошедшего времени
 			$datum    = $data['datum'];
-			$diff     = diffDate( $datum );
-			$diffyear = (int)get_year( date( 'Y' ) ) - (int)get_year( $datum );
+			$diff     = diffDate($datum);
+			$diffyear = (int)get_year(date('Y')) - (int)get_year($datum);
 
-			if ( $diffyear == 0 ) {
-				$date = ($diff < 1) ? get_time( $datum ) : get_dateru( $datum )." в ".get_time( $datum );
+			if ($diffyear == 0) {
+				$date = ( $diff < 1 ) ? get_time($datum) : get_dateru($datum)." в ".get_time($datum);
 			}
 			else {
-				$date = get_sfdate2( $datum );
+				$date = get_sfdate2($datum);
 			}
 
 			/**
 			 * Количество вложений
 			 */
 
-			$fcount  = $db -> getOne( "SELECT COUNT(*) as fcount FROM {$sqlname}ymail_files WHERE mid = '$data[id]' and identity = '$identity'" );
-			$xfcount = count( yexplode( ",", (string)$data['fid'] ) );
+			$fcount  = $db -> getOne("SELECT COUNT(*) as fcount FROM {$sqlname}ymail_files WHERE mid = '$data[id]' and identity = '$identity'");
+			$xfcount = count(yexplode(",", (string)$data['fid']));
 			$fcount  += $xfcount;
 
-			$res = $db -> query( "SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$data[id]' and identity = '$identity'" );
-			while ($dataa = $db -> fetch( $res )) {
+			$res = $db -> query("SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$data[id]' and identity = '$identity'");
+			while ($dataa = $db -> fetch($res)) {
 
-				if ( (int)$dataa['pid'] > 0 ) {
+				if ((int)$dataa['pid'] > 0) {
 
-					$person = $db -> getRow( "SELECT mail, person FROM {$sqlname}personcat WHERE pid = '$dataa[pid]' and identity = '$identity'" );
+					$person = $db -> getRow("SELECT mail, person FROM {$sqlname}personcat WHERE pid = '$dataa[pid]' and identity = '$identity'");
 
 					$to = [
 						"email" => $person['email'],
@@ -746,15 +748,15 @@ class Mailer {
 					//$to = '<span title="'.$dataa['email'].'"><i class="icon-user-1 broun"></i>'.$person.'</span>';
 
 				}
-				elseif ( (int)$dataa['clid'] > 0 ) {
+				elseif ((int)$dataa['clid'] > 0) {
 
-					$rest = $db -> getRow( "SELECT mail_url, type FROM {$sqlname}clientcat WHERE clid = '$dataa[clid]' and identity = '$identity'" );
+					$rest = $db -> getRow("SELECT mail_url, type FROM {$sqlname}clientcat WHERE clid = '$dataa[clid]' and identity = '$identity'");
 					$type = $rest['type'];
 
 					$to = [
 						"email" => $dataa['email'],
 						"name"  => $dataa['name'],
-						"icon"  => strtr( $type, self::CLIENTICON )
+						"icon"  => strtr($type, self::CLIENTICON)
 					];
 
 					//$to = '<span title="'.$dataa['email'].'"><i class="'.strtr($type, self::CLIENTICON).'"></i>'.$dataa['name'].'</span>';
@@ -762,12 +764,12 @@ class Mailer {
 				}
 				else {
 
-					$iduserFrom = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$dataa[email]%' and identity = '$identity'" );
-					if ( $iduserFrom > 0 ) {
+					$iduserFrom = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$dataa[email]%' and identity = '$identity'");
+					if ($iduserFrom > 0) {
 
 						$to = [
 							"email"  => $dataa['email'],
-							"name"   => current_user( $iduserFrom ),
+							"name"   => current_user($iduserFrom),
 							"iduser" => $iduserFrom,
 							"icon"   => "icon-user-1 green"
 						];
@@ -777,7 +779,7 @@ class Mailer {
 					}
 					else {
 
-						if ( $dataa['name'] == '0' || $dataa['name'] == '' ) {
+						if ($dataa['name'] == '0' || $dataa['name'] == '') {
 							$dataa['name'] = $dataa['email'];
 						}
 
@@ -793,33 +795,33 @@ class Mailer {
 
 				}
 
-				if ( $dataa['tip'] == 'to' ) {
+				if ($dataa['tip'] == 'to') {
 					$toar[] = $to;
 				}
-				elseif ( $dataa['tip'] == 'copy' ) {
+				elseif ($dataa['tip'] == 'copy') {
 					$copyar[] = $to;
 				}
 
 			}
 
-			if ( $data['folder'] != 'inbox' ) {
+			if ($data['folder'] != 'inbox') {
 				$to = $toar;
 			}
 
 			$copy = $copyar;
 
-			if ( !$data['fromname'] ) {
+			if (!$data['fromname']) {
 				$data['fromname'] = $data['fromm'];
 			}
 
-			if ( $data['folder'] != 'draft' && $data['folder'] != 'sended' ) {
+			if ($data['folder'] != 'draft' && $data['folder'] != 'sended') {
 
-				$iduserFrom = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE ?s and identity = '$identity'", "%".$data['fromm']."%" );
-				if ( $iduserFrom > 0 ) {
+				$iduserFrom = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE ?s and identity = '$identity'", "%".$data['fromm']."%");
+				if ($iduserFrom > 0) {
 
 					$from = [
 						"email"  => $data['fromm'],
-						"name"   => current_user( $iduserFrom ),
+						"name"   => current_user($iduserFrom),
 						"iduser" => $iduserFrom,
 						"icon"   => "icon-user-1 green"
 					];
@@ -840,29 +842,29 @@ class Mailer {
 			}
 
 			//если письмо, не текущего пользователя
-			if ( (int)$data['iduser'] != $iduser ) {
+			if ((int)$data['iduser'] != $iduser) {
 
 				//$too = current_user($data['iduser']);
 
 				//привязка в зависомости от связи с сообщением
-				if ( (int)$data['clid'] > 0 ) {
+				if ((int)$data['clid'] > 0) {
 
-					$isDostup = (int)$db -> getOne( "SELECT id FROM {$sqlname}dostup WHERE clid = '$data[clid]' and iduser = '$iduser' and identity = '$identity'" );
+					$isDostup = (int)$db -> getOne("SELECT id FROM {$sqlname}dostup WHERE clid = '$data[clid]' and iduser = '$iduser' and identity = '$identity'");
 
-					$reazons['isOwnerClient']  = getClientData( $data['clid'], 'iduser' ) == $iduser ? true : NULL;
+					$reazons['isOwnerClient']  = getClientData($data['clid'], 'iduser') == $iduser ? true : NULL;
 					$reazons["isDostupClient"] = $isDostup > 0 ? true : NULL;
 
 				}
 
-				if ( (int)$data['pid'] > 0 ) {
+				if ((int)$data['pid'] > 0) {
 
-					$reazons["isOwnerPerson"] = getPersonData( $data['pid'], 'iduser' ) == $iduser ? true : NULL;
+					$reazons["isOwnerPerson"] = getPersonData($data['pid'], 'iduser') == $iduser ? true : NULL;
 
 				}
 
-				if ( (int)$data['did'] > 0 ) {
+				if ((int)$data['did'] > 0) {
 
-					$isDostup = (int)$db -> getOne( "SELECT id FROM {$sqlname}dostup WHERE did = '$data[did]' and iduser = '$iduser' and identity = '$identity'" );
+					$isDostup = (int)$db -> getOne("SELECT id FROM {$sqlname}dostup WHERE did = '$data[did]' and iduser = '$iduser' and identity = '$identity'");
 
 					$reazons["isOwnerDeal"]  = $data['did'] > 0 ? true : NULL;
 					$reazons["isDostupDeal"] = $isDostup > 0 ? true : NULL;
@@ -872,31 +874,31 @@ class Mailer {
 			}
 
 			//добавим иконку наличия email в заявках
-			$countInLeads = (int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}leads WHERE email = '$data[fromm]' AND status = '0' AND identity = '$identity'" );
+			$countInLeads = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}leads WHERE email = '$data[fromm]' AND status = '0' AND identity = '$identity'");
 
 			$list[] = [
 				"id"                => (int)$data['id'],
 				"from"              => $from,
 				"to"                => $to,
 				"copy"              => $copy,
-				"unseen"            => ($data['folder'] == 'inbox' && $data['state'] == 'unread') ? 'unseen' : NULL,
-				"priority"          => strtr( $data['priority'], self::PRIORITYICON ),
-				"theme"             => mb_substr( clean( $data['theme'] ), 0, 101, 'utf-8' ),
+				"unseen"            => ( $data['folder'] == 'inbox' && $data['state'] == 'unread' ) ? 'unseen' : NULL,
+				"priority"          => strtr($data['priority'], self::PRIORITYICON),
+				"theme"             => mb_substr(clean($data['theme']), 0, 101, 'utf-8'),
 				"folder"            => $data['folder'],
-				"folderIcon"        => strtr( $data['folder'], self::FOLDERICON ),
-				"folderName"        => strtr( $data['folder'], self::FOLDERNAME ),
-				"isDraft"           => ($data['folder'] == 'draft') ? true : NULL,
-				"isInbox"           => ($data['folder'] == 'inbox') ? true : NULL,
-				"isTrash"           => ($data['trash'] == 'yes') ? true : NULL,
-				"isTrashNo"         => ($data['trash'] != 'yes' && $data['iduser'] == $iduser) ? true : NULL,
+				"folderIcon"        => strtr($data['folder'], self::FOLDERICON),
+				"folderName"        => strtr($data['folder'], self::FOLDERNAME),
+				"isDraft"           => ( $data['folder'] == 'draft' ) ? true : NULL,
+				"isInbox"           => ( $data['folder'] == 'inbox' ) ? true : NULL,
+				"isTrash"           => ( $data['trash'] == 'yes' ) ? true : NULL,
+				"isTrashNo"         => ( $data['trash'] != 'yes' && $data['iduser'] == $iduser ) ? true : NULL,
 				"date"              => $date,
-				"hid"               => ($data['hid'] > 0) ? true : NULL,
-				"files"             => ($fcount > 0) ? $fcount : NULL,
-				"isUserOwner"       => ($data['iduser'] != $iduser) ? NULL : true,
-				"Owner"             => current_user( $data['iduser'] ),
-				"inleads"           => ($countInLeads > 0) ? true : NULL,
-				"elementIsDisabled" => ($iduser != $data['iduser']) ? true : NULL,
-				"reazons"           => (!empty( $reazons )) ? $reazons : NULL
+				"hid"               => ( $data['hid'] > 0 ) ? true : NULL,
+				"files"             => ( $fcount > 0 ) ? $fcount : NULL,
+				"isUserOwner"       => ( $data['iduser'] != $iduser ) ? NULL : true,
+				"Owner"             => current_user($data['iduser']),
+				"inleads"           => ( $countInLeads > 0 ) ? true : NULL,
+				"elementIsDisabled" => ( $iduser != $data['iduser'] ) ? true : NULL,
+				"reazons"           => ( !empty($reazons) ) ? $reazons : NULL
 			];
 
 		}
@@ -928,24 +930,29 @@ class Mailer {
 		$iduser1       = $this -> iduser1;
 		$otherSettings = $this -> otherSettings;
 
-		$page   = (int)$params['page'];
-		$folder = $params['folder'];
-		$word   = str_replace( " ", "%", trim( $params['word'] ) );
-		$da1    = $params['date1'];
-		$da2    = $params['date2'];
-		$clid   = (int)$params['clid'];
-		$pid    = (int)$params['pid'];
-		$did    = (int)$params['did'];
-		$sort   = '';
-		$dos    = '';
-		$list   = [];
+		$page       = (int)$params['page'];
+		$folder     = $params['folder'];
+		$word       = str_replace(" ", "%", trim($params['word']));
+		$da1        = $params['date1'];
+		$da2        = $params['date2'];
+		$clid       = (int)$params['clid'];
+		$pid        = (int)$params['pid'];
+		$did        = (int)$params['did'];
+		$sort       = '';
+		$dos        = '';
+		$list       = [];
 		$haveAccess = false;
 
-		$userInfo = User ::info( $iduser )['result'];
+		$userInfo = User::info($iduser)['result'];
 
-		if ( $otherSettings['mailerMsgUnion'] ) {
+		if ($otherSettings['mailerMsgUnion']) {
 
-			if ( in_array( $userInfo['tip'], ['Руководитель организации', 'Руководитель отдела'] ) || $userInfo['isadmin'] == 'on' ) {
+			if (
+				in_array($userInfo['tip'], [
+					'Руководитель организации',
+					'Руководитель отдела'
+				]) || $userInfo['isadmin'] == 'on'
+			) {
 
 				$haveAccess = true;
 
@@ -953,79 +960,88 @@ class Mailer {
 
 		}
 
-		if ( $word != '' ) {
+		if ($word != '') {
 
-			$w    = $db -> parse( "?s", "%".$word."%" );
-			$we   = $db -> parse( "?s", $word );
+			$w    = $db -> parse("?s", "%".$word."%");
+			$we   = $db -> parse("?s", $word);
 			$sort .= " and (msg.theme LIKE $w or msg.content LIKE $w or msg.fromname LIKE $w or msg.fromm LIKE $w or msg.id IN (SELECT mid FROM {$sqlname}ymail_messagesrec WHERE email = $we AND identity = '$identity'))";
 
 		}
 
 		$sort .= " and msg.folder IN ('inbox','sended') and msg.trash != 'yes'";
 
-		if ( $da1 != '' && $da2 != '' ) {
+		if ($da1 != '' && $da2 != '') {
 
-			$sort .= " and DATE(msg.datum) BETWEEN ".$db -> parse( "?s", $da1 )." AND ".$db -> parse( "?s", $da2 );
+			$sort .= " and DATE(msg.datum) BETWEEN ".$db -> parse("?s", $da1)." AND ".$db -> parse("?s", $da2);
 
 		}
 
 		//$set   = $db -> getOne("SELECT other FROM {$sqlname}settings WHERE id = '$identity'");
 		//$other = explode(";", $set);
 
-		if ( $otherSettings['mailerMsgUnion'] ) {
+		if ($otherSettings['mailerMsgUnion']) {
 
 			//print $tipuser;
 
-			if ( in_array( $userInfo['tip'], ['Руководитель организации', 'Руководитель отдела'] ) || $userInfo['isadmin'] == 'on' ) {
-				$dos .= " or msg.iduser IN (".yimplode( ",", get_people( $iduser, "yes" ) ).")";
+			if (
+				in_array($userInfo['tip'], [
+					'Руководитель организации',
+					'Руководитель отдела'
+				]) || $userInfo['isadmin'] == 'on'
+			) {
+				$dos .= " or msg.iduser IN (".yimplode(",", get_people($iduser, "yes")).")";
 			}
 			else {
 
-				$dostup_array = $db -> getCol( "SELECT clid FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'" );
+				$dostup_array = $db -> getCol("SELECT clid FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'");
 
-				if ( !empty( (array)$dostup_array ) ) {
+				if (!empty((array)$dostup_array)) {
 					$dos .= " or (mrec.clid IN (SELECT {$sqlname}dostup.clid FROM {$sqlname}dostup WHERE {$sqlname}dostup.iduser = '$iduser' and {$sqlname}dostup.identity = '$identity'))";
 				}
 
-				$dostup_array = $db -> getCol( "SELECT did FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'" );
+				$dostup_array = $db -> getCol("SELECT did FROM {$sqlname}dostup WHERE iduser = '$iduser' and identity = '$identity'");
 
-				if ( !empty( (array)$dostup_array ) ) {
+				if (!empty((array)$dostup_array)) {
 					$dos .= " or (msg.did IN (SELECT {$sqlname}dostup.did FROM {$sqlname}dostup WHERE {$sqlname}dostup.iduser = '$iduser' and {$sqlname}dostup.identity = '$identity'))";
 				}
 
 			}
 
-			if ( !empty( $userInfo['assistants'] ) ) {
-				$dos .= " or msg.iduser IN (".yimplode( ",", $userInfo['assistants'] ).")";
+			if (!empty($userInfo['assistants'])) {
+				$dos .= " or msg.iduser IN (".yimplode(",", $userInfo['assistants']).")";
 			}
 
 		}
 
 		//print $folder;
 
-		$shared = (in_array( $folder, ['sended', 'inbox', 'conversation'] )) ? "(msg.iduser = '$iduser' $dos) and " : "msg.iduser = '$iduser' and ";
+		$shared = ( in_array($folder, [
+			'sended',
+			'inbox',
+			'conversation'
+		]) ) ? "(msg.iduser = '$iduser' $dos) and " : "msg.iduser = '$iduser' and ";
 
-		if ( $clid > 0 ) {
+		if ($clid > 0) {
 
 			//получаем массив контактов
-			$pids = $db -> getCol( "SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid' and identity = '$identity' ORDER BY person" );
+			$pids = $db -> getCol("SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid' and identity = '$identity' ORDER BY person");
 
-			$si = (!empty( $pids )) ? " or mrec.pid IN (".yimplode( ",", $pids ).")" : "";
+			$si = ( !empty($pids) ) ? " or mrec.pid IN (".yimplode(",", $pids).")" : "";
 
 			$sort .= " and (mrec.clid = '$clid' $si)";
 
 		}
-		elseif ( $pid > 0 ) {
+		elseif ($pid > 0) {
 			$sort .= " and mrec.pid = '$pid'";
 		}
 
-		if ( $did > 0 ) {
+		if ($did > 0) {
 			$sort .= " and msg.did = '$did'";
 		}
 
-		$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+		$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
-		$all_lines = $db -> getOne( "
+		$all_lines = $db -> getOne("
 			SELECT 
 				COUNT(DISTINCT msg.id)
 			FROM {$sqlname}ymail_messages `msg`
@@ -1037,19 +1053,19 @@ class Mailer {
 				msg.identity = '$identity'
 				$sort
 				-- GROUP BY {$sqlname}ymail_messages.id
-		" );
+		");
 
 		//print $db -> lastQuery();
 
 		$lines_per_page = 30;
-		if ( empty( $page ) || $page <= 0 ) {
+		if (empty($page) || $page <= 0) {
 			$page = 1;
 		}
 
 		$page_for_query = $page - 1;
 		$lpos           = $page_for_query * $lines_per_page;
-		$count_pages    = ceil( $all_lines / $lines_per_page );
-		if ( $count_pages == 0 ) {
+		$count_pages    = ceil($all_lines / $lines_per_page);
+		if ($count_pages == 0) {
 			$count_pages = 1;
 		}
 
@@ -1057,8 +1073,8 @@ class Mailer {
 			SELECT 
 				DISTINCT msg.id as id,
 				msg.iduser as iduser,
-				".($otherSettings['mailerMsgUnion'] ? "mrec.clid as clid," : "")."
-				".($otherSettings['mailerMsgUnion'] ? "mrec.pid as pid," : "")."
+				".( $otherSettings['mailerMsgUnion'] ? "mrec.clid as clid," : "" )."
+				".( $otherSettings['mailerMsgUnion'] ? "mrec.pid as pid," : "" )."
 				msg.did as did,
 				msg.datum as datum,
 				msg.folder as folder,
@@ -1072,7 +1088,7 @@ class Mailer {
 				msg.fromname as fromname,
 				msg.fromm as fromm
 			FROM {$sqlname}ymail_messages `msg`
-				".($otherSettings['mailerMsgUnion'] ? "LEFT JOIN {$sqlname}ymail_messagesrec `mrec` ON mrec.mid = msg.id" : "")."
+				".( $otherSettings['mailerMsgUnion'] ? "LEFT JOIN {$sqlname}ymail_messagesrec `mrec` ON mrec.mid = msg.id" : "" )."
 			WHERE 
 				$shared
 				msg.id > 0 and 
@@ -1085,8 +1101,8 @@ class Mailer {
 
 		//print
 		$query  .= " DESC LIMIT $lpos,$lines_per_page";
-		$result = $db -> query( $query );
-		while ($data = $db -> fetch( $result )) {
+		$result = $db -> query($query);
+		while ($data = $db -> fetch($result)) {
 
 			$from = $to = $copy = $email = '';
 
@@ -1096,43 +1112,43 @@ class Mailer {
 
 			// время получения/отправки в констексте количества прошедшего времени
 			$datum    = $data['datum'];
-			$diff     = diffDate( $datum );
-			$diffyear = get_year( date( 'Y' ) ) - get_year( $datum );
+			$diff     = diffDate($datum);
+			$diffyear = get_year(date('Y')) - get_year($datum);
 
-			if ( $diffyear == 0 ) {
-				$date = ($diff < 1) ? get_time( $datum ) : get_dateru( $datum )." в ".get_time( $datum );
+			if ($diffyear == 0) {
+				$date = ( $diff < 1 ) ? get_time($datum) : get_dateru($datum)." в ".get_time($datum);
 			}
 			else {
-				$date = get_sfdate2( $datum );
+				$date = get_sfdate2($datum);
 			}
 
 			/**
 			 * Количество вложений
 			 */
 
-			$fcount  = $db -> getOne( "SELECT COUNT(*) as fcount FROM {$sqlname}ymail_files WHERE mid = '$data[id]' and identity = '$identity'" );
-			$xfcount = count( yexplode( ",", (string)$data['fid'] ) );
+			$fcount  = $db -> getOne("SELECT COUNT(*) as fcount FROM {$sqlname}ymail_files WHERE mid = '$data[id]' and identity = '$identity'");
+			$xfcount = count(yexplode(",", (string)$data['fid']));
 			$fcount  += $xfcount;
 
-			if ( $data['folder'] != 'inbox' ) {
+			if ($data['folder'] != 'inbox') {
 
-				$res = $db -> query( "SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$data[id]' and identity = '$identity'" );
-				while ($dataa = $db -> fetch( $res )) {
+				$res = $db -> query("SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$data[id]' and identity = '$identity'");
+				while ($dataa = $db -> fetch($res)) {
 
-					if ( (int)$dataa['pid'] > 0 ) {
+					if ((int)$dataa['pid'] > 0) {
 
-						$person = $db -> getRow( "SELECT mail, person FROM {$sqlname}personcat WHERE pid = '$dataa[pid]' and identity = '$identity'" );
+						$person = $db -> getRow("SELECT mail, person FROM {$sqlname}personcat WHERE pid = '$dataa[pid]' and identity = '$identity'");
 
 						$to = [
-							"email" => (string)yexplode( ",", (string)$person['mail'], 0 ),
+							"email" => (string)yexplode(",", (string)$person['mail'], 0),
 							"name"  => $person['person'],
 							"icon"  => "icon-user-1 broun"
 						];
 
-						$email = (string)yexplode( ",", (string)$person['mail'], 0 );
+						$email = (string)yexplode(",", (string)$person['mail'], 0);
 
 					}
-					elseif ( (int)$dataa['clid'] > 0 ) {
+					elseif ((int)$dataa['clid'] > 0) {
 
 						$to = [
 							"email" => $dataa['email'],
@@ -1145,12 +1161,12 @@ class Mailer {
 					}
 					else {
 
-						$iduserFrom = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$dataa[email]%' and identity = '$identity'" );
-						if ( $iduserFrom > 0 ) {
+						$iduserFrom = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$dataa[email]%' and identity = '$identity'");
+						if ($iduserFrom > 0) {
 
 							$to = [
 								"email"  => $dataa['email'],
-								"name"   => current_user( $iduserFrom ),
+								"name"   => current_user($iduserFrom),
 								"iduser" => $iduserFrom,
 								"icon"   => "icon-user-1 green"
 							];
@@ -1158,7 +1174,7 @@ class Mailer {
 						}
 						else {
 
-							if ( $dataa['name'] == '0' || $dataa['name'] == '' ) {
+							if ($dataa['name'] == '0' || $dataa['name'] == '') {
 								$dataa['name'] = $dataa['email'];
 							}
 
@@ -1174,10 +1190,10 @@ class Mailer {
 
 					}
 
-					if ( $dataa['tip'] == 'to' ) {
+					if ($dataa['tip'] == 'to') {
 						$toar[] = $to;
 					}
-					elseif ( $dataa['tip'] == 'copy' ) {
+					elseif ($dataa['tip'] == 'copy') {
 						$copyar[] = $to;
 					}
 
@@ -1190,15 +1206,15 @@ class Mailer {
 			// входящие
 			else {
 
-				$res = $db -> query( "SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$data[id]' and identity = '$identity'" );
-				while ($dataa = $db -> fetch( $res )) {
+				$res = $db -> query("SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$data[id]' and identity = '$identity'");
+				while ($dataa = $db -> fetch($res)) {
 
-					if ( (int)$dataa['pid'] > 0 ) {
+					if ((int)$dataa['pid'] > 0) {
 
-						$person = $db -> getRow( "SELECT mail, person FROM {$sqlname}personcat WHERE pid = '$dataa[pid]' and identity = '$identity'" );
+						$person = $db -> getRow("SELECT mail, person FROM {$sqlname}personcat WHERE pid = '$dataa[pid]' and identity = '$identity'");
 
 						$to = [
-							"email" => (string)yexplode( ",", (string)$person['mail'], 0 ),
+							"email" => (string)yexplode(",", (string)$person['mail'], 0),
 							"name"  => $person['person'],
 							"icon"  => "icon-user-1 broun"
 						];
@@ -1206,7 +1222,7 @@ class Mailer {
 						//$email = (string)yexplode( ",", (string)$person['mail'], 0 );
 
 					}
-					elseif ( (int)$dataa['clid'] > 0 ) {
+					elseif ((int)$dataa['clid'] > 0) {
 
 						$to = [
 							"email" => $dataa['email'],
@@ -1219,12 +1235,12 @@ class Mailer {
 					}
 					else {
 
-						$iduserFrom = (int)$db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$dataa[email]%' and identity = '$identity'" );
-						if ( $iduserFrom > 0 ) {
+						$iduserFrom = (int)$db -> getOne("SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$dataa[email]%' and identity = '$identity'");
+						if ($iduserFrom > 0) {
 
 							$to = [
 								"email"  => $dataa['email'],
-								"name"   => current_user( $iduserFrom ),
+								"name"   => current_user($iduserFrom),
 								"iduser" => $iduserFrom,
 								"icon"   => "icon-user-1 green"
 							];
@@ -1234,7 +1250,7 @@ class Mailer {
 						}
 						else {
 
-							if ( $dataa['name'] == '0' || $dataa['name'] == '' ) {
+							if ($dataa['name'] == '0' || $dataa['name'] == '') {
 								$dataa['name'] = $dataa['email'];
 							}
 
@@ -1248,21 +1264,21 @@ class Mailer {
 
 					}
 
-					if ( $dataa['tip'] == 'to' ) {
+					if ($dataa['tip'] == 'to') {
 						$toar[] = $to;
 					}
-					elseif ( $dataa['tip'] == 'copy' ) {
+					elseif ($dataa['tip'] == 'copy') {
 						$copyar[] = $to;
 					}
 
 				}
 
-				$iduserFrom = (int)$db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$data[fromm]%' and identity = '$identity'" );
-				if ( $iduserFrom > 0 ) {
+				$iduserFrom = (int)$db -> getOne("SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$data[fromm]%' and identity = '$identity'");
+				if ($iduserFrom > 0) {
 
 					$from = [
 						"email"  => $data['fromm'],
-						"name"   => current_user( $iduserFrom ),
+						"name"   => current_user($iduserFrom),
 						"iduser" => $iduserFrom,
 						"icon"   => "icon-user-1 green"
 					];
@@ -1273,34 +1289,34 @@ class Mailer {
 
 			}
 
-			if ( !$data['fromname'] ) {
+			if (!$data['fromname']) {
 				$data['fromname'] = $data['fromm'];
 			}
 
 			//если письмо, не текущего пользователя
-			if ( (int)$data['iduser'] != (int)$iduser ) {
+			if ((int)$data['iduser'] != (int)$iduser) {
 
 				//$too = current_user($data['iduser']);
 
 				//привязка в зависомости от связи с сообщением
-				if ( (int)$data['clid'] > 0 ) {
+				if ((int)$data['clid'] > 0) {
 
-					$isDostup = (int)$db -> getOne( "SELECT id FROM {$sqlname}dostup WHERE clid = '$data[clid]' and iduser = '$iduser' and identity = '$identity'" );
+					$isDostup = (int)$db -> getOne("SELECT id FROM {$sqlname}dostup WHERE clid = '$data[clid]' and iduser = '$iduser' and identity = '$identity'");
 
-					$reazons['isOwnerClient']  = getClientData( $data['clid'], 'iduser' ) == $iduser ? true : NULL;
+					$reazons['isOwnerClient']  = getClientData($data['clid'], 'iduser') == $iduser ? true : NULL;
 					$reazons["isDostupClient"] = $isDostup > 0 ? true : NULL;
 
 				}
 
-				if ( (int)$data['pid'] > 0 ) {
+				if ((int)$data['pid'] > 0) {
 
-					$reazons["isOwnerPerson"] = getPersonData( $data['pid'], 'iduser' ) == $iduser ? true : NULL;
+					$reazons["isOwnerPerson"] = getPersonData($data['pid'], 'iduser') == $iduser ? true : NULL;
 
 				}
 
-				if ( (int)$data['did'] > 0 ) {
+				if ((int)$data['did'] > 0) {
 
-					$isDostup = (int)$db -> getOne( "SELECT id FROM {$sqlname}dostup WHERE did = '$data[did]' and iduser = '$iduser' and identity = '$identity'" );
+					$isDostup = (int)$db -> getOne("SELECT id FROM {$sqlname}dostup WHERE did = '$data[did]' and iduser = '$iduser' and identity = '$identity'");
 
 					$reazons["isOwnerDeal"]  = true;
 					$reazons["isDostupDeal"] = $isDostup > 0 ? true : NULL;
@@ -1309,13 +1325,13 @@ class Mailer {
 
 			}
 			// если письмо текущего пользователя и это входящее, то убираем получателя, т.к. это текущий пользователь
-			elseif ( $data['folder'] == 'inbox' ) {
+			elseif ($data['folder'] == 'inbox') {
 				$from = $to;
 				$to   = [];
 			}
 
 			//добавим иконку наличия email в заявках
-			$countInLeads = (int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}leads WHERE email = '$data[fromm]' AND status = '0' AND identity = '$identity'" );
+			$countInLeads = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}leads WHERE email = '$data[fromm]' AND status = '0' AND identity = '$identity'");
 
 			$list[] = [
 				"id"                => (int)$data['id'],
@@ -1324,26 +1340,26 @@ class Mailer {
 				"from"              => $from,
 				"to"                => $to,
 				"copy"              => $copy,
-				"unseen"            => ($data['folder'] == 'inbox' && $data['state'] == 'unread') ? 'unseen' : NULL,
-				"priority"          => strtr( $data['priority'], self::PRIORITYICON ),
-				"theme"             => mb_substr( clean( $data['theme'] ), 0, 101, 'utf-8' ),
+				"unseen"            => ( $data['folder'] == 'inbox' && $data['state'] == 'unread' ) ? 'unseen' : NULL,
+				"priority"          => strtr($data['priority'], self::PRIORITYICON),
+				"theme"             => mb_substr(clean($data['theme']), 0, 101, 'utf-8'),
 				"folder"            => $data['folder'],
-				"folderIcon"        => strtr( $data['folder'], self::FOLDERICON ),
-				"folderName"        => strtr( $data['folder'], self::FOLDERNAME ),
-				"isDraft"           => ($data['folder'] == 'draft') ? true : NULL,
-				"isInbox"           => ($data['folder'] == 'inbox') ? true : NULL,
-				"isOutbox"          => ($data['folder'] == 'sended') ? true : NULL,
-				"isTrash"           => ($data['trash'] == 'yes') ? true : NULL,
-				"isTrashNo"         => ($data['trash'] != 'yes' && (int)$data['iduser'] == (int)$iduser) ? true : NULL,
+				"folderIcon"        => strtr($data['folder'], self::FOLDERICON),
+				"folderName"        => strtr($data['folder'], self::FOLDERNAME),
+				"isDraft"           => ( $data['folder'] == 'draft' ) ? true : NULL,
+				"isInbox"           => ( $data['folder'] == 'inbox' ) ? true : NULL,
+				"isOutbox"          => ( $data['folder'] == 'sended' ) ? true : NULL,
+				"isTrash"           => ( $data['trash'] == 'yes' ) ? true : NULL,
+				"isTrashNo"         => ( $data['trash'] != 'yes' && (int)$data['iduser'] == (int)$iduser ) ? true : NULL,
 				"date"              => $date,
-				"hid"               => ((int)$data['hid'] > 0) ? true : NULL,
-				"files"             => ($fcount > 0) ? $fcount : NULL,
-				"isUserOwner"       => ((int)$data['iduser'] != (int)$iduser) ? NULL : true,
-				"haveAccesse"       => ((int)$data['iduser'] != (int)$iduser && $haveAccess ) ? true : NULL,
-				"Owner"             => current_user( $data['iduser'] ),
-				"inleads"           => ($countInLeads > 0) ? true : NULL,
-				"elementIsDisabled" => ((int)$iduser != (int)$data['iduser'] && !$haveAccess) ? true : NULL,
-				"reazons"           => (!empty( $reazons )) ? $reazons : NULL,
+				"hid"               => ( (int)$data['hid'] > 0 ) ? true : NULL,
+				"files"             => ( $fcount > 0 ) ? $fcount : NULL,
+				"isUserOwner"       => ( (int)$data['iduser'] != (int)$iduser ) ? NULL : true,
+				"haveAccesse"       => ( (int)$data['iduser'] != (int)$iduser && $haveAccess ) ? true : NULL,
+				"Owner"             => current_user($data['iduser']),
+				"inleads"           => ( $countInLeads > 0 ) ? true : NULL,
+				"elementIsDisabled" => ( (int)$iduser != (int)$data['iduser'] && !$haveAccess ) ? true : NULL,
+				"reazons"           => ( !empty($reazons) ) ? $reazons : NULL,
 				"isConversation"    => true,
 			];
 
@@ -1377,26 +1393,26 @@ class Mailer {
 		$sort = '';
 		$list = [];
 
-		if ( $clid > 0 ) {
+		if ($clid > 0) {
 
 			//получаем массив контактов
-			$pids = $db -> getCol( "SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid' and identity = '$identity' ORDER BY person" );
+			$pids = $db -> getCol("SELECT pid FROM {$sqlname}personcat WHERE clid = '$clid' and identity = '$identity' ORDER BY person");
 
-			$si = (!empty( $pids )) ? " or {$sqlname}ymail_messagesrec.pid IN (".yimplode( ",", $pids ).")" : "";
+			$si = ( !empty($pids) ) ? " or {$sqlname}ymail_messagesrec.pid IN (".yimplode(",", $pids).")" : "";
 
 			$sort .= " and ({$sqlname}ymail_messagesrec.clid = '$clid' $si)";
 
 		}
-		elseif ( $pid > 0 ) {
+		elseif ($pid > 0) {
 			$sort .= " and {$sqlname}ymail_messagesrec.pid = '$pid'";
 		}
 
-		if ( $did > 0 ) {
+		if ($did > 0) {
 			$sort .= " and {$sqlname}ymail_messages.did = '$did'";
 		}
 
 
-		$all_lines = $db -> getOne( "
+		$all_lines = $db -> getOne("
 			SELECT 
 				COUNT(DISTINCT {$sqlname}ymail_messages.id)
 			FROM {$sqlname}ymail_messages 
@@ -1407,19 +1423,19 @@ class Mailer {
 				{$sqlname}ymail_messages.identity = '$identity'
 				$sort
 				-- GROUP BY {$sqlname}ymail_messages.id
-		" );
+		");
 		//print $db -> lastQuery();
 
 		$lines_per_page = 5;
-		if ( empty( $page ) || $page <= 0 ) {
+		if (empty($page) || $page <= 0) {
 			$page = 1;
 		}
 
 		$page_for_query = $page - 1;
 		$lpos           = $page_for_query * $lines_per_page;
-		$count_pages    = ceil( $all_lines / $lines_per_page );
+		$count_pages    = ceil($all_lines / $lines_per_page);
 
-		if ( $count_pages == 0 ) {
+		if ($count_pages == 0) {
 			$count_pages = 1;
 		}
 
@@ -1453,8 +1469,8 @@ class Mailer {
 			";
 
 		$query  .= " DESC LIMIT $lpos,$lines_per_page";
-		$result = $db -> query( $query );
-		while ($data = $db -> fetch( $result )) {
+		$result = $db -> query($query);
+		while ($data = $db -> fetch($result)) {
 
 			$list[] = (int)$data['id'];
 
@@ -1490,6 +1506,7 @@ class Mailer {
 	public function mailEdit(): void {
 
 		global $bdtimezone;
+		global $hooks;
 
 		$identity = $this -> identity;
 		$iduser1  = $this -> iduser1;
@@ -1504,25 +1521,25 @@ class Mailer {
 		$iduser = $iduser ?? $iduser1;
 
 		//если не указан почтовый ящик ( для реализации 1 Юзер = 1 Ящик )
-		if ( $mailID == 0 ) {
+		if ($mailID == 0) {
 
 			//читаем настройки
 			$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$iduser.".json";
 
-			if ( file_exists( $settingsYMail ) ) {
-				$param = json_decode( (string)file_get_contents( $settingsYMail ), true );
+			if (file_exists($settingsYMail)) {
+				$param = json_decode((string)file_get_contents($settingsYMail), true);
 			}
 
 			else {
-				$param = json_decode( (string)$db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'" ), true );
+				$param = json_decode((string)$db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'"), true);
 			}
 
 		}
 		// если указан ID конкретного ящика ( для реализации 1 Юзер = ХХХ ящиков )
 		else {
 
-			$p      = $db -> getRow( "SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'" );
-			$param  = json_decode( (string)$p['settings'], true );
+			$p      = $db -> getRow("SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'");
+			$param  = json_decode((string)$p['settings'], true);
 			$iduser = $p['iduser'];
 
 		}
@@ -1532,12 +1549,12 @@ class Mailer {
 		$to     = $this -> to;
 		$copy   = $this -> copy;
 
-		$did      = max( (int)$params['did'], 0 );
-		$content  = $this -> html ? htmlspecialchars( $this -> html ) : htmlspecialchars( $params['content'] );
+		$did      = max((int)$params['did'], 0);
+		$content  = $this -> html ? htmlspecialchars($this -> html) : htmlspecialchars($params['content']);
 		$priority = $params['priority'] ?? $this -> priority;
 		$theme    = $this -> subject ? : $params['theme'];
 		$from     = $this -> from ? : $param['ymailFrom'];
-		$fromname = current_user( $iduser );
+		$fromname = current_user($iduser);
 
 		//to
 		$email = $params['email'];
@@ -1551,18 +1568,18 @@ class Mailer {
 		$cpid   = $params['cpid'];
 		$cname  = $params['cname'];
 
-		if ( $did < 1 ) {
+		if ($did < 1) {
 
-			preg_match( '/(?<=\[D#)[0-9.\/]*(?=]$)/', $theme, $didtag );
-			if ( $didtag[0] != '' ) {
+			preg_match('/(?<=\[D#)[0-9.\/]*(?=]$)/', $theme, $didtag);
+			if ($didtag[0] != '') {
 				$did = (int)$didtag[0];
 			}
 
 		}
 		else {
 
-			preg_match( '/(?<=\[D#)[0-9.\/]*(?=]$)/', $theme, $d );
-			if ( empty( $d ) ) {
+			preg_match('/(?<=\[D#)[0-9.\/]*(?=]$)/', $theme, $d);
+			if (empty($d)) {
 				$theme .= " [D#".$did."]";
 			}
 
@@ -1578,8 +1595,8 @@ class Mailer {
 
 		//приведем к int для подстановки в SQL
 		$xfid_s = [];
-		foreach ( (array)$xfid as $f ) {
-			if ( $f != '' ) {
+		foreach ((array)$xfid as $f) {
+			if ($f != '') {
 				$xfid_s[] = (int)$f;
 			}
 		}
@@ -1591,48 +1608,48 @@ class Mailer {
 		$cnames = [];
 
 		//сформируем массив адресатов
-		if ( empty( $to ) ) {
-			foreach ( $email as $key => $value ) {
+		if (empty($to)) {
+			foreach ($email as $key => $value) {
 
 				//to
 				$to[] = [
 					"email" => $value,
-					"name"  => $name[ $key ],
-					"clid"  => $clid[ $key ],
-					"pid"   => $pid[ $key ]
+					"name"  => $name[$key],
+					"clid"  => $clid[$key],
+					"pid"   => $pid[$key]
 				];
 
-				$cnames[] = $name[ $key ];
+				$cnames[] = $name[$key];
 
 			}
 		}
-		elseif ( $to['name'] != '' ) {
+		elseif ($to['name'] != '') {
 
 			$to = [$to];
 
-			$cnames = arraySubSearch( $to, 'name' );
+			$cnames = arraySubSearch($to, 'name');
 
 		}
 		else {
 
-			$cnames = arraySubSearch( $to, 'name' );
+			$cnames = arraySubSearch($to, 'name');
 
 		}
 
-		if ( empty( $copy ) ) {
-			foreach ( $cemail as $key => $value ) {
+		if (empty($copy)) {
+			foreach ($cemail as $key => $value) {
 
 				//copy
 				$copy[] = [
 					"email" => $value,
-					"name"  => $cname[ $key ],
-					"clid"  => $cclid[ $key ],
-					"pid"   => $cpid[ $key ]
+					"name"  => $cname[$key],
+					"clid"  => $cclid[$key],
+					"pid"   => $cpid[$key]
 				];
 
 			}
 		}
-		elseif ( $copy['email'] != '' ) {
+		elseif ($copy['email'] != '') {
 
 			$copy   = [$copy];
 			$cnames = $copy['name'];
@@ -1642,10 +1659,10 @@ class Mailer {
 		/**
 		 * Загружаем файлы
 		 */
-		$upload = Upload ::upload( 'ymail' );
+		$upload = Upload::upload('ymail');
 		//$err    = array_merge($err, $upload['message']);
 
-		foreach ( $upload['data'] as $file ) {
+		foreach ($upload['data'] as $file) {
 
 			$filed[] = [
 				"file" => $file['name'],
@@ -1656,82 +1673,90 @@ class Mailer {
 
 		$uploaddir = $rootpath.'/files/'.$fpath;
 
-		$tags['client'] = yimplode( ", ", $cnames );
+		$tags['client'] = yimplode(", ", $cnames);
 
 		//обрабатываем теги шаблона
-		$result_set           = $db -> getRow( "SELECT * FROM {$sqlname}settings WHERE id = '$identity'" );
+		$result_set           = $db -> getRow("SELECT * FROM {$sqlname}settings WHERE id = '$identity'");
 		$tags['company']      = $result_set["company"];
 		$tags['company_full'] = $result_set["company_full"];
 		$tags['company_site'] = $result_set["company_site"];
 
 		//От кого письмо отправляется
 
-		$result_set      = $db -> getRow( "SELECT * FROM {$sqlname}user WHERE iduser = '$iduser' and identity = '$identity'" );
+		$result_set      = $db -> getRow("SELECT * FROM {$sqlname}user WHERE iduser = '$iduser' and identity = '$identity'");
 		$tags['manager'] = $result_set["title"];
 		$tags['phone']   = $result_set["phone"];
 		$tags['fax']     = $result_set["fax"];
 		$tags['mob']     = $result_set["mob"];
 		$tags['email']   = $result_set["email"];
 
-		foreach ( $tags as $key => $tag ) {
+		foreach ($tags as $key => $tag) {
 
 			switch ($key) {
 
 				case "{company_site}":
-					$content = str_replace( "{".$key."}", '<a href="https://'.str_replace( 'https://', '', $tag ).'>'.$tag.'</a>', $content );
-				break;
+					$content = str_replace("{".$key."}", '<a href="https://'.str_replace('https://', '', $tag).'>'.$tag.'</a>', $content);
+					break;
 				case "{email}":
-					$content = str_replace( "{".$key."}", '<a href="mailto:'.$tag.'>'.$tag.'</a>', $content );
-				break;
+					$content = str_replace("{".$key."}", '<a href="mailto:'.$tag.'>'.$tag.'</a>', $content);
+					break;
 				default:
-					$content = str_replace( "{".$key."}", $tag, $content );
-				break;
+					$content = str_replace("{".$key."}", $tag, $content);
+					break;
 
 			}
 
 		}
 
 		//если сообщение уже сохранено
-		if ( $id > 0 ) {
+		if ($id > 0) {
 
-			//сохраним сообщение
-			$db -> query( "UPDATE {$sqlname}ymail_messages SET ?u WHERE id = '$id' and identity = '$identity'", [
+			$yparams = [
 				'datum'    => current_datumtime(),
 				'priority' => $priority,
 				'theme'    => $theme,
 				'content'  => $content
-			] );
+			];
+
+			$yparams = $hooks -> apply_filters("mailer_editfilter", $yparams);
+
+			//сохраним сообщение
+			$db -> query("UPDATE {$sqlname}ymail_messages SET ?u WHERE id = '$id' and identity = '$identity'", $yparams);
+
+			if ($hooks) {
+				$hooks -> do_action("mailer_edit", $params, $yparams);
+			}
 
 			//удалим исключенные из письма файлы
-			$resultf = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'" );
-			while ($data = $db -> fetch( $resultf )) {
+			$resultf = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'");
+			while ($data = $db -> fetch($resultf)) {
 
-				if ( !in_array( $data['id'], (array)$fid ) ) {
+				if (!in_array($data['id'], (array)$fid)) {
 
-					$db -> query( "DELETE FROM {$sqlname}ymail_files WHERE id = '$data[id]' and identity = '$identity'" );
-					unlink( $rootpath.'/files/ymail/'.$fpath.$data['file'] );
+					$db -> query("DELETE FROM {$sqlname}ymail_files WHERE id = '$data[id]' and identity = '$identity'");
+					unlink($rootpath.'/files/ymail/'.$fpath.$data['file']);
 
 				}
 
 			}
 
 			//добавим новые файлы
-			foreach ( $filed as $file ) {
+			foreach ($filed as $file) {
 
-				if ( $file['file'] != '' ) {
+				if ($file['file'] != '') {
 
-					$db -> query( "INSERT INTO {$sqlname}ymail_files SET ?u", [
+					$db -> query("INSERT INTO {$sqlname}ymail_files SET ?u", [
 						'datum'    => current_datumtime(),
 						'mid'      => $id,
 						'name'     => $file['name'],
 						'file'     => $file['file'],
 						'identity' => $identity
-					] );
+					]);
 					$fid = $db -> insertId();
 
 					$uploads[] = [
 						"fid"  => (int)$fid,
-						"icon" => get_icon3( $file['name'] ),
+						"icon" => get_icon3($file['name']),
 						"name" => $file['name'],
 						"file" => $file['file']
 					];
@@ -1741,36 +1766,35 @@ class Mailer {
 			}
 
 			//доавим файлы из файлов карточки и общих папок
-			if ( !empty( $xfid ) ) {
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '".yimplode( ",", $xfid_s )."' WHERE id = '$id' and identity = '$identity'" );
+			if (!empty($xfid)) {
+				$db -> query("UPDATE {$sqlname}ymail_messages SET fid = '".yimplode(",", $xfid_s)."' WHERE id = '$id' and identity = '$identity'");
 			}
-
 			else {
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '' WHERE id = '$id' and identity = '$identity'" );
+				$db -> query("UPDATE {$sqlname}ymail_messages SET fid = '' WHERE id = '$id' and identity = '$identity'");
 			}
 
 			//доавим файлы из документов
-			$xfile = array_combine( $xfile, $xname );
+			$xfile = array_combine($xfile, $xname);
 
-			foreach ( $xfile as $file => $name ) {
+			foreach ($xfile as $file => $name) {
 
-				if ( $name != '' ) {
+				if ($name != '') {
 
 					//скопируем файл в папку ymail
-					copyFile( $uploaddir.$file, $uploaddir.'ymail/' );
+					copyFile($uploaddir.$file, $uploaddir.'ymail/');
 
-					$db -> query( "INSERT INTO {$sqlname}ymail_files SET ?u", [
+					$db -> query("INSERT INTO {$sqlname}ymail_files SET ?u", [
 						'datum'    => current_datumtime(),
 						'mid'      => $id,
 						'name'     => $name,
 						'file'     => $file,
 						'identity' => $identity
-					] );
+					]);
 					$ffid = $db -> insertId();
 
 					$uploads[] = [
 						"fid"  => (int)$ffid,
-						"icon" => get_icon3( $file ),
+						"icon" => get_icon3($file),
 						"name" => $name,
 						"file" => $file
 					];
@@ -1780,19 +1804,19 @@ class Mailer {
 			}
 
 			//удалим из базы исключенных адресатов
-			$resultm = $db -> query( "SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'" );
-			while ($data = $db -> fetch( $resultm )) {
+			$resultm = $db -> query("SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'");
+			while ($data = $db -> fetch($resultm)) {
 
-				if ( $data['tip'] == 'to' ) {
+				if ($data['tip'] == 'to') {
 
-					if ( !in_array( (int)$data['clid'], (array)$clid ) && (int)$data['clid'] > 0 ) {
+					if (!in_array((int)$data['clid'], (array)$clid) && (int)$data['clid'] > 0) {
 
-						$db -> query( "DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'");
 
 					}
-					elseif ( !in_array( (int)$data['pid'], (array)$pid ) && $data['pid'] > 0 ) {
+					elseif (!in_array((int)$data['pid'], (array)$pid) && $data['pid'] > 0) {
 
-						$db -> query( "DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'");
 
 					}
 					else {
@@ -1800,16 +1824,16 @@ class Mailer {
 					}//массив имеющихся записей
 
 				}
-				if ( $data['tip'] == 'copy' ) {
+				if ($data['tip'] == 'copy') {
 
-					if ( !in_array( (int)$data['clid'], (array)$cclid ) && (int)$data['clid'] > 0 ) {
+					if (!in_array((int)$data['clid'], (array)$cclid) && (int)$data['clid'] > 0) {
 
-						$db -> query( "DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'");
 
 					}
-					elseif ( !in_array( (int)$data['pid'], (array)$cpid ) && (int)$data['pid'] > 0 ) {
+					elseif (!in_array((int)$data['pid'], (array)$cpid) && (int)$data['pid'] > 0) {
 
-						$db -> query( "DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_messagesrec WHERE id = '$data[id]' and identity = '$identity'");
 
 					}
 					else {
@@ -1821,33 +1845,33 @@ class Mailer {
 			}
 
 			//добавим новых адресатов
-			foreach ( $to as $t ) {
+			foreach ($to as $t) {
 
-				if ( !in_array( $t['email'], $oldtoo ) && $t['email'] != '' ) {
+				if (!in_array($t['email'], $oldtoo) && $t['email'] != '') {
 
-					if ( $t['name'] == '' ) {
+					if ($t['name'] == '') {
 						$t['name'] = $t['email'];
 					}
 
 					//для свободных email попробуем найти в базе
-					if ( (int)$t['clid'] < 1 && (int)$t['pid'] < 1 ) {
+					if ((int)$t['clid'] < 1 && (int)$t['pid'] < 1) {
 
-						if ( $pid > 0 ) {
+						if ($pid > 0) {
 
 							$t['pid']  = $pid;
-							$t['name'] = current_person( $pid );
+							$t['name'] = current_person($pid);
 
 						}
 						else {
 
-							$result = $db -> getRow( "SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE ?s and identity = ?i", "%".$t['email']."%", $identity );
+							$result = $db -> getRow("SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE ?s and identity = ?i", "%".$t['email']."%", $identity);
 							$clid   = (int)$result['clid'];
 							$client = $result['title'];
 
-							if ( $clid > 0 ) {
+							if ($clid > 0) {
 								$t['clid'] = $clid;
 							}
-							if ( $client != '' ) {
+							if ($client != '') {
 								$t['name'] = $client;
 							}
 
@@ -1856,7 +1880,7 @@ class Mailer {
 					}
 					//для свободных email
 
-					$db -> query( "INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
+					$db -> query("INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
 						'mid'      => $id,
 						'tip'      => 'to',
 						'email'    => $t['email'],
@@ -1864,28 +1888,28 @@ class Mailer {
 						'clid'     => (int)$t['clid'],
 						'pid'      => (int)$t['pid'],
 						'identity' => $identity
-					] );
+					]);
 
 				}
 
 			}
 
-			foreach ( $copy as $c ) {
+			foreach ($copy as $c) {
 
-				if ( !in_array( $c['email'], $oldcopy ) && $c['email'] != '' ) {
+				if (!in_array($c['email'], $oldcopy) && $c['email'] != '') {
 
-					if ( $c['name'] == '' ) {
+					if ($c['name'] == '') {
 						$c['name'] = $c['email'];
 					}
 
-					if ( (int)$c['pid'] > 0 ) {
-						$c['name'] = current_person( (int)$c['pid'] );
+					if ((int)$c['pid'] > 0) {
+						$c['name'] = current_person((int)$c['pid']);
 					}
-					if ( (int)$c['clid'] > 0 ) {
-						$c['name'] = current_client( (int)$c['clid'] );
+					if ((int)$c['clid'] > 0) {
+						$c['name'] = current_client((int)$c['clid']);
 					}
 
-					$db -> query( "INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
+					$db -> query("INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
 						'mid'      => $id,
 						'tip'      => 'to',
 						'email'    => $c['email'],
@@ -1893,7 +1917,7 @@ class Mailer {
 						'clid'     => (int)$c['clid'],
 						'pid'      => (int)$c['pid'],
 						'identity' => $identity
-					] );
+					]);
 
 				}
 
@@ -1904,9 +1928,9 @@ class Mailer {
 		//если новое сообщение
 		else {
 
-			$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+			$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
-			$db -> query( "INSERT INTO {$sqlname}ymail_messages SET ?u", [
+			$yparams = [
 				'datum'    => current_datumtime(),
 				'folder'   => 'draft',
 				'priority' => $priority,
@@ -1917,27 +1941,35 @@ class Mailer {
 				'iduser'   => (int)$iduser1,
 				'did'      => (int)$did,
 				'identity' => $identity
-			] );
+			];
+
+			$yparams = $hooks -> apply_filters("mailer_addfilter", $yparams);
+
+			$db -> query("INSERT INTO {$sqlname}ymail_messages SET ?u", $yparams);
 			$id = $db -> insertId();
 			//print $db -> lastQuery();
 
+			if ($hooks) {
+				$hooks -> do_action("mailer_add", $yparams);
+			}
+
 			// добавим новые загруженные файлы
-			foreach ( $filed as $file ) {
+			foreach ($filed as $file) {
 
-				if ( $file['file'] != '' ) {
+				if ($file['file'] != '') {
 
-					$db -> query( "INSERT INTO {$sqlname}ymail_files SET ?u", [
+					$db -> query("INSERT INTO {$sqlname}ymail_files SET ?u", [
 						'mid'      => $id,
 						'datum'    => current_datumtime(),
 						'name'     => $file['name'],
 						'file'     => $file['file'],
 						'identity' => $identity
-					] );
+					]);
 					$fidd = $db -> insertId();
 
 					$uploads[] = [
 						"fid"  => (int)$fidd,
-						"icon" => get_icon3( $file['name'] ),
+						"icon" => get_icon3($file['name']),
 						"name" => $file['name'],
 						"file" => $file['file']
 					];
@@ -1947,36 +1979,36 @@ class Mailer {
 			}
 
 			// доавим файлы из документов
-			if ( !empty( $xfid ) ) {
+			if (!empty($xfid)) {
 
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '".yimplode( ",", $xfid_s )."' WHERE id = '$id' and identity = '$identity'" );
+				$db -> query("UPDATE {$sqlname}ymail_messages SET fid = '".yimplode(",", $xfid_s)."' WHERE id = '$id' and identity = '$identity'");
 
 			}
 
 			// доавим файлы из документов
-			$xfile = array_combine( (array)$xfile, (array)$xname );
+			$xfile = array_combine((array)$xfile, (array)$xname);
 
 			$r = [];
 
-			foreach ( $xfile as $file => $name ) {
+			foreach ($xfile as $file => $name) {
 
-				if ( $name != '' ) {
+				if ($name != '') {
 
 					//скопируем файл в папку ymail
-					copyFile( $uploaddir.$file, $uploaddir.'ymail/' );
+					copyFile($uploaddir.$file, $uploaddir.'ymail/');
 
-					$r[]  = $db -> query( "INSERT INTO {$sqlname}ymail_files SET ?u", [
+					$r[]  = $db -> query("INSERT INTO {$sqlname}ymail_files SET ?u", [
 						'datum'    => current_datumtime(),
 						'mid'      => (int)$id,
 						'name'     => $name,
 						'file'     => $file,
 						'identity' => $identity
-					] );
+					]);
 					$ffid = $db -> insertId();
 
 					$uploads[] = [
 						"fid"  => (int)$ffid,
-						"icon" => get_icon3( $file ),
+						"icon" => get_icon3($file),
 						"name" => $name,
 						"file" => $file
 					];
@@ -1995,70 +2027,70 @@ class Mailer {
 			*/
 
 			// добавим существующие файлы (если идет пересылка)
-			foreach ( $fid as $f ) {
+			foreach ($fid as $f) {
 
-				if ( $f != '' ) {
+				if ($f != '') {
 
-					$f     = (int)$f;
-					$r     = $db -> getRow( "SELECT * FROM {$sqlname}ymail_files WHERE id = '$f' and identity = '$identity'" );
+					$f    = (int)$f;
+					$r    = $db -> getRow("SELECT * FROM {$sqlname}ymail_files WHERE id = '$f' and identity = '$identity'");
 					$name = $r['name'];
 					$file = $r['file'];
 
-					$db -> query( "INSERT INTO {$sqlname}ymail_files SET ?u", [
+					$db -> query("INSERT INTO {$sqlname}ymail_files SET ?u", [
 						'mid'      => (int)$id,
 						'name'     => $name,
 						'file'     => $file,
 						'identity' => $identity
-					] );
+					]);
 
 				}
 
 			}
 
 			// добавим адресатов
-			foreach ( $to as $t ) {
+			foreach ($to as $t) {
 
-				if ( $t['name'] == '' ) {
+				if ($t['name'] == '') {
 					$t['name'] = $t['email'];
 				}
 
-				if ( (int)$t['pid'] > 0 ) {
-					$t['name'] = current_person( (int)$t['pid'] );
+				if ((int)$t['pid'] > 0) {
+					$t['name'] = current_person((int)$t['pid']);
 				}
-				if ( (int)$t['clid'] > 0 ) {
-					$t['name'] = current_client( (int)$t['clid'] );
+				if ((int)$t['clid'] > 0) {
+					$t['name'] = current_client((int)$t['clid']);
 				}
 
 				//найдем, к какой организации относится контакт
-				if ( (int)$t['pid'] > 0 && (int)$t['clid'] < 1 ) {
-					$t['clid'] = getPersonData( $t['pid'], 'clid' );
+				if ((int)$t['pid'] > 0 && (int)$t['clid'] < 1) {
+					$t['clid'] = getPersonData($t['pid'], 'clid');
 				}
 
 				//для свободных email попробуем найти в базе
-				if ( (int)$t['clid'] < 1 && (int)$t['pid'] < 1 ) {
+				if ((int)$t['clid'] < 1 && (int)$t['pid'] < 1) {
 
-					$result = $db -> getRow( "SELECT pid,ptitle FROM {$sqlname}personcat WHERE mail LIKE ?s and identity = ?i", "%".$t['email']."%", $identity );
+					$result = $db -> getRow("SELECT pid,ptitle FROM {$sqlname}personcat WHERE mail LIKE ?s and identity = ?i", "%".$t['email']."%", $identity);
 					$pid    = (int)$result['pid'];
 					$person = $result['person'];
 
-					if ( $pid > 0 ) {
+					if ($pid > 0) {
 
 						$t['pid'] = $pid;
-						if ( $person != '' ) {
+						if ($person != '') {
 							$t['name'] = $person;
 						}
 
 					}
 					else {
 
-						$result = $db -> getRow( "SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE ?s and identity = ?i", "%".$t['email']."%", $identity );
+						$result = $db -> getRow("SELECT clid,title FROM {$sqlname}clientcat WHERE mail_url LIKE ?s and identity = ?i", "%".$t['email']."%", $identity);
 						$clid   = (int)$result['clid'];
 						$client = $result['title'];
 
-						if ( $clid > 0 ) {
+						if ($clid > 0) {
 							$t['clid'] = $clid;
 						}
-						if ( $client != '' ) {
+						if ($client != '') {
 							$t['name'] = $client;
 						}
 
@@ -2067,7 +2099,7 @@ class Mailer {
 				}
 				//для свободных email
 
-				$db -> query( "INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
+				$db -> query("INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
 					'mid'      => (int)$id,
 					'tip'      => 'to',
 					'email'    => $t['email'],
@@ -2075,22 +2107,22 @@ class Mailer {
 					'clid'     => (int)$t['clid'],
 					'pid'      => (int)$t['pid'],
 					'identity' => $identity
-				] );
+				]);
 
 			}
 
 			// добавим получателей копии. Не активно
-			foreach ( $copy as $t ) {
+			foreach ($copy as $t) {
 
-				if ( (int)$t['pid'] > 0 ) {
-					$t['name'] = current_person( (int)$t['pid'] );
+				if ((int)$t['pid'] > 0) {
+					$t['name'] = current_person((int)$t['pid']);
 				}
 
-				if ( (int)$t['clid'] > 0 ) {
-					$t['name'] = current_client( (int)$t['clid'] );
+				if ((int)$t['clid'] > 0) {
+					$t['name'] = current_client((int)$t['clid']);
 				}
 
-				$db -> query( "INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
+				$db -> query("INSERT INTO {$sqlname}ymail_messagesrec SET ?u", [
 					'mid'      => (int)$id,
 					'tip'      => 'to',
 					'email'    => $t['email'],
@@ -2098,7 +2130,7 @@ class Mailer {
 					'clid'     => (int)$t['clid'],
 					'pid'      => (int)$t['pid'],
 					'identity' => $identity
-				] );
+				]);
 
 			}
 
@@ -2127,12 +2159,12 @@ class Mailer {
 
 		global $tipuser, $isadmin;
 
-		$identity = $this -> identity;
-		$iduser1  = $this -> iduser1;
-		$sqlname  = $this -> sqlname;
-		$db       = $this -> db;
-		$fpath    = $this -> fpath;
-		$id       = (int)$this -> id;
+		$identity      = $this -> identity;
+		$iduser1       = $this -> iduser1;
+		$sqlname       = $this -> sqlname;
+		$db            = $this -> db;
+		$fpath         = $this -> fpath;
+		$id            = (int)$this -> id;
 		$otherSettings = $this -> otherSettings;
 
 		//$params['id'] = $this ->id;
@@ -2163,11 +2195,11 @@ class Mailer {
 
 		//print $id."\n";
 
-		if ( $id > 0 ) {
+		if ($id > 0) {
 
-			$result   = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
+			$result   = $db -> getRow("SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
 			$datum    = $result['datum'];
-			$content  = htmlspecialchars_decode( $result['content'] );
+			$content  = htmlspecialchars_decode($result['content']);
 			$theme    = $result['theme'];
 			$folder   = $result['folder'];
 			$priority = $result['priority'];
@@ -2180,17 +2212,22 @@ class Mailer {
 			$uid      = $result['uid'];
 			$xfid     = $result['fid'];
 			$owner    = (int)$result['iduser'];
-			$did      = ($result['did'] > 0) ? $result['did'] : NULL;
+			$did      = ( $result['did'] > 0 ) ? $result['did'] : NULL;
 
 			//print $content;
 
-			$userInfo = User ::info( $iduser1 )['result'];
+			$userInfo = User::info($iduser1)['result'];
 
 			//print_r($userInfo);
 
-			if ( $otherSettings['mailerMsgUnion'] ) {
+			if ($otherSettings['mailerMsgUnion']) {
 
-				if ( in_array( $userInfo['tip'], ['Руководитель организации', 'Руководитель отдела'] ) || $userInfo['isadmin'] == 'on' ) {
+				if (
+					in_array($userInfo['tip'], [
+						'Руководитель организации',
+						'Руководитель отдела'
+					]) || $userInfo['isadmin'] == 'on'
+				) {
 
 					$haveAccess = true;
 
@@ -2198,16 +2235,16 @@ class Mailer {
 
 			}
 
-			$date = get_sfdate2( $datum );
+			$date = get_sfdate2($datum);
 
-			if ( $state == 'unread' ) {
+			if ($state == 'unread') {
 
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE id = '$id' and identity = '$identity'" );
+				$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE id = '$id' and identity = '$identity'");
 
-				if ( ($this -> boxSettings['ymailOnReadSeen'] || (string)$this -> boxSettings['ymailOnReadSeen'] == 'true') && $owner == $this -> iduser1 ) {
+				if (( $this -> boxSettings['ymailOnReadSeen'] || (string)$this -> boxSettings['ymailOnReadSeen'] == 'true' ) && $owner == $this -> iduser1) {
 
 					// отметим прочитанным
-					self ::mailAction( $id, 'seen' );
+					self::mailAction($id, 'seen');
 
 				}
 
@@ -2219,39 +2256,39 @@ class Mailer {
 			$diskControl = 0;
 			$diskUsage   = getFileLimit();
 
-			if ( $diskUsage['total'] == 0 || $diskUsage['percent'] < 100 ) {
+			if ($diskUsage['total'] == 0 || $diskUsage['percent'] < 100) {
 				$diskControl = 1;
 			}
 			//--контроль диска
 
-			if ( $folder != '' && $state != 'deleted' ) {
+			if ($folder != '' && $state != 'deleted') {
 
-				$content = self ::clearHtml( $content );
+				$content = self::clearHtml($content);
 
 				//Находим кому и от кого письмо
-				$result = $db -> query( "SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'" );
-				while ($data = $db -> fetch( $result )) {
+				$result = $db -> query("SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'");
+				while ($data = $db -> fetch($result)) {
 
-					if ( $data['clid'] > 0 && $data['pid'] < 1 ) {
+					if ($data['clid'] > 0 && $data['pid'] < 1) {
 
-						$type = getClientData( $data['clid'], 'type' );
+						$type = getClientData($data['clid'], 'type');
 
 						$clids[] = $data['clid'];
 
 						$t = [
-							"name"  => current_client( $data['clid'] ),
+							"name"  => current_client($data['clid']),
 							"email" => $data['email'],
 							"clid"  => $data['clid'],
-							"icon"  => strtr( $type, self::CLIENTICON )
+							"icon"  => strtr($type, self::CLIENTICON)
 						];
 
 					}
-					elseif ( $data['pid'] > 0 ) {
+					elseif ($data['pid'] > 0) {
 
 						$pids[] = $data['pid'];
 
 						$t = [
-							"name"  => current_person( $data['pid'] ),
+							"name"  => current_person($data['pid']),
 							"email" => $data['email'],
 							"pid"   => $data['pid'],
 							"icon"  => "icon-user-1"
@@ -2260,11 +2297,11 @@ class Mailer {
 					}
 					else {
 
-						if ( $data['name'] == '0' ) {
+						if ($data['name'] == '0') {
 							$data['name'] = '';
 						}
 
-						$blacklist = self ::blackList();
+						$blacklist = self::blackList();
 
 						$t = [
 							"unknown" => true,
@@ -2275,34 +2312,34 @@ class Mailer {
 								"id"        => $id,
 								"from"      => $data['email'],
 								"rid"       => $data['id'],
-								"blacklist" => (in_array( $from, $blacklist )) ? true : NULL
+								"blacklist" => ( in_array($from, $blacklist) ) ? true : NULL
 							]
 						];
 
 					}
 
-					if ( $data['tip'] == 'to' ) {
+					if ($data['tip'] == 'to') {
 						$ato[] = $t;
 					}
-					elseif ( $data['tip'] == 'copy' ) {
+					elseif ($data['tip'] == 'copy') {
 						$acopy[] = $t;
 					}
 
 				}
 
 				// время получения/отправки в констексте количества прошедшего времени
-				$diff     = diffDate( $datum );
-				$diffyear = get_year( date( 'Y' ) ) - get_year( $datum );
+				$diff     = diffDate($datum);
+				$diffyear = get_year(date('Y')) - get_year($datum);
 
-				if ( $folder == 'inbox' ) {
+				if ($folder == 'inbox') {
 
 					$ato[] = [
-						"name"   => current_user( $iduser ),
+						"name"   => current_user($iduser),
 						"iduser" => $iduser,
 						"icon"   => "icon-user-1"
 					];
 
-					$result = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'" );
+					$result = $db -> getRow("SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'");
 					$email  = $result['email'];
 					$name   = $result['name'];
 					$pid    = (int)$result['pid'];
@@ -2310,18 +2347,18 @@ class Mailer {
 					$rid    = (int)$result['id'];
 
 					//поищем сотрудника
-					$iduserFrom = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$email%' and identity = '$identity'" );
-					if ( $iduserFrom > 0 ) {
+					$iduserFrom = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_settings WHERE settings LIKE '%$email%' and identity = '$identity'");
+					if ($iduserFrom > 0) {
 
 						$t = [
-							"name"   => current_user( $iduserFrom ),
+							"name"   => current_user($iduserFrom),
 							"iduser" => $iduserFrom,
 							"icon"   => "icon-user-1",
 							"action" => [
 								"id"        => $id,
 								"from"      => $email,
 								"rid"       => $rid,
-								"blacklist" => (in_array( $from, $blacklist )) ? true : NULL
+								"blacklist" => ( in_array($from, $blacklist) ) ? true : NULL
 							]
 						];
 
@@ -2331,41 +2368,41 @@ class Mailer {
 					else {
 
 						//поищем email в базе
-						if ( $clid == 0 && $pid == 0 ) {
+						if ($clid == 0 && $pid == 0) {
 
-							$resultt = $db -> getRow( "SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE '%$from%' AND identity = '$identity'" );
+							$resultt = $db -> getRow("SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE '%$from%' AND identity = '$identity'");
 							$pid     = (int)$resultt['pid'];
 							$clid    = (int)$resultt['clid'];
 
-							if ( $clid == 0 && $pid == 0 ) {
-								$clid = (int)$db -> getOne( "SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE '%$from%' AND identity = '$identity'" );
+							if ($clid == 0 && $pid == 0) {
+								$clid = (int)$db -> getOne("SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE '%$from%' AND identity = '$identity'");
 							}
 
-							if ( $clid > 0 || $pid > 0 ) {
-								$db -> query( "UPDATE {$sqlname}ymail_messagesrec SET ?u WHERE mid = '$id' and identity = '$identity'", [
+							if ($clid > 0 || $pid > 0) {
+								$db -> query("UPDATE {$sqlname}ymail_messagesrec SET ?u WHERE mid = '$id' and identity = '$identity'", [
 									'pid'  => $pid,
 									'clid' => $clid
-								] );
+								]);
 							}
 
 						}
 
-						if ( $clid > 0 && $pid == 0 ) {
+						if ($clid > 0 && $pid == 0) {
 
-							$type = getClientData( $clid, 'type' );
+							$type = getClientData($clid, 'type');
 
 							$t = [
-								"name"  => current_client( $clid ),
+								"name"  => current_client($clid),
 								"email" => $email,
 								"clid"  => $clid,
-								"icon"  => strtr( $type, self::CLIENTICON )
+								"icon"  => strtr($type, self::CLIENTICON)
 							];
 
 						}
-						elseif ( $pid > 0 ) {
+						elseif ($pid > 0) {
 
 							$t = [
-								"name"  => current_person( $pid ),
+								"name"  => current_person($pid),
 								"email" => $email,
 								"pid"   => $pid,
 								"icon"  => "icon-user-1"
@@ -2376,13 +2413,13 @@ class Mailer {
 
 							$t = [
 								"unknown" => true,
-								"name"    => ($name) ? : $from,
+								"name"    => ( $name ) ? : $from,
 								"email"   => $email,
 								"action"  => [
 									"id"        => $id,
 									"from"      => $email,
 									"rid"       => $rid,
-									"blacklist" => (in_array( $from, $blacklist )) ? true : NULL
+									"blacklist" => ( in_array($from, $blacklist) ) ? true : NULL
 								]
 							];
 
@@ -2393,7 +2430,7 @@ class Mailer {
 					$afrom = $t;
 
 				}
-				if ( $folder == 'sended' ) {
+				if ($folder == 'sended') {
 
 					$afrom = [
 						"name"   => $fromname,
@@ -2403,13 +2440,13 @@ class Mailer {
 					];
 
 				}
-				if ( $folder == 'draft' ) {
+				if ($folder == 'draft') {
 
-					$set = $db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' and identity = '$identity'" );
-					$set = json_decode( $set, true );
+					$set = $db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' and identity = '$identity'");
+					$set = json_decode($set, true);
 
 					$afrom = [
-						"name"   => current_user( $iduser, "yes" ),
+						"name"   => current_user($iduser, "yes"),
 						"email"  => $set['ymailFrom'],
 						"iduser" => $iduser,
 						"icon"   => "icon-user-1"
@@ -2419,8 +2456,8 @@ class Mailer {
 
 				}
 
-				if ( $diffyear == 0 ) {
-					$date = ($diff < 1) ? "Сегодня в ".get_time( $datum ) : get_dateru( $datum )." в ".get_time( $datum );
+				if ($diffyear == 0) {
+					$date = ( $diff < 1 ) ? "Сегодня в ".get_time($datum) : get_dateru($datum)." в ".get_time($datum);
 				}
 
 				/**
@@ -2429,43 +2466,43 @@ class Mailer {
 				$uploaddir = $this -> rootpath.'/files/'.$fpath;
 
 				//файлы, загруженные в систему
-				$xfid   = yexplode( ",", (string)$xfid );
-				$xcount = count( (array)$xfid );
+				$xfid   = yexplode(",", (string)$xfid);
+				$xcount = count((array)$xfid);
 
 				//файлы, оставшиеся в письме
-				$resultt    = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'" );
-				$count      = $db -> affectedRows( $resultt );
+				$resultt    = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'");
+				$count      = $db -> affectedRows($resultt);
 				$countFiles = $count + $xcount;
 
-				if ( $countFiles > 0 ) {
+				if ($countFiles > 0) {
 
 					$fnames = [];
 
 					// файлы, перемещенные в систему
-					if ( !empty( $xfid ) ) {
+					if (!empty($xfid)) {
 
-						$result = $db -> query( "SELECT * FROM {$sqlname}file WHERE fid IN (".implode( ",", str_replace( ";", ",", $xfid ) ).") and identity = '$identity'" );
-						while ($da = $db -> fetch( $result )) {
+						$result = $db -> query("SELECT * FROM {$sqlname}file WHERE fid IN (".implode(",", str_replace(";", ",", $xfid)).") and identity = '$identity'");
+						while ($da = $db -> fetch($result)) {
 
-							$size = filesize( $uploaddir.$da['fname'] );
-							$fext = texttosmall( substr( $da['fname'], strrpos( $da['fname'], '.' ) + 1 ) );
+							$size = filesize($uploaddir.$da['fname']);
+							$fext = texttosmall(substr($da['fname'], strrpos($da['fname'], '.') + 1));
 
 							$sizeFiles += $size;
 
-							if ( $size > 0 ) {
+							if ($size > 0) {
 
 								$attach[] = [
 									"fid"    => $da['fid'],
 									"name"   => $da['ftitle'],
 									"file"   => $da['fname'],
-									"icon"   => get_icon2( $da['fname'] ),
-									"tip"    => in_array( $fext, [
+									"icon"   => get_icon2($da['fname']),
+									"tip"    => in_array($fext, [
 										"png",
 										"jpeg",
 										"jpg",
 										"gif"
-									] ) ? 'pic' : NULL,
-									"size"   => num_format( $size / 1000 ),
+									]) ? 'pic' : NULL,
+									"size"   => num_format($size / 1000),
 									"infile" => true
 								];
 
@@ -2476,7 +2513,7 @@ class Mailer {
 									"id"     => $da['id'],
 									"name"   => $da['ftitle'],
 									"file"   => $da['fname'],
-									"icon"   => get_icon2( $da['fname'] ),
+									"icon"   => get_icon2($da['fname']),
 									"infile" => true
 								];
 
@@ -2491,29 +2528,29 @@ class Mailer {
 					}
 
 					// файлы, остающиеся в пределах Почтовика
-					while ($data = $db -> fetch( $resultt )) {
+					while ($data = $db -> fetch($resultt)) {
 
 						$ft = '';
 
-						$size = filesize( $uploaddir.'ymail/'.$data['file'] );
-						$fext = texttosmall( substr( $data['file'], strrpos( $data['file'], '.' ) + 1 ) );
+						$size = filesize($uploaddir.'ymail/'.$data['file']);
+						$fext = texttosmall(substr($data['file'], strrpos($data['file'], '.') + 1));
 
 						$sizeFiles += $size;
 
-						if ( $size > 0 && !in_array( $data['name'], $fnames ) ) {
+						if ($size > 0 && !in_array($data['name'], $fnames)) {
 
 							$attach[] = [
 								"id"     => $data['id'],
 								"name"   => $data['name'],
 								"file"   => $data['file'],
-								"icon"   => get_icon2( $data['name'] ),
-								"tip"    => in_array( $fext, [
+								"icon"   => get_icon2($data['name']),
+								"tip"    => in_array($fext, [
 									"png",
 									"jpeg",
 									"jpg",
 									"gif"
-								] ) ? 'pic' : NULL,
-								"size"   => num_format( $size / 1000 ),
+								]) ? 'pic' : NULL,
+								"size"   => num_format($size / 1000),
 								"path"   => $fpath."ymail/",
 								"infile" => NULL
 							];
@@ -2521,15 +2558,15 @@ class Mailer {
 							$attachments[] = ["file" => $data['name']];
 
 						}
-						elseif ( !in_array( $data['name'], $fnames ) ) {
+						elseif (!in_array($data['name'], $fnames)) {
 
 							$attach[] = [
 								"id"     => NULL,
 								"name"   => $data['name'],
 								"file"   => $data['file'],
-								"icon"   => get_icon2( $data['name'] ),
+								"icon"   => get_icon2($data['name']),
 								"tip"    => $ft,
-								"size"   => num_format( $size / 1000 ),
+								"size"   => num_format($size / 1000),
 								"infile" => NULL
 							];
 
@@ -2542,7 +2579,7 @@ class Mailer {
 					}
 
 					// требуется ли скачивать не скачанные файлы
-					$isdownload = (!empty( $attachments )) ? true : NULL;
+					$isdownload = ( !empty($attachments) ) ? true : NULL;
 					//$needdownload = ($needDownload > 0) ? true : NULL;
 
 				}
@@ -2555,19 +2592,19 @@ class Mailer {
 
 			}
 
-			if ( $folder == 'inbox' && empty( $clids ) && empty( $pids ) && !str_contains( $from, 'replay' ) && !$isfromuser ) {
+			if ($folder == 'inbox' && empty($clids) && empty($pids) && !str_contains($from, 'replay') && !$isfromuser) {
 				$actions = [
 					"id"        => $id,
 					"from"      => $from,
 					"rid"       => $rid,
-					"blacklist" => (in_array( $from, $blacklist )) ? true : NULL
+					"blacklist" => ( in_array($from, $blacklist) ) ? true : NULL
 				];
 			}
 
 			//добавим иконку наличия email в заявках
-			$countInLeads = (int)$db -> getOne( "SELECT COUNT(*) FROM {$sqlname}leads WHERE email = '$from' AND status = '0' AND identity = '$identity'" );
+			$countInLeads = (int)$db -> getOne("SELECT COUNT(*) FROM {$sqlname}leads WHERE email = '$from' AND status = '0' AND identity = '$identity'");
 
-			$nextid = (int)$db -> getOne( "SELECT id FROM {$sqlname}ymail_messages WHERE id > '$id' AND state = 'unread' and iduser = '$iduser' and identity = '$identity' ORDER BY id DESC LIMIT 1" );
+			$nextid = (int)$db -> getOne("SELECT id FROM {$sqlname}ymail_messages WHERE id > '$id' AND state = 'unread' and iduser = '$iduser' and identity = '$identity' ORDER BY id DESC LIMIT 1");
 
 			$View = [
 				"id"                => $id,
@@ -2575,7 +2612,7 @@ class Mailer {
 				"from"              => $afrom,
 				"fromname"          => $fromname,
 				"isfromuser"        => $isfromuser ? true : NULL,
-				"priority"          => strtr( $priority, self::PRIORITY ),
+				"priority"          => strtr($priority, self::PRIORITY),
 				"content"           => $content,
 				"isInbox"           => $folder == 'inbox' ? true : NULL,
 				"isSended"          => $folder == 'sended' ? true : NULL,
@@ -2584,40 +2621,40 @@ class Mailer {
 				"toTrash"           => $trash != 'yes' && $iduser1 == $iduser ? true : NULL,
 				"fromTrash"         => $trash == 'yes' ? true : NULL,
 				"folder"            => $folder,
-				"folderIcon"        => strtr( $folder, self::FOLDERICON ),
-				"folderName"        => strtr( $folder, self::FOLDERNAME ),
+				"folderIcon"        => strtr($folder, self::FOLDERICON),
+				"folderName"        => strtr($folder, self::FOLDERNAME),
 				"date"              => $date,
 				"to"                => $ato,
 				"copy"              => $acopy,
-				"haveTo"            => !empty( $ato ) ? true : NULL,
-				"haveCopy"          => !empty( $acopy ) ? true : NULL,
+				"haveTo"            => !empty($ato) ? true : NULL,
+				"haveCopy"          => !empty($acopy) ? true : NULL,
 				"theme"             => $theme,
 				"links"             => [
-					"did"  => ($did > 0) ? $did : NULL,
-					"clid" => ($clid > 0) ? $clid : NULL,
-					"pid"  => ($pid > 0) ? $pid : NULL,
+					"did"  => ( $did > 0 ) ? $did : NULL,
+					"clid" => ( $clid > 0 ) ? $clid : NULL,
+					"pid"  => ( $pid > 0 ) ? $pid : NULL,
 				],
 				"did"               => $did,
 				//"clid"              => $clid,
 				//"pid"               => $pid,
-				"countClidsPids"    => ((!empty( $clids )) > 0 || (!empty( $pids )) > 0) ? 'yes' : '',
+				"countClidsPids"    => ( ( !empty($clids) ) > 0 || ( !empty($pids) ) > 0 ) ? 'yes' : '',
 				"hid"               => $hid > 0 ? $hid : NULL,
 				"files"             => $attach,
 				"isdownload"        => $isdownload,
-				"needdownload"      => ($needDownload > 0) ? true : NULL,
-				"emptyfile"         => ($sizeFiles == 0) ? 1 : NULL,
-				"attachments"       => !empty( $attachments ) ? $attachments : NULL,
-				"hasAttachments"    => !empty( $attachments ) ? true : NULL,
+				"needdownload"      => ( $needDownload > 0 ) ? true : NULL,
+				"emptyfile"         => ( $sizeFiles == 0 ) ? 1 : NULL,
+				"attachments"       => !empty($attachments) ? $attachments : NULL,
+				"hasAttachments"    => !empty($attachments) ? true : NULL,
 				"emptyMessage"      => $emptyMessage,
 				"countFiles"        => $countFiles > 0 ? true : NULL,
-				"isAccesse"         => ($iduser1 == $iduser || $haveAccess) ? true : NULL,
-				"inleads"           => ($countInLeads > 0) ? true : NULL,
-				"actions"           => !empty( $actions ) ? $actions : NULL,
+				"isAccesse"         => ( $iduser1 == $iduser || $haveAccess ) ? true : NULL,
+				"inleads"           => ( $countInLeads > 0 ) ? true : NULL,
+				"actions"           => !empty($actions) ? $actions : NULL,
 				"toactions"         => $toactions,
 				"diskPercent"       => $diskUsage['percent'],
-				"diskControl"       => ($diskControl > 0) ? 1 : '',
-				"userIsOwner"       => ($iduser1 == $iduser) ? true : NULL,
-				"elementIsDisabled" => ($iduser1 != $iduser && !$haveAccess) ? true : NULL,
+				"diskControl"       => ( $diskControl > 0 ) ? 1 : '',
+				"userIsOwner"       => ( $iduser1 == $iduser ) ? true : NULL,
+				"elementIsDisabled" => ( $iduser1 != $iduser && !$haveAccess ) ? true : NULL,
 				"next"              => $nextid,
 				//"boxSettings" => $this -> boxSettings
 			];
@@ -2649,7 +2686,7 @@ class Mailer {
 	 */
 	public function mailGet(): void {
 
-		global $bdtimezone;
+		global $bdtimezone, $hooks;
 
 		$identity = $this -> identity;
 		$iduser1  = $this -> iduser1;
@@ -2674,8 +2711,8 @@ class Mailer {
 		$ignoreExist = $this -> ignoreExist ?? false;
 
 		// преобразуем значения массива параметров в переменные
-		if ( !empty( $params ) ) {
-			foreach ( $params as $key => $val ) {
+		if (!empty($params)) {
+			foreach ($params as $key => $val) {
 				$this ->{$key} = $val;
 			}
 		}
@@ -2684,43 +2721,43 @@ class Mailer {
 
 		$ym_fpath = $rootpath.'/files/'.$fpath.'ymail';
 		$messages = [];
-		$iduser   = ($iduser > 0) ? $iduser : $iduser1;
+		$iduser   = ( $iduser > 0 ) ? $iduser : $iduser1;
 
 		//проверяем папку для загрузки и если нет, то создаем
-		createDir( $ym_fpath );
+		createDir($ym_fpath);
 
 		//проверяем папку для загрузки и если нет, то создаем
-		createDir( $ym_fpath.'/inbody' );
+		createDir($ym_fpath.'/inbody');
 
-		$db = new SafeMySQL( $opts );
+		$db = new SafeMySQL($opts);
 
-		if ( !isset( $params['smtp'] ) ) {
+		if (!isset($params['smtp'])) {
 
 			//если не указан почтовый ящик ( для реализации 1 Юзер = 1 Ящик )
-			if ( $mailID == 0 ) {
+			if ($mailID == 0) {
 
 				//читаем настройки
 				$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$iduser.".json";
 
-				if ( file_exists( $settingsYMail ) ) {
-					$param = json_decode( file_get_contents( $settingsYMail ), true );
+				if (file_exists($settingsYMail)) {
+					$param = json_decode(file_get_contents($settingsYMail), true);
 				}
 				else {
-					$param = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'" ), true );
+					$param = json_decode($db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'"), true);
 				}
 
 			}
 			// если указан ID конкретного ящика ( для реализации 1 Юзер = ХХХ ящиков )
 			else {
 
-				$p      = $db -> getRow( "SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'" );
-				$param  = json_decode( $p['settings'], true );
+				$p      = $db -> getRow("SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'");
+				$param  = json_decode($p['settings'], true);
 				$iduser = $p['iduser'];
 
 			}
 
-			$param['ymailUser'] = self ::decrypt( $param['ymailUser'], $skey, $ivc );
-			$param['ymailPass'] = self ::decrypt( $param['ymailPass'], $skey, $ivc );
+			$param['ymailUser'] = self::decrypt($param['ymailUser'], $skey, $ivc);
+			$param['ymailPass'] = self::decrypt($param['ymailPass'], $skey, $ivc);
 
 		}
 		// возможность отправить настройки в виде параметров
@@ -2740,41 +2777,41 @@ class Mailer {
 
 		//print_r($param);
 
-		unset( $db );
-		$db = new SafeMySQL( $opts );
-		$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+		unset($db);
+		$db = new SafeMySQL($opts);
+		$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
 		//если параметры не указаны - отключаем проверку
-		if ( $param['ymailUser'] != '' && $param['ymailPass'] != '' ) {
+		if ($param['ymailUser'] != '' && $param['ymailPass'] != '') {
 
-			$folder = ($box == 'SEND') ? 'sended' : 'inbox';
+			$folder = ( $box == 'SEND' ) ? 'sended' : 'inbox';
 
-			$mexist = $params['ignoreuids'] ?? (!$ignoreExist ? $db -> getCol( "SELECT uid FROM {$sqlname}ymail_messages WHERE folder = '$folder' and uid > 0 and datum BETWEEN '".current_datum( 10 )." 00:00:00' AND '".current_datum( -2 )." 23:59:59' AND iduser = '$iduser' AND identity = '$identity' ORDER BY uid DESC" ) : []);
+			$mexist = $params['ignoreuids'] ?? ( !$ignoreExist ? $db -> getCol("SELECT uid FROM {$sqlname}ymail_messages WHERE folder = '$folder' and uid > 0 and datum BETWEEN '".current_datum(10)." 00:00:00' AND '".current_datum(-2)." 23:59:59' AND iduser = '$iduser' AND identity = '$identity' ORDER BY uid DESC") : [] );
 
 			//print_r($mexist);
 
 			//максимальная дата проверки
-			$date = date( "d-M-Y", strtotime( "-$days days" ) );
+			$date = date("d-M-Y", strtotime("-$days days"));
 
-			if ( $box == 'SEND' ) {
+			if ($box == 'SEND') {
 
-				$box = ImapUtf7 ::encode( $param['ymailFolderSent'] );
+				$box = ImapUtf7::encode($param['ymailFolderSent']);
 
-				if ( $box == '' ) {
+				if ($box == '') {
 					goto extt;
 				}
 
 			}
 
 			//-start--проверка получения почты
-			if ( $param['ymailInSecure'] != '' ) {
-				$param['ymailInSecure'] = '/'.$param['ymailInSecure'].'/novalidate-cert'.(!$params['deletemess'] ? "/readonly" : "");
+			if ($param['ymailInSecure'] != '') {
+				$param['ymailInSecure'] = '/'.$param['ymailInSecure'].'/novalidate-cert'.( !$params['deletemess'] ? "/readonly" : "" );
 			}
 
 			$mailbox = '{'.$param['ymailInHost'].':'.$param['ymailInPort'].'/'.$param['ymailInProtocol'].$param['ymailInSecure'].'}'.$box;
-			$conn    = imap_open( $mailbox, $param['ymailUser'], $param['ymailPass'] );
+			$conn    = imap_open($mailbox, $param['ymailUser'], $param['ymailPass']);
 
-			if ( !$conn ) {
+			if (!$conn) {
 
 				$this -> Error = 'Ошибка подключения';
 
@@ -2792,11 +2829,11 @@ class Mailer {
 			$msguid = [];
 
 			// Поиск параметров только указанных UIDS
-			if ( !empty( $this -> uids ) ) {
+			if (!empty($this -> uids)) {
 
-				foreach ( $this -> uids as $uid ) {
+				foreach ($this -> uids as $uid) {
 
-					$emails = imap_fetch_overview( $conn, $uid.":*", FT_UID );
+					$emails = imap_fetch_overview($conn, $uid.":*", FT_UID);
 					//var_dump($emails);
 
 					$msguid[] = $emails[0] -> uid;
@@ -2839,10 +2876,10 @@ class Mailer {
 			 */
 
 			// если поиск не конкретный UIDS, то получаем по дате
-			if ( empty( $msguid ) ) {
+			if (empty($msguid)) {
 
-				$msgnom = imap_search( $conn, 'SINCE '.$date );//, SE_UID); //выводим uid писем
-				$msguid = imap_search( $conn, 'SINCE '.$date, SE_UID ); //выводим uid писем
+				$msgnom = imap_search($conn, 'SINCE '.$date);         //, SE_UID); //выводим uid писем
+				$msguid = imap_search($conn, 'SINCE '.$date, SE_UID); //выводим uid писем
 
 				//print_r($msguid);
 				//print_r($mexist);
@@ -2850,49 +2887,49 @@ class Mailer {
 			}
 
 			//количество писем в ящике
-			$all = !empty( $msguid ) ? count( $msguid ) - 1 : -1;
+			$all = !empty($msguid) ? count($msguid) - 1 : -1;
 
 			//максимум загружаем 30 писем за раз
 			$max = $all - 50;
 
 			//принимаем с последнего письма
-			for ( $i = $all; $i > $max && $i >= 0; $i-- ) {
+			for ($i = $all; $i > $max && $i >= 0; $i--) {
 
 				$attach = [];
 
-				if ( !in_array( $msguid[ $i ], (array)$mexist ) ) {
+				if (!in_array($msguid[$i], (array)$mexist)) {
 
 					//$uid = imap_uid($conn, $msgno[ $i ]);
 
-					$uid   = $msguid[ $i ];
-					$msgno = $msgnom[ $i ];
+					$uid   = $msguid[$i];
+					$msgno = $msgnom[$i];
 
 					//print $uid." -- ".$msgno."\n";
 
-					if ( $uid > 0 ) {
+					if ($uid > 0) {
 
-						$header = imap_headerinfo( $conn, $msgno );
+						$header = imap_headerinfo($conn, $msgno);
 
 						//читаем аттачи
-						$structure = imap_fetchstructure( $conn, $msgno );
+						$structure = imap_fetchstructure($conn, $msgno);
 
-						if ( !is_object( $structure ) ) {
+						if (!is_object($structure)) {
 							$structure = (object)$structure;
 						}
 
 						$parts    = $structure -> parts;
-						$numparts = !empty( $parts ) ? count( (array)$parts ) : 0;
+						$numparts = !empty($parts) ? count((array)$parts) : 0;
 
-						$asub     = self ::objectToArray( $structure );
-						$codeBody = strtoupper( self ::searchEncode( $asub['parts'] ) );
+						$asub     = self::objectToArray($structure);
+						$codeBody = strtoupper(self::searchEncode($asub['parts']));
 
-						if ( $msguid[ $i ] == 6513 ) {
+						if ($msguid[$i] == 6513) {
 							//file_put_contents($rootpath."/cash/msg.json", json_encode_cyr($asub));
 						}
 
-						$codeBody = ($codeBody == 'UTF8') ? "UTF-8" : $codeBody;
+						$codeBody = ( $codeBody == 'UTF8' ) ? "UTF-8" : $codeBody;
 
-						if ( str_contains( $codeBody, 'UTF-8' ) ) {
+						if (str_contains($codeBody, 'UTF-8')) {
 							$codeBody = 'UTF-8';
 						}
 
@@ -2902,10 +2939,10 @@ class Mailer {
 						$replyInfo = $header -> reply_to[0];
 						//$MailDate  = $header -> MailDate;
 
-						$blacklist = self ::blackList();
+						$blacklist = self::blackList();
 
 						// выводим для проблемного письма
-						if ( $msguid[ $i ] == 40139 ) {
+						if ($msguid[$i] == 40139) {
 
 							//print_r( $structure );
 							//print_r($header);
@@ -2914,16 +2951,16 @@ class Mailer {
 						}
 
 						//если ящик в черном листе, то завершаем
-						if ( in_array( $fromInfo -> mailbox."@".$fromInfo -> host, $blacklist ) ) {
+						if (in_array($fromInfo -> mailbox."@".$fromInfo -> host, $blacklist)) {
 							continue;
 						}
 
 						$details = [
-							"fromAddr"  => isset( $fromInfo -> mailbox, $fromInfo -> host ) ? $fromInfo -> mailbox."@".$fromInfo -> host : "",
+							"fromAddr"  => isset($fromInfo -> mailbox, $fromInfo -> host) ? $fromInfo -> mailbox."@".$fromInfo -> host : "",
 							"fromName"  => $fromInfo -> personal ?? "",
-							"toAddr"    => isset( $toInfo -> mailbox, $toInfo -> host ) ? $toInfo -> mailbox."@".$toInfo -> host : "",
+							"toAddr"    => isset($toInfo -> mailbox, $toInfo -> host) ? $toInfo -> mailbox."@".$toInfo -> host : "",
 							"toName"    => $toInfo -> personal ?? "",
-							"replyAddr" => isset( $replyInfo -> mailbox, $replyInfo -> host ) ? $replyInfo -> mailbox."@".$replyInfo -> host : "",
+							"replyAddr" => isset($replyInfo -> mailbox, $replyInfo -> host) ? $replyInfo -> mailbox."@".$replyInfo -> host : "",
 							"subject"   => $header -> subject ?? "",
 							"udate"     => $header -> udate ?? "",
 							//"udate"     => (isset( $header -> udate )) ? $header -> MailDate : "",
@@ -2936,7 +2973,7 @@ class Mailer {
 						//print "u: ".$header -> udate." => ".modifyDatetime($header -> udate)."\n";
 
 						// если не задано игнорирование вложений
-						if ( !isset( $params['ignoreattachments'] ) ) {
+						if (!isset($params['ignoreattachments'])) {
 
 							/**
 							 * Вложения
@@ -2944,7 +2981,7 @@ class Mailer {
 							$attachments = [];
 							$bimage      = [];
 
-							if ( $numparts > 0 ) {
+							if ($numparts > 0) {
 
 								$endwhile = false;
 								$stack    = [];
@@ -2954,13 +2991,13 @@ class Mailer {
 
 								while (!$endwhile) {
 
-									if ( !$parts[ $j ] ) {
+									if (!$parts[$j]) {
 
-										if ( !empty( $stack ) ) {
+										if (!empty($stack)) {
 
-											$parts = $stack[ count( $stack ) - 1 ]["p"];
-											$j     = $stack[ count( $stack ) - 1 ]["i"] + 1;
-											array_pop( $stack );
+											$parts = $stack[count($stack) - 1]["p"];
+											$j     = $stack[count($stack) - 1]["i"] + 1;
+											array_pop($stack);
 
 										}
 										else {
@@ -2969,48 +3006,50 @@ class Mailer {
 
 									}
 
-									if ( !$endwhile ) {
+									if (!$endwhile) {
 
 										$partstring = "";
 										$isJP       = false;
 
-										foreach ( $stack as $s ) {
-											$partstring .= ($s["i"] + 1).".";
+										foreach ($stack as $s) {
+											$partstring .= ( $s["i"] + 1 ).".";
 										}
 
-										$partstring .= ($j + 1);
+										$partstring .= ( $j + 1 );
 
 										//print_r($parts[$j]);
 
-										$dsp = strtoupper( $parts[ $j ] -> disposition );
+										$dsp = strtoupper($parts[$j] -> disposition);
 
-										if ( in_array( $dsp, [
+										if (
+											in_array($dsp, [
 												"ATTACHMENT",
 												"INLINE"
-											] ) || in_array( strtoupper( $parts[ $j ] -> subtype ), [
+											]) || in_array(strtoupper($parts[$j] -> subtype), [
 												"PNG",
 												"JPG",
 												"JPEG",
 												"GIF"
-											] ) ) {
+											])
+										) {
 
-											$parts1[ $j ] = self ::objectToArray( $parts[ $j ] );
+											$parts1[$j] = self::objectToArray($parts[$j]);
 
-											$fnameOrig1 = $parts1[ $j ]['dparameters'][0]['value'];
-											$fnameOrig2 = $parts1[ $j ]['parameters'][0]['value'];
+											$fnameOrig1 = $parts1[$j]['dparameters'][0]['value'];
+											$fnameOrig2 = $parts1[$j]['parameters'][0]['value'];
 
-											if ( $fnameOrig1 == '' ) {
+											if ($fnameOrig1 == '') {
 												$fnameOrig1 = $fnameOrig2;
 											}
 
-											if ( str_contains( strtoupper( $fnameOrig1 ), "ISO-2022-JP" ) ) {
+											if (str_contains(strtoupper($fnameOrig1), "ISO-2022-JP")) {
 												$isJP = true;
 											}
 
-											if ( !$isJP ) {
+											if (!$isJP) {
 
-												$fnameOrigg1 = imap_mime_header_decode( $fnameOrig1 );
-												$fnameOrigg2 = imap_mime_header_decode( $fnameOrig2 );
+												$fnameOrigg1 = imap_mime_header_decode($fnameOrig1);
+												$fnameOrigg2 = imap_mime_header_decode($fnameOrig2);
 
 												//print_r($fnameOrigg1);
 												//print_r($fnameOrigg2);
@@ -3018,12 +3057,12 @@ class Mailer {
 												$filename1 = '';
 												$filename2 = '';
 
-												for ( $h = 0, $hMax = count( (array)$fnameOrigg1 ); $h < $hMax; $h++ ) {
-													$filename1 .= $fnameOrigg1[ $h ] -> text;
+												for ($h = 0, $hMax = count((array)$fnameOrigg1); $h < $hMax; $h++) {
+													$filename1 .= $fnameOrigg1[$h] -> text;
 												}
 
-												for ( $h = 0, $hMax = count( (array)$fnameOrigg2 ); $h < $hMax; $h++ ) {
-													$filename2 .= $fnameOrigg2[ $h ] -> text;
+												for ($h = 0, $hMax = count((array)$fnameOrigg2); $h < $hMax; $h++) {
+													$filename2 .= $fnameOrigg2[$h] -> text;
 												}
 
 											}
@@ -3034,26 +3073,26 @@ class Mailer {
 
 											}
 
-											if ( $isJP ) {
+											if ($isJP) {
 
-												$filename1 = str_replace( "?", "№", self ::encodeToUtf8( $filename1 ) );
-												$filename2 = str_replace( "?", "№", self ::encodeToUtf8( $filename2 ) );
+												$filename1 = str_replace("?", "№", self::encodeToUtf8($filename1));
+												$filename2 = str_replace("?", "№", self::encodeToUtf8($filename2));
 
 											}
 
 											//если имя файла в кодировке WINDOWS-1251
-											if ( str_contains( strtoupper( $fnameOrig1 ), "WINDOWS-1251" ) ) {
+											if (str_contains(strtoupper($fnameOrig1), "WINDOWS-1251")) {
 
-												$filename1 = mb_convert_encoding( $filename1, "UTF-8", "WINDOWS-1251" );
-												$filename2 = mb_convert_encoding( $filename1, "UTF-8", "WINDOWS-1251" );
+												$filename1 = mb_convert_encoding($filename1, "UTF-8", "WINDOWS-1251");
+												$filename2 = mb_convert_encoding($filename1, "UTF-8", "WINDOWS-1251");
 
 											}
 
 											//если имя файла в кодировке KOI8-R
-											if ( str_contains( strtoupper( $fnameOrig1 ), "KOI8-R" ) || str_contains( strtoupper( $fnameOrig1 ), "KOI8R" ) ) {
+											if (str_contains(strtoupper($fnameOrig1), "KOI8-R") || str_contains(strtoupper($fnameOrig1), "KOI8R")) {
 
-												$filename1 = mb_convert_encoding( $filename1, "UTF-8", "KOI8-R" );
-												$filename2 = mb_convert_encoding( $filename1, "UTF-8", "KOI8-R" );
+												$filename1 = mb_convert_encoding($filename1, "UTF-8", "KOI8-R");
+												$filename2 = mb_convert_encoding($filename1, "UTF-8", "KOI8-R");
 
 											}
 
@@ -3062,24 +3101,24 @@ class Mailer {
 											//print "utf=".stripos( strtoupper( $filename1 ), "UTF8''" )."\n";
 											//print "utf=".str_contains( strtoupper( $filename1 ), "UTF8''" )."\n";
 
-											if ( str_contains( strtoupper( $filename1 ), "UTF-8''" ) || str_contains( strtoupper( $filename1 ), "UTF8''" ) ) {
+											if (str_contains(strtoupper($filename1), "UTF-8''") || str_contains(strtoupper($filename1), "UTF8''")) {
 												$filename = $filename2;
 											}
 											else {
 												$filename = $filename1;
 											}
 
-											if ( $filename == 'UTF-8' ) {
-												$fnameOrigg = imap_mime_header_decode( $parts[ $j ] -> parameters[1] -> value );
+											if ($filename == 'UTF-8') {
+												$fnameOrigg = imap_mime_header_decode($parts[$j] -> parameters[1] -> value);
 
 												$filename = '';
-												for ( $h = 0, $hMax = count( (array)$fnameOrigg ); $h < $hMax; $h++ ) {
-													$filename .= $fnameOrigg[ $h ] -> text;
+												for ($h = 0, $hMax = count((array)$fnameOrigg); $h < $hMax; $h++) {
+													$filename .= $fnameOrigg[$h] -> text;
 												}
 
 											}
 
-											$filename = str_replace( [
+											$filename = str_replace([
 												"'",
 												"`",
 												"$",
@@ -3087,44 +3126,44 @@ class Mailer {
 												"(",
 												'\t',
 												'\n'
-											], "", $filename );
+											], "", $filename);
 
-											$fext = str_replace( [
+											$fext = str_replace([
 												' ',
 												'\t',
 												'\n'
-											], "", substr( $filename, strrpos( $filename, '.' ) + 1 ) );
+											], "", substr($filename, strrpos($filename, '.') + 1));
 
-											if ( $fext != '' && $dsp == "ATTACHMENT" ) {
+											if ($fext != '' && $dsp == "ATTACHMENT") {
 
-												$fsize = $parts[ $j ] -> bytes;
+												$fsize = $parts[$j] -> bytes;
 
 												$attachments[] = [
-													"file"     => md5( $fsize.$filename.$details['fromAddr'] ).".".$fext,
+													"file"     => md5($fsize.$filename.$details['fromAddr']).".".$fext,
 													"name"     => $filename,
 													"id"       => "0",
-													"enc"      => $parts[ $j ] -> encoding,
+													"enc"      => $parts[$j] -> encoding,
 													"partNum"  => $partstring,
-													"filedata" => imap_fetchbody( $conn, $msgno, $partstring, FT_PEEK ),
+													"filedata" => imap_fetchbody($conn, $msgno, $partstring, FT_PEEK),
 													"size"     => $fsize
 												];
 
 											}
-											elseif ( $fext != '' && $dsp == "INLINE" ) {
+											elseif ($fext != '' && $dsp == "INLINE") {
 
 												//$file = $parts[ $j ] -> id;
 												//$file = ($file == '') ? $filename.$msgno : $file;
 
 												//$fname = time() + $j;
-												$fsize = $parts[ $j ] -> bytes;
+												$fsize = $parts[$j] -> bytes;
 
 												$bimage[] = [
-													"file"     => md5( $fsize.$filename.$details['fromAddr'] ).".".$fext,
+													"file"     => md5($fsize.$filename.$details['fromAddr']).".".$fext,
 													"name"     => $filename,
-													"id"       => $parts[ $j ] -> id,
-													"enc"      => $parts[ $j ] -> encoding,
+													"id"       => $parts[$j] -> id,
+													"enc"      => $parts[$j] -> encoding,
 													"partNum"  => $partstring,
-													"filedata" => imap_fetchbody( $conn, $msgno, $partstring, FT_PEEK ),
+													"filedata" => imap_fetchbody($conn, $msgno, $partstring, FT_PEEK),
 													"size"     => $fsize
 												];
 
@@ -3135,19 +3174,19 @@ class Mailer {
 												//$file = $parts[ $j ] -> id;
 												//$file = ($file == '') ? $filename.$msgno[ $i ] : $file;
 
-												$fext = strtolower( $parts[ $j ] -> subtype );
+												$fext = strtolower($parts[$j] -> subtype);
 
 												//$fname = time() + $j;
-												$fsize = $parts[ $j ] -> bytes;
+												$fsize = $parts[$j] -> bytes;
 
 												$bimage[] = [
-													"file"     => md5( $fsize.$filename.$details['fromAddr'] ).".".$fext,
+													"file"     => md5($fsize.$filename.$details['fromAddr']).".".$fext,
 													//$fname.".".$fext,
 													"name"     => $filename,
-													"id"       => $parts[ $j ] -> id,
-													"enc"      => $parts[ $j ] -> encoding,
+													"id"       => $parts[$j] -> id,
+													"enc"      => $parts[$j] -> encoding,
 													"partNum"  => $partstring,
-													"filedata" => imap_fetchbody( $conn, $msgno, $partstring, FT_PEEK ),
+													"filedata" => imap_fetchbody($conn, $msgno, $partstring, FT_PEEK),
 													"size"     => $fsize
 												];
 
@@ -3157,14 +3196,14 @@ class Mailer {
 
 									}
 
-									if ( $parts[ $j ] -> parts ) {
+									if ($parts[$j] -> parts) {
 
 										$stack[] = [
 											"p" => $parts,
 											"i" => $j
 										]; // next stack
 
-										$parts = $parts[ $j ] -> parts; // parts
+										$parts = $parts[$j] -> parts; // parts
 										$j     = 0;
 									}
 									else {
@@ -3181,11 +3220,11 @@ class Mailer {
 							 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 							 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 							 */
-							unset( $db );
-							$db = new SafeMySQL( $opts );
+							unset($db);
+							$db = new SafeMySQL($opts);
 
 							//загрузка файлов
-							foreach ( $attachments as $attachment ) {
+							foreach ($attachments as $attachment) {
 
 								$attach[] = [
 									"uid"  => $uid,
@@ -3197,9 +3236,9 @@ class Mailer {
 
 								$diskUsage = getFileLimit();
 
-								if ( $diskUsage['total'] == 0 || $diskUsage['percent'] < 100 ) {
+								if ($diskUsage['total'] == 0 || $diskUsage['percent'] < 100) {
 
-									self ::downloadAttachment( $conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"] );
+									self::downloadAttachment($conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"]);
 
 								}
 
@@ -3207,14 +3246,14 @@ class Mailer {
 
 							//загрузка вложенных изображений
 							$bodyimg = [];
-							foreach ( $bimage as $bimg ) {
+							foreach ($bimage as $bimg) {
 
 								$bodyimg[] = [
 									"uid"  => $uid,
-									"id"   => str_replace( [
+									"id"   => str_replace([
 										"<",
 										">"
-									], "", $bimg["id"] ),
+									], "", $bimg["id"]),
 									"part" => $bimg["partNum"],
 									"enc"  => $bimg["enc"],
 									"file" => $bimg["file"],
@@ -3222,8 +3261,8 @@ class Mailer {
 								];
 
 								//загружаем файлы
-								if ( !file_exists( $ym_fpath."/inbody/".$bimg["file"] ) ) {
-									self ::downloadAttachment( $conn, $uid, $bimg["partNum"], $bimg["enc"], $ym_fpath."/inbody/", $bimg["file"] );
+								if (!file_exists($ym_fpath."/inbody/".$bimg["file"])) {
+									self::downloadAttachment($conn, $uid, $bimg["partNum"], $bimg["enc"], $ym_fpath."/inbody/", $bimg["file"]);
 								}
 
 							}
@@ -3238,14 +3277,14 @@ class Mailer {
 
 						$isJP = false;
 
-						if ( str_contains( $details["subject"], 'ISO-2022-JP' ) ) {
+						if (str_contains($details["subject"], 'ISO-2022-JP')) {
 							$isJP = true;
 						}
 
-						$namee  = imap_mime_header_decode( $details["fromName"] );
-						$toname = imap_mime_header_decode( $details["toName"] );
+						$namee  = imap_mime_header_decode($details["fromName"]);
+						$toname = imap_mime_header_decode($details["toName"]);
 
-						$themee = (!$isJP) ? imap_mime_header_decode( $details["subject"] ) : $details["subject"];
+						$themee = ( !$isJP ) ? imap_mime_header_decode($details["subject"]) : $details["subject"];
 
 
 						/*if($msguid[ $i ] == 40160) {
@@ -3254,18 +3293,18 @@ class Mailer {
 
 
 						$name = '';
-						for ( $h = 0, $hMax = count( (array)$namee ); $h < $hMax; $h++ ) {
-							$name .= " ".str_replace( "'", "", untag( $namee[ $h ] -> text ) );
+						for ($h = 0, $hMax = count((array)$namee); $h < $hMax; $h++) {
+							$name .= " ".str_replace("'", "", untag($namee[$h] -> text));
 						}
 
 
 						$subject = '';
 
-						if ( is_object( $themee ) || is_array($themee) ) {
+						if (is_object($themee) || is_array($themee)) {
 
-							foreach ($themee as $item){
+							foreach ($themee as $item) {
 
-								$subject .= str_replace( "'", " ", untag( $item -> text ) );
+								$subject .= str_replace("'", " ", untag($item -> text));
 
 							}
 
@@ -3280,92 +3319,92 @@ class Mailer {
 
 						//бывает, что заголовок приходит в UTF-8 не зашифрованным, т.е. без приставок "=?UTF"
 						//такие заголовки не будем перекодировать
-						elseif ( strpos( $details["subject"], '=?' ) === false ) {
+						elseif (strpos($details["subject"], '=?') === false) {
 							$subject = $details["subject"];
 						}
 
 						else {
-							$subject = self ::encodeToUtf8( $details["subject"] );
+							$subject = self::encodeToUtf8($details["subject"]);
 						}
 
 						//кодировка заголовков, ибо надо проверять отдельно
 						//потому что, сука, всякие веб-клиенты мэйл.сру, яндекс и пр. отправляют в разных кодировках
-						$code = strtoupper( $themee[0] -> charset );
+						$code = strtoupper($themee[0] -> charset);
 
 						//$details['datum'] = modifyDatetime( $details["udate"] );
-						$details['datum'] = unix_to_datetime( $details["udate"] );
-						$details['msgno'] = $msgno[ $i ];
-						$details['theme'] = ($subject != '') ? trim( $subject ) : self ::encodeToUtf8( $details["subject"] );
+						$details['datum'] = unix_to_datetime($details["udate"]);
+						$details['msgno'] = $msgno[$i];
+						$details['theme'] = ( $subject != '' ) ? trim($subject) : self::encodeToUtf8($details["subject"]);
 
 						//декодируем имя отправителя и заголовок
-						if ( $code == "KOI8-R" || $code == "KOI8R" ) {
+						if ($code == "KOI8-R" || $code == "KOI8R") {
 
 							/*
 							$details['fromName'] = iconv("KOI8-R", "UTF-8", trim($name));
 							$details['toName']   = iconv("KOI8-R", "UTF-8", $toname[0] -> text);
 							*/
 
-							$details['fromName'] = mb_convert_encoding( trim( $name ), "UTF-8", "KOI8-R" );
-							$details['toName']   = mb_convert_encoding( $toname[0] -> text, "UTF-8", "KOI8-R" );
-							$details['theme']    = mb_convert_encoding ( $subject, "UTF-8", "KOI8-R" );
+							$details['fromName'] = mb_convert_encoding(trim($name), "UTF-8", "KOI8-R");
+							$details['toName']   = mb_convert_encoding($toname[0] -> text, "UTF-8", "KOI8-R");
+							$details['theme']    = mb_convert_encoding($subject, "UTF-8", "KOI8-R");
 
 
 						}
-						elseif ( $code == "WINDOWS-1251" ) {
+						elseif ($code == "WINDOWS-1251") {
 
 							//if (!$isJP) $details['theme'] = iconv("WINDOWS-1251", "UTF-8", $subject);
 							//$details['fromName'] = iconv("WINDOWS-1251", "UTF-8", trim($name));
 							//$details['toName']   = iconv("WINDOWS-1251", "UTF-8", $toname[0] -> text);
 
 							//$details['theme'] = mb_convert_encoding ( $subject, "UTF-8", "WINDOWS-1251" );
-							$details['fromName'] = mb_convert_encoding( trim( $name ), "UTF-8", "WINDOWS-1251" );
-							$details['toName']   = mb_convert_encoding( $toname[0] -> text, "UTF-8", "WINDOWS-1251" );
+							$details['fromName'] = mb_convert_encoding(trim($name), "UTF-8", "WINDOWS-1251");
+							$details['toName']   = mb_convert_encoding($toname[0] -> text, "UTF-8", "WINDOWS-1251");
 
 						}
 						else {
 
-							if ( !$isJP ) {
+							if (!$isJP) {
 								$details['theme'] = $subject;
 							}
-							$details['fromName'] = trim( $name );
+							$details['fromName'] = trim($name);
 							$details['toName']   = $toname[0] -> text;
 
 						}
 
-						$details['theme']    = str_replace( [
+						$details['theme']    = str_replace([
 							"'",
 							"`",
 							"$",
 							")",
 							"("
-						], "", untag( $details['theme'] ) );
-						$details['fromName'] = str_replace( [
+						], "", untag($details['theme']));
+						$details['fromName'] = str_replace([
 							"'",
 							"`",
 							"$"
-						], "", untag( $details['fromName'] ) );
-						$details['toName']   = str_replace( [
+						], "", untag($details['fromName']));
+						$details['toName']   = str_replace([
 							"'",
 							"`",
 							"$"
-						], "", untag( $details['toName'] ) );
+						], "", untag($details['toName']));
 
 						//тело сообщения
-						$html = self ::getBody( $uid, $conn );
+						$html = self::getBody($uid, $conn);
 
 						//декодируем текст письма, т.к. веб-клиенты типа Яндекса и Майл.сру отправляют заголовки в разных кодировках
-						if ( str_contains( $codeBody, "ASCII" ) ) {
+						if (str_contains($codeBody, "ASCII")) {
 							$details['html']    = $html;
 							$details['convert'] = "ASCII";
 						}
-						elseif ( $codeBody == "WINDOWS-1251" ) {
+						elseif ($codeBody == "WINDOWS-1251") {
 							//$details[ 'html' ] = $html;
-							$details['html'] = str_replace( "charset=windows-1251", "charset=utf-8", mb_convert_encoding( $html, "UTF-8", "WINDOWS-1251" ) );
+							$details['html'] = str_replace("charset=windows-1251", "charset=utf-8", mb_convert_encoding($html, "UTF-8", "WINDOWS-1251"));
 							//$details['html']    = mb_convert_encoding( $html, "UTF-8", "WINDOWS-1251" );
 							$details['convert'] = "WINDOWS-1251";
 						}
-						elseif ( $codeBody == "KOI8-R" || $codeBody == "KOI8R" ) {
-							$details['html']    = str_replace( "charset=koi8-r", "charset=utf-8", mb_convert_encoding( $html, "UTF-8", "KOI8-R" ) );
+						elseif ($codeBody == "KOI8-R" || $codeBody == "KOI8R") {
+							$details['html']    = str_replace("charset=koi8-r", "charset=utf-8", mb_convert_encoding($html, "UTF-8", "KOI8-R"));
 							$details['convert'] = "KOI8-R";
 						}
 						else {
@@ -3373,12 +3412,12 @@ class Mailer {
 							$details['convert'] = false;
 						}
 
-						$details['html'] = getHtmlBody( $details['html'] );
+						$details['html'] = getHtmlBody($details['html']);
 
-						if ( !empty( $bodyimg ) ) {
-							foreach ( $bodyimg as $bimg ) {
+						if (!empty($bodyimg)) {
+							foreach ($bodyimg as $bimg) {
 
-								$details['html'] = str_replace( "cid:".$bimg['id'], "/files/".$fpath."ymail/inbody/".$bimg['file'], $details['html'] );
+								$details['html'] = str_replace("cid:".$bimg['id'], "/files/".$fpath."ymail/inbody/".$bimg['file'], $details['html']);
 
 							}
 						}
@@ -3386,23 +3425,23 @@ class Mailer {
 						//$details['html']    = htmlspecialchars($details['html']);
 						$details['uid'] = $uid;
 
-						if ( !empty( $attach ) ) {
+						if (!empty($attach)) {
 							$details['attach'] = $attach;
 						}
 
-						if ( !empty( $bodyimg ) ) {
+						if (!empty($bodyimg)) {
 							$details['bodyimg'] = $bodyimg;
 						}
 
 						$messages[] = $details;
 
 						//удаляем письма вручную
-						if ( $params['deletemess'] ) {
+						if ($params['deletemess']) {
 
-							imap_delete( $conn, $msgno );
+							imap_delete($conn, $msgno);
 
 							//FT_UID - опция, чтобы моно было применить uid вместо msgno
-							imap_delete( $conn, $uid, FT_UID );
+							imap_delete($conn, $uid, FT_UID);
 
 						}
 
@@ -3413,19 +3452,21 @@ class Mailer {
 			}
 
 			//если настроено, то удаляем письмо из ящика
-			if ( $params['deletemess'] ) {
+			if ($params['deletemess']) {
 
-				imap_expunge( $conn );
+				imap_expunge($conn);
 
 			}
 
-			imap_close( $conn );
+			imap_close($conn);
 
-			setcookie( "ymail", "" );
+			setcookie("ymail", "");
 
 			$this -> Error = $error;
 
 		}
+
+		$messages = $hooks -> apply_filters( "mailer_mailget", $messages );
 
 		extt:
 
@@ -3477,34 +3518,34 @@ class Mailer {
 		$messages = $this -> Messages;
 		$box      = $this -> box;
 
-		$mailbox = ($box == 'SEND') ? 'sended' : 'inbox';
-		$tip     = ($box == 'SEND') ? 'to' : 'from';
+		$mailbox = ( $box == 'SEND' ) ? 'sended' : 'inbox';
+		$tip     = ( $box == 'SEND' ) ? 'to' : 'from';
 
 		$mcount = 0;
 		$last   = 0;
 		$err    = [];
 
-		$db = new SafeMySQL( $opts );
-		$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+		$db = new SafeMySQL($opts);
+		$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
-		$db -> query( "UPDATE {$sqlname}ymail_settings SET lasttime = ?s WHERE iduser = ?i and identity = ?i", current_datumtime(), $iduser, $identity );
+		$db -> query("UPDATE {$sqlname}ymail_settings SET lasttime = ?s WHERE iduser = ?i and identity = ?i", current_datumtime(), $iduser, $identity);
 
-		$cUser = current_user( $iduser );
+		$cUser = current_user($iduser);
 
 		$ymfpath = $rootpath.'/files/'.$fpath.'ymail/';
 
 		//если не указан почтовый ящик ( для реализации 1 Юзер = 1 Ящик )
-		if ( $mailID == 0 ) {
+		if ($mailID == 0) {
 
 			//читаем настройки
 			$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$iduser.".json";
 
-			if ( file_exists( $settingsYMail ) ) {
-				$ymailSet = json_decode( file_get_contents( $settingsYMail ), true );
+			if (file_exists($settingsYMail)) {
+				$ymailSet = json_decode(file_get_contents($settingsYMail), true);
 			}
 
 			else {
-				$ymailSet = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'" ), true );
+				$ymailSet = json_decode($db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'"), true);
 			}
 
 		}
@@ -3512,69 +3553,69 @@ class Mailer {
 		// если указан ID конкретного ящика ( для реализации 1 Юзер = ХХХ ящиков )
 		else {
 
-			$p        = $db -> getRow( "SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'" );
-			$ymailSet = json_decode( $p['settings'], true );
+			$p        = $db -> getRow("SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'");
+			$ymailSet = json_decode($p['settings'], true);
 
 		}
 
-		foreach ( $messages as $message ) {
+		foreach ($messages as $message) {
 
-			unset( $db );
-			$db = new SafeMySQL( $opts );
-			$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+			unset($db);
+			$db = new SafeMySQL($opts);
+			$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
 			//найдем тэг ID сделки в заголовке
-			preg_match( '/(?<=\[D#)[0-9.\/]*(?=]$)/', $message['theme'], $didtag );
-			$did = ($didtag[0] != '') ? (int)$didtag[0] : "0";
+			preg_match('/(?<=\[D#)[0-9.\/]*(?=]$)/', $message['theme'], $didtag);
+			$did = ( $didtag[0] != '' ) ? (int)$didtag[0] : "0";
 
-			if ( $message['theme'] == '' ) {
+			if ($message['theme'] == '') {
 				$message['theme'] = "--Без темы--";
 			}
 			else {
-				$message['theme'] = substr( $message['theme'], 0, 250 );
+				$message['theme'] = substr($message['theme'], 0, 250);
 			}
 
-			if ( $message['fromName'] == '' ) {
+			if ($message['fromName'] == '') {
 				$message['fromName'] = $message['fromAddr'];
 			}
 
 			//найдем аналогичные письма, чтобы исключить дубли
-			$msgid = $db -> getOne( "SELECT id FROM {$sqlname}ymail_messages WHERE messageid = ?s and fromm = ?s and iduser = ?i and identity = ?i", $message['messageid'], $message['fromAddr'], $iduser, $identity );
+			$msgid = $db -> getOne("SELECT id FROM {$sqlname}ymail_messages WHERE messageid = ?s and fromm = ?s and iduser = ?i and identity = ?i", $message['messageid'], $message['fromAddr'], $iduser, $identity);
 
 			//для сообщений из ящика Отправленные
-			if ( $mailbox == 'sended' ) {
+			if ($mailbox == 'sended') {
 
-				if ( $message['fromName'] == '' ) {
+				if ($message['fromName'] == '') {
 					$message['fromName'] = $cUser;
 				}
 
-				if ( $message['fromName'] == $message['fromAddr'] ) {
+				if ($message['fromName'] == $message['fromAddr']) {
 					$message['fromName'] = $cUser;
 				}
 
 			}
 
-			if ( !empty( $message['bodyimg'] ) ) {
-				foreach ( $message['bodyimg'] as $bimg ) {
-					$message['html'] = str_replace( "cid:".$bimg['id'], $ymfpath."inbody/".$bimg['file'], $message['html'] );
+			if (!empty($message['bodyimg'])) {
+				foreach ($message['bodyimg'] as $bimg) {
+					$message['html'] = str_replace("cid:".$bimg['id'], $ymfpath."inbody/".$bimg['file'], $message['html']);
 				}
 			}
 
 
 			//если такого письма нет (для всех входящих точно нет, для проверки папки Отправленные возможно
-			if ( $msgid < 1 ) {
+			if ($msgid < 1) {
 
-				unset( $db );
-				$db = new SafeMySQL( $opts );
-				$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+				unset($db);
+				$db = new SafeMySQL($opts);
+				$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
 				//file_put_contents($rootpath."/cash/mailer-".$message['uid'].".json", json_encode_cyr($message));
 
 				//try {
 
-				$blacklist = self ::blackList();
+				$blacklist = self::blackList();
 
-				if ( !in_array( $message['fromAddr'], $blacklist ) ) {
+				if (!in_array($message['fromAddr'], $blacklist)) {
 
 					$msg['datum']     = $message['datum'];
 					$msg['messageid'] = $message['messageid'];
@@ -3583,22 +3624,22 @@ class Mailer {
 					$msg['state']     = 'unread';
 					$msg['priority']  = '3';
 					$msg['fromm']     = $message['fromAddr'];
-					$msg['fromname']  = remove_emoji( $message['fromName'] );
-					$msg['theme']     = remove_emoji( $message['theme'] );
-					$msg['content']   = htmlspecialchars( str_replace( [
+					$msg['fromname']  = remove_emoji($message['fromName']);
+					$msg['theme']     = remove_emoji($message['theme']);
+					$msg['content']   = htmlspecialchars(str_replace([
 						"<p> </p>",
 						"<p>&nbsp;</p>",
 						"<p>&nbsp; </p>",
 						"<p class=\"MsoNormal\"></p>",
 						"<p></p>"
-					], "", (isHTML( $message['html'] ) ? str_replace( "\n", "", remove_emoji( $message['html'] ) ) : $message['html']) ) );
+					], "", ( isHTML($message['html']) ? str_replace("\n", "", remove_emoji($message['html'])) : $message['html'] )));
 					$msg['iduser']    = $iduser;
 					$msg['did']       = $did;
 					$msg['identity']  = $identity;
 
 					//file_put_contents($rootpath."/cash/mailer-".$message['uid'].".json", json_encode_cyr($msg));
 
-					$db -> query( "INSERT INTO {$sqlname}ymail_messages SET ?u", arrayNullClean( $msg ) );
+					$db -> query("INSERT INTO {$sqlname}ymail_messages SET ?u", arrayNullClean($msg));
 					$msgid = $db -> insertId();
 
 					$last = $msgid;
@@ -3609,7 +3650,7 @@ class Mailer {
 					$mcount++;
 
 					//для сообщений из ящика Отправленные
-					if ( $tip == 'to' ) {
+					if ($tip == 'to') {
 
 						$message['fromName'] = $message['toName'];
 						$message['fromAddr'] = $message['toAddr'];
@@ -3617,27 +3658,27 @@ class Mailer {
 					}
 
 					//найдем и добавим отправителя по базе и добавим его
-					$r    = $db -> getRow( "SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE ?s AND identity = ?i ORDER BY pid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity );
+					$r    = $db -> getRow("SELECT pid, clid FROM {$sqlname}personcat WHERE mail LIKE ?s AND identity = ?i ORDER BY pid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity);
 					$pid  = (int)$r['pid'];
 					$clid = (int)$r['clid'];
 
-					if ( $clid == 0 && $pid == 0 ) {
+					if ($clid == 0 && $pid == 0) {
 
-						$clid = (int)$db -> getOne( "SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE ?s AND identity = ?i ORDER BY clid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity );
+						$clid = (int)$db -> getOne("SELECT clid FROM {$sqlname}clientcat WHERE mail_url LIKE ?s AND identity = ?i ORDER BY clid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity);
 
-						if ( $clid == 0 ) {
-							$pid = (int)$db -> getOne( "SELECT pid FROM {$sqlname}personcat WHERE mail LIKE ?s AND identity = ?i ORDER BY pid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity );
+						if ($clid == 0) {
+							$pid = (int)$db -> getOne("SELECT pid FROM {$sqlname}personcat WHERE mail LIKE ?s AND identity = ?i ORDER BY pid DESC LIMIT 1", "%".$message['fromAddr']."%", $identity);
 						}
 
 					}
 
-					if ( $message['fromName'] == '' ) {
+					if ($message['fromName'] == '') {
 
-						if ( $clid > 0 ) {
-							$message['fromName'] = current_client( $clid );
+						if ($clid > 0) {
+							$message['fromName'] = current_client($clid);
 						}
-						if ( $pid > 0 ) {
-							$message['fromName'] = current_person( $pid );
+						if ($pid > 0) {
+							$message['fromName'] = current_person($pid);
 						}
 
 					}
@@ -3646,19 +3687,19 @@ class Mailer {
 						'mid'      => $msgid,
 						'tip'      => $tip,
 						'email'    => $message['fromAddr'],
-						'name'     => remove_emoji( $message['fromName'] ),
+						'name'     => remove_emoji($message['fromName']),
 						'clid'     => $clid,
 						'pid'      => $pid,
 						'identity' => $identity
 					];
-					$db -> query( "INSERT INTO {$sqlname}ymail_messagesrec SET ?u", $msgrec );
+					$db -> query("INSERT INTO {$sqlname}ymail_messagesrec SET ?u", $msgrec);
 
 					//добавим файлы вложения
 					$attach = $message['attach'] ?? [];
 
-					foreach ( $attach as $att ) {
+					foreach ($attach as $att) {
 
-						if ( $att['name'] != '' ) {
+						if ($att['name'] != '') {
 
 							$at = [
 								'mid'      => $msgid,
@@ -3667,7 +3708,7 @@ class Mailer {
 								'file'     => $att['file'],
 								'identity' => $identity
 							];
-							$db -> query( "INSERT INTO {$sqlname}ymail_files  SET ?u", arrayNullClean( $at ) );
+							$db -> query("INSERT INTO {$sqlname}ymail_files  SET ?u", arrayNullClean($at));
 
 						}
 
@@ -3683,12 +3724,12 @@ class Mailer {
 				//}
 
 				//если есть сделка, клиент или контакт, то добавим письмо в историю
-				if ( ($did > 0 && $ymailSet['ymailAddHistoryDeal']) || ($mailbox == 'inbox' && $ymailSet['ymailAddHistoryInbox']) || ($mailbox == 'sended' && $ymailSet['ymailAddHistorySended']) ) {
+				if (( $did > 0 && $ymailSet['ymailAddHistoryDeal'] ) || ( $mailbox == 'inbox' && $ymailSet['ymailAddHistoryInbox'] ) || ( $mailbox == 'sended' && $ymailSet['ymailAddHistorySended'] )) {
 
 					//unset($db);
 					//$db = new SafeMySQL($opts);
 
-					self ::putHistory( (int)$msgid );
+					self::putHistory((int)$msgid);
 
 					/*try {
 
@@ -3707,11 +3748,11 @@ class Mailer {
 
 		}
 
-		$d = ($mailbox == 'sended') ? 'Отправленных' : 'Входящих';
+		$d = ( $mailbox == 'sended' ) ? 'Отправленных' : 'Входящих';
 
 		return [
-			"result" => empty( $err ) ? "Получено $d писем <b>$mcount</b>" : "error",
-			"text"   => empty( $err ) ? "Получено $d писем <b>$mcount</b>" : "Ошибка: ".implode( "<br>", $err ),
+			"result" => empty($err) ? "Получено $d писем <b>$mcount</b>" : "error",
+			"text"   => empty($err) ? "Получено $d писем <b>$mcount</b>" : "Ошибка: ".implode("<br>", $err),
 			"mcount" => $mcount,
 			"last"   => $last
 		];
@@ -3769,7 +3810,7 @@ class Mailer {
 	 */
 	public function mailSubmit(): array {
 
-		global $bdtimezone;
+		global $bdtimezone, $hooks;
 
 		$identity = $this -> identity;
 		$sqlname  = $this -> sqlname;
@@ -3801,7 +3842,7 @@ class Mailer {
 		//print_r(get_object_vars($this));
 
 		// если параметры не пришли, то найдем их через ID письма
-		if ( $id > 0 ) {
+		if ($id > 0) {
 
 			$this -> mailInfo();
 			$msg = $this -> Message;
@@ -3809,7 +3850,7 @@ class Mailer {
 			//print_r($msg);
 
 			$subject  = $msg['subject'];
-			$html     = str_replace( "{subject}", $subject, $msg['html'] );
+			$html     = str_replace("{subject}", $subject, $msg['html']);
 			$from     = $msg['from'];
 			$fromname = $msg['fromname'];
 			$to       = $msg['to'];
@@ -3820,15 +3861,15 @@ class Mailer {
 		}
 		else {
 
-			$fromname = current_user( (int)$iduser );
+			$fromname = current_user((int)$iduser);
 
 		}
 
-		$html = htmlspecialchars_decode( $html );
+		$html = htmlspecialchars_decode($html);
 
 		// преобразуем значения массива параметров в переменные
-		if ( !empty( $params ) ) {
-			foreach ( $params as $key => $val ) {
+		if (!empty($params)) {
+			foreach ($params as $key => $val) {
 				$$key = $val;
 			}
 		}
@@ -3836,30 +3877,30 @@ class Mailer {
 		$response = [];
 
 		//если не указан почтовый ящик ( для реализации 1 Юзер = 1 Ящик )
-		if ( $mailID == 0 ) {
+		if ($mailID == 0) {
 
 			//читаем настройки
 			$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.$iduser.json";
 
-			if ( file_exists( $settingsYMail ) ) {
-				$settings = json_decode( file_get_contents( $settingsYMail ), true );
+			if (file_exists($settingsYMail)) {
+				$settings = json_decode(file_get_contents($settingsYMail), true);
 			}
 			else {
-				$settings = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'" ), true );
+				$settings = json_decode($db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '$iduser' AND identity = '$identity'"), true);
 			}
 
 		}
 		// если указан ID конкретного ящика ( для реализации 1 Юзер = ХХХ ящиков )
 		else {
 
-			$p        = $db -> getRow( "SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'" );
-			$settings = json_decode( $p['settings'], true );
+			$p        = $db -> getRow("SELECT settings, iduser FROM {$sqlname}ymail_settings WHERE id = '$mailID'");
+			$settings = json_decode($p['settings'], true);
 			$iduser   = $p['iduser'];
 
 		}
 
 		//копирование в отправленные делаем кроме Gmail, т.к. он сам кладет письма в отправленные, если отправлять через SMTP
-		if ( str_contains( strtolower( $settings['ymailInHost'] ), 'google' ) ) {
+		if (str_contains(strtolower($settings['ymailInHost']), 'google')) {
 			$copyInSent = false;
 		}
 		else {
@@ -3867,40 +3908,40 @@ class Mailer {
 		}
 
 		// раскодируем логин/пароль
-		$settings['ymailUser'] = self ::decrypt( $settings['ymailUser'], $skey, $ivc );
-		$settings['ymailPass'] = self ::decrypt( $settings['ymailPass'], $skey, $ivc );
+		$settings['ymailUser'] = self::decrypt($settings['ymailUser'], $skey, $ivc);
+		$settings['ymailPass'] = self::decrypt($settings['ymailPass'], $skey, $ivc);
 
-		$charset = (!$settings['ymailOutCharset']) ? 'utf-8' : $settings['ymailOutCharset'];
+		$charset = ( !$settings['ymailOutCharset'] ) ? 'utf-8' : $settings['ymailOutCharset'];
 
 		//закодируем все вложенные файлы в base64
 		$images   = [];
 		$ym_fpath = $rootpath.'/files/'.$fpath.'ymail/';
 
 		//находим ссылки на изображения в массив $images
-		preg_match_all( '/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $html, $images, PREG_SET_ORDER );
+		preg_match_all('/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $html, $images, PREG_SET_ORDER);
 
 		// включаем изображения в теле письма как base64
-		foreach ( $images as $img ) {
+		foreach ($images as $img) {
 
 			$imgSrc  = $img[1];
-			$array   = yexplode( "/", (string)$img[1] );
-			$imgOrig = array_pop( $array );
+			$array   = yexplode("/", (string)$img[1]);
+			$imgOrig = array_pop($array);
 
-			if ( file_exists( $ym_fpath."inbody/".$imgOrig ) ) {
+			if (file_exists($ym_fpath."inbody/".$imgOrig)) {
 
-				$imgBase64 = base64_encode( file_get_contents( $ym_fpath."inbody/".$imgOrig ) );
-				$src       = 'data:'.mime_content_type( $ym_fpath."inbody/".$imgOrig ).';base64,'.$imgBase64;
+				$imgBase64 = base64_encode(file_get_contents($ym_fpath."inbody/".$imgOrig));
+				$src       = 'data:'.mime_content_type($ym_fpath."inbody/".$imgOrig).';base64,'.$imgBase64;
 
-				$html = str_replace( $imgSrc, $src, $html );
+				$html = str_replace($imgSrc, $src, $html);
 
 			}
 
 		}
 
 		$messageid = 'salesman'.$iduser.time();
-		$host      = (yexplode( "@", $settings['ymailFrom'], 1 ) != '') ? (string)yexplode( "@", (string)$settings['ymailFrom'], 1 ) : 'localhost';
+		$host      = ( yexplode("@", $settings['ymailFrom'], 1) != '' ) ? (string)yexplode("@", (string)$settings['ymailFrom'], 1) : 'localhost';
 
-		if ( empty( $host ) ) {
+		if (empty($host)) {
 			$host = 'salesmancrm.local';
 		}
 
@@ -3933,55 +3974,55 @@ class Mailer {
 		//print $fromname;
 
 		$mail -> CharSet = $charset;
-		$mail -> setLanguage( 'ru', $rootpath.'/vendor/phpmailer/phpmailer/language/' );
+		$mail -> setLanguage('ru', $rootpath.'/vendor/phpmailer/phpmailer/language/');
 		$mail -> IsHTML();
 
-		if ( $charset != 'utf-8' ) {
-			$fromname = iconv( "utf-8", $charset, $fromname );
+		if ($charset != 'utf-8') {
+			$fromname = iconv("utf-8", $charset, $fromname);
 		}
 
-		$mail -> SetFrom( $settings['ymailFrom'], $fromname );
+		$mail -> SetFrom($settings['ymailFrom'], $fromname);
 
 		//print $param['from'];
 
 		// новая реализация
-		if ( !isset( $params['toname'] ) ) {
+		if (!isset($params['toname'])) {
 
-			if ( $to[0]['name'] != '' ) {
+			if ($to[0]['name'] != '') {
 
-				foreach ( $to as $t ) {
+				foreach ($to as $t) {
 
-					if ( $charset != 'utf-8' ) {
-						$t['name'] = iconv( "utf-8", $charset, $t['name'] );
+					if ($charset != 'utf-8') {
+						$t['name'] = iconv("utf-8", $charset, $t['name']);
 					}
 
-					$mail -> AddAddress( $t['email'], $t['name'] );
+					$mail -> AddAddress($t['email'], $t['name']);
 
 				}
 
 			}
 			else {
 
-				if ( $charset != 'utf-8' ) {
-					$to['name'] = iconv( "utf-8", $charset, $to['name'] );
+				if ($charset != 'utf-8') {
+					$to['name'] = iconv("utf-8", $charset, $to['name']);
 				}
 
-				$mail -> AddAddress( $to['email'], $to['name'] );
+				$mail -> AddAddress($to['email'], $to['name']);
 
 			}
 
 		}
 
 		// старая реализация ( передача email и имен отправителей в разных массивах - to и toname )
-		elseif ( is_array( $params['to'] ) ) {
+		elseif (is_array($params['to'])) {
 
-			for ( $i = 0, $iMax = count( (array)$params['to'] ); $i < $iMax; $i++ ) {
+			for ($i = 0, $iMax = count((array)$params['to']); $i < $iMax; $i++) {
 
-				if ( $charset != 'utf-8' ) {
-					$params['toname'][ $i ] = iconv( "utf-8", $charset, $params['toname'][ $i ] );
+				if ($charset != 'utf-8') {
+					$params['toname'][$i] = iconv("utf-8", $charset, $params['toname'][$i]);
 				}
 
-				$mail -> AddAddress( $params['to'][ $i ], $params['toname'][ $i ] );
+				$mail -> AddAddress($params['to'][$i], $params['toname'][$i]);
 
 			}
 
@@ -3989,48 +4030,48 @@ class Mailer {
 
 		else {
 
-			if ( $charset != 'utf-8' ) {
-				$params['toname'] = iconv( "utf-8", $charset, $params['toname'] );
+			if ($charset != 'utf-8') {
+				$params['toname'] = iconv("utf-8", $charset, $params['toname']);
 			}
 
-			$mail -> AddAddress( $params['to'], $params['toname'] );
+			$mail -> AddAddress($params['to'], $params['toname']);
 
 		}
 
 		// вложения из папки ymail ( для не загруженных в систему файлов )
-		foreach ( $attach as $file ) {
+		foreach ($attach as $file) {
 
-			if ( $charset != 'utf-8' ) {
-				$file['name'] = iconv( "utf-8", $charset, $file['name'] );
+			if ($charset != 'utf-8') {
+				$file['name'] = iconv("utf-8", $charset, $file['name']);
 			}
 
-			$mail -> AddAttachment( $rootpath."/files/{$fpath}ymail/".$file['file'], $file['name'] );
+			$mail -> AddAttachment($rootpath."/files/{$fpath}ymail/".$file['file'], $file['name']);
 
 		}
 
 		// вложения из папки files
-		foreach ( $files as $file ) {
+		foreach ($files as $file) {
 
-			if ( $charset != 'utf-8' ) {
-				$file['name'] = iconv( "utf-8", $charset, $file['name'] );
+			if ($charset != 'utf-8') {
+				$file['name'] = iconv("utf-8", $charset, $file['name']);
 			}
 
-			$mail -> AddAttachment( $rootpath."/files/".$fpath.$file['file'], $file['name'] );
+			$mail -> AddAttachment($rootpath."/files/".$fpath.$file['file'], $file['name']);
 
 		}
 
-		if ( $charset != 'utf-8' ) {
-			$subject = iconv( "utf-8", $charset, $subject );
-			$html    = iconv( "utf-8", $charset, $html );
+		if ($charset != 'utf-8') {
+			$subject = iconv("utf-8", $charset, $subject);
+			$html    = iconv("utf-8", $charset, $html);
 		}
 
 		$mail -> Subject = $subject;
 		$mail -> Body    = $html;
-		$mail -> AltBody = html2text( $html );
+		$mail -> AltBody = html2text($html);
 
 		//print_r(get_object_vars($mail));
 
-		if ( !$mail -> Send() ) {
+		if (!$mail -> Send()) {
 			$this -> Error = 'Ошибка отправки: '.$mail -> ErrorInfo;
 		}
 
@@ -4039,27 +4080,25 @@ class Mailer {
 			$mail -> preSend();
 			$content = $mail -> getSentMIMEMessage();
 
-			unset( $db );
-			$db = new SafeMySQL( $opts );
-			$db -> query( "SET time_zone = '".$bdtimezone.":00'" );
+			unset($db);
+			$db = new SafeMySQL($opts);
+			$db -> query("SET time_zone = '".$bdtimezone.":00'");
 
-			//$db -> query( "UPDATE {$sqlname}ymail_messages SET folder = 'sended', state = 'read', messageid = '$messageid', datum = '".current_datumtime()."' WHERE id = '$id'" );
-			$db -> query( "UPDATE {$sqlname}ymail_messages SET ?u WHERE id = '$id'", [
+			$db -> query("UPDATE {$sqlname}ymail_messages SET ?u WHERE id = '$id'", [
 				"folder"    => 'sended',
 				"state"     => 'read',
 				"messageid" => $messageid,
 				"datum"     => current_datumtime()
-			] );
-			//print "yml: ".$db -> lastQuery();
+			]);
 
-			if ( $settings['ymailAddHistorySended'] == 'true' ) {
+			if ($settings['ymailAddHistorySended'] == 'true') {
 
 				try {
 
-					self ::putHistory( $id );
+					self::putHistory($id);
 
 				}
-				catch ( Exception $e ) {
+				catch (Exception $e) {
 
 					$this -> Error = $e -> getMessage();
 
@@ -4070,25 +4109,25 @@ class Mailer {
 			//$copyInSent = false;//принудительно отключим копирование в папку отправленные
 
 			//копируем в отправленные на сервере
-			if ( $copyInSent ) {
+			if ($copyInSent) {
 
 				//$mail -> preSend();
 				//$content = $mail -> getSentMIMEMessage();
 
-				if ( $settings['ymailInSecure'] == 'ssl' ) {
+				if ($settings['ymailInSecure'] == 'ssl') {
 					$settings['ymailInSecure'] = '/'.$settings['ymailInSecure'].'/novalidate-cert';
 				}
 
-				$box = ImapUtf7 ::encode( $settings['ymailFolderSent'] );
+				$box = ImapUtf7::encode($settings['ymailFolderSent']);
 
 				$mailbox = '{'.$settings['ymailInHost'].':'.$settings['ymailInPort'].'/'.$settings['ymailInProtocol'].$settings['ymailInSecure'].'}'.$box;
-				$conn    = imap_open( $mailbox, $settings['ymailUser'], $settings['ymailPass'] );
+				$conn    = imap_open($mailbox, $settings['ymailUser'], $settings['ymailPass']);
 
-				imap_append( $conn, $mailbox, $content, "\\Seen" );
+				imap_append($conn, $mailbox, $content, "\\Seen");
 
 				$response['imaperror'] = imap_last_error();
 
-				imap_close( $conn );
+				imap_close($conn);
 
 			}
 
@@ -4096,11 +4135,19 @@ class Mailer {
 
 		$mail -> ClearAddresses();
 		$mail -> ClearAttachments();
-		$mail -> IsHTML( false );
+		$mail -> IsHTML(false);
 
 		$response['messageid'] = $messageid;
 
 		$this -> messageid = $messageid;
+
+		if ($hooks) {
+			$hooks -> do_action("mailer_submit", [
+				"id"       => $id,
+				"response" => $response,
+				"obj"      => $this
+			]);
+		}
 
 		return $response;
 
@@ -4109,13 +4156,13 @@ class Mailer {
 	/**
 	 * Выполнение различных действий с сообщением непосредственно по IMAP, т.е. на сервере
 	 *
-	 * @param int    $id     - id письма
+	 * @param int $id - id письма
 	 * @param string $action - действие: delete, seen, unseen
 	 * @return string
 	 */
 	public static function mailAction(int $id, string $action = ''): string {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		global $mail_rez;
 
@@ -4129,66 +4176,66 @@ class Mailer {
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
-		if ( $id < 1 ) {
+		if ($id < 1) {
 
 			$mail_rez = 'Не указано id сообщения';
 
 		}
 		else {
 
-			$msg = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' AND identity = '$identity'" );
+			$msg = $db -> getRow("SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' AND identity = '$identity'");
 
-			$param = $db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$msg['iduser']."' AND identity = '$identity'" );
-			$param = json_decode( $param, true );
+			$param = $db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$msg['iduser']."' AND identity = '$identity'");
+			$param = json_decode($param, true);
 
-			$param['ymailUser'] = self ::decrypt( $param['ymailUser'], $skey, $ivc );
-			$param['ymailPass'] = self ::decrypt( $param['ymailPass'], $skey, $ivc );
+			$param['ymailUser'] = self::decrypt($param['ymailUser'], $skey, $ivc);
+			$param['ymailPass'] = self::decrypt($param['ymailPass'], $skey, $ivc);
 
 			//если параметры не указаны - отключаем проверку
-			if ( $param['ymailUser'] != '' || $param['ymailPass'] != '' ) {
+			if ($param['ymailUser'] != '' || $param['ymailPass'] != '') {
 
 				$uid = $msg['uid'];
 
-				if ( $param['ymailInSecure'] != '' ) {
+				if ($param['ymailInSecure'] != '') {
 					$param['ymailInSecure'] = '/'.$param['ymailInSecure'].'/novalidate-cert';
 				}
 
 				$mailbox  = '{'.$param['ymailInHost'].':'.$param['ymailInPort'].'/'.$param['ymailInProtocol'].$param['ymailInSecure'].'}INBOX';
-				$conn     = imap_open( $mailbox, $param['ymailUser'], $param['ymailPass'] );
+				$conn     = imap_open($mailbox, $param['ymailUser'], $param['ymailPass']);
 				$mail_rez = imap_last_error();
 
-				if ( $mail_rez == '' ) {
+				if ($mail_rez == '') {
 
 					//FT_UID - опция, чтобы моно было применить uid вместо msgno
-					if ( ($action == 'delete') && imap_delete( $conn, $uid, FT_UID ) ) {
+					if (( $action == 'delete' ) && imap_delete($conn, $uid, FT_UID)) {
 
-						imap_expunge( $conn );
+						imap_expunge($conn);
 						$mail_rez = 'Сообщение удалено с сервера';
 
 					}
-					if ( $action == 'seen' ) {
+					if ($action == 'seen') {
 
-						if ( !imap_setflag_full( $conn, $uid, "\\Seen", ST_UID ) ) {
+						if (!imap_setflag_full($conn, $uid, "\\Seen", ST_UID)) {
 							$mail_rez = imap_last_error();
 						}
 
 						else {
 
-							$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE id = '$id' and identity = '$identity'" );
+							$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE id = '$id' and identity = '$identity'");
 							$mail_rez = 'Выполнено';
 
 						}
 
 					}
-					if ( $action == 'unseen' ) {
+					if ($action == 'unseen') {
 
-						if ( !imap_clearflag_full( $conn, $uid, "\\Seen", ST_UID ) ) {
+						if (!imap_clearflag_full($conn, $uid, "\\Seen", ST_UID)) {
 							$mail_rez = imap_last_error();
 						}
 
 						else {
 
-							$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'unread' WHERE id = '$id' and identity = '$identity'" );
+							$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'unread' WHERE id = '$id' and identity = '$identity'");
 							$mail_rez = 'Выполнено';
 
 						}
@@ -4197,8 +4244,8 @@ class Mailer {
 
 				}
 
-				imap_close( $conn );
-				setcookie( "ymail", "" );
+				imap_close($conn);
+				setcookie("ymail", "");
 
 			}
 			else {
@@ -4226,29 +4273,31 @@ class Mailer {
 	 *      - int **id** - id сообщения ( для seen, delete, trash, untrash, history )
 	 *      - array **multi** - массив id писем ( для multitrash, emptytrash, multidelete )
 	 *
-	 * @return string
+	 * @return int|string
 	 */
-	public static function mailActionPlus(array $param = []) {
+	public static function mailActionPlus(array $param = []): int|string {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		include_once $rootpath."/inc/config.php";
 		include_once $rootpath."/inc/func.php";
 		require_once $rootpath."/inc/dbconnector.php";
 
-		$identity = (int)(($param['identity'] > 0) ? $param['identity'] : $GLOBALS['identity']);
-		$iduser   = (int)(($param['iduser1'] > 0) ? $param['iduser'] : $GLOBALS['iduser1']);
+		global $hooks;
+
+		$identity = (int)( ( $param['identity'] > 0 ) ? $param['identity'] : $GLOBALS['identity'] );
+		$iduser   = (int)( ( $param['iduser1'] > 0 ) ? $param['iduser'] : $GLOBALS['iduser1'] );
 		$fpath    = $GLOBALS['fpath'];
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
 		$tip          = $param['tip'];
-		$params['id'] = (isset( $param['id'] )) ? (int)$param['id'] : null;//id сообщения
+		$params['id'] = ( isset($param['id']) ) ? (int)$param['id'] : NULL;//id сообщения
 		$ids          = (array)$param['multi'];
 		// если задано, то сообщение будет удалено из базы
 		$havy = $params['havy'];
 
-		$params['iduser'] = (int)(($param['iduser'] < 1) ? $iduser : $param['iduser']);
+		$params['iduser'] = (int)( ( $param['iduser'] < 1 ) ? $iduser : $param['iduser'] );
 
 		$rez      = '';
 		$err      = [];
@@ -4257,39 +4306,39 @@ class Mailer {
 		//читаем настройки
 		$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$params['iduser'].".json";
 
-		if ( file_exists( $settingsYMail ) ) {
-			$ym_param = json_decode( file_get_contents( $settingsYMail ), true );
+		if (file_exists($settingsYMail)) {
+			$ym_param = json_decode(file_get_contents($settingsYMail), true);
 		}
 		else {
-			$ym_param = json_decode( $db -> getOne( "SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$params['iduser']."' AND identity = '".$identity."'" ), true );
+			$ym_param = json_decode($db -> getOne("SELECT settings FROM {$sqlname}ymail_settings WHERE iduser = '".$params['iduser']."' AND identity = '".$identity."'"), true);
 		}
 
-		if ( $tip != 'emptytrash' && $params['id'] < 1 && count( (array)$ids ) < 1 ) {
+		if ($tip != 'emptytrash' && $params['id'] < 1 && count((array)$ids) < 1) {
 
 			$rez = 'Отмена. Не выбрано писем';
 
 		}
 		else {
 
-			$result = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'" );
+			$result = $db -> getRow("SELECT * FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'");
 			//$params['uid'] = $result['uid'];
 			$state     = $result['state'];
 			$folder    = $result['folder'];
 			$messageid = $result['messageid'];
 
-			if ( $tip == 'seen' ) {
+			if ($tip == 'seen') {
 
-				if ( $state == 'unread' ) {
+				if ($state == 'unread') {
 					$params['action'] = 'seen';
 				}
 				else {
 					$params['action'] = 'unseen';
 				}
 
-				if ( $ym_param['ymailOnReadSeen'] == "true" ) {
+				if ($ym_param['ymailOnReadSeen'] == "true") {
 
 					// отметим прочитанным
-					self ::mailAction( $id, $params['action'] );
+					self::mailAction($id, $params['action']);
 					flush();
 
 				}
@@ -4297,15 +4346,15 @@ class Mailer {
 				//этот функционал не работает - проблему с запросом серверу почты
 				//if ($ym_param['ymailOnReadSeen'] == "true") $rez = ym_mailAction($params);
 
-				if ( $params['action'] == 'seen' ) {
+				if ($params['action'] == 'seen') {
 
-					$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE id = '".$params['id']."' and identity = '$identity'" );
+					$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE id = '".$params['id']."' and identity = '$identity'");
 					$rez = 'Выполнено';
 
 				}
-				if ( $params['action'] == 'unseen' ) {
+				if ($params['action'] == 'unseen') {
 
-					$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'unread' WHERE id = '".$params['id']."' and identity = '$identity'" );
+					$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'unread' WHERE id = '".$params['id']."' and identity = '$identity'");
 					$rez = 'Выполнено';
 
 				}
@@ -4313,69 +4362,72 @@ class Mailer {
 			}
 
 			//удаление сообщения в самом сообщении
-			if ( $tip == 'delete' ) {
+			if ($tip == 'delete') {
 
-				$provIduser = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'" );
+				$provIduser = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'");
 
-				if ( $provIduser == $params['iduser'] ) {
+				if ($provIduser == $params['iduser']) {
 
 					//если это сообщение из почты или не отправлено из почтовика
-					if ( $messageid != '' && $folder != 'sended' && $ym_param['ymailOnDelete'] == "true" ) {
+					if ($messageid != '' && $folder != 'sended' && $ym_param['ymailOnDelete'] == "true") {
 
 						$params['action'] = 'delete';
 
-						self ::mailAction( $params['id'], 'delete' );
+						self::mailAction($params['id'], 'delete');
 						flush();
 
 					}
 
 					//получаем текст сообщения
-					$result  = $db -> getOne( "SELECT content FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'" );
-					$content = htmlspecialchars_decode( $result );
+					$result  = $db -> getOne("SELECT content FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'");
+					$content = htmlspecialchars_decode($result);
 
 					$images = [];
 
 					//находим ссылки на изображения в массив $images
-					preg_match_all( '/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $content, $images, PREG_SET_ORDER );
+					preg_match_all('/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $content, $images, PREG_SET_ORDER);
 
-					foreach ( $images as $img ) {
+					foreach ($images as $img) {
 
-						$array = (array)yexplode( "/", (string)$img[1] );
-						$img   = array_pop( $array );
+						$array = (array)yexplode("/", (string)$img[1]);
+						$img   = array_pop($array);
 
-						if ( file_exists( $ym_fpath."inbody/".$img ) ) {
-							unlink( $ym_fpath."inbody/".$img );
+						if (file_exists($ym_fpath."inbody/".$img)) {
+							unlink($ym_fpath."inbody/".$img);
 						}
 
 					}
 
 					// вместо удаления записи пометим её удаленной статусом state и очисткой содержимого
-					if ( !isset( $havy ) ) {
-						$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '".$params['id']."' and identity = '$identity'" );
+					if (!isset($havy)) {
+						$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '".$params['id']."' and identity = '$identity'");
 					}
 					// или удалим жёстко
 					else {
-						$db -> query( "DELETE FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'");
 					}
 
-					$db -> query( "DELETE FROM {$sqlname}ymail_messagesrec WHERE mid = '".$params['id']."' and identity = '$identity'" );
+					$db -> query("DELETE FROM {$sqlname}ymail_messagesrec WHERE mid = '".$params['id']."' and identity = '$identity'");
 
-					$result = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$params['id']."' and identity = '$identity'" );
-					while ($data = $db -> fetch( $result )) {
+					$result = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$params['id']."' and identity = '$identity'");
+					while ($data = $db -> fetch($result)) {
 
-						$db -> query( "DELETE FROM {$sqlname}ymail_files WHERE mid = '".$params['id']."' and id = '".$data['id']."' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_files WHERE mid = '".$params['id']."' and id = '".$data['id']."' and identity = '$identity'");
 
-						if ( file_exists( $ym_fpath.$data['file'] ) ) {
-							unlink( $ym_fpath.$data['file'] );
+						if (file_exists($ym_fpath.$data['file'])) {
+							unlink($ym_fpath.$data['file']);
 						}
 
 					}
 
-					if ( !empty( $err ) ) {
-						$rez = 'Есть ошибки: '.implode( "<br>", $err );
+					if (!empty($err)) {
+						$rez = 'Есть ошибки: '.implode("<br>", $err);
 					}
 
 					else {
+						if ($hooks) {
+							$hooks -> do_action("mailer_delete", (int)$data['id']);
+						}
 						$rez = 'Сообщение удалено';
 					}
 
@@ -4384,43 +4436,43 @@ class Mailer {
 			}
 
 			//удаление в корзину в самом сообщении (и в левой части у каждого сообщения)
-			if ( $tip == 'trash' ) {
+			if ($tip == 'trash') {
 
-				$provIduser = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'" );
-				if ( $provIduser == $params['iduser'] ) {
+				$provIduser = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '".$params['id']."' and identity = '$identity'");
+				if ($provIduser == $params['iduser']) {
 
-					$db -> query( "update {$sqlname}ymail_messages set trash = 'yes' WHERE id = '".$params['id']."' and identity = '$identity'" );
+					$db -> query("update {$sqlname}ymail_messages set trash = 'yes' WHERE id = '".$params['id']."' and identity = '$identity'");
 					$rez = 'Выполнено';
 
 				}
 
 			}
 
-			if ( $tip == 'untrash' ) {
+			if ($tip == 'untrash') {
 
-				$db -> query( "update {$sqlname}ymail_messages set trash = 'no' WHERE id = '".$params['id']."' and identity = '$identity'" );
+				$db -> query("update {$sqlname}ymail_messages set trash = 'no' WHERE id = '".$params['id']."' and identity = '$identity'");
 				$rez = 'Выполнено';
 
 			}
 
 			//Удалить выбранные сообщения в Корзину
-			if ( $tip == 'multitrash' ) {
+			if ($tip == 'multitrash') {
 
-				foreach ( $ids as $id ) {
+				foreach ($ids as $id) {
 
 					$id = (int)$id;
 
-					$provIduser = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
-					if ( $provIduser == $params['iduser'] ) {
+					$provIduser = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
+					if ($provIduser == $params['iduser']) {
 
-						$db -> query( "update {$sqlname}ymail_messages set trash = 'yes' WHERE id = '$id' and identity = '$identity'" );
+						$db -> query("update {$sqlname}ymail_messages set trash = 'yes' WHERE id = '$id' and identity = '$identity'");
 
 					}
 
 				}
 
-				if ( !empty( $err ) ) {
-					$rez = 'Выполнено с ошибками. Ошибки:<br>'.implode( ",", $err );
+				if (!empty($err)) {
+					$rez = 'Выполнено с ошибками. Ошибки:<br>'.implode(",", $err);
 				}
 
 				else {
@@ -4430,33 +4482,33 @@ class Mailer {
 			}
 
 			// Очистка корзины
-			if ( $tip == 'emptytrash' ) {
+			if ($tip == 'emptytrash') {
 
-				$result = $db -> query( "SELECT * FROM {$sqlname}ymail_messages WHERE trash = 'yes' and identity = '$identity'" );
-				while ($data = $db -> fetch( $result )) {
+				$result = $db -> query("SELECT * FROM {$sqlname}ymail_messages WHERE trash = 'yes' and identity = '$identity'");
+				while ($data = $db -> fetch($result)) {
 
-					$resultt = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$data['id']."' and identity = '$identity'" );
-					while ($dataa = $db -> fetch( $resultt )) {
+					$resultt = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$data['id']."' and identity = '$identity'");
+					while ($dataa = $db -> fetch($resultt)) {
 
-						$db -> query( "DELETE FROM {$sqlname}ymail_files WHERE id = '".$dataa['id']."' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_files WHERE id = '".$dataa['id']."' and identity = '$identity'");
 
-						if ( !file_exists( $ym_fpath.$dataa['file'] ) ) {
+						if (!file_exists($ym_fpath.$dataa['file'])) {
 							$err[] = 'Файл '.$dataa['name'].' не найден';
 						}
 
-						elseif ( !unlink( $ym_fpath.$dataa['file'] ) ) {
+						elseif (!unlink($ym_fpath.$dataa['file'])) {
 							$err[] = 'Файл '.$dataa['name'].' не удален';
 						}
 
 					}
 
-					$db -> query( "DELETE FROM {$sqlname}ymail_messagesrec WHERE mid = '".$data['id']."' and identity = '$identity'" );
-					$db -> query( "DELETE FROM {$sqlname}ymail_messages WHERE id = '".$data['id']."' and identity = '$identity'" );
+					$db -> query("DELETE FROM {$sqlname}ymail_messagesrec WHERE mid = '".$data['id']."' and identity = '$identity'");
+					$db -> query("DELETE FROM {$sqlname}ymail_messages WHERE id = '".$data['id']."' and identity = '$identity'");
 
 				}
 
-				if ( !empty( $err ) ) {
-					$rez = 'Выполнено с ошибками. Ошибки:<br>'.implode( ",", $err );
+				if (!empty($err)) {
+					$rez = 'Выполнено с ошибками. Ошибки:<br>'.implode(",", $err);
 				}
 				else {
 					$rez = 'Выполнено';
@@ -4465,18 +4517,18 @@ class Mailer {
 			}
 
 			// Отметка всех писем прочитанными или выбранного
-			if ( $tip == 'readall' ) {
+			if ($tip == 'readall') {
 
-				$s = !isset( $params['id'] ) ? "iduser = '$iduser' AND" : "id IN (".yimplode( ",", (array)$params['id'] ).") AND";
+				$s = !isset($params['id']) ? "iduser = '$iduser' AND" : "id IN (".yimplode(",", (array)$params['id']).") AND";
 
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE state = 'unread' AND $s identity = '$identity'" );
+				$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE state = 'unread' AND $s identity = '$identity'");
 				$rez = (int)$db -> affectedRows();
 
-				if ( $ym_param['ymailOnReadSeen'] == "true" ) {
+				if ($ym_param['ymailOnReadSeen'] == "true") {
 
-					foreach ( (array)$params['id'] as $xid ) {
+					foreach ((array)$params['id'] as $xid) {
 
-						self ::mailAction( (int)$xid, 'seen' );
+						self::mailAction((int)$xid, 'seen');
 						flush();
 
 					}
@@ -4486,21 +4538,21 @@ class Mailer {
 			}
 
 			//Удалить выбранные сообщения из CRM
-			if ( $tip == 'multidelete' ) {
+			if ($tip == 'multidelete') {
 
-				foreach ( $ids as $id ) {
+				foreach ($ids as $id) {
 
 					$id = (int)$id;
 
-					$provIduser = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
+					$provIduser = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
 
-					if ( $provIduser == $params['iduser'] ) {
+					if ($provIduser == $params['iduser']) {
 
-						$result = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'" );
-						while ($dataa = $db -> fetch( $result )) {
+						$result = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'");
+						while ($dataa = $db -> fetch($result)) {
 
-							if ( unlink( $ym_fpath.$dataa['file'] ) ) {
-								$db -> query( "DELETE FROM {$sqlname}ymail_files WHERE mid = '$id' and id = '".$dataa['id']."' and identity = '$identity'" );
+							if (unlink($ym_fpath.$dataa['file'])) {
+								$db -> query("DELETE FROM {$sqlname}ymail_files WHERE mid = '$id' and id = '".$dataa['id']."' and identity = '$identity'");
 							}
 							else {
 								$err[] = 'Файл '.$dataa['name'].' не удален';
@@ -4508,37 +4560,37 @@ class Mailer {
 
 						}
 
-						$db -> query( "DELETE FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'" );
+						$db -> query("DELETE FROM {$sqlname}ymail_messagesrec WHERE mid = '$id' and identity = '$identity'");
 
-						$result = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
+						$result = $db -> getRow("SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
 						$folder = $result['folder'];
 						//$uid     = $result['uid'];
 						//$iduser  = $result['iduser'];
-						$content = htmlspecialchars_decode( $result['content'] );//получаем текст сообщения
+						$content = htmlspecialchars_decode($result['content']);//получаем текст сообщения
 
 						$images = [];
 
 						//находим ссылки на изображения в массив $images
-						preg_match_all( '/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $content, $images, PREG_SET_ORDER );
+						preg_match_all('/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $content, $images, PREG_SET_ORDER);
 
-						foreach ( $images as $img ) {
+						foreach ($images as $img) {
 
-							$array1 = (array)yexplode( "/", (string)$img[1] );
-							$img    = array_pop( $array1 );
+							$array1 = (array)yexplode("/", (string)$img[1]);
+							$img    = array_pop($array1);
 
-							if ( file_exists( $ym_fpath."inbody/".$img ) ) {
-								unlink( $ym_fpath."inbody/".$img );
+							if (file_exists($ym_fpath."inbody/".$img)) {
+								unlink($ym_fpath."inbody/".$img);
 							}
 
 						}
 
 						//вместо удаления записи пометим её удаленной статусом state и очисткой содержимого
-						$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '$id' and identity = '$identity'" );
+						$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '$id' and identity = '$identity'");
 
 						//этот функционал не работает - проблему с запросом серверу почты
-						if ( $folder == 'inbox' && $ym_param['ymailOnDelete'] == "true" ) {
+						if ($folder == 'inbox' && $ym_param['ymailOnDelete'] == "true") {
 
-							self ::mailAction( $id, 'delete' );
+							self::mailAction($id, 'delete');
 
 						}
 
@@ -4546,8 +4598,8 @@ class Mailer {
 
 				}
 
-				if ( !empty( $err ) ) {
-					$rez = 'Выполнено с ошибками. Ошибки:<br>'.implode( ",", $err );
+				if (!empty($err)) {
+					$rez = 'Выполнено с ошибками. Ошибки:<br>'.implode(",", $err);
 				}
 				else {
 					$rez = 'Выполнено';
@@ -4558,26 +4610,26 @@ class Mailer {
 			/**
 			 * Добавить запись в Историю активностей
 			 */
-			if ( $tip == 'history' ) {
+			if ($tip == 'history') {
 
-				$result = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '".$params['id']."' and identity = '$identity'" );
+				$result = $db -> getRow("SELECT * FROM {$sqlname}ymail_messagesrec WHERE mid = '".$params['id']."' and identity = '$identity'");
 				$clid   = $result['clid'];
 				$pid    = $result['pid'];
 
-				if ( $pid > 0 || $clid > 0 ) {
+				if ($pid > 0 || $clid > 0) {
 
 					try {
 
-						$rezz = self ::putHistory( (int)$params['id'] );
+						$rezz = self::putHistory((int)$params['id']);
 
 					}
-					catch ( Exception $e ) {
+					catch (Exception $e) {
 
 						$rezz[] = $e -> getMessage();
 
 					}
 
-					$rez = implode( "<br>", $rezz );
+					$rez = implode("<br>", $rezz);
 
 				}
 				else {
@@ -4604,7 +4656,7 @@ class Mailer {
 
 		$id = (int)$id;
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -4618,73 +4670,73 @@ class Mailer {
 		$db       = $GLOBALS['db'];
 		$opts     = $GLOBALS['opts'];
 
-		unset( $db );
-		$db = new SafeMySQL( $opts );
+		unset($db);
+		$db = new SafeMySQL($opts);
 
-		$timezone = $db -> getOne( "SELECT timezone FROM {$sqlname}settings WHERE id = '$identity'" );
-		date_default_timezone_set( $timezone );
+		$timezone = $db -> getOne("SELECT timezone FROM {$sqlname}settings WHERE id = '$identity'");
+		date_default_timezone_set($timezone);
 
-		$tz         = new DateTimeZone( $timezone );
+		$tz         = new DateTimeZone($timezone);
 		$dz         = new DateTime();
-		$dzz        = $tz -> getOffset( $dz );
+		$dzz        = $tz -> getOffset($dz);
 		$bdtimezone = $dzz / 3600;
-		$db -> query( "SET time_zone = '+".$bdtimezone.":00'" );
+		$db -> query("SET time_zone = '+".$bdtimezone.":00'");
 
 		$ym_fpath = $rootpath.'/files/'.$fpath;
 		$htip     = 'Почта';
 
-		unset( $db );
-		$db = new SafeMySQL( $opts );
+		unset($db);
+		$db = new SafeMySQL($opts);
 
-		$result  = $db -> getRow( "SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
+		$result  = $db -> getRow("SELECT * FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
 		$theme   = $result['theme'];
 		$folder  = $result['folder'];
 		$content = $result['content'];
 		$did     = $result['did'];
 		$datum   = $result['datum'];
-		$xfid    = yexplode( ",", (string)$result['fid'] );
-		$content = html2text( removeChild( htmlspecialchars_decode( $content ), ['index' => 2] ) );
-		$iduser  = ($iduser == 0) ? $result['iduser'] : $iduser;
+		$xfid    = yexplode(",", (string)$result['fid']);
+		$content = html2text(removeChild(htmlspecialchars_decode($content), ['index' => 2]));
+		$iduser  = ( $iduser == 0 ) ? $result['iduser'] : $iduser;
 		$hid     = (int)$result['hid'];
 
-		if ( $hid == 0 && $content != '' ) {
+		if ($hid == 0 && $content != '') {
 
 			$content = $theme."\n".$content;
 
-			if ( $folder == 'inbox' ) {
+			if ($folder == 'inbox') {
 				$htip = 'вх.Почта';
 			}
-			if ( $folder == 'sended' ) {
+			if ($folder == 'sended') {
 				$htip = 'исх.Почта';
 			}
 
-			$ffolder = $db -> getOne( "SELECT idcategory FROM {$sqlname}file_cat WHERE title = 'Файлы почты' and identity = '$identity'" );
+			$ffolder = $db -> getOne("SELECT idcategory FROM {$sqlname}file_cat WHERE title = 'Файлы почты' and identity = '$identity'");
 
-			if ( $ffolder < 1 ) {
+			if ($ffolder < 1) {
 
-				$db -> query( "INSERT INTO {$sqlname}file_cat (idcategory,title,identity) values(null, 'Файлы почты', '$identity')" );
+				$db -> query("INSERT INTO {$sqlname}file_cat (idcategory,title,identity) values(null, 'Файлы почты', '$identity')");
 				$ffolder = $db -> insertId();
 
 			}
 
-			unset( $db );
-			$db = new SafeMySQL( $opts );
+			unset($db);
+			$db = new SafeMySQL($opts);
 
-			$resultm = $db -> query( "SELECT * FROM {$sqlname}ymail_messagesrec where mid = '$id' and identity = '$identity'" );
-			while ($data = $db -> fetch( $resultm )) {
+			$resultm = $db -> query("SELECT * FROM {$sqlname}ymail_messagesrec where mid = '$id' and identity = '$identity'");
+			while ($data = $db -> fetch($resultm)) {
 
 				//добавим файлы
 				$fids   = [];
-				$result = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'" );
-				while ($dataa = $db -> fetch( $result )) {
+				$result = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'");
+				while ($dataa = $db -> fetch($result)) {
 
-					if ( $dataa['name'] != '' && ($data['pid'] > 0 || $data['clid'] > 0) ) {
+					if ($dataa['name'] != '' && ( $data['pid'] > 0 || $data['clid'] > 0 )) {
 
-						$db -> query( "INSERT INTO {$sqlname}file (`fid`, `ftitle`, `fname`, `iduser`, `clid`, `pid`, `folder`, `identity`) values (null, '".$dataa['name']."', '".$dataa['file']."', '".$iduser."', '".$data['clid']."', '".$data['pid']."', '".$ffolder."','$identity')" );
+						$db -> query("INSERT INTO {$sqlname}file (`fid`, `ftitle`, `fname`, `iduser`, `clid`, `pid`, `folder`, `identity`) values (null, '".$dataa['name']."', '".$dataa['file']."', '".$iduser."', '".$data['clid']."', '".$data['pid']."', '".$ffolder."','$identity')");
 						$fids[] = $db -> insertId();
 
-						$mrezz = copyFile( $ym_fpath.'ymail/'.$dataa['file'], $ym_fpath );
-						if ( $mrezz != '' ) {
+						$mrezz = copyFile($ym_fpath.'ymail/'.$dataa['file'], $ym_fpath);
+						if ($mrezz != '') {
 							$mrez[] = $mrezz;
 						}
 
@@ -4693,30 +4745,30 @@ class Mailer {
 				}
 
 				//прикрепленные файлы
-				$fids  = array_unique( array_merge( $fids, $xfid ) );
-				$fidss = implode( ";", $fids );
+				$fids  = array_unique(array_merge($fids, $xfid));
+				$fidss = implode(";", $fids);
 
 				//найдем, к какой организации относится контакт
-				if ( (int)$data['pid'] > 0 && (int)$data['clid'] == 0 ) {
+				if ((int)$data['pid'] > 0 && (int)$data['clid'] == 0) {
 
-					unset( $db );
-					$db = new SafeMySQL( $opts );
+					unset($db);
+					$db = new SafeMySQL($opts);
 
-					$data['clid'] = (int)getPersonData( (int)$data['pid'], 'clid' );
+					$data['clid'] = (int)getPersonData((int)$data['pid'], 'clid');
 
 				}
 
-				if ( (int)$data['clid'] > 0 || (int)$data['pid'] > 0 ) {
+				if ((int)$data['clid'] > 0 || (int)$data['pid'] > 0) {
 
-					unset( $db );
-					$db = new SafeMySQL( $opts );
+					unset($db);
+					$db = new SafeMySQL($opts);
 
 					$hp = [
 						"iduser"   => $iduser,
 						"clid"     => (int)$data['clid'],
 						"pid"      => (int)$data['pid'],
 						"did"      => (int)$did,
-						"des"      => html2text( remove_emoji($content) ),
+						"des"      => html2text(remove_emoji($content)),
 						"tip"      => $htip,
 						"fid"      => $fidss,
 						"datum"    => $datum,
@@ -4726,9 +4778,9 @@ class Mailer {
 
 					//print_r($hp);
 
-					$hid = addHistorty( $hp );
+					$hid = addHistorty($hp);
 
-					if( $hid > 0 ) {
+					if ($hid > 0) {
 
 						$db -> query("UPDATE {$sqlname}ymail_messages SET hid = '$hid' WHERE id = '$id' and identity = '$identity'");
 						$mrez[] = 'Добавлено в активности';
@@ -4738,17 +4790,17 @@ class Mailer {
 					//оптимизация хранения файлов-вложений в письмах - прикрепленные к истории файлы удаляем из папки files/ymail и прикрепляем из папки files
 
 					//v8.31: прикрепим файлы из активности к письму, для экономии пространства
-					$db -> query( "update {$sqlname}ymail_messages set did = '$did', fid = '".str_replace( ";", ",", $fidss )."' WHERE id = '$id' and identity = '$identity'" );
+					$db -> query("update {$sqlname}ymail_messages set did = '$did', fid = '".str_replace(";", ",", $fidss)."' WHERE id = '$id' and identity = '$identity'");
 
 					//v8.31: удалим загруженные вложения из письма
-					$result = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'" );
-					while ($data = $db -> fetch( $result )) {
+					$result = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'");
+					while ($data = $db -> fetch($result)) {
 
-						if ( file_exists( $ym_fpath.'ymail/'.$data['file'] ) ) {
+						if (file_exists($ym_fpath.'ymail/'.$data['file'])) {
 
-							unlink( $ym_fpath.'ymail/'.$data['file'] );
+							unlink($ym_fpath.'ymail/'.$data['file']);
 
-							$db -> query( "DELETE FROM {$sqlname}ymail_files WHERE id = '$data[id]'" );
+							$db -> query("DELETE FROM {$sqlname}ymail_files WHERE id = '$data[id]'");
 
 						}
 
@@ -4767,20 +4819,20 @@ class Mailer {
 	/**
 	 * Загружает вложения конкретного письма по его uid
 	 *
-	 * @param     $uid  - uid сообщения
-	 * @param     $mid  - id сообщения
-	 * @param int $file - конкретный файл или все файлы, если не указано
+	 * @param     $uid - uid сообщения
+	 * @param     $mid - id сообщения
+	 * @param int|array $file - конкретный файл или все файлы, если не указано
 	 * @return array
 	 *                  - int **uid** - uid письма
 	 *                  - array|string **file** системное имя
 	 *                  - string **name** оригинальное имя файла
 	 */
-	public static function getAttachmentFromEmail($uid, $mid, $file = [] | ""): array {
+	public static function getAttachmentFromEmail($uid, $mid, string|array $file = []): array {
 
 		$uid = (int)$uid;
 		$mid = (int)$mid;
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		global $error;
 
@@ -4800,22 +4852,22 @@ class Mailer {
 		$isGmail  = false;
 		$ym_fpath = $rootpath.'/files/'.$fpath.'ymail/';
 
-		$isFiles = isset( $file );
+		$isFiles = isset($file);
 
 		//проверяем папку для загрузки и если нет, то создаем
-		createDir( $rootpath.'/files/'.$fpath.'ymail' );
+		createDir($rootpath.'/files/'.$fpath.'ymail');
 
 		//ответственный за письмо, чтобы загрузить его настройки подключения к IMAP
-		$res    = $db -> getRow( "SELECT iduser, folder FROM {$sqlname}ymail_messages WHERE uid = '$uid' and id = '$mid' and identity = '$identity'" );
+		$res    = $db -> getRow("SELECT iduser, folder FROM {$sqlname}ymail_messages WHERE uid = '$uid' and id = '$mid' and identity = '$identity'");
 		$iduser = $res["iduser"];
 		$ybox   = $res["folder"];
 
 		//читаем настройки
 		$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$iduser.".json";
-		$param         = json_decode( file_get_contents( $settingsYMail ), true );
+		$param         = json_decode(file_get_contents($settingsYMail), true);
 
-		if ( $ybox == 'sended' ) {
-			$box = ImapUtf7 ::encode( $param['ymailFolderSent'] );
+		if ($ybox == 'sended') {
+			$box = ImapUtf7::encode($param['ymailFolderSent']);
 		}
 
 		else {
@@ -4826,40 +4878,40 @@ class Mailer {
 		//$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$iduser.".json";
 		//$param         = json_decode( file_get_contents( $settingsYMail ), true );
 
-		$param['ymailUser'] = self ::decrypt( $param['ymailUser'], $skey, $ivc );
-		$param['ymailPass'] = self ::decrypt( $param['ymailPass'], $skey, $ivc );
+		$param['ymailUser'] = self::decrypt($param['ymailUser'], $skey, $ivc);
+		$param['ymailPass'] = self::decrypt($param['ymailPass'], $skey, $ivc);
 
 		//print_r($param);
 
 		//если параметры не указаны - отключаем проверку
-		if ( $param['ymailUser'] != '' && $param['ymailPass'] != '' ) {
+		if ($param['ymailUser'] != '' && $param['ymailPass'] != '') {
 
 			//-start--проверка получения почты
-			if ( $param['ymailInSecure'] != '' ) {
+			if ($param['ymailInSecure'] != '') {
 				$param['ymailInSecure'] = '/'.$param['ymailInSecure'].'/novalidate-cert';
 			}
 
-			if ( str_contains( strtolower( $param['ymailInHost'] ), 'google' ) || str_contains( strtolower( $param['ymailInHost'] ), 'gmail' ) ) {
+			if (str_contains(strtolower($param['ymailInHost']), 'google') || str_contains(strtolower($param['ymailInHost']), 'gmail')) {
 				$isGmail = true;
 			}
 
 			$mailbox = '{'.$param['ymailInHost'].':'.$param['ymailInPort'].'/'.$param['ymailInProtocol'].$param['ymailInSecure'].'}'.$box;
-			$conn    = imap_open( $mailbox, $param['ymailUser'], $param['ymailPass'] );
+			$conn    = imap_open($mailbox, $param['ymailUser'], $param['ymailPass']);
 
 			$error = imap_last_error();
 
-			$msgno = imap_msgno( $conn, $uid );
+			$msgno = imap_msgno($conn, $uid);
 
-			if ( $msgno > 0 ) {
+			if ($msgno > 0) {
 
 				//читаем аттачи
-				$structure = imap_fetchstructure( $conn, $msgno );
+				$structure = imap_fetchstructure($conn, $msgno);
 				$parts     = $structure -> parts;
-				$numparts  = count( (array)$parts );
+				$numparts  = count((array)$parts);
 
 				//print_r($structure);
 
-				if ( $numparts > 1 ) {
+				if ($numparts > 1) {
 
 					$endwhile    = false;
 					$stack       = [];
@@ -4868,13 +4920,13 @@ class Mailer {
 
 					while (!$endwhile) {
 
-						if ( !$parts[ $j ] ) {
+						if (!$parts[$j]) {
 
-							if ( !empty( $stack ) ) {
+							if (!empty($stack)) {
 
-								$parts = $stack[ count( $stack ) - 1 ]["p"];
-								$j     = $stack[ count( $stack ) - 1 ]["i"] + 1;
-								array_pop( $stack );
+								$parts = $stack[count($stack) - 1]["p"];
+								$j     = $stack[count($stack) - 1]["i"] + 1;
+								array_pop($stack);
 
 							}
 							else {
@@ -4883,45 +4935,45 @@ class Mailer {
 
 						}
 
-						if ( !$endwhile ) {
+						if (!$endwhile) {
 
 							$partstring = "";
 
-							foreach ( $stack as $s ) {
-								$partstring .= ($s["i"] + 1).".";
+							foreach ($stack as $s) {
+								$partstring .= ( $s["i"] + 1 ).".";
 							}
 
-							$partstring .= ($j + 1);
+							$partstring .= ( $j + 1 );
 
-							if ( strtoupper( $parts[ $j ] -> disposition ) == "ATTACHMENT" ) {
+							if (strtoupper($parts[$j] -> disposition) == "ATTACHMENT") {
 
-								$fnameOrig1 = $parts[ $j ] -> dparameters[0] -> value;
-								$fnameOrig2 = $parts[ $j ] -> parameters[0] -> value;
+								$fnameOrig1 = $parts[$j] -> dparameters[0] -> value;
+								$fnameOrig2 = $parts[$j] -> parameters[0] -> value;
 
-								if ( str_contains( strtoupper( $fnameOrig1 ), "ISO-2022-JP" ) ) {
+								if (str_contains(strtoupper($fnameOrig1), "ISO-2022-JP")) {
 									$isJP = true;
 								}
 
-								if ( str_contains( strtoupper( $fnameOrig2 ), "ISO-2022-JP" ) ) {
+								if (str_contains(strtoupper($fnameOrig2), "ISO-2022-JP")) {
 									$isJP = true;
 								}
 
-								if ( !$isJP ) {
+								if (!$isJP) {
 
-									$fnameOrigg1 = imap_mime_header_decode( $fnameOrig1 );
-									$fnameOrigg2 = imap_mime_header_decode( $fnameOrig2 );
+									$fnameOrigg1 = imap_mime_header_decode($fnameOrig1);
+									$fnameOrigg2 = imap_mime_header_decode($fnameOrig2);
 
 									$filename1 = '';
 									$filename2 = '';
 
-									for ( $h = 0, $hMax = count( (array)$fnameOrigg1 ); $h < $hMax; $h++ ) {
+									for ($h = 0, $hMax = count((array)$fnameOrigg1); $h < $hMax; $h++) {
 
-										$filename1 .= $fnameOrigg1[ $h ] -> text;
+										$filename1 .= $fnameOrigg1[$h] -> text;
 
 									}
-									for ( $h = 0, $hMax = count( (array)$fnameOrigg2 ); $h < $hMax; $h++ ) {
+									for ($h = 0, $hMax = count((array)$fnameOrigg2); $h < $hMax; $h++) {
 
-										$filename2 .= $fnameOrigg2[ $h ] -> text;
+										$filename2 .= $fnameOrigg2[$h] -> text;
 
 									}
 
@@ -4933,68 +4985,68 @@ class Mailer {
 
 								}
 
-								if ( $isJP ) {
-									$filename1 = str_replace( "?", "№", self ::encodeToUtf8( $filename1 ) );
-									$filename2 = str_replace( "?", "№", self ::encodeToUtf8( $filename2 ) );
+								if ($isJP) {
+									$filename1 = str_replace("?", "№", self::encodeToUtf8($filename1));
+									$filename2 = str_replace("?", "№", self::encodeToUtf8($filename2));
 								}
 
 								//если имя файла в кодировке WINDOWS-1251
-								if ( str_contains( strtoupper( $fnameOrig1 ), "WINDOWS-1251" ) ) {
-									$filename1 = mb_convert_encoding( $filename1, "UTF-8", "WINDOWS-1251" );
-									$filename2 = mb_convert_encoding( $filename1, "UTF-8", "WINDOWS-1251" );
+								if (str_contains(strtoupper($fnameOrig1), "WINDOWS-1251")) {
+									$filename1 = mb_convert_encoding($filename1, "UTF-8", "WINDOWS-1251");
+									$filename2 = mb_convert_encoding($filename1, "UTF-8", "WINDOWS-1251");
 								}
 
 								//если имя файла в кодировке KOI8-R
-								if ( str_contains( strtoupper( $fnameOrig1 ), "KOI8-R" ) ) {
-									$filename1 = mb_convert_encoding( $filename1, "UTF-8", "KOI8-R" );
-									$filename2 = mb_convert_encoding( $filename1, "UTF-8", "KOI8-R" );
+								if (str_contains(strtoupper($fnameOrig1), "KOI8-R")) {
+									$filename1 = mb_convert_encoding($filename1, "UTF-8", "KOI8-R");
+									$filename2 = mb_convert_encoding($filename1, "UTF-8", "KOI8-R");
 								}
 
-								if ( str_contains( strtoupper( $filename1 ), "UTF-8''" ) ) {
+								if (str_contains(strtoupper($filename1), "UTF-8''")) {
 									$filename = $filename2;
 								}
 								else {
 									$filename = $filename1;
 								}
 
-								if ( $filename == 'UTF-8' ) {
+								if ($filename == 'UTF-8') {
 
-									$fnameOrigg = imap_mime_header_decode( $parts[ $j ] -> parameters[1] -> value );
+									$fnameOrigg = imap_mime_header_decode($parts[$j] -> parameters[1] -> value);
 
 									$filename = '';
-									for ( $h = 0, $hMax = count( (array)$fnameOrigg ); $h < $hMax; $h++ ) {
+									for ($h = 0, $hMax = count((array)$fnameOrigg); $h < $hMax; $h++) {
 
-										$filename .= $fnameOrigg[ $h ] -> text;
+										$filename .= $fnameOrigg[$h] -> text;
 
 									}
 
 								}
 
-								if ( $isGmail && !$isJP ) {
-									$filename = iconv( "KOI8-R", "UTF-8", $filename );
+								if ($isGmail && !$isJP) {
+									$filename = iconv("KOI8-R", "UTF-8", $filename);
 								}
 
-								$filename = str_replace( [
+								$filename = str_replace([
 									"'",
 									"`",
 									"$",
 									")",
 									"("
-								], "", $filename );
+								], "", $filename);
 
-								$fext = substr( $filename, strrpos( $filename, '.' ) + 1 );
+								$fext = substr($filename, strrpos($filename, '.') + 1);
 
-								if ( $fext != '' ) {
+								if ($fext != '') {
 
 									//$fname         = time() + $j;
 									$attachments[] = [
-										"file"     => md5( $parts[ $j ] -> bytes.$filename ).".".$fext,
+										"file"     => md5($parts[$j] -> bytes.$filename).".".$fext,
 										//$fname.".".$fext,
 										"name"     => $filename,
-										"enc"      => $parts[ $j ] -> encoding,
+										"enc"      => $parts[$j] -> encoding,
 										"partNum"  => $partstring,
-										"filedata" => imap_fetchbody( $conn, $msgno, $partstring, FT_PEEK ),
-										"size"     => $parts[ $j ] -> bytes
+										"filedata" => imap_fetchbody($conn, $msgno, $partstring, FT_PEEK),
+										"size"     => $parts[$j] -> bytes
 									];
 
 									//print_r(imap_fetchbody($conn, $msgno, $partstring, FT_PEEK));
@@ -5007,13 +5059,13 @@ class Mailer {
 
 						//print_r($attachments);
 
-						if ( $parts[ $j ] -> parts ) {
+						if ($parts[$j] -> parts) {
 
 							$stack[] = [
 								"p" => $parts,
 								"i" => $j
-							]; // next stack
-							$parts   = $parts[ $j ] -> parts; // parts
+							];                              // next stack
+							$parts   = $parts[$j] -> parts; // parts
 							$j       = 0;
 
 						}
@@ -5032,10 +5084,10 @@ class Mailer {
 
 				//загрузка файлов
 				//$attach = [];
-				foreach ( $attachments as $attachment ) {
+				foreach ($attachments as $attachment) {
 
 					//если в запросе не указан конкретный файл для загрузки
-					if ( !$isFiles && $file == "" ) {
+					if (!$isFiles && $file == "") {
 
 						$attach[] = [
 							"uid"  => $uid,
@@ -5047,10 +5099,10 @@ class Mailer {
 						/*$diskUsage = getFileLimit();
 
 						if($diskUsage['total'] == 0 || $diskUsage['percent'] < 100)*/
-						self ::downloadAttachment( $conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"] );
+						self::downloadAttachment($conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"]);
 
 					}
-					elseif ( $isFiles && in_array( $attachment["name"], (array)$file ) ) {
+					elseif ($isFiles && in_array($attachment["name"], (array)$file)) {
 
 						$attach[] = [
 							"uid"  => $uid,
@@ -5062,10 +5114,10 @@ class Mailer {
 						/*$diskUsage = getFileLimit();
 
 						if($diskUsage['total'] == 0 || $diskUsage['percent'] < 100)*/
-						self ::downloadAttachment( $conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"] );
+						self::downloadAttachment($conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"]);
 
 					}
-					elseif ( $file == $attachment["name"] ) {
+					elseif ($file == $attachment["name"]) {
 
 						$attach[] = [
 							"uid"  => $uid,
@@ -5077,7 +5129,7 @@ class Mailer {
 						/*$diskUsage = getFileLimit();
 
 						if($diskUsage['total'] == 0 || $diskUsage['percent'] < 100)*/
-						self ::downloadAttachment( $conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"] );
+						self::downloadAttachment($conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"]);
 
 					}
 
@@ -5087,7 +5139,7 @@ class Mailer {
 
 			//if ($error != '') print $error;
 
-			imap_close( $conn );
+			imap_close($conn);
 
 		}
 
@@ -5098,7 +5150,7 @@ class Mailer {
 	/**
 	 * Загрузка всех вложений письма
 	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $attachments
 	 *
 	 * @return array
@@ -5112,7 +5164,7 @@ class Mailer {
 	 */
 	public static function getAttachments(int $id = 0, array $attachments = []): array {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -5128,65 +5180,65 @@ class Mailer {
 		$err    = [];
 		$rezult = 'error';
 
-		if ( $id > 0 ) {
+		if ($id > 0) {
 
-			$hid = (int)$db -> getOne( "SELECT hid FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
+			$hid = (int)$db -> getOne("SELECT hid FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
 
-			if ( $hid > 0 ) {
+			if ($hid > 0) {
 
-				$ifids = yexplode( ";", (string)$db -> getOne( "SELECT fid FROM {$sqlname}history WHERE cid = '$hid' and identity = '$identity'" ) );
+				$ifids = yexplode(";", (string)$db -> getOne("SELECT fid FROM {$sqlname}history WHERE cid = '$hid' and identity = '$identity'"));
 
-				foreach ( $ifids as $fid ) {
+				foreach ($ifids as $fid) {
 
-					$fids[ $fid ] = $db -> getOne( "SELECT ftitle FROM {$sqlname}file WHERE fid = '$fid' and identity = '$identity'" );
+					$fids[$fid] = $db -> getOne("SELECT ftitle FROM {$sqlname}file WHERE fid = '$fid' and identity = '$identity'");
 
 				}
 
 			}
 
-			foreach ( $attachments as $key => $attach ) {
+			foreach ($attachments as $key => $attach) {
 
-				if ( $hid == 0 ) {
+				if ($hid == 0) {
 
-					$fidd = $db -> getOne( "SELECT id FROM {$sqlname}ymail_files WHERE mid = ?i and name = ?s and identity = ?i", $id, $attach['name'], $identity );
+					$fidd = $db -> getOne("SELECT id FROM {$sqlname}ymail_files WHERE mid = ?i and name = ?s and identity = ?i", $id, $attach['name'], $identity);
 
 					//запишем файл в базу
-					$db -> query( "UPDATE {$sqlname}ymail_files SET file = ?s WHERE id = ?i", $attach['file'], (int)$fidd );
+					$db -> query("UPDATE {$sqlname}ymail_files SET file = ?s WHERE id = ?i", $attach['file'], (int)$fidd);
 
-					$uploaddir                     = $rootpath.'/files/'.$fpath;
-					$attachments[ $key ]['size']   = num_format( filesize( $uploaddir.'ymail/'.$attach['file'] ) / 1000 );
-					$attachments[ $key ]['icon']   = get_icon2( $attach['file'] );
-					$attachments[ $key ]['fid']    = $fidd;
-					$attachments[ $key ]['folder'] = 'ymail/';
+					$uploaddir                   = $rootpath.'/files/'.$fpath;
+					$attachments[$key]['size']   = num_format(filesize($uploaddir.'ymail/'.$attach['file']) / 1000);
+					$attachments[$key]['icon']   = get_icon2($attach['file']);
+					$attachments[$key]['fid']    = $fidd;
+					$attachments[$key]['folder'] = 'ymail/';
 
 				}
 				else {
 
-					$fidd = array_search( $attach['name'], $fids );
+					$fidd = array_search($attach['name'], $fids);
 
 					$uploaddir = $rootpath.'/files/'.$fpath;
 
 					//запишем файл в базу
 					try {
 
-						$db -> query( "UPDATE {$sqlname}file SET fname = ?s WHERE fid = ?i", $attach['file'], (int)$fidd );
+						$db -> query("UPDATE {$sqlname}file SET fname = ?s WHERE fid = ?i", $attach['file'], (int)$fidd);
 
-						copyFile( $uploaddir.'ymail/'.$attach['file'], $uploaddir, 'yes' );
-						unlink( $uploaddir.'ymail/'.$attach['file'] );
+						copyFile($uploaddir.'ymail/'.$attach['file'], $uploaddir, 'yes');
+						unlink($uploaddir.'ymail/'.$attach['file']);
 
-						$attachments[ $key ]['size']   = num_format( filesize( $uploaddir.$attach['file'] ) / 1000 );
-						$attachments[ $key ]['icon']   = get_icon2( $attach['file'] );
-						$attachments[ $key ]['folder'] = '';
+						$attachments[$key]['size']   = num_format(filesize($uploaddir.$attach['file']) / 1000);
+						$attachments[$key]['icon']   = get_icon2($attach['file']);
+						$attachments[$key]['folder'] = '';
 
 					}
-					catch ( Exception $e ) {
+					catch (Exception $e) {
 
 						$err[] = $e -> getMessage();
 
 					}
 
-					$fid = yimplode( ";", $ifids );
-					$db -> query( "UPDATE {$sqlname}ymail_messages SET fid = '$fid' WHERE id = '$id'" );
+					$fid = yimplode(";", $ifids);
+					$db -> query("UPDATE {$sqlname}ymail_messages SET fid = '$fid' WHERE id = '$id'");
 
 				}
 
@@ -5210,7 +5262,7 @@ class Mailer {
 	/**
 	 * Загружает вложения конкретного письма по его uid
 	 *
-	 * @param        $uid  - uid сообщения
+	 * @param        $uid - uid сообщения
 	 * @param string $file - конкретный файл или все файлы, если не указано
 	 * @return array
 	 *                     - **uid**
@@ -5221,7 +5273,7 @@ class Mailer {
 
 		$uid = (int)$uid;
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		global $error;
 
@@ -5243,52 +5295,52 @@ class Mailer {
 
 
 		//проверяем папку для загрузки и если нет, то создаем
-		createDir( $rootpath.'/files/'.$fpath.'ymail' );
+		createDir($rootpath.'/files/'.$fpath.'ymail');
 
 		//ответственный за письмо, чтобы загрузить его настройки подключения к IMAP
-		$iduser = $db -> getOne( "SELECT iduser FROM {$sqlname}ymail_messages WHERE uid = '$uid' and identity = '$identity'" );
+		$iduser = $db -> getOne("SELECT iduser FROM {$sqlname}ymail_messages WHERE uid = '$uid' and identity = '$identity'");
 
 		//читаем настройки
 		$settingsYMail = $rootpath."/cash/".$fpath."settings.ymail.".$iduser.".json";
-		$param         = json_decode( file_get_contents( $settingsYMail ), true );
+		$param         = json_decode(file_get_contents($settingsYMail), true);
 
-		$param['ymailUser'] = self ::decrypt( $param['ymailUser'], $skey, $ivc );
-		$param['ymailPass'] = self ::decrypt( $param['ymailPass'], $skey, $ivc );
+		$param['ymailUser'] = self::decrypt($param['ymailUser'], $skey, $ivc);
+		$param['ymailPass'] = self::decrypt($param['ymailPass'], $skey, $ivc);
 
 		//если параметры не указаны - отключаем проверку
-		if ( $param['ymailUser'] != '' || $param['ymailPass'] != '' ) {
+		if ($param['ymailUser'] != '' || $param['ymailPass'] != '') {
 
 			//-start--проверка получения почты
-			if ( $param['ymailInSecure'] != '' ) {
+			if ($param['ymailInSecure'] != '') {
 				$param['ymailInSecure'] = '/'.$param['ymailInSecure'].'/novalidate-cert';
 			}
 
-			if ( str_contains( strtolower( $param['ymailInHost'] ), 'google' ) || str_contains( strtolower( $param['ymailInHost'] ), 'gmail' ) ) {
+			if (str_contains(strtolower($param['ymailInHost']), 'google') || str_contains(strtolower($param['ymailInHost']), 'gmail')) {
 				$isGmail = true;
 			}
 
 			$mailbox = '{'.$param['ymailInHost'].':'.$param['ymailInPort'].'/'.$param['ymailInProtocol'].$param['ymailInSecure'].'}INBOX';
-			$conn    = imap_open( $mailbox, $param['ymailUser'], $param['ymailPass'] );
+			$conn    = imap_open($mailbox, $param['ymailUser'], $param['ymailPass']);
 
 			$error = imap_last_error();
 
-			$msgno = imap_msgno( $conn, $uid );
+			$msgno = imap_msgno($conn, $uid);
 
-			if ( $msgno > 0 ) {
+			if ($msgno > 0) {
 
 				//читаем аттачи
-				$structure = imap_fetchstructure( $conn, $msgno );
+				$structure = imap_fetchstructure($conn, $msgno);
 				$parts     = $structure -> parts;
-				$numparts  = count( (array)$parts );
-				$header    = imap_headerinfo( $conn, $msgno );
+				$numparts  = count((array)$parts);
+				$header    = imap_headerinfo($conn, $msgno);
 
 				$fromInfo = $header -> from[0];
 
 				$details = [
-					"fromAddr" => (isset( $fromInfo -> mailbox, $fromInfo -> host )) ? $fromInfo -> mailbox."@".$fromInfo -> host : ""
+					"fromAddr" => ( isset($fromInfo -> mailbox, $fromInfo -> host) ) ? $fromInfo -> mailbox."@".$fromInfo -> host : ""
 				];
 
-				if ( $numparts > 1 ) {
+				if ($numparts > 1) {
 
 					$endwhile    = false;
 					$stack       = [];
@@ -5297,50 +5349,50 @@ class Mailer {
 
 					while (!$endwhile) {
 
-						if ( !$parts[ $j ] ) {
-							if ( !empty( $stack ) ) {
-								$parts = $stack[ count( $stack ) - 1 ]["p"];
-								$j     = $stack[ count( $stack ) - 1 ]["i"] + 1;
-								array_pop( $stack );
+						if (!$parts[$j]) {
+							if (!empty($stack)) {
+								$parts = $stack[count($stack) - 1]["p"];
+								$j     = $stack[count($stack) - 1]["i"] + 1;
+								array_pop($stack);
 							}
 							else {
 								$endwhile = true;
 							}
 						}
 
-						if ( !$endwhile ) {
+						if (!$endwhile) {
 
 							$partstring = "";
 
-							foreach ( $stack as $s ) {
-								$partstring .= ($s["i"] + 1).".";
+							foreach ($stack as $s) {
+								$partstring .= ( $s["i"] + 1 ).".";
 							}
 
-							$partstring .= ($j + 1);
+							$partstring .= ( $j + 1 );
 
-							if ( strtoupper( $parts[ $j ] -> disposition ) == "ATTACHMENT" ) {
+							if (strtoupper($parts[$j] -> disposition) == "ATTACHMENT") {
 
-								$fnameOrig1 = $parts[ $j ] -> dparameters[0] -> value;
-								$fnameOrig2 = $parts[ $j ] -> parameters[0] -> value;
+								$fnameOrig1 = $parts[$j] -> dparameters[0] -> value;
+								$fnameOrig2 = $parts[$j] -> parameters[0] -> value;
 
-								if ( str_contains( strtoupper( $fnameOrig1 ), "ISO-2022-JP" ) ) {
+								if (str_contains(strtoupper($fnameOrig1), "ISO-2022-JP")) {
 									$isJP = true;
 								}
 
-								if ( !$isJP ) {
+								if (!$isJP) {
 
-									$fnameOrigg1 = imap_mime_header_decode( $fnameOrig1 );
-									$fnameOrigg2 = imap_mime_header_decode( $fnameOrig2 );
+									$fnameOrigg1 = imap_mime_header_decode($fnameOrig1);
+									$fnameOrigg2 = imap_mime_header_decode($fnameOrig2);
 
 									$filename1 = '';
 									$filename2 = '';
 
-									for ( $h = 0, $hMax = count( (array)$fnameOrigg1 ); $h < $hMax; $h++ ) {
-										$filename1 .= $fnameOrigg1[ $h ] -> text;
+									for ($h = 0, $hMax = count((array)$fnameOrigg1); $h < $hMax; $h++) {
+										$filename1 .= $fnameOrigg1[$h] -> text;
 									}
 
-									for ( $h = 0, $hMax = count( $fnameOrigg2 ); $h < $hMax; $h++ ) {
-										$filename2 .= $fnameOrigg2[ $h ] -> text;
+									for ($h = 0, $hMax = count($fnameOrigg2); $h < $hMax; $h++) {
+										$filename2 .= $fnameOrigg2[$h] -> text;
 									}
 
 								}
@@ -5351,14 +5403,14 @@ class Mailer {
 
 								}
 
-								if ( $isJP ) {
+								if ($isJP) {
 
-									$filename1 = str_replace( "?", "№", self ::encodeToUtf8( $filename1 ) );
-									$filename2 = str_replace( "?", "№", self ::encodeToUtf8( $filename2 ) );
+									$filename1 = str_replace("?", "№", self::encodeToUtf8($filename1));
+									$filename2 = str_replace("?", "№", self::encodeToUtf8($filename2));
 
 								}
 
-								if ( str_contains( strtoupper( $filename1 ), "UTF-8''" ) ) {
+								if (str_contains(strtoupper($filename1), "UTF-8''")) {
 									$filename = $filename2;
 								}
 
@@ -5366,42 +5418,42 @@ class Mailer {
 									$filename = $filename1;
 								}
 
-								if ( $filename == 'UTF-8' ) {
+								if ($filename == 'UTF-8') {
 
-									$fnameOrigg = imap_mime_header_decode( $parts[ $j ] -> parameters[1] -> value );
+									$fnameOrigg = imap_mime_header_decode($parts[$j] -> parameters[1] -> value);
 
 									$filename = '';
-									for ( $h = 0, $hMax = count( (array)$fnameOrigg ); $h < $hMax; $h++ ) {
+									for ($h = 0, $hMax = count((array)$fnameOrigg); $h < $hMax; $h++) {
 
-										$filename .= $fnameOrigg[ $h ] -> text;
+										$filename .= $fnameOrigg[$h] -> text;
 
 									}
 
 								}
 
-								if ( $isGmail && !$isJP ) {
-									$filename = iconv( "KOI8-R", "UTF-8", $filename );
+								if ($isGmail && !$isJP) {
+									$filename = iconv("KOI8-R", "UTF-8", $filename);
 								}
 
-								$filename = str_replace( [
+								$filename = str_replace([
 									"'",
 									"`",
 									"$",
 									")",
 									"("
-								], "", $filename );
+								], "", $filename);
 
-								$fext = substr( $filename, strrpos( $filename, '.' ) + 1 );
+								$fext = substr($filename, strrpos($filename, '.') + 1);
 
-								if ( $fext != '' ) {
+								if ($fext != '') {
 
-									$fsize         = $parts[ $j ] -> bytes;
+									$fsize         = $parts[$j] -> bytes;
 									$attachments[] = [
-										"file"     => md5( $fsize.$filename.$details['fromAddr'] ).".".$fext,
+										"file"     => md5($fsize.$filename.$details['fromAddr']).".".$fext,
 										"name"     => $filename,
-										"enc"      => $parts[ $j ] -> encoding,
+										"enc"      => $parts[$j] -> encoding,
 										"partNum"  => $partstring,
-										"filedata" => imap_fetchbody( $conn, $msgno, $partstring, FT_PEEK )
+										"filedata" => imap_fetchbody($conn, $msgno, $partstring, FT_PEEK)
 										// data, duhh!
 									];
 
@@ -5412,12 +5464,12 @@ class Mailer {
 
 						//print_r($attachments);
 
-						if ( $parts[ $j ] -> parts ) {
+						if ($parts[$j] -> parts) {
 							$stack[] = [
 								"p" => $parts,
 								"i" => $j
-							]; // next stack
-							$parts   = $parts[ $j ] -> parts; // parts
+							];                              // next stack
+							$parts   = $parts[$j] -> parts; // parts
 							$j       = 0;
 						}
 						else {
@@ -5431,10 +5483,10 @@ class Mailer {
 
 				//загрузка файлов
 				//$attach = [];
-				foreach ( $attachments as $attachment ) {
+				foreach ($attachments as $attachment) {
 
 					//если в запросе не указан конвретный файл для загрузки
-					if ( $file == "" ) {
+					if ($file == "") {
 
 						$attach[] = [
 							"uid"  => $uid,
@@ -5442,10 +5494,10 @@ class Mailer {
 							"name" => $attachment["name"]
 						];
 
-						self ::downloadAttachment( $conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"] );
+						self::downloadAttachment($conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"]);
 
 					}
-					elseif ( $file == $attachment["name"] ) {
+					elseif ($file == $attachment["name"]) {
 
 						$attach[] = [
 							"uid"  => $uid,
@@ -5453,7 +5505,7 @@ class Mailer {
 							"name" => $attachment["name"]
 						];
 
-						self ::downloadAttachment( $conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"] );
+						self::downloadAttachment($conn, $uid, $attachment["partNum"], $attachment["enc"], $ym_fpath, $attachment["file"]);
 
 					}
 
@@ -5463,7 +5515,7 @@ class Mailer {
 
 			//if ($error != '') print $error;
 
-			imap_close( $conn );
+			imap_close($conn);
 
 		}
 
@@ -5480,7 +5532,7 @@ class Mailer {
 
 		$id = (int)$id;
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -5497,25 +5549,25 @@ class Mailer {
 
 		$path = $uploaddir."tmp".time()."/";
 
-		if ( !is_dir( $path ) && !mkdir( $path, 0766 ) && !is_dir( $path ) ) {
-			throw new RuntimeException( sprintf( 'Directory "%s" was not created', $path ) );
+		if (!is_dir($path) && !mkdir($path, 0766) && !is_dir($path)) {
+			throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
 		}
-		chmod( $path, 0777 );
+		chmod($path, 0777);
 
-		$hid = $db -> getOne( "SELECT hid FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'" );
+		$hid = $db -> getOne("SELECT hid FROM {$sqlname}ymail_messages WHERE id = '$id' and identity = '$identity'");
 
-		if ( $hid > 0 ) {
+		if ($hid > 0) {
 
-			$fids = yexplode( ";", (string)$db -> getOne( "SELECT fid FROM {$sqlname}history WHERE cid = '$hid' and identity = '$identity'" ) );
+			$fids = yexplode(";", (string)$db -> getOne("SELECT fid FROM {$sqlname}history WHERE cid = '$hid' and identity = '$identity'"));
 
-			foreach ( $fids as $fid ) {
+			foreach ($fids as $fid) {
 
-				$result = $db -> getRow( "SELECT * FROM {$sqlname}file WHERE fid = '$fid' and identity = '$identity'" );
+				$result = $db -> getRow("SELECT * FROM {$sqlname}file WHERE fid = '$fid' and identity = '$identity'");
 				$file   = $result['fname'];
-				$name   = str_replace( " ", "-", translit( $result['ftitle'] ) );
+				$name   = str_replace(" ", "-", translit($result['ftitle']));
 
-				if ( file_exists( $uploaddir.$file ) ) {
-					copy( $uploaddir.$file, $path.$name );
+				if (file_exists($uploaddir.$file)) {
+					copy($uploaddir.$file, $path.$name);
 				}
 
 			}
@@ -5525,11 +5577,11 @@ class Mailer {
 
 			$uploaddir .= 'ymail/';
 
-			$result = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'" );
-			while ($data = $db -> fetch( $result )) {
+			$result = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$id' and identity = '$identity'");
+			while ($data = $db -> fetch($result)) {
 
-				if ( file_exists( $uploaddir.$data['file'] ) ) {
-					copy( $uploaddir.$data['file'], $path.str_replace( " ", "-", translit( $data['name'] ) ) );
+				if (file_exists($uploaddir.$data['file'])) {
+					copy($uploaddir.$data['file'], $path.str_replace(" ", "-", translit($data['name'])));
 				}
 
 			}
@@ -5552,30 +5604,30 @@ class Mailer {
 		*/
 
 		$zip = new ZipFolder();
-		$zip -> zipFile( $file, $rootpath."/files/", $path );
+		$zip -> zipFile($file, $rootpath."/files/", $path);
 
-		header( 'Content-Type: '.get_mimetype( $file ) );
-		header( 'Content-Disposition: attachment; filename="'.$file.'"' );
-		header( 'Content-Transfer-Encoding: binary' );
-		header( 'Accept-Ranges: bytes' );
+		header('Content-Type: '.get_mimetype($file));
+		header('Content-Disposition: attachment; filename="'.$file.'"');
+		header('Content-Transfer-Encoding: binary');
+		header('Accept-Ranges: bytes');
 
-		readfile( $rootpath."/files/".$file );
+		readfile($rootpath."/files/".$file);
 
 		//удалим не нужные файлы
 
-		if ( $dh = opendir( $path ) ) {
+		if ($dh = opendir($path)) {
 
-			while (($file = readdir( $dh )) !== false) {
+			while (( $file = readdir($dh) ) !== false) {
 
-				if ( $file != "." && $file != ".." ) {
-					unlink( $path.$file );
+				if ($file != "." && $file != "..") {
+					unlink($path.$file);
 				}
 
 			}
 
 		}
 
-		rmdir( $path );
+		rmdir($path);
 
 	}
 
@@ -5588,7 +5640,7 @@ class Mailer {
 	 */
 	public static function clearOtherMessages(int $iduser = 0, int $day = 10): bool {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -5604,17 +5656,17 @@ class Mailer {
 
 		//удалим к ебеням письма, не прикрепленные к истории (входящие или в корзине), а значит не нужные
 
-		if ( $day > 0 ) {
+		if ($day > 0) {
 
 			/**
 			 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 			 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 			 */
-			unset( $db );
-			$db = new SafeMySQL( $opts );
+			unset($db);
+			$db = new SafeMySQL($opts);
 
-			$result = $db -> query( "SELECT id, datum FROM {$sqlname}ymail_messages WHERE id > 0 and iduser = '$iduser' and (folder = 'inbox' or trash = 'yes') and DATE_FORMAT(datum, '%Y-%m-%d') < '".current_datum( $day )."' and (hid < 1 OR hid IS NULL) and identity = '$identity' ORDER BY datum DESC LIMIT 20" );
-			while ($da = $db -> fetch( $result )) {
+			$result = $db -> query("SELECT id, datum FROM {$sqlname}ymail_messages WHERE id > 0 and iduser = '$iduser' and (folder = 'inbox' or trash = 'yes') and DATE_FORMAT(datum, '%Y-%m-%d') < '".current_datum($day)."' and (hid < 1 OR hid IS NULL) and identity = '$identity' ORDER BY datum DESC LIMIT 20");
+			while ($da = $db -> fetch($result)) {
 
 				//удалим файлы inbody
 				/*
@@ -5633,19 +5685,19 @@ class Mailer {
 				//$db -> query("delete from " . $sqlname . "ymail_messages WHERE id = '" . $da['id'] . "' and identity = '$identity'");
 
 				//пометим письмо как удаленное
-				$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '$da[id]' and identity = '$identity'" );
+				$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '$da[id]' and identity = '$identity'");
 
 				//удалим адресатов
-				$db -> query( "delete from {$sqlname}ymail_messagesrec WHERE mid = '$da[id]' and identity = '$identity'" );
+				$db -> query("delete from {$sqlname}ymail_messagesrec WHERE mid = '$da[id]' and identity = '$identity'");
 
-				$res = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$da[id]' and identity = '$identity'" );
-				while ($data = $db -> fetch( $res )) {
+				$res = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$da[id]' and identity = '$identity'");
+				while ($data = $db -> fetch($res)) {
 
 					//удалим файлы
-					$db -> query( "delete from {$sqlname}ymail_files WHERE mid = '$da[id]' and id = '$data[id]' and identity = '$identity'" );
+					$db -> query("delete from {$sqlname}ymail_files WHERE mid = '$da[id]' and id = '$data[id]' and identity = '$identity'");
 
-					if ( file_exists( $ym_fpath.$data['file'] ) ) {
-						unlink( $ym_fpath.$data['file'] );
+					if (file_exists($ym_fpath.$data['file'])) {
+						unlink($ym_fpath.$data['file']);
 					}
 
 				}
@@ -5656,31 +5708,31 @@ class Mailer {
 			 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 			 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 			 */
-			unset( $db );
-			$db = new SafeMySQL( $opts );
+			unset($db);
+			$db = new SafeMySQL($opts);
 
 			//удалим вложения из писем, прикрепленных к истории
-			$result = $db -> query( "SELECT id, hid FROM {$sqlname}ymail_messages where id > 0 and iduser = '$iduser' and folder != 'draft' and (hid != '0' and hid IS NOT NULL) and identity = '$identity' ORDER BY datum DESC LIMIT 20" );
-			while ($da = $db -> fetch( $result )) {
+			$result = $db -> query("SELECT id, hid FROM {$sqlname}ymail_messages where id > 0 and iduser = '$iduser' and folder != 'draft' and (hid != '0' and hid IS NOT NULL) and identity = '$identity' ORDER BY datum DESC LIMIT 20");
+			while ($da = $db -> fetch($result)) {
 
 				//v8.31: найдем файлы, прикрепленные к истории
-				$result = $db -> getOne( "select fid from {$sqlname}history WHERE cid = '".$da['hid']."' and identity = '$identity'" );
-				$fids   = yexplode( ";", (string)$result );
-				$fidx   = yexplode( ",", (string)$da['fid'] );
+				$result = $db -> getOne("select fid from {$sqlname}history WHERE cid = '".$da['hid']."' and identity = '$identity'");
+				$fids   = yexplode(";", (string)$result);
+				$fidx   = yexplode(",", (string)$da['fid']);
 
-				$xfid = implode( ",", array_unique( array_merge( $fids, $fidx ) ) );
+				$xfid = implode(",", array_unique(array_merge($fids, $fidx)));
 
 				//v8.31: прикрепим файлы из активности к письму, для экономии пространства
-				$db -> query( "update {$sqlname}ymail_messages set fid = '".str_replace( ";", ",", $xfid )."' WHERE id = '".$da['id']."' and identity = '$identity'" );
+				$db -> query("update {$sqlname}ymail_messages set fid = '".str_replace(";", ",", $xfid)."' WHERE id = '".$da['id']."' and identity = '$identity'");
 
 				//v8.31: удалим загруженные вложения из письма
-				$result = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$da['id']."' and identity = '$identity'" );
-				while ($data = $db -> fetch( $result )) {
+				$result = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$da['id']."' and identity = '$identity'");
+				while ($data = $db -> fetch($result)) {
 
-					$db -> query( "delete from {$sqlname}ymail_files WHERE mid = '".$da['id']."' and id = '".$data['id']."' and identity = '$identity'" );
+					$db -> query("delete from {$sqlname}ymail_files WHERE mid = '".$da['id']."' and id = '".$data['id']."' and identity = '$identity'");
 
-					if ( file_exists( $ym_fpath.$data['file'] ) ) {
-						unlink( $ym_fpath.$data['file'] );
+					if (file_exists($ym_fpath.$data['file'])) {
+						unlink($ym_fpath.$data['file']);
 					}
 
 				}
@@ -5694,25 +5746,25 @@ class Mailer {
 			//$fls = getDirFiles( $myDir );
 			$fls = [];
 
-			unset( $db );
-			$db = new SafeMySQL( $opts );
+			unset($db);
+			$db = new SafeMySQL($opts);
 
 			// ограничим только 20 файлами
 			$fcount = 0;
-			foreach ( $fls as $file ) {
+			foreach ($fls as $file) {
 
-				if ( $file != '' && $fcount < 20 ) {
+				if ($file != '' && $fcount < 20) {
 
 					/**
 					 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 					 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 					 */
 
-					$yfid = $db -> getOne( "SELECT id FROM {$sqlname}ymail_files WHERE file = '$file' and identity = '$identity'" );
+					$yfid = $db -> getOne("SELECT id FROM {$sqlname}ymail_files WHERE file = '$file' and identity = '$identity'");
 
-					if ( (int)$yfid > 0 ) {
+					if ((int)$yfid > 0) {
 
-						unlink( $ym_fpath.$file );
+						unlink($ym_fpath.$file);
 
 					}
 
@@ -5764,7 +5816,7 @@ class Mailer {
 
 		$iduser = (int)$iduser;
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -5780,17 +5832,17 @@ class Mailer {
 
 		//удалим старые сообщения (более 3-х месяцев)
 
-		$db = new SafeMySQL( $opts );
+		$db = new SafeMySQL($opts);
 
-		$result = $db -> query( "SELECT id FROM {$sqlname}ymail_messages where id > 0 and iduser = '$iduser' and (folder = 'inbox' or folder = 'sended' or trash = 'yes') and DATE_FORMAT(datum, '%Y-%m-%d') < '".current_datum( $day )."' and hid > 0 and identity = '$identity'" );
-		while ($da = $db -> fetch( $result )) {
+		$result = $db -> query("SELECT id FROM {$sqlname}ymail_messages where id > 0 and iduser = '$iduser' and (folder = 'inbox' or folder = 'sended' or trash = 'yes') and DATE_FORMAT(datum, '%Y-%m-%d') < '".current_datum($day)."' and hid > 0 and identity = '$identity'");
+		while ($da = $db -> fetch($result)) {
 
 			/**
 			 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 			 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 			 */
-			unset( $db2 );
-			$db2 = new SafeMySQL( $opts );
+			unset($db2);
+			$db2 = new SafeMySQL($opts);
 
 			//удалим файлы inbody
 			/*preg_match_all( '/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', htmlspecialchars_decode( $da['content'] ), $images, PREG_SET_ORDER );
@@ -5807,19 +5859,19 @@ class Mailer {
 			}*/
 
 			//пометим письмо как удаленное
-			$db2 -> query( "UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '$da[id]' and identity = '$identity'" );
+			$db2 -> query("UPDATE {$sqlname}ymail_messages SET state = 'deleted', theme = '', content = '', fid = '' WHERE id = '$da[id]' and identity = '$identity'");
 
 			//удалим адресатов
-			$db2 -> query( "delete from {$sqlname}ymail_messagesrec WHERE mid = '$da[id]' and identity = '$identity'" );
+			$db2 -> query("delete from {$sqlname}ymail_messagesrec WHERE mid = '$da[id]' and identity = '$identity'");
 
-			$res = $db2 -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '$da[id]' and identity = '$identity'" );
-			while ($data = $db2 -> fetch( $res )) {
+			$res = $db2 -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '$da[id]' and identity = '$identity'");
+			while ($data = $db2 -> fetch($res)) {
 
 				//удалим файлы
-				$db2 -> query( "delete from {$sqlname}ymail_files WHERE mid = '$da[id]' and id = '$data[id]' and identity = '$identity'" );
+				$db2 -> query("delete from {$sqlname}ymail_files WHERE mid = '$da[id]' and id = '$data[id]' and identity = '$identity'");
 
-				if ( file_exists( $ym_fpath.$data['file'] ) ) {
-					unlink( $ym_fpath.$data['file'] );
+				if (file_exists($ym_fpath.$data['file'])) {
+					unlink($ym_fpath.$data['file']);
 				}
 
 			}
@@ -5830,34 +5882,34 @@ class Mailer {
 		 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 		 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 		 */
-		unset( $db );
-		$db = new SafeMySQL( $opts );
+		unset($db);
+		$db = new SafeMySQL($opts);
 
 		//удалим вложения из писем, прикрепленных к истории
-		$result = $db -> query( "SELECT id, hid FROM {$sqlname}ymail_messages where id > 0 and iduser = '".$iduser."' and folder != 'draft' and hid > 0 and identity = '$identity'" );
-		while ($da = $db -> fetch( $result )) {
+		$result = $db -> query("SELECT id, hid FROM {$sqlname}ymail_messages where id > 0 and iduser = '".$iduser."' and folder != 'draft' and hid > 0 and identity = '$identity'");
+		while ($da = $db -> fetch($result)) {
 
-			unset( $db2 );
-			$db2 = new SafeMySQL( $opts );
+			unset($db2);
+			$db2 = new SafeMySQL($opts);
 
 			//v8.31: найдем файлы, прикрепленные к истории
-			$result = $db2 -> getOne( "select fid from {$sqlname}history WHERE cid = '".$da['hid']."' and identity = '$identity'" );
-			$fids   = yexplode( ";", $result );
-			$fidx   = yexplode( ",", $da['fid'] );
+			$result = $db2 -> getOne("select fid from {$sqlname}history WHERE cid = '".$da['hid']."' and identity = '$identity'");
+			$fids   = yexplode(";", $result);
+			$fidx   = yexplode(",", $da['fid']);
 
-			$xfid = implode( ",", array_unique( array_merge( $fids, $fidx ) ) );
+			$xfid = implode(",", array_unique(array_merge($fids, $fidx)));
 
 			//v8.31: прикрепим файлы из активности к письму, для экономии пространства
-			$db2 -> query( "update {$sqlname}ymail_messages set fid = '".str_replace( ";", ",", $xfid )."' WHERE id = '".$da['id']."' and identity = '$identity'" );
+			$db2 -> query("update {$sqlname}ymail_messages set fid = '".str_replace(";", ",", $xfid)."' WHERE id = '".$da['id']."' and identity = '$identity'");
 
 			//v8.31: удалим загруженные вложения из письма
-			$result = $db -> query( "SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$da['id']."' and identity = '$identity'" );
-			while ($data = $db2 -> fetch( $result )) {
+			$result = $db -> query("SELECT * FROM {$sqlname}ymail_files WHERE mid = '".$da['id']."' and identity = '$identity'");
+			while ($data = $db2 -> fetch($result)) {
 
-				$db2 -> query( "delete from {$sqlname}ymail_files WHERE mid = '".$da['id']."' and id = '".$data['id']."' and identity = '$identity'" );
+				$db2 -> query("delete from {$sqlname}ymail_files WHERE mid = '".$da['id']."' and id = '".$data['id']."' and identity = '$identity'");
 
-				if ( file_exists( $ym_fpath.$data['file'] ) ) {
-					unlink( $ym_fpath.$data['file'] );
+				if (file_exists($ym_fpath.$data['file'])) {
+					unlink($ym_fpath.$data['file']);
 				}
 
 			}
@@ -5871,22 +5923,22 @@ class Mailer {
 
 		// ставим заглушку, т.к. эту функцию вынес в cronCleaner
 		// да и работает как-то не правильно
-		foreach ( $fls as $file ) {
+		foreach ($fls as $file) {
 
-			if ( $file != '' ) {
+			if ($file != '') {
 
 				/**
 				 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 				 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 				 */
-				unset( $db );
-				$db = new SafeMySQL( $opts );
+				unset($db);
+				$db = new SafeMySQL($opts);
 
-				$yfid = $db -> getOne( "SELECT id FROM {$sqlname}ymail_files WHERE file = '$file' and identity = '$identity'" );
+				$yfid = $db -> getOne("SELECT id FROM {$sqlname}ymail_files WHERE file = '$file' and identity = '$identity'");
 
-				if ( (int)$yfid > 0 ) {
+				if ((int)$yfid > 0) {
 
-					unlink( $ym_fpath.$file );
+					unlink($ym_fpath.$file);
 
 				}
 
@@ -5918,7 +5970,7 @@ class Mailer {
 		*/
 
 		//удалим удаленные сообщения старше месяца
-		$db -> query( "DELETE FROM {$sqlname}ymail_messages WHERE state = 'deleted' AND datum < '".current_datum( 30 )."'" );
+		$db -> query("DELETE FROM {$sqlname}ymail_messages WHERE state = 'deleted' AND datum < '".current_datum(30)."'");
 
 		return true;
 
@@ -5931,7 +5983,7 @@ class Mailer {
 	 */
 	public static function clearInBody(): int {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -5947,16 +5999,16 @@ class Mailer {
 
 		$imgExist = [];
 
-		$result = $db -> getCol( "SELECT content FROM {$sqlname}ymail_messages where identity = '$identity'" );
-		foreach ( $result as $html ) {
+		$result = $db -> getCol("SELECT content FROM {$sqlname}ymail_messages where identity = '$identity'");
+		foreach ($result as $html) {
 
 			//найдем все валидные файлы
-			preg_match_all( '/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', htmlspecialchars_decode( $html ), $images, PREG_SET_ORDER );
+			preg_match_all('/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', htmlspecialchars_decode($html), $images, PREG_SET_ORDER);
 
-			foreach ( $images as $img ) {
+			foreach ($images as $img) {
 
-				$array = yexplode( "/", $img[1] );
-				$image = array_pop( $array );
+				$array = yexplode("/", $img[1]);
+				$image = array_pop($array);
 
 				$imgExist[] = $image;
 
@@ -5967,17 +6019,19 @@ class Mailer {
 		//проходим дирректорию и удаляем не валидные файлы
 		clearstatcache();
 
-		$files = scandir( $ym_fpath."inbody", 1 );
+		$files = scandir($ym_fpath."inbody", 1);
 
-		foreach ( $files as $file ) {
+		foreach ($files as $file) {
 
-			if ( !in_array( $file, [
+			if (
+				!in_array($file, [
 					"0",
 					".",
 					".."
-				], true ) && !in_array( $file, $imgExist ) ) {
+				], true) && !in_array($file, $imgExist)
+			) {
 
-				unlink( $ym_fpath."inbody/".$file );
+				unlink($ym_fpath."inbody/".$file);
 				$count++;
 
 			}
@@ -6000,7 +6054,7 @@ class Mailer {
 	 */
 	public static function deleteMsgByPeriod(int $iduser = 0, int $period = 5): array {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -6012,16 +6066,16 @@ class Mailer {
 
 		$m = [];
 
-		$s = ($iduser > 0) ? " AND iduser = '$iduser'" : "";
+		$s = ( $iduser > 0 ) ? " AND iduser = '$iduser'" : "";
 
-		$r = $db -> query( "SELECT id, iduser FROM {$sqlname}ymail_messages WHERE DATEDIFF(datum, NOW() - INTERVAL $period DAY) > 0 $s AND state != 'deleted' AND identity = '$identity'" );
-		while ($d = $db -> fetch( $r )) {
+		$r = $db -> query("SELECT id, iduser FROM {$sqlname}ymail_messages WHERE DATEDIFF(datum, NOW() - INTERVAL $period DAY) > 0 $s AND state != 'deleted' AND identity = '$identity'");
+		while ($d = $db -> fetch($r)) {
 
-			$y = self ::mailActionPlus( [
+			$y = self::mailActionPlus([
 				"id"     => $d['id'],
 				"iduser" => $d['iduser'],
 				"tip"    => "delete"
-			] );
+			]);
 
 			$m[] = [
 				"id"   => $d['id'],
@@ -6045,27 +6099,27 @@ class Mailer {
 	 */
 	public static function readAll(array $params = []): int {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
 		require_once $rootpath."/inc/func.php";
 
-		$identity = (int)(($params['identity'] > 0) ? $params['identity'] : $GLOBALS['identity']);
-		$iduser   = (int)(($params['iduser1'] > 0) ? $params['iduser'] : $GLOBALS['iduser1']);
+		$identity = (int)( ( $params['identity'] > 0 ) ? $params['identity'] : $GLOBALS['identity'] );
+		$iduser   = (int)( ( $params['iduser1'] > 0 ) ? $params['iduser'] : $GLOBALS['iduser1'] );
 		$sqlname  = $GLOBALS['sqlname'];
 		$db       = $GLOBALS['db'];
 
 		$ids = [];
-		if ( isset( $params['id'] ) ) {
-			foreach ( (array)$params['id'] as $xid ) {
+		if (isset($params['id'])) {
+			foreach ((array)$params['id'] as $xid) {
 				$ids[] = (int)$xid;
 			}
 		}
 
-		$s = empty( $ids ) ? "iduser = '$iduser' AND" : "id IN (".yimplode( ",", $ids ).") AND";
+		$s = empty($ids) ? "iduser = '$iduser' AND" : "id IN (".yimplode(",", $ids).") AND";
 
-		$db -> query( "UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE state = 'unread' AND $s identity = '$identity'" );
+		$db -> query("UPDATE {$sqlname}ymail_messages SET state = 'read' WHERE state = 'unread' AND $s identity = '$identity'");
 
 		return (int)$db -> affectedRows();
 
@@ -6078,7 +6132,7 @@ class Mailer {
 	 */
 	public static function blackList(): array {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		require_once $rootpath."/inc/config.php";
 		require_once $rootpath."/inc/dbconnector.php";
@@ -6093,10 +6147,10 @@ class Mailer {
 		 * Удаляем объект подключения к базе и создаем новый, для следующего цикла
 		 * В противном случае получим ошибку "safemysql MySQL server has gone away"
 		 */
-		unset( $db );
-		$db = new \SafeMySQL( $opts );
+		unset($db);
+		$db = new \SafeMySQL($opts);
 
-		return $db -> getCol( "SELECT email FROM {$sqlname}ymail_blacklist WHERE identity='$identity'" );
+		return $db -> getCol("SELECT email FROM {$sqlname}ymail_blacklist WHERE identity='$identity'");
 
 	}
 
@@ -6113,40 +6167,40 @@ class Mailer {
 	 */
 	private static function downloadAttachment($imap, $uid, $partNum, $encoding, $path, $filename): void {
 
-		$rootpath = dirname( __DIR__, 2 );
+		$rootpath = dirname(__DIR__, 2);
 
 		include_once $rootpath."/inc/func.php";
 
 		//$partStruct = imap_bodystruct($imap, imap_msgno($imap, $uid), $partNum);
 		//$filename = str_replace(" ", "_", translit($partStruct->dparameters[0]->value));
 
-		$message = imap_fetchbody( $imap, $uid, $partNum, FT_UID );
+		$message = imap_fetchbody($imap, $uid, $partNum, FT_UID);
 
 		switch ($encoding) {
 			case 0:
 			case 1:
-				$message = imap_8bit( $message );
-			break;
+				$message = imap_8bit($message);
+				break;
 			case 2:
-				$message = imap_binary( $message );
-			break;
+				$message = imap_binary($message);
+				break;
 			case 3:
 			case 5:
-				$message = imap_base64( $message );
-			break;
+				$message = imap_base64($message);
+				break;
 			case 4:
-				$message = quoted_printable_decode( $message );
-			break;
+				$message = quoted_printable_decode($message);
+				break;
 		}
 
-		if ( is_string( $message ) ) {
+		if (is_string($message)) {
 
-			$fp = fopen( $path.'/'.$filename, 'wb' );
+			$fp = fopen($path.'/'.$filename, 'wb');
 
-			if ( is_resource( $fp ) ) {
+			if (is_resource($fp)) {
 
-				fwrite( $fp, $message );
-				fclose( $fp );
+				fwrite($fp, $message);
+				fclose($fp);
 
 			}
 
@@ -6161,12 +6215,12 @@ class Mailer {
 	 * @param $imap
 	 * @return bool|string
 	 */
-	private static function getBody($uid, $imap) {
+	private static function getBody($uid, $imap): bool|string {
 
-		$body = self ::getPart( $imap, $uid, "TEXT/HTML" );
+		$body = self::getPart($imap, $uid, "TEXT/HTML");
 
-		if ( $body == "" ) {
-			$body = self ::getPart( $imap, $uid, "TEXT/PLAIN" );
+		if ($body == "") {
+			$body = self::getPart($imap, $uid, "TEXT/PLAIN");
 		}
 
 		return $body;
@@ -6183,27 +6237,27 @@ class Mailer {
 	 * @param      $partNumber
 	 * @return bool|string
 	 */
-	private static function getPart($imap, $uid, $mimetype, $structure = NULL, $partNumber = NULL) {
+	private static function getPart($imap, $uid, $mimetype, $structure = NULL, $partNumber = NULL): bool|string {
 
-		if ( !$structure ) {
-			$structure = imap_fetchstructure( $imap, $uid, FT_UID );
+		if (!$structure) {
+			$structure = imap_fetchstructure($imap, $uid, FT_UID);
 		}
 
-		if ( $structure ) {
+		if ($structure) {
 
-			if ( $mimetype == self ::getMimeType( $structure ) ) {
+			if ($mimetype == self::getMimeType($structure)) {
 
-				if ( !$partNumber ) {
+				if (!$partNumber) {
 					$partNumber = 1;
 				}
 
-				$text = imap_fetchbody( $imap, $uid, $partNumber, FT_UID );
+				$text = imap_fetchbody($imap, $uid, $partNumber, FT_UID);
 
 				switch ($structure -> encoding) {
 					case 3:
-						return imap_base64( $text );
+						return imap_base64($text);
 					case 4:
-						return imap_qprint( $text );
+						return imap_qprint($text);
 					default:
 						return $text;
 				}
@@ -6211,17 +6265,17 @@ class Mailer {
 			}
 
 			// multipart
-			if ( $structure -> type == 1 ) {
+			if ($structure -> type == 1) {
 
-				foreach ( $structure -> parts as $index => $subStruct ) {
+				foreach ($structure -> parts as $index => $subStruct) {
 
 					$rootpath = "";
-					if ( $partNumber ) {
+					if ($partNumber) {
 						$rootpath = $partNumber.".";
 					}
 
-					$data = self ::getPart( $imap, $uid, $mimetype, $subStruct, $rootpath.($index + 1) );
-					if ( $data ) {
+					$data = self::getPart($imap, $uid, $mimetype, $subStruct, $rootpath.( $index + 1 ));
+					if ($data) {
 						return $data;
 					}
 
@@ -6254,8 +6308,8 @@ class Mailer {
 			"OTHER"
 		];
 
-		if ( $structure -> subtype ) {
-			return $primaryMimetype[ (int)$structure -> type ]."/".$structure -> subtype;
+		if ($structure -> subtype) {
+			return $primaryMimetype[(int)$structure -> type]."/".$structure -> subtype;
 		}
 
 		return "TEXT/PLAIN";
@@ -6268,12 +6322,12 @@ class Mailer {
 	 * @param $object
 	 * @return mixed
 	 */
-	private static function objectToArray($object) {
+	private static function objectToArray($object): mixed {
 		// First we convert the object into a json string
-		$json = json_encode( $object );
+		$json = json_encode($object);
 
 		// Then we convert the json string to an array
-		return json_decode( $json, true );
+		return json_decode($json, true);
 
 	}
 
@@ -6283,25 +6337,25 @@ class Mailer {
 	 * @param $array
 	 * @return mixed
 	 */
-	public static function searchEncode($array) {
+	public static function searchEncode($array): mixed {
 
 		//global $charset;
 		$charset = '';
 
-		foreach ( $array as $arr ) {
+		foreach ($array as $arr) {
 
-			if(!empty($charset)){
+			if (!empty($charset)) {
 				continue;
 			}
 
-			if ( is_array( $arr ) && !isset( $arr['disposition'] ) ) {
+			if (is_array($arr) && !isset($arr['disposition'])) {
 
-				if ( strtoupper( $arr[0]['attribute'] ) == 'CHARSET' ) {
+				if (strtoupper($arr[0]['attribute']) == 'CHARSET') {
 					$charset = $arr[0]['value'];
 					continue;
 				}
 
-				$charset = self ::searchEncode( $arr );
+				$charset = self::searchEncode($arr);
 
 			}
 
@@ -6317,13 +6371,13 @@ class Mailer {
 	 * @param $string
 	 * @return false|string
 	 */
-	private static function encodeToUtf8($string) {
+	private static function encodeToUtf8($string): false|string {
 
-		mb_internal_encoding( "utf-8" );
-		$str_japan = mb_convert_encoding( $string, "UTF-8", "ISO-2022-JP" );
+		mb_internal_encoding("utf-8");
+		$str_japan = mb_convert_encoding($string, "UTF-8", "ISO-2022-JP");
 
 		//"=?iso-2022-jp?B?GyRCQjZCPjhsOEBCLDtuGyhCIC0gdGVzdGluZw==?=";
-		return mb_decode_mimeheader( $str_japan );
+		return mb_decode_mimeheader($str_japan);
 
 	}
 
@@ -6337,7 +6391,7 @@ class Mailer {
 	 */
 	private static function decrypt($text, $key, $iv): string {
 
-		return openssl_decrypt( base64_decode( $text ), 'AES-256-CTR', $key, OPENSSL_RAW_DATA, base64_decode( $iv ) );
+		return openssl_decrypt(base64_decode($text), 'AES-256-CTR', $key, OPENSSL_RAW_DATA, base64_decode($iv));
 
 	}
 
@@ -6350,32 +6404,32 @@ class Mailer {
 	 * @return mixed
 	 * @throws ImageResizeException
 	 */
-	public static function image2base64($html, bool $resize = false) {
+	public static function image2base64($html, bool $resize = false): mixed {
 
-		preg_match_all( '/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $html, $images, PREG_SET_ORDER );
+		preg_match_all('/<img[^>]+src="?\'?([^"\']+)"?\'?[^>]*>/i', $html, $images, PREG_SET_ORDER);
 
 		/**
 		 * Нужно проверить поддержки JPEG, т.к. в PHP7.4 её по дефолту нет
 		 */
 		$gd = gd_info();
 
-		foreach ( $images as $img ) {
+		foreach ($images as $img) {
 
 			// уменьшаем изображение только если есть поддержка работы с JPEG
-			if ( $resize && file_exists( $img[1] ) && $gd['JPEG Support'] ) {
+			if ($resize && file_exists($img[1]) && $gd['JPEG Support']) {
 
-				$image = new ImageResize( $img[1] );
-				$image -> resizeToWidth( 300 );
-				$image -> save( $img[1], IMAGETYPE_PNG );
+				$image = new ImageResize($img[1]);
+				$image -> resizeToWidth(300);
+				$image -> save($img[1], IMAGETYPE_PNG);
 
 			}
 
-			if ( file_exists( $img[1] ) ) {
+			if (file_exists($img[1])) {
 
-				$imgBase64 = base64_encode( file_get_contents( $img[1] ) );
-				$src       = 'data:'.mime_content_type( $img[1] ).';base64,'.$imgBase64;
+				$imgBase64 = base64_encode(file_get_contents($img[1]));
+				$src       = 'data:'.mime_content_type($img[1]).';base64,'.$imgBase64;
 
-				$html = str_replace( $img[1], $src, $html );
+				$html = str_replace($img[1], $src, $html);
 
 			}
 
@@ -6396,11 +6450,11 @@ class Mailer {
 
 		$content = $html;
 
-		if ( preg_match( '|<body.*?>(.*)</body>|si', $content, $arr ) ) {
+		if (preg_match('|<body.*?>(.*)</body>|si', $content, $arr)) {
 			$content = $arr[1];
 		}
 
-		$content = str_replace( [
+		$content = str_replace([
 			'<base',
 			'base>',
 			'underline'
@@ -6408,40 +6462,40 @@ class Mailer {
 			'<span',
 			'span>',
 			'none'
-		], $content );
+		], $content);
 
 		// старый метод
 		/*$content = preg_replace( '|<style.*?>(.*)</style>|si', "", $content );*/
 
 		// новый метод. работает качественнее
-		$content = preg_replace( '|<body.*</body>|isU', "", $content );
-		$content = preg_replace( '|<style.*</style>|isU', "", $content );
-		$content = preg_replace( '|<title.*</title>|isU', "", $content );
-		$content = preg_replace( '~style="[^"]*"~i', "", $content );
+		$content = preg_replace('|<body.*</body>|isU', "", $content);
+		$content = preg_replace('|<style.*</style>|isU', "", $content);
+		$content = preg_replace('|<title.*</title>|isU', "", $content);
+		$content = preg_replace('~style="[^"]*"~i', "", $content);
 
 		//если текст не имеет форматирования, то заменяем \n на br
 		$k = 0;
-		if ( strpos( $content, "<p" ) !== false ) {
+		if (strpos($content, "<p") !== false) {
 			$k++;
 		}
-		if ( strpos( $content, "<div" ) !== false ) {
+		if (strpos($content, "<div") !== false) {
 			$k++;
 		}
-		if ( strpos( $content, "<span" ) !== false ) {
+		if (strpos($content, "<span") !== false) {
 			$k++;
 		}
-		if ( strpos( $content, "<table" ) !== false ) {
+		if (strpos($content, "<table") !== false) {
 			$k++;
 		}
-		if ( strpos( $content, "class=" ) !== false ) {
+		if (strpos($content, "class=") !== false) {
 			$k++;
 		}
-		if ( strpos( $content, "<br" ) !== false ) {
+		if (strpos($content, "<br") !== false) {
 			$k++;
 		}
 
-		if ( $k == 0 ) {
-			$content = nl2br( $content );
+		if ($k == 0) {
+			$content = nl2br($content);
 		}
 
 		return $content;

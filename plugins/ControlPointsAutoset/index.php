@@ -500,7 +500,7 @@ $about = json_decode(str_replace([
 <script src="/assets/js/jquery/jquery-3.4.1.min.js"></script>
 <script src="/assets/js/jquery/jquery-migrate-3.0.0.min.js"></script>
 <script src="/assets/js/jquery/jquery-ui.min.js?v=2019.4"></script>
-<script src="/assets/js/moment.min.js"></script>
+<script src="/assets/js/moment.js/moment.min.js"></script>
 <script src="/assets/js/app.extended.js"></script>
 
 <script type="text/javascript" src="/assets/js/mustache/mustache.js"></script>

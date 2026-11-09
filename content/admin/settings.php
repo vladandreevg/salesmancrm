@@ -1468,7 +1468,7 @@ if ( $action == 'getValuta' ) {
 				<label><input name="mailme" type="checkbox" id="mailme" value="yes" <?php if ( $mailme == 'yes' ) print "checked" ?>/>&nbsp;Вкл./Откл. отправки уведомлений</label> (например: при создании новой организации)
 			</TD>
 		</TR>
-		<TR class="th40 <? ( $isCloud == true ? 'hidden' : '' ) ?>">
+		<TR class="th40 <?php ( $isCloud == true ? 'hidden' : '' ) ?>">
 			<td class="w200 fs-12 gray2 text-right">
 				<div class="">Рассылки:</div>
 			</TD>

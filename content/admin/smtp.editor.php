@@ -102,7 +102,7 @@ if ($_REQUEST['action'] == 'check') {
 	$mail -> CharSet = $charset;
 	$mail -> setLanguage('ru', $rootpath.'/vendor/phpmailer/phpmailer/language/');
 	$mail -> IsHTML(false);
-	$mail -> SetFrom($smtp_user, iconv("utf-8", $charset, "Тест CRM"));
+	$mail -> SetFrom($smtp_from, iconv("utf-8", $charset, "Тест CRM"));
 	$mail -> AddAddress($smtp_from, current_user($iduser1));
 	$mail -> Subject = iconv("utf-8", $charset, "Проверка отправки сообщений из CRM");
 	$mail -> Body    = iconv("utf-8", $charset, "Это тест");
@@ -121,7 +121,7 @@ if ($_REQUEST['action'] == 'check') {
 	exit();
 }
 
-if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) != 'xmlhttprequest') {
 	print '<div class="bad" align="center"><br>Доступ запрещен.<br>Обратитесь к администратору.<br><br></div>';
 	exit();
 }

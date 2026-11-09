@@ -10,10 +10,6 @@
 
 namespace Salesman;
 
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
 use clsTinyButStrong;
 use icircle\Template\Docx\DocxTemplate;
 use Exception;
@@ -1531,32 +1527,24 @@ class Document {
 
 		$message = 'Документ удален';
 
-		event ::fire( 'contract.delete', [
-			"deid" => $id,
-			"did"  => $fc['did']
-		] );
-
-		if ( $type['type'] != 'invoice' ) {
-
-			//это акт
-			if ( in_array( $type['type'], [
-				'get_akt',
-				'get_aktper'
-			] ) ) {
-				$etype = "akt";
-			}
-
-			else {
-				$etype = "contract";
-			}
-
-			event ::fire( $etype.'.add', [
-				"id"    => $id,
-				"did"   => $fc['did'],
-				"autor" => $iduser1
-			] );
-
+		//это акт
+		if ( in_array( $type['type'], [
+			'get_akt',
+			'get_aktper'
+		] ) ) {
+			$etype = "akt";
 		}
+
+		else {
+			$etype = "contract";
+		}
+
+		event ::fire( $etype.'.delete', [
+			"id"    => $id,
+			"deid"  => $id,
+			"did"   => $fc['did'],
+			"autor" => $iduser1
+		] );
 
 		return [
 			"id"      => $id,
@@ -1941,6 +1929,10 @@ class Document {
 
 				$docxTemplate -> merge( $tags, $outputPath );
 
+				// DocxTemplate на Windows складывает записи zip с '\' (RecursiveDirectoryIterator),
+				// а OOXML требует '/': нормализуем имена, иначе Word может не открыть документ
+				self ::normalizeDocxZipNames( $outputPath );
+
 				//удалим промежуточный файл
 				unlink( $inputPath );
 
@@ -2223,7 +2215,7 @@ class Document {
 	 * $data = $rez -> doc2PDF($id, $params);
 	 * ```
 	 */
-	public function doc2PDF(int $fid = 0, array $params = []) {
+	public function doc2PDF(int $fid = 0, array $params = []): mixed {
 
 		$rootpath      = $this -> rootpath;
 		$sqlname       = $this -> sqlname;
@@ -2353,7 +2345,7 @@ class Document {
 	 * )
 	 * ```
 	 */
-	public function getFiles(int $id = 0) {
+	public function getFiles(int $id = 0): mixed {
 
 		$deid = $id;
 
@@ -2424,7 +2416,7 @@ class Document {
 	 * $data = $rez -> mail($id, $params);
 	 * ```
 	 */
-	public function mail(int $id = 0, array $params = [], bool $auto = false) {
+	public function mail(int $id = 0, array $params = [], bool $auto = false): mixed {
 
 		global $hooks;
 
@@ -2878,19 +2870,103 @@ class Document {
 			$file = "/cash/qrcode-invoice.png";
 		}
 
-		// qrcode
-		$renderer = new ImageRenderer( new RendererStyle( 400 ), new ImagickImageBackEnd() );
-		$writer   = new Writer( $renderer );
-
 		$kpp = $tags[ 'compKpp' ] == '0' ? "" : $tags[ 'compKpp' ];
 		
 		//print $rootpath.$file."\n";
 		
 		$content = "ST00012|Name=".trim( str_replace( "”", "\"", $tags[ 'compUrName' ] ) )."|PersonalAcc=".trim( $tags[ 'compBankRs' ] )."|BankName=".trim( str_replace( "”", "\"", $tags[ 'compBankName' ] ) )."|BIC=".trim( $tags[ 'compBankBik' ] )."|CorrespAcc=".trim( $tags[ 'compBankKs' ] )."|PayeeINN=".trim( $tags[ 'compInn' ] )."|KPP=".trim( $kpp )."|Sum=".(pre_format($tags[ 'InvoiceSumma' ]) * 100)."|Purpose=".trim( str_replace( "”", "\"", "Оплата счета _№".$tags[ 'Invoice' ]." от ".$tags[ 'InvoiceDate' ]." ".$tags[ 'nalogName' ]." ".$tags[ 'nalogSumma' ] ) );
 
-		$writer -> writeFile( $content, $rootpath.$file, "UTF-8" );
+		QrCode::writeFile($content, $rootpath.$file, 400);
 
 		return $rootpath.$file;
+
+	}
+
+	/**
+	 * Приводит имена записей zip-архива DOCX к OOXML-виду: '\' → '/'.
+	 *
+	 * Нужно из-за библиотеки icircle/docx-template-in-php: в DocxTemplate::merge()
+	 * имена берутся из RecursiveDirectoryIterator и на Windows попадают в zip
+	 * с обратными слэшами ('word\document.xml'), а спецификация OOXML требует '/'
+	 * и Word может отказаться открывать такой документ. На Linux имена уже
+	 * корректные, поэтому метод там ничего не переписывает.
+	 *
+	 * @param string $file - путь к готовому DOCX
+	 * @return void
+	 */
+	private static function normalizeDocxZipNames( string $file ): void {
+
+		if ( !is_file( $file ) ) {
+			return;
+		}
+
+		$zip = new \ZipArchive();
+
+		if ( $zip -> open( $file ) !== true ) {
+			return;
+		}
+
+		$renames = [];
+
+		for ( $i = 0; $i < $zip -> numFiles; $i++ ) {
+
+			$stat = $zip -> statIndex( $i );
+
+			if ( $stat === false ) {
+				continue;
+			}
+
+			$raw = (string)$stat[ 'name' ];
+
+			if ( str_contains( $raw, '\\' ) ) {
+				$renames[ $raw ] = str_replace( '\\', '/', $raw );
+			}
+
+		}
+
+		if ( $renames === [] ) {
+			$zip -> close();
+			return;
+		}
+
+		$tmp = $file.'.norm';
+
+		$out = new \ZipArchive();
+
+		if ( $out -> open( $tmp, \ZipArchive::CREATE | \ZipArchive::OVERWRITE ) !== true ) {
+			$zip -> close();
+			return;
+		}
+
+		for ( $i = 0; $i < $zip -> numFiles; $i++ ) {
+
+			$stat = $zip -> statIndex( $i );
+
+			if ( $stat === false ) {
+				continue;
+			}
+
+			$raw  = (string)$stat[ 'name' ];
+			$name = $renames[ $raw ] ?? $raw;
+			$data = $zip -> getFromIndex( $i );
+
+			if ( $data === false ) {
+				continue;
+			}
+
+			$out -> addFromString( $name, $data );
+
+		}
+
+		$zip -> close();
+		$out -> close();
+
+		if ( !@rename( $tmp, $file ) ) {
+
+			@copy( $tmp, $file );
+			@unlink( $tmp );
+
+		}
 
 	}
 

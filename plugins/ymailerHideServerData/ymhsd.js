@@ -23,7 +23,7 @@ var ymhsdFunc = {
 
 	work: function (data) {
 
-		console.log(data);
+		//console.log(data);
 
 		if(data.etype === 'ymailerForm' && data.action === 'account.on'){
 

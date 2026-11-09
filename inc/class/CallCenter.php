@@ -24,6 +24,7 @@ use SpreadsheetReader;
  * @version     1.0 (29/07/2020)
  *
  */
+#[\AllowDynamicProperties]
 class CallCenter {
 
 	public const STATUSES = [

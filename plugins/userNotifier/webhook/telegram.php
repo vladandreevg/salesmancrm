@@ -39,7 +39,7 @@ function logIt($array, $name) {
 }
 
 //Найдем identity по настройкам
-$res      = $db -> getRow("select id, api_key, timezone from ".$sqlname."settings where api_key = '$apikey'");
+$res      = $db -> getRow("select id, api_key, timezone from ".$sqlname."settings where api_key = ?s", $apikey);
 $tmzone   = $res['timezone'];
 $api_key  = $res['api_key'];
 $identity = $res['id'] + 0;

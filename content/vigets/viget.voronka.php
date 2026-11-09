@@ -30,11 +30,11 @@ $m   = date( 'm' );
 $nd  = date( 'd' );
 $st  = mktime( 0, 0, 0, $m + 1, 0, $y ); //сформировали дату для дальнейшей обработки - первый день месяца $m года $y
 $dd  = (int)date( "t", $st ); //получили Стоимость дней в месяце
-$d11 = strftime( '%d.%m', mktime( 0, 0, 0, $m, '01', $y ) );
-$d12 = strftime( '%d.%m', mktime( 0, 0, 0, $m, $dd, $y ) );
+$d11 = date( 'd.m', mktime( 0, 0, 0, $m, '01', $y ) );
+$d12 = date( 'd.m', mktime( 0, 0, 0, $m, $dd, $y ) );
 
-$d1 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m, '01', $y ) );
-$d2 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m, $dd, $y ) );
+$d1 = date( 'Y-m-d', mktime( 0, 0, 0, $m, '01', $y ) );
+$d2 = date( 'Y-m-d', mktime( 0, 0, 0, $m, $dd, $y ) );
 
 if ( $voronkaInterval == '' ) {
 	$per    = "datum_plan BETWEEN '".$d1." 00:00:00' AND '".$d2." 23:59:59' AND ";

@@ -36,6 +36,38 @@ ini_set('error_log', $rootpath.'/cash/salesman_error.log');
 // фатальны, так что шума в журнале они не добавят.
 error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR);
 
+/**
+ * Профиль сбора депрекатов PHP 8.2–8.5 (Этап 1 миграции на 8.5).
+ *
+ * Включается ТОЛЬКО явно: env-переменная SM_PHP_DEBUG=1 или файл-маркер
+ * cash/php85-debug.on с содержимым «1». В обычном режиме поведение прежнее.
+ * Нужен, потому что php.ini скрывает E_DEPRECATED, а сотни файлов сбрасывают
+ * error_reporting(E_ERROR) — без профиля депрекаты 8.2–8.5 не измерить.
+ * display_errors принудительно выключается: лог не должен попадать в HTML/JSON.
+ */
+$php85Debug = getenv('SM_PHP_DEBUG');
+
+if ($php85Debug === false && isset($_SERVER['SM_PHP_DEBUG'])) {
+
+	$php85Debug = $_SERVER['SM_PHP_DEBUG'];
+
+}
+
+if (!$php85Debug && is_file($rootpath.'/cash/php85-debug.on')) {
+
+	$php85Debug = trim((string)@file_get_contents($rootpath.'/cash/php85-debug.on')) === '1' ? '1' : '';
+
+}
+
+if (in_array((string)$php85Debug, ['1', 'on', 'true'], true)) {
+
+	error_reporting(E_ALL);
+	ini_set('display_errors', '0');
+	ini_set('log_errors', '1');
+	ini_set('error_log', $rootpath.'/cash/php85-deprecations.log');
+
+}
+
 if (!isset($productInfo)) {
 	$productInfo = [
 		"name"      => "SalesMan CRM",
@@ -61,9 +93,8 @@ if (!isset($productInfo['phone'])) {
 }
 
 require_once $rootpath."/inc/dbconnector.php";
-require_once $rootpath."/vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php";
 
-$detect = new Mobile_Detect();
+$detect = new \Detection\MobileDetect();
 
 $isApple = false;
 

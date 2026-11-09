@@ -392,7 +392,7 @@ if ($action == "edit.signer.on") {
 
 }
 
-if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) != 'xmlhttprequest') {
 
 	print '<div class="warning text-center"><h2>Доступ запрещен.</h2>>Обратитесь к администратору.</div>';
 	exit();

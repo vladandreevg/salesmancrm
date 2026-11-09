@@ -9,8 +9,8 @@
 
 /* ============================ */
 
-use andreskrey\Readability\Configuration;
-use andreskrey\Readability\Readability;
+use fivefilters\Readability\Configuration;
+use fivefilters\Readability\Readability;
 use Salesman\CorpUniver;
 use Salesman\Document;
 use Salesman\Upload;
@@ -649,7 +649,6 @@ if ( $action == 'resource' ) {
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
 		//curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, 0 );
 		$out = curl_exec( $curl );
-		curl_close( $curl );
 
 		preg_match_all( '#meta name="twitter:image" content="(.*?)"#is', $out, $matches_image );
 		$img = $matches_image[1][0];
@@ -718,7 +717,7 @@ if ( $action == 'resource' ) {
 				$img = $images[0];
 
 		}
-		catch ( andreskrey\Readability\ParseException $e ) {
+		catch ( fivefilters\Readability\ParseException $e ) {
 
 			$error = sprintf( 'Error processing text: %s', $e -> getMessage() );
 
@@ -814,7 +813,7 @@ if ( $action == 'parceURL' ) {
 		$rezult['images']  = $readability -> getImages();
 
 	}
-	catch ( andreskrey\Readability\ParseException $e ) {
+	catch ( fivefilters\Readability\ParseException $e ) {
 
 		$rezult['error'] = sprintf( 'Error processing text: %s', $e -> getMessage() );
 

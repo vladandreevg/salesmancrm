@@ -30,6 +30,7 @@ use DOMXPath;
  * ```
  *
  */
+#[\AllowDynamicProperties]
 class Knowledgebase {
 
 	/**
@@ -123,8 +124,8 @@ class Knowledgebase {
 			$href = $hrefs -> item($i);
 
 			$url   = $href -> getAttribute('href');
-			$title = utf8_decode($href -> getAttribute('title'));
-			$text  = utf8_decode($href -> textContent);
+			$title = mb_convert_encoding($href -> getAttribute('title'), 'ISO-8859-1', 'UTF-8');
+			$text  = mb_convert_encoding($href -> textContent, 'ISO-8859-1', 'UTF-8');
 
 			if ($title == '' && $text != '') {
 				$title = $text;

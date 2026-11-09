@@ -6,11 +6,11 @@
  * @version  6.4
  */
 
-error_reporting( E_ERROR );
-ini_set( 'display_errors', 1 );
-header( "Pragma: no-cache" );
+error_reporting(E_ERROR);
+ini_set('display_errors', 1);
+header("Pragma: no-cache");
 
-$rootpath = realpath( __DIR__.'/../' );
+$rootpath = realpath(__DIR__.'/../');
 
 include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
@@ -19,18 +19,18 @@ include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
 include $rootpath."/inc/language/".$language.".php";
 
-$action = $_REQUEST[ 'action' ];
-$da1    = $_REQUEST[ 'da1' ];
-$da2    = $_REQUEST[ 'da2' ];
+$action = $_REQUEST['action'];
+$da1    = $_REQUEST['da1'] ?? current_datum();
+$da2    = $_REQUEST['da2'] ?? current_datum();
 
-$users  = (array)$_REQUEST[ 'user_list' ];
-$cPath  = (array)$_REQUEST[ 'clientPath' ];
+$users = (array)$_REQUEST['user_list'];
+$cPath = (array)$_REQUEST['clientPath'];
 
-$thisfile = basename( $_SERVER[ 'PHP_SELF' ] );
-$prefix   = $_SERVER[ 'DOCUMENT_ROOT' ]."/";
+$thisfile = basename($_SERVER['PHP_SELF']);
+$prefix   = $_SERVER['DOCUMENT_ROOT']."/";
 
 //Формируем доп.параметры запроса
-$sd = get_people( $iduser1, 'yes' );
+$sd = get_people($iduser1, 'yes');
 
 $sort = '';
 
@@ -64,17 +64,21 @@ $colors = [
 ];
 
 //массив каналов
-$channel = $db -> getIndCol("id", "SELECT id, name FROM ".$sqlname."clientpath WHERE identity = '$identity'" );
-$channel[ 0 ] = 'Не указан';
+$channel    = $db -> getIndCol("id", "SELECT id, name FROM ".$sqlname."clientpath WHERE identity = '$identity'");
+$channel[0] = 'Не указан';
 
-$user_list = (!empty( $user_list )) ? $user_list : (array)get_people( $iduser1, "yes" );
+$user_list = ( !empty($user_list) ) ? $user_list : (array)get_people($iduser1, "yes");
 if (!empty($user_list)) {
-	$so .= " deal.iduser IN (".yimplode( ",", $user_list ).") AND ";
+	$so .= " deal.iduser IN (".yimplode(",", $user_list).") AND ";
 }
 
 //фильтр по источнику
-if ( in_array( "0", $cPath ) ) $s1 = " OR cc.clientpath = ''";
-if ( !empty( $cPath ) ) $sort = "(cc.clientpath IN (".implode( ",", $cPath ).") $s1) and ";
+if (in_array("0", $cPath)) {
+	$s1 = " OR cc.clientpath = ''";
+}
+if (!empty($cPath)) {
+	$sort = "(cc.clientpath IN (".implode(",", $cPath).") $s1) and ";
+}
 
 $list       = [];
 $order      = [];
@@ -85,17 +89,21 @@ $totalSum   = 0;
 
 $max = 0;
 
-if ( $action == 'view' ) {
+if ($action == 'view') {
 
-	$path = $_REQUEST[ 'path' ];
-	$date = $_REQUEST[ 'date' ];
+	$path = $_REQUEST['path'];
+	$date = $_REQUEST['date'];
 
-	$format = ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) ? '%d.%m' : '%m.%y';
+	$format = ( abs(diffDate2($da1, $da2)) <= 62 ) ? '%d.%m' : '%m.%y';
 
-	if ( $path == 'Не указан' ) $cp = "cc.clientpath = '' AND ";
-	else $cp = "cp.name = '$path' AND";
+	if ($path == 'Не указан') {
+		$cp = "cc.clientpath = '' AND ";
+	}
+	else {
+		$cp = "cp.name = '$path' AND";
+	}
 
-	if ( !$otherSettings['credit'] ) {
+	if (!$otherSettings['credit']) {
 
 		$q = "
 		SELECT
@@ -125,21 +133,23 @@ if ( $action == 'view' ) {
 		ORDER BY us.title, deal.datum_close
 		";
 
-		$rez = $db -> query( $q );
-		while ( $daz = $db -> fetch( $rez ) ) {
+		$rez = $db -> query($q);
+		while ($daz = $db -> fetch($rez)) {
 
-			if ( $daz[ 'path' ] == NULL ) $daz[ 'path' ] = 'Не указан';
+			if ($daz['path'] == NULL) {
+				$daz['path'] = 'Не указан';
+			}
 
 			$list[] = [
-				"did"     => $daz[ 'did' ],
-				"dogovor" => $daz[ 'dogovor' ],
-				"dclose"  => format_date_rus( $daz[ 'dclose' ] ),
-				"summa"   => $daz[ 'summa' ],
-				"marga"   => $daz[ 'marga' ],
-				"clid"    => $daz[ 'clid' ],
-				"client"  => $daz[ 'client' ],
-				"user"    => $daz[ 'user' ],
-				"path"    => $daz[ 'path' ],
+				"did"     => $daz['did'],
+				"dogovor" => $daz['dogovor'],
+				"dclose"  => format_date_rus($daz['dclose']),
+				"summa"   => $daz['summa'],
+				"marga"   => $daz['marga'],
+				"clid"    => $daz['clid'],
+				"client"  => $daz['client'],
+				"user"    => $daz['user'],
+				"path"    => $daz['path'],
 				"comment" => 'Закрытая сделка'
 			];
 
@@ -147,10 +157,10 @@ if ( $action == 'view' ) {
 
 	}
 
-	if ( $otherSettings['credit'] ) {
+	if ($otherSettings['credit']) {
 
 		//выполнение планов по оплатам
-		if ( !$otherSettings['planByClosed'] ) {
+		if (!$otherSettings['planByClosed']) {
 
 			$q = "
 			SELECT
@@ -179,14 +189,14 @@ if ( $action == 'view' ) {
 				cr.invoice_date BETWEEN '$da1 00:00:00' and '$da2 23:59:59' and
 				DATE_FORMAT(cr.invoice_date, '$format') = '$date' and
 				$cp
-				".str_replace( "deal", "cr", $so )."
+				".str_replace("deal", "cr", $so)."
 				cr.identity = '$identity'
 			GROUP BY deal.did
 			ORDER by cr.invoice_date";
 		}
 
 		//выполнение учет только оплат по закрытым сделкам в указанном периоде
-		if ( $otherSettings['planByClosed'] ) {
+		if ($otherSettings['planByClosed']) {
 
 			$q = "
 			SELECT
@@ -222,33 +232,43 @@ if ( $action == 'view' ) {
 
 		}
 
-		$rez = $db -> query( $q );
-		while ( $daz = $db -> fetch( $rez ) ) {
+		$rez = $db -> query($q);
+		while ($daz = $db -> fetch($rez)) {
 
-			if ( $daz[ 'path' ] == NULL ) $daz[ 'path' ] = 'Не указан';
+			if ($daz['path'] == NULL) {
+				$daz['path'] = 'Не указан';
+			}
 
-			if ( $daz[ 'dclose' ] == '0000-00-00' ) $daz[ 'dclose' ] = '-';
-			else $daz[ 'dclose' ] = format_date_rus( $daz[ 'dclose' ] );
+			if ($daz['dclose'] == '0000-00-00') {
+				$daz['dclose'] = '-';
+			}
+			else {
+				$daz['dclose'] = format_date_rus($daz['dclose']);
+			}
 
-			$marga = $daz[ 'dmarga' ] / $daz[ 'dsumma' ] * $daz[ 'summa' ];
-			$proc  = $daz[ 'summa' ] / $daz[ 'dsumma' ] * 100;
+			$marga = $daz['dmarga'] / $daz['dsumma'] * $daz['summa'];
+			$proc  = $daz['summa'] / $daz['dsumma'] * 100;
 
-			if ( $proc < 100 ) $color = "red";
-			else $color = "green";
+			if ($proc < 100) {
+				$color = "red";
+			}
+			else {
+				$color = "green";
+			}
 
-			$comment = 'Оплачено <b>'.num_format( $daz[ 'summa' ] ).'</b><br>Оплачено: <b class="'.$color.'">'.num_format( $proc ).'%</b>';
+			$comment = 'Оплачено <b>'.num_format($daz['summa']).'</b><br>Оплачено: <b class="'.$color.'">'.num_format($proc).'%</b>';
 
 			$list[] = [
-				"did"     => $daz[ 'did' ],
-				"dogovor" => $daz[ 'dogovor' ],
-				"dclose"  => $daz[ 'dclose' ],
-				"dsumma"  => $daz[ 'dsumma' ],
-				"summa"   => $daz[ 'summa' ],
+				"did"     => $daz['did'],
+				"dogovor" => $daz['dogovor'],
+				"dclose"  => $daz['dclose'],
+				"dsumma"  => $daz['dsumma'],
+				"summa"   => $daz['summa'],
 				"marga"   => $marga,
-				"clid"    => $daz[ 'clid' ],
-				"client"  => $daz[ 'client' ],
-				"user"    => $daz[ 'user' ],
-				"path"    => $daz[ 'path' ],
+				"clid"    => $daz['clid'],
+				"client"  => $daz['client'],
+				"user"    => $daz['user'],
+				"path"    => $daz['path'],
 				"comment" => $comment
 			];
 
@@ -256,44 +276,45 @@ if ( $action == 'view' ) {
 
 	}
 
-	print json_encode_cyr( $list );
+	print json_encode_cyr($list);
 
 	exit();
 
 }
 
-$da1_array = explode( "-", $da1 );
-$da2_array = explode( "-", $da2 );
-$dstart    = mktime( 0, 0, 0, $da1_array[ 1 ], $da1_array[ 2 ], $da1_array[ 0 ] );
-$dend      = mktime( 23, 59, 59, $da2_array[ 1 ], $da2_array[ 2 ], $da2_array[ 0 ] );
-$step      = 86400;
-$day       = (int)( ( $dend - $dstart ) / $step ) + 1;
+$da1_array = explode("-", $da1);
+$da2_array = explode("-", $da2);
+
+$dstart = mktime(0, 0, 0, $da1_array[1], $da1_array[2], $da1_array[0]);
+$dend   = mktime(23, 59, 59, $da2_array[1], $da2_array[2], $da2_array[0]);
+$step   = 86400;
+$day    = (int)( ( $dend - $dstart ) / $step ) + 1;
 
 $dat = $dstart;//стартовое значение даты
 
 
-if ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) {
+if (abs(diffDate2($da1, $da2)) <= 62) {
 
 	$perName = 'День';
 
-	for ( $d = 0; $d < $day; $d++ ) {
+	for ($d = 0; $d < $day; $d++) {
 
 		$dat   = $dstart + $d * $step;//дата в unix-формате
-		$datum = date( 'Y-m-d', $dat );
-		$date  = date( 'd.m', $dat );
+		$datum = date('Y-m-d', $dat);
+		$date  = date('d.m', $dat);
 
-		foreach ( $channel as $path => $name ) {
+		foreach ($channel as $path => $name) {
 
-			$chart[ $date ][ $path ] = 0;
+			$chart[$date][$path] = 0;
 
-			$budjet = $db -> getOne( "SELECT SUM(summa) FROM ".$sqlname."budjet WHERE cat IN (SELECT id FROM ".$sqlname."budjet_cat WHERE clientpath = '$path' and identity = '$identity') and year = '".get_year( $datum )."' and mon = '".getMonth( $datum )."' and `do` = 'on' and identity = '$identity'" );
+			$budjet = $db -> getOne("SELECT SUM(summa) FROM ".$sqlname."budjet WHERE cat IN (SELECT id FROM ".$sqlname."budjet_cat WHERE clientpath = '$path' and identity = '$identity') and year = '".get_year($datum)."' and mon = '".getMonth($datum)."' and `do` = 'on' and identity = '$identity'");
 
-			$channelBudjet[ $path ][ $date ] += $budjet;
+			$channelBudjet[$path][$date] += $budjet;
 
 		}
 
 		//расчет по закрытым сделкам. график платежей не включен
-		if ( !$otherSettings['credit'] ) {
+		if (!$otherSettings['credit']) {
 
 			$q = "
 			SELECT
@@ -319,20 +340,20 @@ if ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) {
 
 			//print "<br><br>".$q."<br><br>";
 
-			$rez = $db -> query( $q );
-			while ( $daz = $db -> fetch( $rez ) ) {
+			$rez = $db -> query($q);
+			while ($daz = $db -> fetch($rez)) {
 
 				//if ($daz['id'] == null) $daz['id'] = '0';
 
-				$chart[ $daz[ 'date' ] ][ $daz[ 'id' ] ] += $daz[ 'summa' ];
+				$chart[$daz['date']][$daz['id']] += $daz['summa'];
 
-				$order[ $daz[ 'date' ] ] = '"'.$daz[ 'date' ].'"';
+				$order[$daz['date']] = '"'.$daz['date'].'"';
 
-				$channelSum[ $daz[ 'id' ] ][ 'summa' ] += $daz[ 'summa' ];
-				$channelSum[ $daz[ 'id' ] ][ 'count' ] += 1;
-				$channelCount[ $daz[ 'id' ] ][ $daz[ 'date' ] ]++;
+				$channelSum[$daz['id']]['summa'] += $daz['summa'];
+				$channelSum[$daz['id']]['count'] += 1;
+				$channelCount[$daz['id']][$daz['date']]++;
 
-				$totalSum += $daz[ 'summa' ];
+				$totalSum += $daz['summa'];
 
 				//print "datum = ".$datum."<br>";
 				//print "sum = ".$daz['summa']."<br>===============<br>";
@@ -342,10 +363,10 @@ if ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) {
 		}
 
 		//по оплатам. график платежей включен
-		if ( $otherSettings['credit'] ) {
+		if ($otherSettings['credit']) {
 
 			//выполнение планов по оплатам
-			if ( !$otherSettings['planByClosed'] ) {
+			if (!$otherSettings['planByClosed']) {
 
 				$q = "
 				SELECT
@@ -363,7 +384,7 @@ if ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) {
 				WHERE
 					cr.do = 'on' and
 					cr.invoice_date = '$datum' and
-					".str_replace( "deal", "cr", $so )."
+					".str_replace("deal", "cr", $so)."
 					$sort
 					cr.identity = '$identity'
 				ORDER BY cr.invoice_date
@@ -372,7 +393,7 @@ if ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) {
 			}
 
 			//выполнение учет только оплат по закрытым сделкам в указанном периоде
-			if ( $otherSettings['planByClosed'] ) {
+			if ($otherSettings['planByClosed']) {
 
 				$q = "
 				SELECT
@@ -405,23 +426,25 @@ if ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) {
 
 			//проходим все сделки и считаем по нима сумму оплат и маржу
 			$dids = [];
-			$rez  = $db -> query( $q );
-			while ( $daz = $db -> fetch( $rez ) ) {
+			$rez  = $db -> query($q);
+			while ($daz = $db -> fetch($rez)) {
 
 				$budjet = 0;
 
-				$chart[ $daz[ 'date' ] ][ $daz[ 'id' ] ] += $daz[ 'summa' ];
+				$chart[$daz['date']][$daz['id']] += $daz['summa'];
 
-				$order[ $daz[ 'date' ] ] = '"'.$daz[ 'date' ].'"';
+				$order[$daz['date']] = '"'.$daz['date'].'"';
 
-				$channelSum[ $daz[ 'id' ] ][ 'summa' ] += $daz[ 'summa' ];
-				$channelSum[ $daz[ 'id' ] ][ 'count' ] += 1;
+				$channelSum[$daz['id']]['summa'] += $daz['summa'];
+				$channelSum[$daz['id']]['count'] += 1;
 
-				$totalSum += $daz[ 'summa' ];
+				$totalSum += $daz['summa'];
 
-				if ( !in_array( $daz[ 'did' ], $dids, true ) ) $channelCount[ $daz[ 'id' ] ][ $daz[ 'date' ] ]++;
+				if (!in_array($daz['did'], $dids, true)) {
+					$channelCount[$daz['id']][$daz['date']]++;
+				}
 
-				$dids[] = $daz[ 'did' ];
+				$dids[] = $daz['did'];
 
 			}
 
@@ -429,11 +452,11 @@ if ( abs( diffDate2( $da1, $da2 ) ) <= 62 ) {
 
 	}
 
-	foreach ( $chart as $date => $value ) {
+	foreach ($chart as $date => $value) {
 
-		foreach ( $value as $path => $summa ) {
+		foreach ($value as $path => $summa) {
 
-			$charts[] = '{"Источник":"'.$channel[ $path ].'", "Сумма":"'.pre_format( $summa ).'","'.$perName.'":"'.$date.'"}';
+			$charts[] = '{"Источник":"'.$channel[$path].'", "Сумма":"'.pre_format($summa).'","'.$perName.'":"'.$date.'"}';
 
 		}
 
@@ -445,38 +468,38 @@ else {
 	$perName = 'Месяц';
 
 	//количество месяцев
-	$monStart  = (int)getMonth( $da1 );
-	$yearStart = (int)get_year( $da1 );
+	$monStart  = (int)getMonth($da1);
+	$yearStart = (int)get_year($da1);
 
-	$monEnd  = (int)getMonth( $da2 ) + 1;
-	$yearEnd = (int)get_year( $da2 );
+	$monEnd  = (int)getMonth($da2) + 1;
+	$yearEnd = (int)get_year($da2);
 
 	$mon  = $monStart;
 	$year = $yearStart;
 
 	$dataYear = [];
 
-	while ( $year <= $yearEnd ) {
+	while ($year <= $yearEnd) {
 
-		while ( $mon <= 12 ) {
+		while ($mon <= 12) {
 
 			$mon1 = ( $mon < 10 ) ? "0".$mon : $mon;
 
 			$datum = $year."-".$mon1;
 			$date  = $mon1.".".$year;
 
-			foreach ( $channel as $path => $name ) {
+			foreach ($channel as $path => $name) {
 
-				$chart[ $mon1.'.'.substr( $year, 2, 3 ) ][ $path ] = 0;
+				$chart[$mon1.'.'.substr($year, 2, 3)][$path] = 0;
 
-				$budjet = $db -> getOne( "SELECT SUM(summa) FROM ".$sqlname."budjet WHERE cat IN (SELECT id FROM ".$sqlname."budjet_cat WHERE clientpath = '$path' and identity = '$identity') and year = '".get_year( $datum )."' and mon = '".getMonth( $datum )."' and do = 'on' and identity = '$identity'" ) + 0;
+				$budjet = $db -> getOne("SELECT SUM(summa) FROM ".$sqlname."budjet WHERE cat IN (SELECT id FROM ".$sqlname."budjet_cat WHERE clientpath = '$path' and identity = '$identity') and year = '".get_year($datum)."' and mon = '".getMonth($datum)."' and do = 'on' and identity = '$identity'") + 0;
 
-				$channelBudjet[ $path ][ $mon1.'.'.substr( $year, 2, 3 ) ] += $budjet;
+				$channelBudjet[$path][$mon1.'.'.substr($year, 2, 3)] += $budjet;
 
 			}
 
 			//расчет по закрытым сделкам. график платежей не включен
-			if ( !$otherSettings['credit'] ) {
+			if (!$otherSettings['credit']) {
 
 				$q = "
 				SELECT
@@ -499,26 +522,26 @@ else {
 				ORDER BY deal.datum_close
 				";
 
-				$rez = $db -> query( $q );
-				while ( $daz = $db -> fetch( $rez ) ) {
+				$rez = $db -> query($q);
+				while ($daz = $db -> fetch($rez)) {
 
-					$chart[ $daz[ 'date' ] ][ $daz[ 'id' ] ] += $daz[ 'summa' ];
+					$chart[$daz['date']][$daz['id']] += $daz['summa'];
 
-					$channelSum[ $daz[ 'id' ] ][ 'summa' ] += $daz[ 'summa' ];
-					$channelSum[ $daz[ 'id' ] ][ 'count' ] += 1;
-					$channelCount[ $daz[ 'id' ] ][ $daz[ 'date' ] ]++;
+					$channelSum[$daz['id']]['summa'] += $daz['summa'];
+					$channelSum[$daz['id']]['count'] += 1;
+					$channelCount[$daz['id']][$daz['date']]++;
 
-					$dataYear[ $year ][ $daz[ 'id' ] ] += $daz[ 'summa' ];
+					$dataYear[$year][$daz['id']] += $daz['summa'];
 
 				}
 
 			}
 
 			//по оплатам. график платежей включен
-			if ( $otherSettings['credit'] ) {
+			if ($otherSettings['credit']) {
 
 				//выполнение планов по оплатам
-				if ( !$otherSettings['planByClosed'] ) {
+				if (!$otherSettings['planByClosed']) {
 
 					$q = "
 					SELECT
@@ -536,7 +559,7 @@ else {
 					WHERE
 						cr.do = 'on' and
 						date_format(cr.invoice_date, '%Y-%m') = '".$datum."' and
-						".str_replace( "deal", "cr", $so )."
+						".str_replace("deal", "cr", $so)."
 						$sort
 						cr.identity = '$identity'
 					GROUP BY cr.did
@@ -546,7 +569,7 @@ else {
 				}
 
 				//выполнение учет только оплат по закрытым сделкам в указанном периоде
-				if ( $otherSettings['planByClosed'] ) {
+				if ($otherSettings['planByClosed']) {
 
 					$q = "
 					SELECT
@@ -579,19 +602,21 @@ else {
 
 				//проходим все сделки и считаем по нима сумму оплат и маржу
 				$dids = [];
-				$rez  = $db -> query( $q );
-				while ( $daz = $db -> fetch( $rez ) ) {
+				$rez  = $db -> query($q);
+				while ($daz = $db -> fetch($rez)) {
 
-					$chart[ $daz[ 'date' ] ][ $daz[ 'id' ] ] += $daz[ 'summa' ];
+					$chart[$daz['date']][$daz['id']] += $daz['summa'];
 
-					$channelSum[ $daz[ 'id' ] ][ 'summa' ] += $daz[ 'summa' ];
-					$channelSum[ $daz[ 'id' ] ][ 'count' ] += $daz[ 'count' ];
+					$channelSum[$daz['id']]['summa'] += $daz['summa'];
+					$channelSum[$daz['id']]['count'] += $daz['count'];
 
-					if ( !in_array( $daz[ 'did' ], $dids ) ) $channelCount[ $daz[ 'id' ] ][ $daz[ 'date' ] ]++;
+					if (!in_array($daz['did'], $dids)) {
+						$channelCount[$daz['id']][$daz['date']]++;
+					}
 
-					$dids[] = $daz[ 'did' ];
+					$dids[] = $daz['did'];
 
-					$dataYear[ $year ][ $daz[ 'id' ] ] += $daz[ 'summa' ];
+					$dataYear[$year][$daz['id']] += $daz['summa'];
 
 				}
 
@@ -599,15 +624,17 @@ else {
 
 			}
 
-			if ( $year == $yearEnd && $mon == $monEnd ) goto endo;
+			if ($year == $yearEnd && $mon == $monEnd) {
+				goto endo;
+			}
 
 			//$m = ($mon < 10) ? "0".$mon : $mon;
 
-			$order[ $mon1.'.'.substr( $year, 2, 3 ) ] = '"'.$mon1.'.'.substr( $year, 2, 3 ).'"';
+			$order[$mon1.'.'.substr($year, 2, 3)] = '"'.$mon1.'.'.substr($year, 2, 3).'"';
 
 			$mon++;
 
-			if ( $mon > 12 ) {
+			if ($mon > 12) {
 				$mon = 1;
 				goto y;
 			}
@@ -622,11 +649,11 @@ else {
 
 	endo:
 
-	foreach ( $chart as $date => $value ) {
+	foreach ($chart as $date => $value) {
 
-		foreach ( $value as $path => $summa ) {
+		foreach ($value as $path => $summa) {
 
-			$charts[] = '{"Источник":"'.$channel[ $path ].'", "Сумма":"'.pre_format( $summa ).'","'.$perName.'":"'.$date.'"}';
+			$charts[] = '{"Источник":"'.$channel[$path].'", "Сумма":"'.pre_format($summa).'","'.$perName.'":"'.$date.'"}';
 
 		}
 
@@ -637,17 +664,17 @@ else {
 /**
  * Сумма по всем каналам
  */
-$total = arraysum( $channelSum, 'summa' )."<br>";
+$total = arraysum($channelSum, 'summa')."<br>";
 
 /**
  * Наиболее прибыльный канал (объект)
  */
-$maxChannelVal = arrayMax( $channelSum, 'summa' );
+$maxChannelVal = arrayMax($channelSum, 'summa');
 
 /**
  * Самый слабый канал
  */
-$minChannelVal = arrayMin( $channelSum, 'summa' );
+$minChannelVal = arrayMin($channelSum, 'summa');
 
 //max значение
 //$maxChannelVal -> max;
@@ -656,14 +683,20 @@ $minChannelVal = arrayMin( $channelSum, 'summa' );
 $indexMax = $maxChannelVal -> index;
 $indexMin = $minChannelVal -> index;
 
-$charts = implode( ",", $charts );
-$orders = implode( ",", $order );
+$charts = implode(",", $charts);
+$orders = implode(",", $order);
 
 //print_r($channelBudjet);
 
-if ( !$otherSettings['credit'] ) $text = '<li>В отчет попадают ВСЕ <b>активные</b> сделки и <b>закрытые</b> сделки, Дата.Закрытия которых совпадают с указанным месяцем</li>';
-if ( $otherSettings['credit'] && !$otherSettings['planByClosed'] ) $text = '<li>Расчеты строятся по <b>оплаченным счетам в периоде</b> в соответствии с настройками системы</li>';
-if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>Расчеты строятся по <b>оплаченным счетам</b> в Сделках, <b>закрытых в отчетном периоде</b> в соответствии с настройками системы</li>';
+if (!$otherSettings['credit']) {
+	$text = '<li>В отчет попадают ВСЕ <b>активные</b> сделки и <b>закрытые</b> сделки, Дата.Закрытия которых совпадают с указанным месяцем</li>';
+}
+if ($otherSettings['credit'] && !$otherSettings['planByClosed']) {
+	$text = '<li>Расчеты строятся по <b>оплаченным счетам в периоде</b> в соответствии с настройками системы</li>';
+}
+if ($otherSettings['credit'] && $otherSettings['planByClosed']) {
+	$text = '<li>Расчеты строятся по <b>оплаченным счетам</b> в Сделках, <b>закрытых в отчетном периоде</b> в соответствии с настройками системы</li>';
+}
 ?>
 
 <style>
@@ -848,41 +881,45 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 
 <div class="zagolovok_rep text-center">
 	<h2>Эффективность каналов в деньгах</h2>
-	<div class="fs-10">за период&nbsp;с&nbsp;<?= format_date_rus( $da1 ) ?>&nbsp;по&nbsp;<?= format_date_rus( $da2 ) ?></div>
+	<div class="fs-10">за период&nbsp;с&nbsp;<?= format_date_rus($da1) ?>&nbsp;по&nbsp;<?= format_date_rus($da2) ?></div>
 </div>
 
 <table class="noborder">
 	<tr>
 		<td class="wp20">
 			<?php
-			$result = $db -> getAll( "SELECT * FROM ".$sqlname."clientpath WHERE identity = '$identity' ORDER BY name" );
-			if ( count( $cPath ) == 0 ) {
+			$result = $db -> getAll("SELECT * FROM ".$sqlname."clientpath WHERE identity = '$identity' ORDER BY name");
+			if (count($cPath) == 0) {
 
-				$cPath   = $db -> getCol( "SELECT id FROM ".$sqlname."clientpath WHERE identity = '$identity' ORDER BY name" );
+				$cPath   = $db -> getCol("SELECT id FROM ".$sqlname."clientpath WHERE identity = '$identity' ORDER BY name");
 				$cPath[] = "0";
 
 			}
 			?>
 			<div class="ydropDown">
-				<span>По Источнику</span><span class="ydropCount"><?= count( $cPath ) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
+				<span>По Источнику</span><span class="ydropCount"><?= count($cPath) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 				<div class="yselectBox" style="max-height: 300px;">
 					<div class="yunSelect"><i class="icon-cancel-circled2"></i>Снять выделение</div>
 					<div class="ydropString ellipsis">
 						<label>
-							<input class="taskss" name="clientPath[]" type="checkbox" id="clientPath[]" value="0" <?php if ( in_array( "0", $cPath ) ) print "checked"; ?>>&nbsp;Не указан
+							<input class="taskss" name="clientPath[]" type="checkbox" id="clientPath[]" value="0" <?php
+							if (in_array("0", $cPath)) {
+								print "checked";
+							} ?>>&nbsp;Не указан
 						</label>
 					</div>
 					<?php
-					foreach ( $result as $data ) {
+					foreach ($result as $data) {
 
-						$s = ( in_array( $data[ 'id' ], $cPath ) ) ? 'checked' : '';
+						$s = ( in_array($data['id'], $cPath) ) ? 'checked' : '';
 						?>
 						<div class="ydropString ellipsis">
 							<label>
-								<input class="taskss" name="clientPath[]" type="checkbox" id="clientPath[]" value="<?= $data[ 'id' ] ?>" <?= $s ?>>&nbsp;<?= $data[ 'name' ] ?>
+								<input class="taskss" name="clientPath[]" type="checkbox" id="clientPath[]" value="<?= $data['id'] ?>" <?= $s ?>>&nbsp;<?= $data['name'] ?>
 							</label>
 						</div>
-					<?php } ?>
+					<?php
+					} ?>
 				</div>
 			</div>
 		</td>
@@ -899,8 +936,8 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 	<div class="flex-string wp35 viget-micros greenbgg div-center">
 
 		<div class="gray fs-11 Bold pt5 uppercase">Эффективный канал</div>
-		<div class="green fs-20 mt15 Bold mb20"><?= $channel[ $indexMax ] ?>
-			<sup class="fs-05 gray2">[<?= ( (float)$total > 0 ? round( ( $channelSum[ $indexMax ][ 'summa' ] / $total * 100 ), 1 ) : 0 ) ?>%]</sup>
+		<div class="green fs-20 mt15 Bold mb20"><?= $channel[$indexMax] ?>
+			<sup class="fs-05 gray2">[<?= ( (float)$total > 0 ? round(( $channelSum[$indexMax]['summa'] / $total * 100 ), 1) : 0 ) ?>%]</sup>
 		</div>
 
 		<hr>
@@ -909,15 +946,15 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 
 			<div class="column grid-5 border-box">
 
-				<div class="fs-16 Bold mb5"><?= num_format( $maxChannelVal -> max ).' '.$valuta ?></div>
+				<div class="fs-16 Bold mb5"><?= num_format($maxChannelVal -> max).' '.$valuta ?></div>
 				<div class="gray fs-09 Bold uppercase">Сумма канала</div>
 
 			</div>
 
 			<div class="column grid-5 border-box">
 
-				<div class="fs-16 Bold mb5"><?= num_format( arraySumma( $channelBudjet[ $indexMax ] ) ).' '.$valuta ?>
-					<sup class="fs-05 gray2">[<?= ( (float)arraySumma( $channelBudjet ) > 0 ? round( ( arraySumma( $channelBudjet[ $indexMax ] ) / arraySumma( $channelBudjet ) * 100 ), 1 ) : 0 ) ?>%]</sup>
+				<div class="fs-16 Bold mb5"><?= num_format(arraySumma($channelBudjet[$indexMax])).' '.$valuta ?>
+					<sup class="fs-05 gray2">[<?= ( (float)arraySumma($channelBudjet) > 0 ? round(( arraySumma($channelBudjet[$indexMax]) / arraySumma($channelBudjet) * 100 ), 1) : 0 ) ?>%]</sup>
 				</div>
 				<div class="gray fs-09 Bold uppercase">Затраты на канал</div>
 
@@ -930,8 +967,8 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 	<div class="flex-string wp35 viget-micros redbgg div-center">
 
 		<div class="gray fs-11 Bold pt5 uppercase">Слабый канал</div>
-		<div class="red fs-20 mt15 Bold mb20"><?= $channel[ $minChannelVal -> index ] ?>
-			<sup class="fs-05 gray2">[<?= ( (float)$total > 0 ? round( ( $channelSum[ $indexMin ][ 'summa' ] / $total * 100 ), 1 ) : 0 ) ?>%]</sup>
+		<div class="red fs-20 mt15 Bold mb20"><?= $channel[$minChannelVal -> index] ?>
+			<sup class="fs-05 gray2">[<?= ( (float)$total > 0 ? round(( $channelSum[$indexMin]['summa'] / $total * 100 ), 1) : 0 ) ?>%]</sup>
 		</div>
 
 		<hr>
@@ -940,15 +977,15 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 
 			<div class="column grid-5 border-box">
 
-				<div class="fs-16 Bold mb5"><?= num_format( $minChannelVal -> min ).' '.$valuta ?></div>
+				<div class="fs-16 Bold mb5"><?= num_format($minChannelVal -> min).' '.$valuta ?></div>
 				<div class="gray fs-09 Bold uppercase">Сумма канала</div>
 
 			</div>
 
 			<div class="column grid-5 border-box">
 
-				<div class="fs-16 Bold mb5"><?= num_format( arraySumma( $channelBudjet[ $indexMin ] ) ).' '.$valuta ?>
-					<sup class="fs-05 gray2">[<?= ( arraySumma( $channelBudjet ) > 0 ? round( ( arraySumma( $channelBudjet[ $indexMin ] ) / arraySumma( $channelBudjet ) * 100 ), 1 ) : 0 ) ?>%]</sup>
+				<div class="fs-16 Bold mb5"><?= num_format(arraySumma($channelBudjet[$indexMin])).' '.$valuta ?>
+					<sup class="fs-05 gray2">[<?= ( arraySumma($channelBudjet) > 0 ? round(( arraySumma($channelBudjet[$indexMin]) / arraySumma($channelBudjet) * 100 ), 1) : 0 ) ?>%]</sup>
 				</div>
 				<div class="gray fs-09 Bold uppercase">Затраты на канал</div>
 
@@ -976,13 +1013,13 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 			<th class="w100 text-center" rowspan="2">Период</th>
 			<?php
 			$i = 0;
-			foreach ( $channel as $path => $name ) {
+			foreach ($channel as $path => $name) {
 				?>
 				<th class="w80 text-left" data-path="<?= $path ?>">
-					<div class="div-center fs-20 black mt10 mb10"><?= ( (float)$total > 0 ? round( $channelSum[ $path ][ 'summa' ] / $total * 100, 1 ) : 0 ) ?>%</div>
-					<div class="div-center fs-10" title="Сумма"><?= num_format( $channelSum[ $path ][ 'summa' ] ) ?></div>
+					<div class="div-center fs-20 black mt10 mb10"><?= ( (float)$total > 0 ? round($channelSum[$path]['summa'] / $total * 100, 1) : 0 ) ?>%</div>
+					<div class="div-center fs-10" title="Сумма"><?= num_format($channelSum[$path]['summa']) ?></div>
 					<div class="div-center fs-10" title="Количество сделок">
-						<i class="icon-briefcase"></i>&nbsp;<?= array_sum( (array)$channelCount[ $path ] ) ?>
+						<i class="icon-briefcase"></i>&nbsp;<?= array_sum((array)$channelCount[$path]) ?>
 					</div>
 					<?php
 					//print_r($channelSum[ $path ]);
@@ -996,11 +1033,11 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 		<tr class="bordered">
 			<?php
 			$i = 0;
-			foreach ( $channel as $path => $name ) {
+			foreach ($channel as $path => $name) {
 				?>
 				<th class="w80 text-left" data-path="<?= $path ?>">
 					<div class="div-center">
-						<div class="bullet" style="background: <?= $colors[ $i ] ?>"></div>
+						<div class="bullet" style="background: <?= $colors[$i] ?>"></div>
 					</div>
 					<div class="div-center" title="<?= $name ?>"><?= $name ?></div>
 				</th>
@@ -1012,7 +1049,7 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 		</thead>
 		<tbody>
 		<?php
-		foreach ( $chart as $date => $value ) {
+		foreach ($chart as $date => $value) {
 
 			print '
 			<tr class="ha fs-09">
@@ -1021,24 +1058,26 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 				</td>
 			';
 
-			foreach ( $channel as $path => $name ) {
+			foreach ($channel as $path => $name) {
 
-				$act  = ( $chart[ $date ][ $path ] > 0 ) ? ' onclick="showData(\''.$name.'\', \''.$date.'\')"' : '';
-				$hand = ( $chart[ $date ][ $path ] > 0 ) ? 'hand' : '';
+				$act  = ( $chart[$date][$path] > 0 ) ? ' onclick="showData(\''.$name.'\', \''.$date.'\')"' : '';
+				$hand = ( $chart[$date][$path] > 0 ) ? 'hand' : '';
 
 				print '
 				<td class="w80 text-right ha '.$hand.'" '.$act.' data-path="'.$path.'">
 					<div class="colorit fs-11 Bold">
-						'.num_format( $chart[ $date ][ $path ] ).'
+						'.num_format($chart[$date][$path]).'
 					</div>
 					<div class="fs-09 pr5" title="Число сделок">
-						<i class="icon-briefcase gray fs-05"></i>'.( $channelCount[ $path ][ $date ] + 0 ).'
+						<i class="icon-briefcase gray fs-05"></i>'.( $channelCount[$path][$date] + 0 ).'
 					</div>
-					<div class="fs-07 pr5 gray2" title="Расходы на канал"><i class="icon-rouble gray fs-05"></i>'.num_format( $channelBudjet[ $path ][ $date ] ).'</div>
+					<div class="fs-07 pr5 gray2" title="Расходы на канал"><i class="icon-rouble gray fs-05"></i>'.num_format($channelBudjet[$path][$date]).'</div>
 				</td>
 				';
 
-				if ( $chart[ $date ][ $path ] > $max ) $max = $chart[ $date ][ $path ];
+				if ($chart[$date][$path] > $max) {
+					$max = $chart[$date][$path];
+				}
 
 			}
 
@@ -1105,8 +1144,7 @@ if ( $otherSettings['credit'] && $otherSettings['planByClosed'] ) $text = '<li>�
 <div class="h35"></div>
 
 <script src="/assets/js/tableHeadFixer/tableHeadFixer.js"></script>
-<script src="/assets/js/dimple.js/dimple.min.js"></script>
-<!--<script src="/assets/js/d3.min.js"></script>-->
+<script src="/assets/js/dimple.js/dimple.min.js"></script><!--<script src="/assets/js/d3.min.js"></script>-->
 <script>
 
 	max = '<?=$max?>';

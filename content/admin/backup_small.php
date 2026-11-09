@@ -162,12 +162,12 @@ if ( $action == "bfile" ) {
 
 					$def .= ",\n";
 					if ( $x == "PRIMARY" )
-						$def .= "   PRIMARY KEY (".implode( $columns, ", " ).")";
+						$def .= "   PRIMARY KEY (".implode( ", ", $columns ).")";
 					elseif ( substr( $x, 0, 8 ) == "FULLTEXT" )
-						$def .= "   FULLTEXT INDEX `".substr( $x, 9 )."` (".implode( $columns, ", " ).")";
+						$def .= "   FULLTEXT INDEX `".substr( $x, 9 )."` (".implode( ", ", $columns ).")";
 					elseif ( substr( $x, 0, 6 ) == "UNIQUE" )
-						$def .= "   UNIQUE INDEX `".substr( $x, 7 )."` (".implode( $columns, ", " ).")";
-					else $def .= "   INDEX `$x` (".implode( $columns, ", " ).")";
+						$def .= "   UNIQUE INDEX `".substr( $x, 7 )."` (".implode( ", ", $columns ).")";
+					else $def .= "   INDEX `$x` (".implode( ", ", $columns ).")";
 
 				}
 

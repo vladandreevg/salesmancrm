@@ -23,6 +23,17 @@ global $sqlname;
 global $identity;
 global $iduser1;
 
+/**
+ * PHP 8.1+ по умолчанию включает MYSQLI_REPORT_ERROR|MYSQLI_REPORT_STRICT:
+ * любая ошибка SQL бросает mysqli_sql_exception прямо из mysqli_query(),
+ * поэтому собственный обработчик SafeMySQL (rawQuery → $this->error())
+ * недостижим, а приложение и REST API получают необработанное исключение
+ * (500 / пустое тело вместо JSON). Возвращаем семантику PHP 7.x: mysqli
+ * возвращает false, а решение об ошибке принимает SafeMySQL (errmode).
+ * См. .dsh/arch/PLAN-php85.md, Этап 2, п.7.
+ */
+mysqli_report(MYSQLI_REPORT_OFF);
+
 $opts = [
 	'host'    => $dbhostname,
 	'user'    => $dbusername,

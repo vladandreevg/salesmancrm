@@ -76,10 +76,5 @@
         "bold_italic": "DejaVuSerif-BoldItalic",
         "italic": "DejaVuSerif-Italic",
         "normal": "DejaVuSerif"
-    },
-	"pt sans": {
-	    "normal": "PTSans",
-	    "bold": "PTSans-Bold",
-	    "italic': 'PTSans-Italic",
     }
 }

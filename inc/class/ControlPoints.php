@@ -28,6 +28,7 @@ use Exception;
  * $data = $rez -> info($id);
  * ```
  */
+#[\AllowDynamicProperties]
 class ControlPoints {
 
 	/**
@@ -540,7 +541,7 @@ class ControlPoints {
 	 * @param string|null $date
 	 * @return array
 	 */
-	public function doit(int $id = 0, string $date = NULL): array {
+	public function doit(int $id = 0, ?string $date = NULL): array {
 
 		global $hooks;
 

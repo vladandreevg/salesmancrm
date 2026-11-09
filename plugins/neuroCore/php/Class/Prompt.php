@@ -148,8 +148,18 @@ class Prompt {
 
 		foreach (array_unique($m[1]) as $name) {
 
-			if (!self::has($tags, (string)$name)) {
-				$missing[] = (string)$name;
+			$name = (string)$name;
+
+			// «{{.}}» — итератор Mustache, а не переменная контекста: требовать
+			// его в tags нельзя. Иначе любой промпт с перебором простого списка
+			// ({{#Список}}{{.}}{{/Список}}) падал ещё до вызова модели с
+			// «В промпте не хватает переменных: .».
+			if ($name === '.' || $name === '') {
+				continue;
+			}
+
+			if (!self::has($tags, $name)) {
+				$missing[] = $name;
 			}
 
 		}

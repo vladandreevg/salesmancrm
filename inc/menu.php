@@ -1299,6 +1299,8 @@ $mhtml = $m -> render($mtemplate, $menu);
 
 		</div>
 
+		<?= $trialCounter ?>
+
 		<div id="menuavatar" class="useravatar disable--select relativ" data-step="2" data-intro="<h1>Аватар пользователя.</h1>Кликните мышкой на Аватар, чтобы открыть <b>Меню управления</b>." data-position="bottom-right-aligned">
 
 			<div class="">

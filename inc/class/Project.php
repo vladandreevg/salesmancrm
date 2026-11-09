@@ -124,7 +124,7 @@ class Project {
 	 *
 	 * @return array
 	 */
-	public static function getStatusesProject(string $status = null): array {
+	public static function getStatusesProject(?string $status = null): array {
 		
 		$rootpath = dirname( __DIR__ );
 		
@@ -271,7 +271,7 @@ class Project {
 	 *
 	 * @return array
 	 */
-	public static function getStatusesWork(string $status = null): array {
+	public static function getStatusesWork(?string $status = null): array {
 		
 		$rootpath = dirname( __DIR__ );
 		

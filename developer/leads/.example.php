@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* ============================ */
 /*         SalesMan CRM         */
 /* ============================ */
@@ -10,8 +10,10 @@
 
 error_reporting(0);
 
-$config['url'] = "https://crm.yoolla.ru/api/leads/connector.php";//Адрес расположения CRM
-$config['api_key'] = 'aMgiCQyj8bCToNc47BZZYrRICoWSIl';//получаем в Панели управления CRM
+//Адрес расположения CRM
+$config['url'] = "https://crm.yoolla.ru/api/leads/connector.php";
+//получаем в Панели управления CRM
+$config['api_key'] = 'YOUR_API_KEY';
 
 // Создаём POST-запрос
 $params['title'] = $_REQUEST['title'];
@@ -38,7 +40,6 @@ curl_setopt($ch, CURLOPT_URL, $config['url']);
 $res = curl_exec($ch);
 
 if(curl_errno($ch)) $err = curl_error($ch);
-curl_close($ch);
 
 if($err) {
 	print 'Ошибка curl: '.$err;
@@ -56,4 +57,3 @@ if($result['error']['code'] == 1) {
 }
 
 exit();
-?>

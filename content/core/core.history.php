@@ -156,6 +156,12 @@ if ( $action == "edit" ) {
 
 		if ( (int)$hid > 0 ) {
 			$message[] = "Информация обновлена";
+
+			event ::fire( 'history.edit', [
+				"id"    => (int)$hid,
+				"autor" => $iduser1
+			] );
+
 		}
 
 	}

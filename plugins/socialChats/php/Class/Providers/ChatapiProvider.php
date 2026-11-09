@@ -23,6 +23,7 @@ use Mike4ip\ChatApi;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     v.1.0 (21/11/2019)
  */
+#[\AllowDynamicProperties]
 class ChatapiProvider {
 
 	/**
@@ -754,7 +755,6 @@ class ChatapiProvider {
 		curl_setopt( $ch, CURLOPT_REFERER, $url );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		$result = curl_exec( $ch );
-		curl_close( $ch );
 
 		return $result;
 

@@ -182,9 +182,6 @@ var $app = {
 			$('div[data-id="tasks"]').empty().mustache('tasksTpl', data);
 
 		}, 'json')
-			.complete(function () {
-
-			});
 
 	},
 	logTask: function(id){
@@ -247,7 +244,7 @@ function doLoad(url){
 		$("a.button:contains('Закрыть')").addClass('bcancel');
 
 	})
-		.complete(function() {
+		.done(function() {
 
 			$('#dialog').css('display', 'block');
 			$('.dialog-preloader').css('display', 'none');

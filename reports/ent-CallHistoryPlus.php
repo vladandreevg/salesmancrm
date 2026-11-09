@@ -249,7 +249,7 @@ foreach ( $da as $data ) {
 			</td>
 			<td width="21%">
 				<div class="ydropDown">
-					<span>Направление вызова</span><span class="ydropCount"><? if ( !isset( $Visov ) )
+					<span>Направление вызова</span><span class="ydropCount"><?php if ( !isset( $Visov ) )
 							print "2";
 						else print count( $Visov ) ?> выбрано</span><i class="icon-angle-down pull-aright"></i>
 					<div class="yselectBox" style="max-height: 300px;">
@@ -314,7 +314,7 @@ foreach ( $da as $data ) {
 	</tr>
 	</thead>
 	<tbody>
-	<?
+	<?php
 	foreach ( $zvonok as $key => $val ) {
 		if ( $key != '' ) {
 			?>
@@ -323,7 +323,7 @@ foreach ( $da as $data ) {
 					<div class="Bold p10 fs-12"><i class="icon-phone blue"></i> <?= $key ?></div>
 				</td>
 			</tr>
-			<? foreach ( $val as $key2 => $val2 ) { ?>
+			<?php foreach ( $val as $key2 => $val2 ) { ?>
 				<tr class="ha" height="40">
 					<td align="center">
 						<div class="smalltxt"><?= $val2['datum'] ?></div>

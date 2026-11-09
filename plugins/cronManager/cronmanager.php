@@ -8,6 +8,8 @@
 /*        ver. 2019.x           */
 /* ============================ */
 
+global $rootpath, $hooks;
+
 // If this file is called directly, abort.
 
 if ( defined( 'SMPLUGIN' ) ) {

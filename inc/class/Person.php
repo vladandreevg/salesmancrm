@@ -30,6 +30,7 @@ use Exception;
  * $pid = $result['data'];
  * ```
  */
+#[\AllowDynamicProperties]
 class Person {
 
 	public $isdouble = [];
@@ -2114,7 +2115,7 @@ class Person {
 	 * @param string|NULL $str
 	 * @return array[]|null[]
 	 */
-	public static function parseSocial(string $str = NULL): array {
+	public static function parseSocial(?string $str = NULL): array {
 
 		$soc = explode(';', (string)$str);
 

@@ -132,7 +132,6 @@ if ( curl_errno( $ch ) > 0 ) {
 	$err = curl_error( $ch );
 }
 
-curl_close( $ch );
 
 if ( $err ) {
 

@@ -2020,7 +2020,7 @@ CREATE TABLE `app_settings` (
    PRIMARY KEY (`id`)
 )  COMMENT='Основные настройки'  ENGINE=MyISAM DEFAULT CHARSET='utf8';#%%
 
-INSERT INTO `app_settings` VALUES ('1','Наша','','http://nasha.ru','info@nasha.ru','+7(342)2067201','','','','{ClientName}','','','','30','30','30','30','9(999)999-99-99',NULL,'8(342)254-55-77',NULL,'99,999 999 999 999','14','','р.',NULL,'','','','20','','gif,jpg,jpeg,png,txt,doc,docx,xls,xlsx,ppt,pptx,rtf,pdf,7z,tar,zip,rar,gz,exe','yes',NULL,'no;no;no;yes;yes;yes;25;25;no;yes;no;yes;yes;yes;no;Дней;no;no;no;no;no;no;yes;yes;invoicedo;2;14;yes;yes;no;no;no;no;no;yes;yes;no;no;no;akt_full.tpl;invoice_qr.tpl;akt_full.tpl;invoice.tpl;no;no;no;no;no;no;no;no','logo.png',NULL,NULL,NULL,'{cnum}-{MM}{YY}/{YYYY}','0','2','{cnum}','1','7','VaSeZvkTfh5HMjJpNnge1W7Bloim0S',NULL,'Europe/Moscow','ifyb8VTNF4hf8kE7QclT9w==','СД{cnum}','1');#%%
+INSERT INTO `app_settings` VALUES ('1','Наша','','http://nasha.ru','info@nasha.ru','+7(342)2067201','','','','{ClientName}','','','','30','30','30','30','9(999)999-99-99',NULL,'8(342)254-55-77',NULL,'99,999 999 999 999','14','','р.',NULL,'','','','20','','gif,jpg,jpeg,png,txt,doc,docx,xls,xlsx,ppt,pptx,rtf,pdf,7z,tar,zip,rar,gz,exe','yes',NULL,'no;no;no;yes;yes;yes;25;25;no;yes;no;yes;yes;yes;no;Дней;no;no;no;no;no;no;yes;yes;invoicedo;2;14;yes;yes;no;no;no;no;no;yes;yes;no;no;no;akt_full.tpl;invoice_qr.tpl;akt_full.tpl;invoice.tpl;no;no;no;no;no;no;no;no','logo.png',NULL,NULL,NULL,'{cnum}-{MM}{YY}/{YYYY}','0','2','{cnum}','1','7','VaSeZvkTfh5HMjJpNnge1W7Bloim0S',NULL,NULL,'Europe/Moscow','ifyb8VTNF4hf8kE7QclT9w==','СД{cnum}','1');#%%
 
 
 DROP TABLE IF EXISTS `app_sip`;#%%

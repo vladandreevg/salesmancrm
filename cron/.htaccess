@@ -1,0 +1,4 @@
+# DEPRECATED-PHP8.5: old CLI demos must not be reachable over HTTP.
+<FilesMatch "\.old\.php$">
+    Require all denied
+</FilesMatch>

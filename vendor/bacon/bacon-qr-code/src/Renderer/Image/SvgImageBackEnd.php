@@ -20,30 +20,20 @@ final class SvgImageBackEnd implements ImageBackEndInterface
 {
     private const PRECISION = 3;
 
-    /**
-     * @var XMLWriter|null
-     */
-    private $xmlWriter;
+    private ?XMLWriter $xmlWriter;
 
-    /**
-     * @var int[]|null
-     */
-    private $stack;
+    private ?array $stack;
 
-    /**
-     * @var int|null
-     */
-    private $currentStack;
+    private ?int $currentStack;
 
-    /**
-     * @var int|null
-     */
-    private $gradientCount;
+    private ?int $gradientCount;
 
     public function __construct()
     {
         if (! class_exists(XMLWriter::class)) {
-            throw new RuntimeException('You need to install the libxml extension to use this back end');
+            throw new RuntimeException(
+                'You need to install the libxml extension and enable the xmlwriter extension to use this back end'
+            );
         }
     }
 
@@ -326,7 +316,11 @@ final class SvgImageBackEnd implements ImageBackEndInterface
                 break;
         }
 
-        $id = sprintf('g%d', ++$this->gradientCount);
+        $toBeHashed = $this->getColorString($startColor) . $this->getColorString($endColor) . $gradient->getType();
+        if ($startColor instanceof Alpha) {
+            $toBeHashed .= (string) $startColor->getAlpha();
+        }
+        $id = sprintf('g%d-%s', ++$this->gradientCount, hash('xxh3', $toBeHashed));
         $this->xmlWriter->writeAttribute('id', $id);
 
         $this->xmlWriter->startElement('stop');
@@ -334,7 +328,7 @@ final class SvgImageBackEnd implements ImageBackEndInterface
         $this->xmlWriter->writeAttribute('stop-color', $this->getColorString($startColor));
 
         if ($startColor instanceof Alpha) {
-            $this->xmlWriter->writeAttribute('stop-opacity', $startColor->getAlpha());
+            $this->xmlWriter->writeAttribute('stop-opacity', (string) $startColor->getAlpha());
         }
 
         $this->xmlWriter->endElement();
@@ -344,7 +338,7 @@ final class SvgImageBackEnd implements ImageBackEndInterface
         $this->xmlWriter->writeAttribute('stop-color', $this->getColorString($endColor));
 
         if ($endColor instanceof Alpha) {
-            $this->xmlWriter->writeAttribute('stop-opacity', $endColor->getAlpha());
+            $this->xmlWriter->writeAttribute('stop-opacity', (string) $endColor->getAlpha());
         }
 
         $this->xmlWriter->endElement();

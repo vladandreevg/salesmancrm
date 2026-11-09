@@ -10,9 +10,9 @@
 
 namespace Chats;
 
-use andreskrey\Readability\Configuration;
-use andreskrey\Readability\ParseException;
-use andreskrey\Readability\Readability;
+use fivefilters\Readability\Configuration;
+use fivefilters\Readability\ParseException;
+use fivefilters\Readability\Readability;
 use Exception;
 use RuntimeException;
 use SafeMySQL;
@@ -29,6 +29,7 @@ use Salesman\Upload;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     v.1.0 (21/11/2019)
  */
+#[\AllowDynamicProperties]
 class Chats {
 
 	//перенесено в метод channelsProvider()
@@ -1277,7 +1278,7 @@ class Chats {
 	 * @param int         $user
 	 * @return int
 	 */
-	public function chatAppendUser(string $chat_id = NULL, int $user = 0): int {
+	public function chatAppendUser(?string $chat_id = NULL, int $user = 0): int {
 
 		$settings = $this -> settings;
 
@@ -1568,7 +1569,7 @@ class Chats {
 	 *
 	 * @return int
 	 */
-	public function logChat($chat_id, string $event = 'dialog', string $value = '', string $datum = '', string $oldvalue = NULL): int {
+	public function logChat($chat_id, string $event = 'dialog', string $value = '', string $datum = '', ?string $oldvalue = NULL): int {
 
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
@@ -2724,7 +2725,6 @@ class Chats {
 
 			// quality is a value from 0 (worst) to 100 (best)
 			imagejpeg( $imageTmp, $rootpath.$outputImage, $quality );
-			imagedestroy( $imageTmp );
 
 			unlink( $rootpath.$originalImage );
 

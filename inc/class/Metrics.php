@@ -21,6 +21,7 @@ use SafeMySQL;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     1.0 (06/09/2019)
  */
+#[\AllowDynamicProperties]
 class Metrics {
 
 	/**
@@ -334,7 +335,7 @@ class Metrics {
 	 *          - str values - значения, разделенные (,)
 	 *          - str subvalues - дополнительные значения, разделенные (,)
 	 */
-	public static function getKPIs(int $id = NULL): array {
+	public static function getKPIs(?int $id = NULL): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -478,7 +479,7 @@ class Metrics {
 	 *
 	 * @return array
 	 */
-	public static function getKPIUsers(int $id = 0, string $element = NULL): array {
+	public static function getKPIUsers(int $id = 0, ?string $element = NULL): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -1933,7 +1934,7 @@ class Metrics {
 	 *         - float margaPercent - процент выполнения
 	 *         - int|array users - число или массив с iduser
 	 */
-	public function getPlanDo(int $iduser = 0, int $syear = NULL, int $month = NULL, bool $ignorePersonal = false): array {
+	public function getPlanDo(int $iduser = 0, ?int $syear = NULL, ?int $month = NULL, bool $ignorePersonal = false): array {
 
 		$sqlname       = $this -> sqlname;
 		$db            = $this -> db;
@@ -2059,8 +2060,8 @@ class Metrics {
 			foreach ( $result as $data ) {
 
 				//расчет процента размера платежа от суммы сделки
-				$kolp   = $db -> getOne( "SELECT kol FROM ${sqlname}dogovor WHERE did = '$data[did]' AND identity = '$identity'" );
-				$margap = $db -> getOne( "SELECT marga FROM ${sqlname}dogovor WHERE did = '$data[did]' AND identity = '$identity'" );
+				$kolp   = $db -> getOne( "SELECT kol FROM {$sqlname}dogovor WHERE did = '$data[did]' AND identity = '$identity'" );
+				$margap = $db -> getOne( "SELECT marga FROM {$sqlname}dogovor WHERE did = '$data[did]' AND identity = '$identity'" );
 
 				//% оплаченной суммы от суммы по договору
 				$dolya = ($kolp > 0) ? (float)$data['summa_credit'] / $kolp : 0;

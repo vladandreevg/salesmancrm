@@ -21,6 +21,7 @@ use Exception;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     1.0 (06/09/2019)
  */
+#[\AllowDynamicProperties]
 class Comments {
 
 	/**
@@ -1219,7 +1220,7 @@ class Comments {
 	 * @return array
 	 * @throws \PHPMailer\PHPMailer\Exception
 	 */
-	public static function sendplus(int $id = 0, array $users = NULL, string $event = 'new', int $idcomment = 0): array {
+	public static function sendplus(int $id = 0, ?array $users = NULL, string $event = 'new', int $idcomment = 0): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 

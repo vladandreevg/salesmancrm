@@ -19,6 +19,7 @@ use stdClass;
  *
  * @package Salesman
  */
+#[\AllowDynamicProperties]
 class DaData {
 
 	/**
@@ -119,7 +120,7 @@ class DaData {
 	 * @param string|null $kpp
 	 * @return bool|object|stdClass
 	 */
-	public function getContragent(string $inn = NULL, string $kpp = NULL) {
+	public function getContragent(?string $inn = NULL, ?string $kpp = NULL) {
 
 		$dadataKey = $this -> dadataKey;
 

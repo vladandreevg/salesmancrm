@@ -20,6 +20,7 @@ namespace Salesman;
  * @version     1.0 (06/09/2019)
  *
  */
+#[\AllowDynamicProperties]
 class History {
 
 	/**

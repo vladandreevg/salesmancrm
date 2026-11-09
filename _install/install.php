@@ -38,7 +38,7 @@ $root = realpath(__DIR__.'/');
 // защита от повторного запуска установки на установленной системе:
 // пока существует inc/config.php, любые шаги установки (в т.ч. перезапись
 // конфига) недоступны — это исключает перезапись конфигурации и PHP-инъекцию
-if (file_exists($rootpath."/inc/config.php")) {
+if (file_exists($rootpath."/inc/config.php") && $step < 3) {
 	print '
 		<LINK rel="stylesheet" type="text/css" href="/assets/css/app.css">
 		<LINK rel="stylesheet" href="/assets/css/fontello.css">
@@ -170,7 +170,7 @@ if ($step == 4) {
 			}
 
 			if ($sqlname != 'salesman_') {
-				$query = str_replace('salesman_', $sqlname, $query);
+				$query = str_replace('app_', $sqlname, $query);
 			}
 
 			try {
@@ -441,192 +441,18 @@ if (!isset($_REQUEST['step'])) {
 				<hr>
 				<blockquote>
 					<?php
-					$ver = substr(PHP_VERSION, 0, 3);
-					if ($ver == '5.3') {
+					if (file_exists($rootpath."/inc/requirements.php")) {
+						require_once $rootpath."/inc/requirements.php";
+					}
 
-						print '<i class="icon-attention green"></i>&nbsp;Требуется версия <b>PHP</b> <b class="red">7.2...8.1</b>. Текущая версия <b class="red">'.$ver.'</b>.<br>';
+					if (function_exists('sm_requirements_check')) {
+						$requirements = sm_requirements_check( $rootpath, null, 'install' );
+						$error        += $requirements['failures'];
+						print sm_requirements_render( $requirements, [], true );
+					}
+					else {
 						$error++;
-
-					}
-					elseif (
-						in_array($ver, [
-							'7.2',
-							'7.3',
-							'7.4',
-							'8.1'
-						])
-					) {
-
-						print '<i class="icon-ok-circled green"></i>&nbsp;Требуется версия <b>PHP</b> <b class="blue">7.2...8.1</b>. Текущая версия <b class="green">'.$ver.'</b>.<br>';
-
-					}
-					else {
-
-						$error++;
-						print '<i class="icon-attention red"></i>&nbsp;Версия <b>PHP</b> <b class="red">не поддерживается</b>. Установлена версия <b>'.$ver.'</b><br>';
-
-					}
-
-					if (!extension_loaded("dom")) {
-
-						$error++;
-						print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>DOM</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>DOM</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (!extension_loaded("curl")) {
-
-						$error++;
-						print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>cURL</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>cURL</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (!extension_loaded("mbstring")) {
-
-						$error++;
-						print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>MBSTRING</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>MBSTRING</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (!extension_loaded("zlib")) {
-						//$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>ZLIB</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>ZLIB</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (!extension_loaded("xmlreader")) {
-						//$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>XMLREADER</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>XMLREADER</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (extension_loaded("domxml")) {
-
-						//$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>DOMXML</b></u> (модуль PHP) <b class="red">подключен</b>. Не критично, но данный модуль мешает работе класса <b>dompdf</b> для генерации PDF файлов.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>DOMXML</b></u> (модуль PHP) <b class="green">не подключен</b>.<br>';
-					}
-
-					/*
-					if (!extension_loaded("mcrypt")) {
-
-						//$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>MCRYPT</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>MCRYPT</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					*/
-
-					if (!extension_loaded("openssl")) {
-
-						$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>OPEN SSL</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>OPEN SSL</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (!extension_loaded("imap")) {
-
-						//$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>IMAP</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>IMAP</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (!extension_loaded("imagick")) {
-
-						$error++;
-						print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>IMAGICK</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>IMAGICK</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (!extension_loaded("gd")) {
-
-						$error++;
-						print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>GD</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>GD</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-
-					if (ini_get('short_open_tag') == 'off') {
-
-						$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Директива <u><b>short_open_tag</b></u> (см. php.ini) <b class="red">off</b>. Критично.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Директива <u><b>short_open_tag</b></u> <b class="green">on</b>.<br>';
-					}
-
-					if (ini_get('date.timezone') == '') {
-
-						$error++;
-						print '<i class="icon-attention broun"></i>&nbsp;Не задан параметр <u><b>date.timezone</b></u> (см. php.ini) <b class="red">Прописать в php ini "date.timezone = Europe/Moscow"</b>. Критично.<br>';
-
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Параметр <u><b>date.timezone</b></u> (см. php.ini) <b class="green">задан</b>. Установлен часовой пояс: '.ini_get('date.timezone').'<br>';
-					}
-					?>
-				</blockquote>
-				<B>Требуемые права для папок (должны быть 0777):</B>
-				<hr>
-				<blockquote>
-					<?php
-					$files = [
-						'/files',
-						'/cash',
-						'/cash/templates',
-						'/cash/logo',
-						'/inc',
-					];
-
-					foreach ($files as $file) {
-
-						clearstatcache();
-
-						if (!is_writable($rootpath.$file)) {
-
-							print '<i class="icon-attention red"></i>&nbsp;Папка <u><b>'.$file.'</b>&nbsp;[ <b class="red">'.substr(decoct(fileperms($rootpath.'/'.$file)), -4).'</b> ]</u> '.( $file == '/inc' ? "Требуется для создания конфигурационного файла config.php" : "" ).'.<br>';
-
-						}
-						else {
-
-							print '<i class="icon-ok-circled green"></i>&nbsp;Папка <u><b>'.$file.'</b>&nbsp;[ <b class="green">'.substr(decoct(fileperms($rootpath.'/'.$file)), 1).'</b> ]</u><br>';
-
-						}
-
-					}
-
-					if (!is_writable($rootpath.'/inc')) {
-						$error++;
+						print '<div class="warning"><b>Не найден inc/requirements.php</b> — проверка системных требований недоступна. Установка остановлена.</div>';
 					}
 					?>
 				</blockquote>
@@ -810,7 +636,7 @@ if ($step == 3) {
 					}
 					catch (Exception $e) {
 
-						$test2 = '<b class="red">'.$e -> getMessage().'</b>';
+						print $test2 = '<b class="red">'.$e -> getMessage().'</b>';
 
 					}
 

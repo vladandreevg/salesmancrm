@@ -1,6 +1,8 @@
 AddDefaultCharset UTF-8
 
+<ifModule mod_php.c>
 php_flag zlib.output_compression On
 php_value zlib.output_compression_level 5
+</ifModule>
 
 DirectoryIndex index.php

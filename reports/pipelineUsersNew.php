@@ -79,9 +79,12 @@ foreach ( $res as $data ) {
 
 			$prov = pre_format( getProviderSum( $da['did'] ) );
 
-			if ( $prov > 0 )
+			if ( $prov > 0 ) {
 				$itog = $summa - $prov;
-			else $itog = 0;
+			}
+			else {
+				$itog = 0;
+			}
 
 			$str[ $data['iduser'] ][ $dataa['idcategory'] ][ $da['did'] ] = [
 				"title"   => $da['title'],
@@ -94,9 +97,9 @@ foreach ( $res as $data ) {
 				"itog"    => $itog
 			];
 
-			$sumUser[ $data['iduser'] ]['summa']  = $sumUser[ $data['iduser'] ]['summa'] + $summa;
-			$sumUser[ $data['iduser'] ]['rashod'] = $sumUser[ $data['iduser'] ]['rashod'] + $prov;
-			$sumUser[ $data['iduser'] ]['itog']   = $sumUser[ $data['iduser'] ]['itog'] + $itog;
+			$sumUser[$data['iduser']]['summa']  += $summa;
+			$sumUser[$data['iduser']]['rashod'] += $prov;
+			$sumUser[$data['iduser']]['itog'] += $itog;
 
 		}
 
@@ -215,7 +218,7 @@ foreach ( $res as $data ) {
 	<?php
 	foreach ( $str as $key => $value ) {
 
-		$procent = ($sumUser[ $key ]['itog'] / $sumUser[ $key ]['summa']) * 100;
+		$procent = $sumUser[ $key ]['summa'] > 0 ? ($sumUser[ $key ]['itog'] / $sumUser[ $key ]['summa']) * 100 : 0;
 
 		print '
 		<div class="stringg pstring">

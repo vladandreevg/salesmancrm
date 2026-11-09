@@ -8,6 +8,8 @@
 /*        ver. 2019.x           */
 /* ============================ */
 
+global $hooks;
+
 // If this file is called directly, abort.
 if ( defined( 'SMPLUGIN' ) ) {
 
@@ -192,25 +194,25 @@ function update_usernotifier(array $argv = []) {
 	$sqlname  = $GLOBALS['sqlname'];
 	$db       = $GLOBALS['db'];
 
-	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}userNotifier_log'");
+	/*$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}usernotifier_log'");
 	if ($da > 0) {
-		$db -> query("RENAME TABLE `{$sqlname}userNotifier_log` TO `{$sqlname}usernotifier_log`");
+		$db -> query("RENAME TABLE `{$sqlname}usernotifier_log` TO `{$sqlname}usernotifier_log`");
 	}
 
-	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}userNotifier_tpl'");
+	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}usernotifier_tpl'");
 	if ($da > 0) {
-		$db -> query("RENAME TABLE `{$sqlname}userNotifier_tpl` TO `{$sqlname}usernotifier_tpl`");
+		$db -> query("RENAME TABLE `{$sqlname}usernotifier_tpl` TO `{$sqlname}usernotifier_tpl`");
 	}
 
-	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}userNotifier_bots'");
+	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}usernotifier_bots'");
 	if ($da > 0) {
-		$db -> query("RENAME TABLE `{$sqlname}userNotifier_bots` TO `{$sqlname}usernotifier_bots`");
+		$db -> query("RENAME TABLE `{$sqlname}usernotifier_bots` TO `{$sqlname}usernotifier_bots`");
 	}
 
-	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}userNotifier_users'");
+	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}usernotifier_users'");
 	if ($da > 0) {
-		$db -> query("RENAME TABLE `{$sqlname}userNotifier_users` TO `{$sqlname}usernotifier_users`");
-	}
+		$db -> query("RENAME TABLE `{$sqlname}usernotifier_users` TO `{$sqlname}usernotifier_users`");
+	}*/
 
 	/**
 	 * Добавим признак блокировки пользователя

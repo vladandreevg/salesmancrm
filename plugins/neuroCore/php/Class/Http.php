@@ -142,7 +142,6 @@ class Http {
 		$info     = curl_getinfo($ch);
 		$error    = curl_error($ch);
 
-		curl_close($ch);
 
 		$httpCode = isset($info['http_code']) ? (int)$info['http_code'] : 0;
 

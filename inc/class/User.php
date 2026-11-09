@@ -417,7 +417,7 @@ class User {
 	 *      - str **isadmin** - является администратором = on|off
 	 *      - bool **canDeleted** - может быть удален = true|false
 	 */
-	public static function userArray($id = NULL, int $level = NULL, $mid = NULL): array {
+	public static function userArray($id = NULL, ?int $level = NULL, $mid = NULL): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -507,7 +507,7 @@ class User {
 	 *      - str **isadmin** - является администратором = on|off
 	 *      - bool **canDeleted** - может быть удален = true|false
 	 */
-	public static function userArrayMenu($id = NULL, int $level = NULL, $mid = NULL): array {
+	public static function userArrayMenu($id = NULL, ?int $level = NULL, $mid = NULL): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -596,7 +596,7 @@ class User {
 	 *      - str **isadmin** - является администратором = on|off
 	 *      - bool **canDeleted** - может быть удален = true|false
 	 */
-	public static function userCatalog($id = NULL, string $active = 'yes', int $level = NULL, $mid = NULL): array {
+	public static function userCatalog($id = NULL, string $active = 'yes', ?int $level = NULL, $mid = NULL): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -698,7 +698,7 @@ class User {
 	 *      - bool **canDeleted** - может быть удален = true|false
 	 *      - array **users** - массив подчиненных с теми же характеристиками
 	 */
-	public static function userOrgChart(int $id = NULL, bool $active = true, $mid = NULL): array {
+	public static function userOrgChart(?int $id = NULL, bool $active = true, $mid = NULL): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 

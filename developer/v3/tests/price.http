@@ -28,6 +28,17 @@ login: vladislav@isaler.ru
 
 ###
 
+GET http://{{baseurl}}/developer/v3/price/list
+Content-Type: application/json
+apikey: {{token}}
+login: vladislav@isaler.ru
+
+{
+  "category": 5
+}
+
+###
+
 POST http://{{baseurl}}/developer/v3/price/add
 Content-Type: application/json
 apikey: {{token}}

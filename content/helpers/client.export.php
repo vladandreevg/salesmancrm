@@ -730,7 +730,7 @@ if ( $action == 'get_xml' ) {
 			}
 
 			foreach ( $clients as $fields ) {
-				fputcsv( $fp, $fields, ";" );
+				fputcsv( $fp, $fields, ";", '"', '\\' );
 			}
 
 			fclose( $fp );
@@ -954,7 +954,7 @@ if ( $action == 'get_xml' ) {
 
 			foreach ( $clients as $fields ) {
 
-				fputcsv( $fp, $fields, ';' );
+				fputcsv( $fp, $fields, ';', '"', '\\' );
 			}
 
 			fclose( $fp );

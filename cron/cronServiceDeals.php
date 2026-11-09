@@ -12,6 +12,9 @@
  * Скрипт для автоматического формирования актов и счетов для Сервисных сделок. Не закончен
  */
 
+use Salesman\Akt;
+use Salesman\Speka;
+
 set_time_limit(0);
 
 // Устанавливаем возможность отправлять ответ для любого домена или для указанных
@@ -46,21 +49,21 @@ $messages = $error = [];
  * В противном случае получим ошибку "safemysql MySQL server has gone away"
  */
 unset($db);
-$db = new \SafeMySQL($opts);
+$db = new SafeMySQL($opts);
 
 //находим все типы сервисных сделок
-$services = isServices();
+$services = (array)isServices();
 
 if (empty($services)) goto ext;
 
 //проходим все сделки, у которых период заканчивается в течение +/- 5 дней
-$result = $db -> query("SELECT * FROM ".$sqlname."dogovor WHERE tip IN (".yimplode(",", $services).") AND datum_end BETWEEN DATE_FORMAT(CURRENT_DATE - INTERVAL 5 DAY, '%Y-%m-%d') AND DATE_FORMAT(CURRENT_DATE + INTERVAL 5 DAY, '%Y-%m-%d')");
+$result = $db -> query("SELECT * FROM {$sqlname}dogovor WHERE tip IN (".yimplode(",", $services).") AND datum_end BETWEEN DATE_FORMAT(CURRENT_DATE - INTERVAL 5 DAY, '%Y-%m-%d') AND DATE_FORMAT(CURRENT_DATE + INTERVAL 5 DAY, '%Y-%m-%d')");
 while ($item = $db -> fetch($result)) {
 
 	$identity = $item['identity'];
 
 	//смотрим последний оплаченный счет
-	$crid = $db -> getOne("SELECT MAX(crid) FROM ".$sqlname."credit WHERE do != 'on' and did = '$item[did]' and identity = '$identity'");
+	$crid = $db -> getOne("SELECT MAX(crid) FROM {$sqlname}credit WHERE do != 'on' and did = '$item[did]' and identity = '$identity'");
 
 	//шаблон для акта
 	$temp = $other[39];
@@ -71,12 +74,12 @@ while ($item = $db -> fetch($result)) {
 		/**
 		 * ID последнего оплаченного счета
 		 */
-		$invoiceLast = $db -> getOne("SELECT * FROM ".$sqlname."credit WHERE crid = (SELECT MAX(crid) FROM ".$sqlname."credit WHERE do = 'on' AND did = '$item[did]' AND identity = '$identity') AND did = '$item[did]' AND identity = '$identity'");
+		$invoiceLast = $db -> getOne("SELECT * FROM {$sqlname}credit WHERE crid = (SELECT MAX(crid) FROM {$sqlname}credit WHERE do = 'on' AND did = '$item[did]' AND identity = '$identity') AND did = '$item[did]' AND identity = '$identity'");
 
 		/**
 		 * Данные по спецификации
 		 */
-		$speka = getSpekaData($item['did']);
+		$speka = (new Speka()) -> getSpekaData($item['did']);
 
 		// !!! этот блок закрыт, потому что новый счет выписываем после создания акта
 		/**
@@ -110,7 +113,7 @@ while ($item = $db -> fetch($result)) {
 			"summa"      => $invoiceLast['summa_credit'],
 			"crid"       => $invoiceLast['crid']
 		];
-		$akt      = new \Salesman\Akt();
+		$akt      = new Akt();
 		$r        = $akt -> edit(0, $paramAkt);
 
 		if($r['deid'] > 0) {

@@ -2,7 +2,6 @@
 [<img src="https://img.shields.io/packagist/dt/shuchkin/simplexlsx" />](https://packagist.org/packages/shuchkin/simplexlsx)
 [<img src="https://img.shields.io/github/license/shuchkin/simplexlsx" />](https://github.com/shuchkin/simplexlsx/blob/master/license.md) [<img src="https://img.shields.io/github/stars/shuchkin/simplexlsx" />](https://github.com/shuchkin/simplexlsx/stargazers) [<img src="https://img.shields.io/github/forks/shuchkin/simplexlsx" />](https://github.com/shuchkin/simplexlsx/network) [<img src="https://img.shields.io/github/issues/shuchkin/simplexlsx" />](https://github.com/shuchkin/simplexlsx/issues)
 [<img src="https://img.shields.io/opencollective/all/simplexlsx" />](https://opencollective.com/simplexlsx)
-[<img src="https://img.shields.io/badge/patreon-_-_" />](https://www.patreon.com/shuchkin)
 
 Parse and retrieve data from Excel XLSx files. MS Excel 2007 workbooks PHP reader.
 No addiditional extensions need (internal unzip + standart SimpleXML parser).
@@ -109,12 +108,13 @@ if ( $xlsx = SimpleXLSX::parse('book_styled.xlsx') ) {
 ```php
 if ( $xlsx = SimpleXLSX::parse( 'xlsx/books.xlsx' ) ) {
     $f = fopen('book.csv', 'wb');
-	foreach ( $xlsx->readRows() as $r ) {
-		fwrite($f, implode(',',$r) . PHP_EOL);
-	}
-	fclose($f);
+    // fwrite($f, chr(0xEF) . chr(0xBB) . chr(0xBF)); // UTF-8 BOM
+    foreach ( $xlsx->readRows() as $r ) {
+        fputcsv($f, $r); // fputcsv($f, $r, ';', '"', "\\", "\r\n");
+    }
+    fclose($f);
 } else {
-	echo SimpleXLSX::parseError();
+    echo SimpleXLSX::parseError();
 }
 ```
 ### XLSX get sheet names and sheet indexes
@@ -122,8 +122,8 @@ if ( $xlsx = SimpleXLSX::parse( 'xlsx/books.xlsx' ) ) {
 // Sheet numeration started 0
 
 if ( $xlsx = SimpleXLSX::parse( 'xlsx/books.xlsx' ) ) {
-	print_r( $xlsx->sheetNames() );
-	print_r( $xlsx->sheetName( $xlsx->activeSheet ) );
+    print_r( $xlsx->sheetNames() );
+    print_r( $xlsx->sheetName( $xlsx->activeSheet ) );
 }
 
 ```
@@ -161,6 +161,7 @@ Array
                     [hidden] =>
                     [width] => 13.7109375
                     [height] => 0
+                    [comment] =>
                 )
         
             [1] => Array
@@ -168,7 +169,7 @@ Array
                     [type] => 
                     [name] => B1
                     [value] => 2016-04-12 13:41:00
-                    [href] => 
+                    [href] => Sheet1!A1
                     [f] => 
                     [format] => m/d/yy h:mm
                     [s] => 0
@@ -177,20 +178,24 @@ Array
                     [hidden] => 1
                     [width] => 16.5703125
                     [height] => 0
+                    [comment] => Serg: See transaction history   
+                    
                 )
 ```
 <!--suppress HttpUrlsUsage -->
 <table>
-<tr><td>type</td><td>cell <a href="http://c-rex.net/projects/samples/ooxml/e1/Part4/OOXML_P4_DOCX_ST_CellType_topic_ID0E6NEFB.html#topic_ID0E6NEFB">type</a></td></tr>
+<tr><td>type</td><td>cell <a href="https://c-rex.net/samples/ooxml/e1/Part4/OOXML_P4_DOCX_ST_CellType_topic_ID0E6NEFB.html">type</a></td></tr>
 <tr><td>name</td><td>cell name (A1, B11)</td></tr>
-<tr><td>value</td><td>cell value (1233, 1233.34, 2022-02-21 00:00:00, String)</td></tr>  
+<tr><td>value</td><td>cell value (1233, 1233.34, 2022-02-21 00:00:00, String)</td></tr>
+<tr><td>href</td><td>internal and external links</td></tr>
 <tr><td>f</td><td>formula</td></tr>
 <tr><td>s</td><td>style index, use <code>$xlsx->cellFormats[ $index ]</code> to get style</td></tr>
 <tr><td>css</td><td>generated cell CSS</td></tr>
 <tr><td>r</td><td>row index</td></tr>
 <tr><td>hidden</td><td>hidden row or column</td></tr>
-<tr><td>width</td><td>width in <a href="http://c-rex.net/projects/samples/ooxml/e1/Part4/OOXML_P4_DOCX_col_topic_ID0ELFQ4.html">custom units</a></td></tr>
+<tr><td>width</td><td>width in <a href="http://c-rex.net/samples/ooxml/e1/Part4/OOXML_P4_DOCX_col_topic_ID0ELFQ4.html">custom units</a></td></tr>
 <tr><td>height</td><td>height in points (pt, 1/72 in)</td></tr>
+<tr><td>comment</td><td>Cell comment as plain text</td></tr>
 </table>
 
 ### Select Sheet
@@ -295,9 +300,9 @@ ini_set('error_reporting', E_ALL );
 ini_set('display_errors', 1 );
 
 if ( $xlsx = SimpleXLSX::parseFile('books.xlsx', true ) ) {
-	echo $xlsx->toHTML();
+    echo $xlsx->toHTML();
 } else {
-	echo SimpleXLSX::parseError();
+    echo SimpleXLSX::parseError();
 }
 ```
 ### Classic OOP style 

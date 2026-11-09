@@ -45,7 +45,7 @@ $indata['api_key'] = $_REQUEST['apikey'];
 $indata['botid']   = $_REQUEST['botid'];
 
 //Найдем identity по настройкам
-$res      = $db -> getRow("select id, api_key, timezone,valuta from ".$sqlname."settings where api_key = '$indata[api_key]'");
+$res      = $db -> getRow("select id, api_key, timezone,valuta from ".$sqlname."settings where api_key = ?s", $indata['api_key']);
 $tmzone   = $res['timezone'];
 $api_key  = $res['api_key'];
 $identity = (int)$res['id'];

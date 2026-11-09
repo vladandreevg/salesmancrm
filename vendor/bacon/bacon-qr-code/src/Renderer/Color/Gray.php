@@ -8,20 +8,13 @@ use BaconQrCode\Exception;
 final class Gray implements ColorInterface
 {
     /**
-     * @var int
-     */
-    private $gray;
-
-    /**
      * @param int $gray the gray value between 0 (black) and 100 (white)
      */
-    public function __construct(int $gray)
+    public function __construct(private readonly int $gray)
     {
         if ($gray < 0 || $gray > 100) {
             throw new Exception\InvalidArgumentException('Gray must be between 0 and 100');
         }
-
-        $this->gray = (int) $gray;
     }
 
     public function getGray() : int
@@ -31,7 +24,10 @@ final class Gray implements ColorInterface
 
     public function toRgb() : Rgb
     {
-        return new Rgb((int) ($this->gray * 2.55), (int) ($this->gray * 2.55), (int) ($this->gray * 2.55));
+        // use 255/100 instead of 2.55 to avoid floating-point precision loss (100 * 2.55 = 254.999...)
+        $value = (int) round($this->gray * 255 / 100);
+
+        return new Rgb($value, $value, $value);
     }
 
     public function toCmyk() : Cmyk

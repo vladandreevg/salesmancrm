@@ -44,7 +44,7 @@ if (!empty($user_list)) {
 }
 
 //фильтр по источнику
-if ( !empty( $cPath ) ) $sort = "({$sqlname}clientpath.clientpath IN (".implode( ",", $cPath ).") $s1) and ";
+if ( !empty( $cPath ) ) $sort = "({$sqlname}clientpath.id IN (".implode( ",", $cPath ).") $s1) and ";
 
 
 $list   = [];

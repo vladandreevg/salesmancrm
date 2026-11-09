@@ -46,7 +46,7 @@ $denda = date( 'm.Y', mktime( 0, 0, 0, $da2_array[1], $dd + 1, $da2_array[0] ) )
 //месяц конечный
 $de = date( 'm', mktime( 0, 0, 0, $da2_array[1], $dd, $da2_array[0] ) );
 //текущий день
-$d2 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) ) );
+$d2 = date( 'Y-m-d', mktime( 1, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) ) );
 
 $user_list = (!empty( $user_list )) ? $user_list : (array)get_people( $iduser1, "yes" );
 $users = implode( ",", $user_list );

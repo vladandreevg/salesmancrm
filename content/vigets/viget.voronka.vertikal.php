@@ -28,8 +28,8 @@ $nd = date( 'd' );
 
 $st  = mktime( 0, 0, 0, $m + 1, 0, $y ); //сформировали дату для дальнейшей обработки - первый день месяца $m года $y
 $dd  = intval( date( "t", $st ) ); //получили Стоимость дней в месяце
-$d11 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m, '01', $y ) );
-$d12 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m, $dd, $y ) );
+$d11 = date( 'Y-m-d', mktime( 0, 0, 0, $m, '01', $y ) );
+$d12 = date( 'Y-m-d', mktime( 0, 0, 0, $m, $dd, $y ) );
 
 $sort = get_people( $iduser1 );
 

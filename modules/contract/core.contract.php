@@ -21,6 +21,7 @@ include $rootpath."/inc/dbconnector.php";
 include $rootpath."/inc/auth.php";
 include $rootpath."/inc/func.php";
 include $rootpath."/inc/settings.php";
+require_once $rootpath."/developer/events.php";
 include $rootpath."/inc/language/".$language.".php";
 
 // Анонимный запрос: inc/auth.php при отсутствии сессии продолжает работу с iduser1 = 0

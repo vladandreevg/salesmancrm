@@ -49,9 +49,9 @@ $baseURL = $_SERVER['HTTP_SCHEME'] ?? (((isset( $_SERVER['HTTPS'] ) && $_SERVER[
  * @param array  $params
  * @return bool|string
  */
-function outSender(string $url, array $params){
+function outSender(string $url, array $params): bool|string {
 
-	$rootpath = realpath(__DIR__.'/../');
+	$rootpath = dirname(__DIR__);
 
 	$params['identity'] = $GLOBALS['identity'];
 	$params['iduser1']  = $GLOBALS['iduser1'];
@@ -85,9 +85,8 @@ function outSender(string $url, array $params){
 	if($result === false) {
 		return $err;
 	}
-	else {
-		return $result;
-	}
+
+	return $result;
 
 }
 
@@ -115,6 +114,11 @@ event::register('client.import', static function($args = []){
  * integer user  - id ответственного сотрудника
  */
 event::register('client.expressadd', static function($args = []){
+
+	//webhook: само событие экспресс-формы
+	$args['event'] = 'client.expressadd';
+
+	outSender($GLOBALS['baseURL']."/developer/webhooks.php", $args);
 
 	//webhook
 	if($args['clid'] > 0) {

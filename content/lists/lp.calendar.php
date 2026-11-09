@@ -81,12 +81,12 @@ if ( strlen( $m ) < 2 )
 	$m = "0".$m;
 
 $dd1 = date( "t", mktime( date( 'H' ), date( 'i' ), date( 's' ), $m1, '01', $y1 ) + $tzone * 3600 ); //кол-во дней в следующем месяце
-$d11 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m1, '01', $y1 ) );
-$d21 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m1, $dd1, $y1 ) );
+$d11 = date( 'Y-m-d', mktime( 0, 0, 0, $m1, '01', $y1 ) );
+$d21 = date( 'Y-m-d', mktime( 0, 0, 0, $m1, $dd1, $y1 ) );
 
 $dd2 = date( "t", mktime( date( 'H' ), date( 'i' ), date( 's' ), $m2, '01', $y2 ) + $tzone * 3600 ); //кол-во дней в прошлом месяце
-$d12 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m2, '01', $y2 ) );
-$d22 = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m2, $dd2, $y2 ) );
+$d12 = date( 'Y-m-d', mktime( 0, 0, 0, $m2, '01', $y2 ) );
+$d22 = date( 'Y-m-d', mktime( 0, 0, 0, $m2, $dd2, $y2 ) );
 
 $yy1 = $y1 - 2000;
 $yy2 = $y2 - 2000;

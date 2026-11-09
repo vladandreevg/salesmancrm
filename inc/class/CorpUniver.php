@@ -1375,7 +1375,7 @@ class CorpUniver {
 	 * $Lecture = \Salesman\CorpUniver::editLecture($id, $name, $course);
 	 * ```
 	 */
-	public static function editLecture(int $id = 0, string $name = NULL, int $course = 0): array {
+	public static function editLecture(int $id = 0, ?string $name = NULL, int $course = 0): array {
 
 		$rootpath = dirname(__DIR__, 2);
 

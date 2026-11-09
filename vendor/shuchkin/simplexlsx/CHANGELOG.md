@@ -1,5 +1,44 @@
 # Changelog
 
+# 1.1.19 (2026-09-10)
+* security fix (CSS injection, font-family) [CVE-2024-55878](https://nvd.nist.gov/vuln/detail/cve-2024-55878], thx Grand
+
+# 1.1.18 (2026-09-05)
+* [ZIP64 support](https://github.com/shuchkin/simplexlsx/issues/169), thx [Dave](https://github.com/WebsiteInc)
+
+# 1.1.17 (2026-08-11)
+* security fix 2 (Cross-site Scripting in align/valign attrs) [CVE-2024-55878](https://github.com/shuchkin/simplexlsx/security/advisories/GHSA-x6mh-rjwm-8ph7)
+
+# 1.1.16 (2025-12-05)
+* Updated [c-rex SpreadsheetML Reference](https://c-rex.net/samples/ooxml/e1/Part4/OOXML_P4_DOCX_SpreadsheetML_topic_ID0EBC63.html) links
+
+# 1.1.15 (2025-12-04)
+* SimpleXLSXEx::getColorValue PHP 8.4 nullable capability
+
+# 1.1.14 (2025-05-21)
+* fixed hidden cols/rows
+
+# 1.1.13 (2024-12-21)
+* fixed css colors vulnerability
+
+# 1.1.12 (2024-12-11)
+* fixed toHTMLEx css vulnerability 
+
+# 1.1.11 (2024-07-06)
+* fixed [#157](https://github.com/shuchkin/simplexlsx/issues/157)
+
+## 1.1.10 (2023-04-27)
+* Cell comments returns in rowsEx
+* hyperlinks moved to rowsEx
+* all fields and methods public now
+* helper methods is static now
+
+## 1.0.21 (2023-04-09)
+* fixed activeSheet(Tab)
+
+## 1.0.20 (2023-04-05)
+* fixed activeSheet(Tab)
+
 ## 1.0.18 (2023-02-04)
 * fixed regex to detect date/datetime in cell
 * added $this->sheetMeta($worksheetIndex = null) to get metadata from workbook.xml

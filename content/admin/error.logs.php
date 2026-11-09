@@ -11,7 +11,7 @@
 error_reporting( 0 );
 header( "Pragma: no-cache" );
 
-if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) != 'xmlhttprequest' ) {
+if ( empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) != 'xmlhttprequest' ) {
 	print '<div class="bad" align="center"><br>Доступ запрещен.<br>Обратитесь к администратору.<br><br></div>';
 	exit();
 }

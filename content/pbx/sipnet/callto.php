@@ -6,7 +6,7 @@
 /*        ver. 2017.x           */
 /* ============================ */
 ?>
-<?
+<?php
 error_reporting( E_ERROR );
 
 $rootpath = realpath( __DIR__.'/../../../' );
@@ -49,7 +49,6 @@ function Send($url, $POST = []) {
 		print $err = curl_error( $ch );
 	}
 
-	curl_close( $ch );
 
 	return $result;
 }

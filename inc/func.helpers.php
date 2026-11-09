@@ -90,8 +90,8 @@ function getPeriodDeal($did): array {
 	$diff = diffDate2( $end, $start );
 
 	//формируем новый период
-	$d1 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1, (int)$e[0] ) );
-	$d2 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1 + (int)$diff, (int)$e[0] ) );
+	$d1 = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1, (int)$e[0] ) );
+	$d2 = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1 + (int)$diff, (int)$e[0] ) );
 
 
 	/**
@@ -101,7 +101,7 @@ function getPeriodDeal($did): array {
 	//если начало периода 1 число месяца, то новый период делаем с 1 числа
 	if ( (int)$s[2] == 1 ) {
 
-		$d1 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e[1] + 1, 1, (int)$e[0] ) );
+		$d1 = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e[1] + 1, 1, (int)$e[0] ) );
 
 	}
 	//если конец периода последнее число месяца, то конец нового периода делаем последнее число
@@ -109,7 +109,7 @@ function getPeriodDeal($did): array {
 
 		$count = date( "t", strtotime( $d2 ) );
 		$e2    = explode( "-", $d2 );
-		$d2    = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e2[1], (int)$count, (int)$e2[0] ) );
+		$d2    = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e2[1], (int)$count, (int)$e2[0] ) );
 
 	}
 
@@ -132,7 +132,7 @@ function getPeriodDeal($did): array {
  * @category Core
  * @package  Func
  */
-function getPeriodSmart(string $start = NULL, string $end = NULL): array {
+function getPeriodSmart(?string $start = NULL, ?string $end = NULL): array {
 
 	if ( $start == '' ) {
 		$start = current_datumtime();
@@ -152,8 +152,8 @@ function getPeriodSmart(string $start = NULL, string $end = NULL): array {
 	$diff = diffDate2( $end, $start );
 
 	//формируем новый период
-	$d1 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1, (int)$e[0] ) );
-	$d2 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1 + $diff, (int)$e[0] ) );
+	$d1 = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1, (int)$e[0] ) );
+	$d2 = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e[1], (int)$e[2] + 1 + $diff, (int)$e[0] ) );
 
 	/**
 	 * Корректируем период
@@ -162,7 +162,7 @@ function getPeriodSmart(string $start = NULL, string $end = NULL): array {
 	//если начало периода 1 число месяца, то новый период делаем с 1 числа
 	if ( (int)$s[2] == 1 && (int)$e[2] == $ecount ) {
 
-		$d1 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e[1] + 1, 1, (int)$e[0] ) );
+		$d1 = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e[1] + 1, 1, (int)$e[0] ) );
 
 	}
 	//если конец периода последнее число месяца, то конец нового периода делаем последнее число
@@ -170,7 +170,7 @@ function getPeriodSmart(string $start = NULL, string $end = NULL): array {
 
 		$count = (int)date( "t", strtotime( $d2 ) );
 		$e2    = explode( "-", $d2 );
-		$d2    = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$e2[1], $count, (int)$e2[0] ) );
+		$d2    = date( 'Y-m-d', mktime( 1, 0, 0, (int)$e2[1], $count, (int)$e2[0] ) );
 
 	}
 
@@ -192,7 +192,7 @@ function getPeriodSmart(string $start = NULL, string $end = NULL): array {
  * @category Core
  * @package  Func
  */
-function setPeriodDeal(int $did, string $d1 = NULL, string $d2 = NULL): string {
+function setPeriodDeal(int $did, ?string $d1 = NULL, ?string $d2 = NULL): string {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -312,7 +312,7 @@ function get_historyinfo($id): array {
  * @category Core
  * @package  Func
  */
-function get_accesse(int $clidd = NULL, int $pidd = NULL, int $didd = NULL): string {
+function get_accesse(?int $clidd = NULL, ?int $pidd = NULL, ?int $didd = NULL): string {
 
 	global $userSettings;
 
@@ -2015,7 +2015,7 @@ function prev_step($id): ?int {
  * @category Core
  * @package  Func
  */
-function current_dogtype($id, string $title = NULL) {
+function current_dogtype($id, ?string $title = NULL) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2139,7 +2139,7 @@ function current_contract($id): string {
  * @category Core
  * @package  Func
  */
-function current_category($id, string $title = NULL): ?string {
+function current_category($id, ?string $title = NULL): ?string {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2171,7 +2171,7 @@ function current_category($id, string $title = NULL): ?string {
  * @category Core
  * @package  Func
  */
-function current_direction($id, string $title = NULL) {
+function current_direction($id, ?string $title = NULL) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2202,7 +2202,7 @@ function current_direction($id, string $title = NULL) {
  * @category Core
  * @package  Func
  */
-function current_company($id, string $title = NULL) {
+function current_company($id, ?string $title = NULL) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2234,7 +2234,7 @@ function current_company($id, string $title = NULL) {
  * @category Core
  * @package  Func
  */
-function getSigner(int $id = NULL, int $mcid = NULL): array {
+function getSigner(?int $id = NULL, ?int $mcid = NULL): array {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2308,7 +2308,7 @@ function getSigner(int $id = NULL, int $mcid = NULL): array {
  * @category Core
  * @package  Func
  */
-function current_territory($id, string $title = NULL) {
+function current_territory($id, ?string $title = NULL) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2395,7 +2395,7 @@ function current_clientpathbyid($id): string {
  * @category Core
  * @package  Func
  */
-function current_loyalty($id, string $title = NULL) {
+function current_loyalty($id, ?string $title = NULL) {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -2839,7 +2839,7 @@ function get_dog_info($id, string $isArray = 'no') {
  * @category Core
  * @package  Func
  */
-function rsadd(int $rs = 0, float $summa = 0.00, string $operacia = NULL, string $rs_move = NULL): bool {
+function rsadd(int $rs = 0, float $summa = 0.00, ?string $operacia = NULL, ?string $rs_move = NULL): bool {
 
 	return true;
 
@@ -5174,7 +5174,7 @@ function getCreditData($did): ?array {
  * @category Core
  * @package  Func
  */
-function getNalog($summa, float $nalog = NULL, string $type = NULL): array {
+function getNalog($summa, ?float $nalog = NULL, ?string $type = NULL): array {
 
 	$price = $summa;
 
@@ -5505,7 +5505,7 @@ function getDogData($id, $tip): string {
  * @category Core
  * @package  Func
  */
-function getClientpath($path, string $source = NULL, string $destination = NULL): int {
+function getClientpath($path, ?string $source = NULL, ?string $destination = NULL): int {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -6014,7 +6014,7 @@ function clientFields(): array {
  * @category Core
  * @package  Func
  */
-function callTrack($phone, string $dest = NULL, int $clid = NULL, bool $update = false): int {
+function callTrack($phone, ?string $dest = NULL, ?int $clid = NULL, bool $update = false): int {
 
 	$identity = $GLOBALS['identity'];
 	$sqlname  = $GLOBALS['sqlname'];
@@ -7492,8 +7492,8 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 				if ( $filter == 'closedealsweek' ) {
 
 					$first = strtotime( "last Monday" );//monday
-					$w1    = strftime( '%Y-%m-%d', $first );
-					$w2    = strftime( '%Y-%m-%d', $first + 6 * 86400 );
+					$w1    = date( 'Y-m-d', $first );
+					$w2    = date( 'Y-m-d', $first + 6 * 86400 );
 
 					$sort_4 .= " and ({$sqlname}dogovor.datum_close BETWEEN '$w1' and '$w2') $us";
 
@@ -7514,8 +7514,8 @@ function getFilterQuery($tip, array $params = [], bool $countQuery = true) {
 				if ( $filter == 'alldealsweek' ) {
 
 					$first  = strtotime( "last Monday" );//monday
-					$w1     = strftime( '%Y-%m-%d', $first );
-					$w2     = strftime( '%Y-%m-%d', $first + 6 * 86400 );
+					$w1     = date( 'Y-m-d', $first );
+					$w2     = date( 'Y-m-d', $first + 6 * 86400 );
 					$sort_4 .= " and ({$sqlname}dogovor.datum BETWEEN '$w1' and '$w2')";
 
 				}

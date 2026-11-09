@@ -32,7 +32,7 @@ class Leads {
 	 *
 	 * @var mixed
 	 */
-	public $identity, $iduser1, $sqlname, $db, $fpath, $opts, $skey, $ivc, $tmzone, $isCloud;
+	public $identity, $iduser1, $sqlname, $db, $fpath, $opts, $skey, $ivc, $tmzone;
 
 	/**
 	 * Передача различных параметров
@@ -151,7 +151,6 @@ class Leads {
 		$this -> fpath    = $GLOBALS['fpath'];
 		$this -> opts     = $GLOBALS['opts'];
 		$this -> tmzone   = $GLOBALS['tmzone'];
-		$this -> isCloud  = $GLOBALS['isCloud'];
 
 		$this -> db = new SafeMySQL( $this -> opts );
 
@@ -244,7 +243,7 @@ class Leads {
 	 * $lists = $l -> lists;
 	 * ```
 	 */
-	public function listLeads($params = []): void {
+	public function listLeads(array $params = []): void {
 
 		$sqlname  = $this -> sqlname;
 		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
@@ -544,7 +543,7 @@ class Leads {
 	 *                      - str **tuda** - направление вывода
 	 *                      - str **word** - поисковое слово
 	 */
-	public function listSources($params = []): void {
+	public function listSources(array $params = []): void {
 
 		$sqlname  = $this -> sqlname;
 		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
@@ -641,8 +640,9 @@ class Leads {
 	 *                      - str **ord** - сортировка по полю
 	 *                      - str **tuda** - направление вывода
 	 *                      - str **word** - поисковое слово
+	 * @throws \Exception
 	 */
-	public function listUTM($params = []): void {
+	public function listUTM(array $params = []): void {
 
 		$sqlname  = $this -> sqlname;
 		$iduser1  = ($params['iduser'] > 0) ? $params['iduser'] : $this -> iduser1;
@@ -1039,7 +1039,7 @@ class Leads {
 	 *
 	 * @throws Exception
 	 */
-	public function setuser($params = []): array {
+	public function setuser(array $params = []): array {
 
 		global $hooks;
 
@@ -1693,7 +1693,6 @@ class Leads {
 		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
 		$db       = $this -> db;
 		$fpath    = $this -> fpath;
-		//$fpath    = ($isCloud) ? $identity."/" : "";
 
 		$settings = $this -> settings( $identity );
 
@@ -1908,7 +1907,7 @@ class Leads {
 	 *
 	 * @return mixed
 	 */
-	public static function getPath(string $path = '', string $source = NULL) {
+	public static function getPath(string $path = '', ?string $source = NULL): mixed {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -1961,7 +1960,7 @@ class Leads {
 	 *
 	 * @return array
 	 */
-	public function getUser(array $params = []) {
+	public function getUser(array $params = []): int|array {
 
 		$sqlname  = $this -> sqlname;
 		$identity = ($params['identity'] > 0) ? $params['identity'] : $this -> identity;
@@ -2443,7 +2442,7 @@ class Leads {
 	 * @return array - массив значений
 	 *      - field => value ( Например: email => m.3000@mail.io )
 	 */
-	public static function parseText(string $text = NULL, string $divider = ':'): array {
+	public static function parseText(?string $text = NULL, string $divider = ':'): array {
 
 		$text = strip_tags( str_replace( "</li>", "\n", $text ) );
 
@@ -2709,7 +2708,7 @@ class Leads {
 	 *      - str **divider** - разделитель для поиска пар "ключ : значение" ( : )
 	 *      - str **filter** - фильтр по темам письма ( Заявка )
 	 */
-	public static function boxSettings(int $id = 0, string $name = NULL, array $params = []): array {
+	public static function boxSettings(int $id = 0, ?string $name = NULL, array $params = []): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 
@@ -2926,7 +2925,7 @@ class Leads {
 	 *
 	 * @return mixed
 	 */
-	private function settings(int $identity = 1) {
+	private function settings(int $identity = 1): mixed {
 
 		$sqlname = $this -> sqlname;
 		$db      = $this -> db;

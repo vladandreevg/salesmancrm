@@ -30,6 +30,7 @@ use Exception;
  * $clid = $result['data'];
  * ```
  */
+#[\AllowDynamicProperties]
 class Client {
 
 	//public $response = [];

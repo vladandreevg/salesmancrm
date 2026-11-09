@@ -1377,9 +1377,15 @@ if ( $action == 'compose' ) {
 
 	$m       = new Mustache_Engine();
 	$message = $m -> render( $template, $msg );
-
+	
+	$hooks -> do_action("mailer_form_before", $_REQUEST);
 	?>
 	<div id="msg"><?= $message ?></div>
+	
+	<?php
+	$hooks -> do_action("mailer_form_after", $_REQUEST);
+	?>
+	
 	<script>
 
 		yremEditor();

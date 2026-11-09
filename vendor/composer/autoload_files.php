@@ -6,13 +6,14 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    '6e3fae29631ef280660b3cdad06f25a8' => $vendorDir . '/symfony/deprecation-contracts/function.php',
     'a4a119a56e50fbb293281d9a48007e0e' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php',
-    '7b11c4dc42b3b3023073cb14e519683c' => $vendorDir . '/ralouphie/getallheaders/src/getallheaders.php',
-    '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
-    '0d59ee240a4cd96ddbb4ff164fccea4d' => $vendorDir . '/symfony/polyfill-php73/bootstrap.php',
-    '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
+    '5897ea0ac4cccf14d323035e65887801' => $vendorDir . '/symfony/polyfill-php82/bootstrap.php',
+    '6e3fae29631ef280660b3cdad06f25a8' => $vendorDir . '/symfony/deprecation-contracts/function.php',
+    '0174385c3be07e86008907d06ee66531' => $vendorDir . '/sabberworm/php-css-parser/src/Rule/Rule.php',
+    '98aea6e41b9cb79b379b10f37ba1f0b7' => $vendorDir . '/sabberworm/php-css-parser/src/RuleSet/RuleContainer.php',
     '7b4ea634fa5bd1ccea7e5ca039562961' => $vendorDir . '/colshrapnel/safemysql/safemysql.class.php',
     '547f39254e5312c66b30c9b6a7d3570f' => $vendorDir . '/eleirbag89/telegrambotphp/Telegram.php',
     '221a7c0887f892e44dd08191321d3815' => $vendorDir . '/eleirbag89/telegrambotphp/TelegramErrorLogger.php',
+    '6417c431d8a4b9056b479d2c5d32e8a4' => $baseDir . '/inc/class/SpreadsheetReader.php',
+    '1b9056b6f951c38af23cb1146d60c27a' => $baseDir . '/inc/class/QrCode.php',
 );

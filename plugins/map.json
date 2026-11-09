@@ -1,4 +1,12 @@
 {
+  "neuroCore": {
+	"name": "Нейроядро",
+	"url": "plugins/neuroCore/",
+	"content": "Общий слой работы с нейросетями: подключения по единому API, очередь заданий, учёт расхода, диагностика",
+	"icon": "icon-magic",
+	"interface": "yes",
+	"js": ""
+  },
   "smsSender": {
 	"name": "SMS-Sender",
 	"url": "plugins/smsSender/",

@@ -282,7 +282,7 @@ class Providers {
 	 *
 	 * @return string - '' если переменная не задана
 	 */
-	public static function resolveKey(string $envName, array $server = NULL, array $env = NULL): string {
+	public static function resolveKey(string $envName, ?array $server = NULL, ?array $env = NULL): string {
 
 		$envName = trim($envName);
 
@@ -335,7 +335,7 @@ class Providers {
 	 *
 	 * @return array
 	 */
-	public static function candidateNames(array $server = NULL, int $limit = 50): array {
+	public static function candidateNames(?array $server = NULL, int $limit = 50): array {
 
 		$server = $server === NULL ? (array)$_SERVER : $server;
 

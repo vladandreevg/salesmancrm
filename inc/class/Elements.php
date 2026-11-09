@@ -1428,7 +1428,7 @@ class Elements {
 	 *
 	 * @return string
 	 */
-	public static function Adres($name, string $text = NULL, array $opt = []): string {
+	public static function Adres($name, ?string $text = NULL, array $opt = []): string {
 
 		return '
 		<input type="text" name="'.$name.'" id="'.$name.'" class="'.$opt['class'].'" value="'.$text.'" '.$opt['other'].' data-type="address">
@@ -1461,7 +1461,7 @@ class Elements {
 	 *
 	 * @return string
 	 */
-	public static function Date($name, string $text = NULL, array $opt = []): string {
+	public static function Date($name, ?string $text = NULL, array $opt = []): string {
 
 		return '
 		<input type="text" name="'.$name.'" id="'.$name.'" class="'.$opt['class'].'" value="'.$text.'" '.$opt['other'].'>
@@ -1491,7 +1491,7 @@ class Elements {
 	 *
 	 * @return string
 	 */
-	public static function DateTime($name, string $text = NULL, array $opt = []): string {
+	public static function DateTime($name, ?string $text = NULL, array $opt = []): string {
 
 		$element = '
 		<input type="text" name="'.$name.'" id="'.$name.'" class="'.$opt['class'].'" value="'.$text.'" '.$opt['other'].'>
@@ -1545,7 +1545,7 @@ class Elements {
 	 *
 	 * @return string
 	 */
-	public static function InputText($name, string $text = NULL, array $opt = []): string {
+	public static function InputText($name, ?string $text = NULL, array $opt = []): string {
 
 		$element = '
 		<input type="text" name="'.$name.'" id="'.$name.'" class="'.$opt['class'].'" value="'.$text.'" '.$opt['other'].'>
@@ -1568,7 +1568,7 @@ class Elements {
 	 *
 	 * @return string
 	 */
-	public static function TextArea($name, string $text = NULL, array $opt = []): string {
+	public static function TextArea($name, ?string $text = NULL, array $opt = []): string {
 
 		if (!$opt['class']) {
 			$opt['class'] = 'wp100';

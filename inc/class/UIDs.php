@@ -215,7 +215,7 @@ class UIDs {
 	 * @param array|null  $params
 	 * @return array
 	 */
-	public static function edit(string $name = NULL, string $value = NULL, array $params = NULL): array {
+	public static function edit(?string $name = NULL, ?string $value = NULL, ?array $params = NULL): array {
 
 		$rootpath = dirname( __DIR__, 2 );
 

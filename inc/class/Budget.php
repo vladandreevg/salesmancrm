@@ -619,7 +619,7 @@ class Budget {
 	 * ```
 	 * @throws \Exception
 	 */
-	public static function doit(int $id, bool $forsed = NULL): array {
+	public static function doit(int $id, ?bool $forsed = NULL): array {
 
 		global $hooks;
 
@@ -2376,7 +2376,7 @@ class Budget {
 	 * @category Core
 	 * @package  Func
 	 */
-	public static function rsadd(int $rs = 0, float $summa = 0.00, string $operacia = NULL, string $rs_move = NULL): bool {
+	public static function rsadd(int $rs = 0, float $summa = 0.00, ?string $operacia = NULL, ?string $rs_move = NULL): bool {
 
 		$identity = $GLOBALS['identity'];
 		$sqlname  = $GLOBALS['sqlname'];

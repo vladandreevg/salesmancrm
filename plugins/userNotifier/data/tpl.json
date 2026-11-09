@@ -6,7 +6,7 @@
   },
   {
 	"name":"Изменен клиент",
-	"content":"{{theme}} - {{{link}}}\r\n--------------------------------------\r\nКомментарий (что изменено): \r\n{{{comment}}}\r\n--------------------------------------\r\nДанные по клиенту:\r\n\r\n- Название: {{client}}\r\n{{#category}}- Отрасль: {{category}}{{/category}}\r\n{{#clientpath}}- Источник: {{clientpath}}{{/clientpath}}\r\n{{#territory}}- Территория: {{territory}}{{/territory}}\r\n{{#phone}}- Телефон: {{phone}}{{/phone}}\r\n{{#email}}- Email: {{email}}{{/email}}\r\n{{#relation}}- Тип отношений: {{relation}}{{/relation}}\r\n\r\nАвтор: {{autor}}",
+	"content":"{{theme}} - {{{link}}}\r\n------------------------------\r\nКомментарий (что изменено): \r\n{{{comment}}}\r\n------------------------------\r\nДанные по клиенту:\r\n\r\n- Название: {{client}}\r\n{{#category}}- Отрасль: {{category}}{{/category}}\r\n{{#clientpath}}- Источник: {{clientpath}}{{/clientpath}}\r\n{{#territory}}- Территория: {{territory}}{{/territory}}\r\n{{#phone}}- Телефон: {{phone}}{{/phone}}\r\n{{#email}}- Email: {{email}}{{/email}}\r\n{{#relation}}- Тип отношений: {{relation}}{{/relation}}\r\n\r\nАвтор: {{autor}}",
 	"event":"client.edit"
   },
   {

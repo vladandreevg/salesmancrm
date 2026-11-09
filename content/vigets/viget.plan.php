@@ -80,7 +80,7 @@ if ( !$otherSettings[ 'credit'] ) {
 if ( $otherSettings[ 'credit'] ) {
 
 	if ( !$otherSettings[ 'planByClosed'] ) {
-		$result = $db -> getAll( "SELECT * FROM ${sqlname}credit WHERE do='on' and invoice_date between '$dm_start' and '$dm_end' and did IN (SELECT did FROM ${sqlname}dogovor WHERE did > 0 $sort) OR (".str_replace( "and", "", $sort )." and invoice_date between '$dm_start' and '$dm_end') and identity = '$identity' ORDER by did" );
+		$result = $db -> getAll( "SELECT * FROM {$sqlname}credit WHERE do='on' and invoice_date between '$dm_start' and '$dm_end' and did IN (SELECT did FROM {$sqlname}dogovor WHERE did > 0 $sort) OR (".str_replace( "and", "", $sort )." and invoice_date between '$dm_start' and '$dm_end') and identity = '$identity' ORDER by did" );
 	}
 
 	if ( $otherSettings[ 'planByClosed'] ) {
@@ -119,9 +119,9 @@ if ( $otherSettings[ 'credit'] ) {
 	foreach ( $result as $data ) {
 
 		//расчет процента размера платежа от суммы сделки
-		$kolp = $db -> getOne( "SELECT kol FROM ${sqlname}dogovor WHERE did = '$data[did]' and identity = '$identity'" );
+		$kolp = $db -> getOne( "SELECT kol FROM {$sqlname}dogovor WHERE did = '$data[did]' and identity = '$identity'" );
 
-		$margap = $db -> getOne( "SELECT marga FROM ${sqlname}dogovor WHERE did = '$data[did]' and identity = '$identity' ORDER by did" );
+		$margap = $db -> getOne( "SELECT marga FROM {$sqlname}dogovor WHERE did = '$data[did]' and identity = '$identity' ORDER by did" );
 
 		$dolya = ($kolp > 0) ? $data['summa_credit'] / $kolp : 0;//% оплаченной суммы от суммы по договору
 		$m     = ($kolp > 0) ? $data['summa_credit'] / $kolp : 0;

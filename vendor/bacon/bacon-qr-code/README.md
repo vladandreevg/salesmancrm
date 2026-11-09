@@ -1,7 +1,7 @@
 # QR Code generator
 
-[![Build Status](https://api.travis-ci.org/Bacon/BaconQrCode.png?branch=master)](http://travis-ci.org/Bacon/BaconQrCode)
-[![Coverage Status](https://coveralls.io/repos/github/Bacon/BaconQrCode/badge.svg?branch=master)](https://coveralls.io/github/Bacon/BaconQrCode?branch=master)
+[![PHP CI](https://github.com/Bacon/BaconQrCode/actions/workflows/ci.yml/badge.svg)](https://github.com/Bacon/BaconQrCode/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Bacon/BaconQrCode/branch/master/graph/badge.svg?token=rD0HcAiEEx)](https://codecov.io/gh/Bacon/BaconQrCode)
 [![Latest Stable Version](https://poser.pugx.org/bacon/bacon-qr-code/v/stable)](https://packagist.org/packages/bacon/bacon-qr-code)
 [![Total Downloads](https://poser.pugx.org/bacon/bacon-qr-code/downloads)](https://packagist.org/packages/bacon/bacon-qr-code)
 [![License](https://poser.pugx.org/bacon/bacon-qr-code/license)](https://packagist.org/packages/bacon/bacon-qr-code)
@@ -37,3 +37,46 @@ BaconQrCode comes with multiple back ends for rendering images. Currently includ
 - `ImagickImageBackEnd`: renders raster images using the Imagick library
 - `SvgImageBackEnd`: renders SVG files using XMLWriter
 - `EpsImageBackEnd`: renders EPS files
+
+### GDLib Renderer
+GD library has so many limitations, that GD support is not added as backend, but as separated renderer.
+Use `GDLibRenderer` instead of `ImageRenderer`. These are the limitations:
+
+- Does not support gradient.
+- Does not support any curves, so you QR code is always squared.
+
+Example usage:
+
+```php
+use BaconQrCode\Renderer\GDLibRenderer;
+use BaconQrCode\Writer;
+
+$renderer = new GDLibRenderer(400);
+$writer = new Writer($renderer);
+$writer->writeFile('Hello World!', 'qrcode.png');
+```
+
+## Known issues
+
+### ImagickImageBackEnd: white pixel artifacts
+
+When using `ImagickImageBackEnd`, single white pixels may appear inside filled regions. This is
+most visible with margin 0 (where artifacts appear at the image edge), but can in theory occur at
+any position. The cause is a bug in ImageMagick's path fill rasterizer (`GetFillAlpha` in
+`MagickCore/draw.c`): an off-by-one error in the winding number calculation combined with an edge
+skipping bug in the scanline processing can incorrectly classify pixels as outside the polygon.
+
+The bug cannot be reliably worked around in this library:
+
+- **Canvas padding** (rendering on a larger canvas and cropping) does not work because the required
+  padding depends on the scale factor, path complexity, and ImageMagick's internal edge processing
+  state. No fixed padding value is safe for all inputs.
+- **Post-processing** (scanning for and fixing isolated white pixels) risks corrupting legitimate
+  rendering features such as curved module edges.
+
+For artifact-free output, use `SvgImageBackEnd` or `GDLibRenderer` instead.
+
+## Development
+
+To run unit tests, you need to have [Node.js](https://nodejs.org/en) and the pixelmatch library installed. Running
+`npm install` will install this for you.

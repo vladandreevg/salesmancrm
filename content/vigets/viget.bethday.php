@@ -25,8 +25,8 @@ $thisfile = basename( __FILE__ );
 $y  = date( 'Y' );
 $m  = date( 'm' );
 $nd = date( 'd' );
-$ed = strftime( '%m-%d', mktime( 0, 0, 0, $m, $nd + 14, $y ) );
-$fd = strftime( '%m-%d', mktime( 0, 0, 0, $m, $nd - 14, $y ) );
+$ed = date( 'm-d', mktime( 0, 0, 0, $m, $nd + 14, $y ) );
+$fd = date( 'm-d', mktime( 0, 0, 0, $m, $nd - 14, $y ) );
 
 $tm  = $tzone;
 $nd2 = mktime( date( 'H' ), date( 'i' ), date( 's' ), date( 'm' ), date( 'd' ), date( 'Y' ) ) + $tm * 3600;

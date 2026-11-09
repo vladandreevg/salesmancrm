@@ -17,6 +17,12 @@ include $rootpath."/inc/config.php";
 include $rootpath."/inc/dbconnector.php";
 include $rootpath."/inc/auth.php";
 include $rootpath."/inc/func.php";
+if (!file_exists($rootpath."/inc/requirements.php")) {
+	print 'Не найден <b>inc/requirements.php</b> — проверка системных требований недоступна. Обновите дистрибутив.';
+	exit();
+}
+
+require_once $rootpath."/inc/requirements.php";
 include $rootpath."/inc/settings.php";
 // Доступ только для администратора
 if ($isadmin != 'on' && $tipuser != 'Администратор') {
@@ -36,18 +42,16 @@ if ( empty( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && strtolower( $_SERVER[ 'HTTP
 
 $current = $db -> getOne( "SELECT current FROM ".$sqlname."ver ORDER BY id DESC LIMIT 1" );
 
-$os = PHP_OS_FAMILY;
-
-exec("php -v", $php, $exit );
-
-$xphp = getPhpInfo();
+$os      = PHP_OS_FAMILY;
+$req     = sm_requirements_check( $rootpath, $db, 'runtime' );
+$cli     = $req[ 'cli' ];
 
 $distro = '';
 
 if ( $os == 'Linux' ) {
 
-	exec("cat /etc/*-release", $osa, $exit);
-	$distro = yexplode("=", $osa[0], 1);
+	sm_shell_exec("cat /etc/*-release", $osa, $exit);
+	$distro = !empty( $osa[0] ) ? yexplode("=", $osa[0], 1) : '';
 
 }
 
@@ -63,192 +67,30 @@ if ( $os == 'Linux' ) {
 		<TD class="w100 text-center"><i class="icon-cog-alt green icon-3x"></i></TD>
 		<TD colspan="4" nowrap="nowrap">
 			<h3 class="m0 p0 mt20">Версии ПО и модулей:</h3>
+			<?php print sm_requirements_verdict( $req ); ?>
 			<blockquote>
-				<?php
-				$ver   = $xphp['web'];
-				$error = 0;
-
-				//$xphp['web'] = "5.6";
-
-				if ( in_array( $xphp['web'], [
-					'7.2',
-					'7.3',
-					'7.4',
-					'8.1'
-				] ) ) {
-
-					print '<i class="icon-ok-circled green"></i>&nbsp;Требуется версия <b>PHP</b> <b class="green">7.2...8.1</b>. Текущая версия <b class="green">'.$xphp['web'].'</b>.<br>';
-
-					// Deprecated since v.2024.1
-					/*
-					if( function_exists( "ioncube_loader_version" ) ) {
-						$loaderVer = ioncube_loader_version();
-					}
-
-					print ( $loaderVer >= 10.2 ? '<i class="icon-ok-circled green"></i>' : '<i class="icon-attention red"></i>' ).'&nbsp;Требуется версия <b>Ioncube Loader</b> <b class="green">> 10.2</b>. Текущая версия <b class="'.( $loaderVer >= 10.2 ? 'green' : 'red' ).'">'.$loaderVer.'</b>.<br>';
-
-					if ( !extension_loaded( "Ioncube Loader" ) ) {
-						$error++;
-						print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>Ioncube Loader</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-					}
-					else {
-						print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>Ioncube Loader</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-					}
-					*/
-
-				}
-				else {
-
-					$error++;
-					print '<i class="icon-attention red"></i>&nbsp;Версия <b>PHP</b> ниже 7.2 <b class="red">не поддерживается</b>, выше 8.1 <b class="broun">не гарантируется</b>. Установлена версия <b>'.$xphp['web'].'</b><br>';
-
-				}
-
-				$mysql_ver = $db -> getOne( "SELECT VERSION() as ver" );
-
-				if ( (float)$mysql_ver < 5.1 ) {
-					$error++;
-					print '<i class="icon-attention red"></i>&nbsp;Требуется версия <b>MySQL</b> <b>5.0</b> или выше. Текущая версия<b class="red">'.$mysql_ver.'</b>.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Версия <b>MySQL</b> <b class="green">в порядке</b>. Установлена версия <b>'.$mysql_ver.'</b>.<br>';
-				}
-
-				if ( !extension_loaded( "dom" ) ) {
-					$error++;
-					print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>DOM</b></u> <b class="red">не подключен</b>.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>DOM</b></u> <b class="green">подключен</b>.<br>';
-				}
-
-				if ( !extension_loaded( "xmlreader" ) ) {
-					//$error++;
-					print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>XMLREADER</b></u> (модуль PHP) <b class="red">не подключен</b>.<br>';
-
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>XMLREADER</b></u> (модуль PHP) <b class="green">подключен</b>.<br>';
-				}
-
-				if ( !extension_loaded( "curl" ) ) {
-					$error++;
-					print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>cUrl</b></u> <b class="red">не подключен</b>.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>cUrl</b></u> <b class="green">подключен</b>.<br>';
-				}
-
-				if ( !extension_loaded( "mbstring" ) ) {
-					$error++;
-					print '<i class="icon-attention red"></i>&nbsp;Модуль <u><b>MBSTRING</b></u> <b class="red">не подключен</b>.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>MBSTRING</b></u> <b class="green">подключен</b>.<br>';
-				}
-
-				if ( !extension_loaded( "imap" ) ) {
-					//$error++;
-					print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>IMAP</b></u> <b class="red">не подключен</b>.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>IMAP</b></u> <b class="green">подключен</b>.<br>';
-				}
-
-				if ( extension_loaded( "domxml" ) ) {
-					//$error++;
-					print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>DOMXML</b></u> <b class="red">подключен</b>. Не критично, но данный модуль мешает работе класса <b>dompdf</b> для генерации PDF файлов.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>DOMXML</b></u> <b class="green">не подключен</b>.<br>';
-				}
-
-				if ( !extension_loaded( "openssl" ) ) {
-					//$error++;
-					print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>OPENSSL</b></u> <b class="red">не подключен</b>. Требуется для отправки почты через SMTP.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>OPENSSL</b></u> <b class="green">подключен</b>.<br>';
-				}
-
-				if ( !extension_loaded( "gd" ) ) {
-					//$error++;
-					print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>GD</b></u> <b class="red">не подключен</b>. Требуется для генератора PDF.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>GD</b></u> <b class="green">подключен</b>.<br>';
-				}
-
-				if ( !extension_loaded( "imagick" ) ) {
-					//$error++;
-					print '<i class="icon-attention broun"></i>&nbsp;Модуль <u><b>IMAGICK</b></u> <b class="red">не подключен</b>. Требуется для генератора QR-кода.<br>';
-				}
-				else {
-					print '<i class="icon-ok-circled green"></i>&nbsp;Модуль <u><b>IMAGICK</b></u> <b class="green">подключен</b>.<br>';
-				}
-				?>
+				<?php print sm_requirements_render( $req, [ 'versions', 'extensions', 'php_ini', 'runtime' ] ); ?>
 			</blockquote>
 
-			<div class="blue mb5">Выполнение запроса <b>php -v</b> ( версия <b><?=$xphp['cli']?></b> ):</div>
-			<div class="white p10 fs-09 wp90 enable--select" style="background: #222;">
-				<code>
-					<?php
-					print yimplode("<br>", $php);
-					?>
-				</code>
-			</div>
-
-			<?php
-			if($os == 'Linux') {
-				if ( $xphp['web'] != $xphp['cli'] ) {
-					print '<div class="warning m0 mt5 inline">Возможно установлена альтернативная версия PHP.<br>Путь до исполняемого файла определился как:<br><div class="warning bgwhite p5 enable--select">'.$xphp['bin'].'</div></div>';
-				}
-				else {
-					print '<div class="success mt5 inline">Версия PHP соответствует версии, используемой веб-сервером.<br>Для запуска скриптов из командной строки используйте:<br><b>php</b></div>';
-				}
-			}
-			?>
+			<?php if ( $cli[ 'available' ] ) { ?>
+				<div class="blue mb5">Выполнение запроса <b>php -v</b><?php if ( $cli[ 'version' ] !== '' ) { print ' ( версия <b>'.$cli[ 'version' ].'</b> )'; } ?>:</div>
+				<div class="white p10 fs-09 wp90 enable--select" style="background: #222;">
+					<code>
+						<?php print yimplode( "<br>", $cli[ 'output' ] ); ?>
+					</code>
+				</div>
+			<?php } ?>
 
 		</TD>
 	</TR>
 	<TR>
 		<TD class="text-center"><i class="icon-folder-1 broun icon-3x"></i></TD>
 		<TD colspan="4">
-			<h3 class="m0 p0 mt20">Требуемые права для папок (должны быть 0777):</h3>
-			<ul>
-				<li>Права для папки "<b>/files/</b>": <?= getPerms( $rootpath.'/files' ) ?></li>
-				<li>Права для папки "<b>/files/backup/</b>": <?= getPerms( $rootpath.'/files/backup' ); ?></li>
-				<li>Права для папки "<b>/cash/logo/</b>": <?= getPerms( $rootpath.'/cash/logo' ); ?></li>
-				<li>Права для папки "<b>/cash/</b>": <?= getPerms( $rootpath.'/cash' ); ?></li>
-				<li>Права для папки "<b>/cash/templates/</b>": <?= getPerms( $rootpath.'/cash/templates' ); ?></li>
-			</ul>
-
-		</TD>
-	</TR>
-	<TR>
-		<TD class="text-center"><i class="icon-file-pdf red icon-3x"></i></TD>
-		<TD colspan="4">
-
-			<h3 class="m0 p0 mt20">Генератор PDF:</h3>
+			<h3 class="m0 p0 mt20">Требуемые права для папок (запись для веб-сервера, 0777):</h3>
 			<blockquote>
-
-				<ul>
-					<li>
-						<?php
-						if ( !extension_loaded( "gd" ) ) {
-							print 'Модуль <u><b>GD</b></u> <b class="red">не подключен</b>. Требуется для генератора PDF.&nbsp;<i class="icon-attention broun"></i><br>';
-						}
-						else {
-							print 'Модуль <u><b>GD</b></u> <b class="green">подключен</b>&nbsp;<i class="icon-ok-circled green"></i>';
-						}
-						?>
-					</li>
-					<li>Права для папки "<b>/cash/dompdf/</b>": <?= getPerms( $rootpath.'/cash/dompdf/' ) ?></li>
-					<!--<li>Файл "<b>cash/log.htm</b>": --><?php /*= is_writable( $rootpath.'/cash/log.htm' ) ? '<b class="green">Доступен для записи</b>' : '<b class="red">Защищен от записи</b>'; */?>
-					</li>
-				</ul>
-
+				<?php print sm_requirements_render( $req, [ 'folders' ] ); ?>
 			</blockquote>
+
 		</TD>
 	</TR>
 	<TR>
@@ -266,11 +108,11 @@ if ( $os == 'Linux' ) {
 					// ищем установки libreoffice
 					// centos
 					if($distro != 'Ubuntu') {
-						exec('rpm -qa --qf "%{NAME}\n" | grep libreoffice', $officeComp, $exit);
+						sm_shell_exec('rpm -qa --qf "%{NAME}\n" | grep libreoffice', $officeComp, $exit);
 					}
 					// ubuntu
 					else {
-						exec('dpkg -l | grep libreoffice | awk \'{print $2}\'', $officeComp, $exit);
+						sm_shell_exec('dpkg -l | grep libreoffice | awk \'{print $2}\'', $officeComp, $exit);
 					}
 
 					?>
@@ -322,29 +164,9 @@ if ( $os == 'Linux' ) {
 		<TD class="text-center"><i class="icon-lock blue icon-3x"></i></TD>
 		<TD colspan="4">
 			<h3 class="m0 p0 mt20">Безопасность:</h3>
-			<ul>
-				<li>Права для папку "<b>inc</b>":
-					<?php
-					clearstatcache();
-					$chmod = getChmod( $rootpath.'/inc' );
-					print ( $chmod != "0777" ) ? '<i class="icon-thumbs-up-alt green list" title="Папка не имеет прав на запись"></i>' : '<i class="icon-thumbs-down-alt red list" title="Снимите права на запись для папки inc"></i> ['.$chmod.']';
-					?>
-				</li>
-				<!--<li>Файл установки "<b>install.php</b>":
-					<?php
-					clearstatcache();
-					if ( file_exists( $rootpath.'/_install/install.php' ) ) print '<i class="icon-thumbs-down-alt red list" title="Файл не удален после установки."></i>';
-					else print '<i class="icon-thumbs-up-alt green list" title="Файл отсутствует"></i>';
-					?>
-				</li>
-				<li>Файл обновления "<b>_update.php</b>":
-					<?php
-					clearstatcache();
-					if ( file_exists( $rootpath.'/_install/_update.php' ) ) print '<i class="icon-thumbs-down-alt red list" title="Файл не удален после установки."></i>';
-					else print '<i class="icon-thumbs-up-alt green list" title="Файл отсутствует"></i>';
-					?>
-				</li>-->
-			</ul>
+			<blockquote>
+				<?php print sm_requirements_render( $req, [ 'security' ] ); ?>
+			</blockquote>
 		</TD>
 	</TR>
 	</tbody>
@@ -386,12 +208,7 @@ if ( $os == 'Linux' ) {
 		</TD>
 		<TD colspan="3" nowrap="nowrap">
 			<?php
-			if ( ini_get( 'date.timezone' ) == '' ) {
-
-				print '<i class="icon-attention broun"></i>&nbsp;Не задан параметр <u><b>date.timezone</b></u> (см. php.ini) <b class="red">Прописать в php ini "date.timezone = Europe/Moscow"</b>. Критично.<br>';
-
-			}
-			else print ini_get( 'date.timezone' );
+			print( ini_get( 'date.timezone' ) !== '' ? ini_get( 'date.timezone' ) : 'не задан — см. проверку выше' );
 			?>
 		</TD>
 	</TR>

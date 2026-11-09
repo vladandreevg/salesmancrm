@@ -31,6 +31,7 @@ use Exception;
  * $did = $result['data'];
  * ```
  */
+#[\AllowDynamicProperties]
 class Deal {
 
 	/**

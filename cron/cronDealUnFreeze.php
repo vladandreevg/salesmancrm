@@ -64,6 +64,7 @@ $freezeInput = $otherSettings['dateFieldForFreeze'];
 $activeUsers = $db -> getCol( str_replace( "app_", $sqlname, "SELECT iduser FROM app_user WHERE secrty = 'yes'" ) );
 
 $response = [];
+$counts = [];
 
 if ( $weekToday < 6 && !$isHoliday ) {
 

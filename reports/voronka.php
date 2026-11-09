@@ -89,7 +89,7 @@ foreach ( $resultt as $data ) {
 			" );
 
 		$dogs = (int)$resultm['count'];
-		$kol  = (double)$resultm['summa'];
+		$kol  = (float)$resultm['summa'];
 
 		if ( $kol > 0 ) {
 

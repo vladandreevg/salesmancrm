@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.3] - 2026-04-23
+
+### Bug fixes
+
+- PHP 8.5 compatibility improved
+  message : « Non-canonical cast (boolean) is deprecated, use the (bool) cast instead. »
+- OPENTBS_READ_ENTITY returns false when find a self closing entity, now return true.
+- OPENTBS_SELECT_HEADER and OPENTBS_SELECT_FOOTER with DOCX raises an error « Cannot load "" ... » if there is not such subfile. Now return false.
+- OPENTBS_SELECT_HEADER and OPENTBS_SELECT_FOOTER with OSD and ODP return false, now return true.
+- OPENTBS_GET_FILES_BY_TYPE may return hidden header/footer for a DOCX.
+
+## [1.12.2] - 2025-11-01
+
+### Enhancements
+
+- more robust XML element search
+- TbsZip 2.18
+
+## [1.12.1] - 2024-03-06
+
+### Enhancements
+
+- OPENTBS_GET_FILES_BY_TYPE supports new keywords : 'all' and 'slidem'
+
+- PPTX : better XML clean for TBS fields recognition.
+
 ## [1.12.0] - 2024-01-25
 
 ### New feature

@@ -26,9 +26,9 @@ $sort = get_people( $iduser1 );
 
 $d01 = mktime( 0, 0, 0, date( 'm' ), 1, date( 'Y' ) );
 $dd  = 14;//intval(date("t",$d01));
-$d1  = strftime( '%Y-%m-%d', $d01 ); //начало месяца
-$d2  = strftime( '%Y-%m-%d', mktime( 23, 59, 59, date( 'm' ), $dd, date( 'Y' ) ) );//конец месяца
-$d3  = strftime( '%Y-%m-%d', mktime( 1, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) ) );//текущая дата
+$d1  = date( 'Y-m-d', $d01 ); //начало месяца
+$d2  = date( 'Y-m-d', mktime( 23, 59, 59, date( 'm' ), $dd, date( 'Y' ) ) );//конец месяца
+$d3  = date( 'Y-m-d', mktime( 1, 0, 0, date( 'm' ), date( 'd' ), date( 'Y' ) ) );//текущая дата
 
 $clAdd = $coAdd = $dAdd = $dday = [];
 

@@ -21,6 +21,7 @@ use event;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     1.0 (06/09/2019)
  */
+#[\AllowDynamicProperties]
 class Speka {
 
 	/**

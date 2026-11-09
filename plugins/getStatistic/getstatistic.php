@@ -8,6 +8,8 @@
 /*        ver. 2019.x           */
 /* ============================ */
 
+global $rootpath, $hooks, $iduser1;
+
 // If this file is called directly, abort.
 if ( defined( 'SMPLUGIN' ) ) {
 
@@ -124,7 +126,7 @@ function update_getstatistic(){
 	$sqlname  = $GLOBALS['sqlname'];
 	$db       = $GLOBALS['db'];
 
-	$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}sendStatistic_bots'");
+	/*$da = (int)$db -> getOne("SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = '$database' and TABLE_NAME = '{$sqlname}sendStatistic_bots'");
 	if ($da > 0) {
 		
 		$db -> query("RENAME TABLE `{$sqlname}sendStatistic_bots` TO `{$sqlname}sendstatistic_bots`");
@@ -143,7 +145,7 @@ function update_getstatistic(){
 
 		$db -> query("RENAME TABLE `{$sqlname}sendStatistic_users` TO `{$sqlname}sendstatistic_users`");
 
-	}
+	}*/
 
 	/**
 	 * Добавим признак блокировки пользователя

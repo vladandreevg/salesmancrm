@@ -24,7 +24,7 @@ $thisfile = basename(__FILE__);
 $y  = date('y');
 $m  = date('m');
 $nd = date('d');
-$nd = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, $nd, $y));
+$nd = date('Y-m-d', mktime(0, 0, 0, $m, $nd, $y));
 
 //кастомные имена некоторых полей
 $dname  = [];

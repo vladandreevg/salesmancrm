@@ -27,6 +27,7 @@ namespace Salesman;
  * $clid = $result['data'];
  * ```
  */
+#[\AllowDynamicProperties]
 class Currency {
 
 	public const HTMLCODE = [
@@ -394,7 +395,7 @@ class Currency {
 	 *
 	 * @return array
 	 */
-	public function currencyList(int $id = NULL): array {
+	public function currencyList(?int $id = NULL): array {
 
 		$sqlname  = $this -> sqlname;
 		$db       = $this -> db;
@@ -430,7 +431,7 @@ class Currency {
 	 *
 	 * @return array
 	 */
-	public function currencyInfo(int $id = NULL): array {
+	public function currencyInfo(?int $id = NULL): array {
 
 		$sqlname = $this -> sqlname;
 		$db      = $this -> db;

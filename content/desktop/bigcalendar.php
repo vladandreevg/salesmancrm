@@ -329,8 +329,8 @@ while ( $da = $db -> fetch( $re ) ) {
 //массив для недельного календаря
 $dayofmonth = $dd; // Вычисляем число дней в текущем месяце
 $day_count  = 1; // Счётчик для дней месяца
-$datum_max  = strftime( '%Y-%m-%d', mktime( 1, 0, 0, $m, $dayofmonth, $y ) );
-$fweek      = strftime( '%w', mktime( 1, 0, 0, $m, 1, $y ) );
+$datum_max  = date( 'Y-m-d', mktime( 1, 0, 0, $m, $dayofmonth, $y ) );
+$fweek      = date( 'w', mktime( 1, 0, 0, $m, 1, $y ) );
 
 if ( $fweek == 0 ) $fweek = 7;
 
@@ -399,12 +399,12 @@ for ( $i = 0, $iMax = count( $week ); $i < $iMax; $i++ ) {
 
 		$d = $week[ $i ][ $j ];
 
-		$datum = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$m, (int)$d, (int)$y ) );
+		$datum = date( 'Y-m-d', mktime( 1, 0, 0, (int)$m, (int)$d, (int)$y ) );
 
 		//if($x <= $dayofmonth){
 		if ( $datum <= $datum_max && $x < $maxDay - 1 ) {
 
-			$datum = strftime( '%Y-%m-%d', mktime( 1, 0, 0, (int)$m, (int)$d, (int)$y ) );
+			$datum = date( 'Y-m-d', mktime( 1, 0, 0, (int)$m, (int)$d, (int)$y ) );
 
 			//$datum = $y."-".$m."-".$d1;
 
@@ -447,8 +447,8 @@ $nextm = ( 6 - $last ) + 14;
 $mn    = $m + 1;
 $x     = 0;
 
-$d1 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, $m + 1, 1, (int)$y ) );
-$d2 = strftime( '%Y-%m-%d', mktime( 1, 0, 0, $m + 1, (int)$nextm, (int)$y ) );
+$d1 = date( 'Y-m-d', mktime( 1, 0, 0, $m + 1, 1, (int)$y ) );
+$d2 = date( 'Y-m-d', mktime( 1, 0, 0, $m + 1, (int)$nextm, (int)$y ) );
 
 #составим массив событий календаря
 $result = $db -> query( "SELECT * FROM {$sqlname}tasks WHERE iduser = '$iduser1' and datum BETWEEN '$d1' and '$d2' and active != 'no' and identity = '$identity' ORDER BY datum, totime, FIELD(day, 'yes', null) DESC" );
@@ -580,8 +580,8 @@ while ( $da = $db -> fetch( $re ) ) {
 
 for ( $j = 1; $j <= $nextm; $j++ ) {
 
-	$datum = strftime( '%Y-%m-%d', mktime( 0, 0, 0, $m + 1, $j, (int)$y ) );
-	$fweek = strftime( '%w', mktime( 1, 0, 0, $m + 1, $j, (int)$y ) );
+	$datum = date( 'Y-m-d', mktime( 0, 0, 0, $m + 1, $j, (int)$y ) );
+	$fweek = date( 'w', mktime( 1, 0, 0, $m + 1, $j, (int)$y ) );
 
 	if ( count( (array)$calendarn[ $j ] ) > 0 ) $list = 'yes';
 	else $list = '';

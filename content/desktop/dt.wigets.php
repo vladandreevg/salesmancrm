@@ -29,15 +29,15 @@ $y  = date( 'Y' );
 $m  = date( 'm' );
 $nd = date( 'd' );
 
-$nd2 = strftime( '%Y-%m-%d', mktime( date( 'H' ), date( 'i' ), date( 's' ), date( 'm' ), date( 'd' ), date( 'Y' ) ) + $tm * 3600 );
+$nd2 = date( 'Y-m-d', mktime( date( 'H' ), date( 'i' ), date( 's' ), date( 'm' ), date( 'd' ), date( 'Y' ) ) + $tm * 3600 );
 
 $st  = mktime( 0, 0, 0, $m + 1, 0, $y ); //сформировали дату для дальнейшей обработки - первый день месяца $m года $y
 $dd  = (int)date( "t", $st ); //получили Стоимость дней в месяце
-$d11 = strftime( '%d.%m', mktime( 0, 0, 0, $m, '01', $y ) );
-$d12 = strftime( '%d.%m', mktime( 0, 0, 0, $m, $dd, $y ) );
+$d11 = date( 'd.m', mktime( 0, 0, 0, $m, '01', $y ) );
+$d12 = date( 'd.m', mktime( 0, 0, 0, $m, $dd, $y ) );
 
-$d1 = strftime( '%d.%m', mktime( 0, 0, 0, $m, $nd - 7, $y ) );
-$d2 = strftime( '%d.%m', mktime( 0, 0, 0, $m, $nd, $y ) );
+$d1 = date( 'd.m', mktime( 0, 0, 0, $m, $nd - 7, $y ) );
+$d2 = date( 'd.m', mktime( 0, 0, 0, $m, $nd, $y ) );
 
 $voronkaInterval = $_COOKIE['voronkaInterval'];
 

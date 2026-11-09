@@ -5,7 +5,7 @@
  * Callback link for your site
  */
 
-if (isset($_GET['zd_echo'])) exit($_GET['zd_echo']);
+if (isset($_GET['zd_echo'])) exit((string)$_GET['zd_echo']);
 
 define('ZADARMA_IP', '185.45.152.42');
 define('API_SECRET', 'YOUR_SECRET');  // You can get it from https://ss.zadarma.com/api/

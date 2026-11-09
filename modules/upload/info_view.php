@@ -102,13 +102,13 @@ if ( $did > 0 ) {
 			<td><i class="icon-folder blue"></i><?= $folder ?><?php if ( $shared == 'yes' ) print " - Общая папка"; ?>
 			</td>
 		</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if ( $size != '' ) { ?>
 		<tr>
 			<td width="110" nowrap="nowrap">&nbsp;Размер:&nbsp;</td>
 			<td><b><?= $size ?></b>&nbsp;kb</td>
 		</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if ( $roditel != "" ) { ?>
 		<tr>
 			<td width="110" nowrap="nowrap">&nbsp;Родитель:&nbsp;</td>
@@ -118,5 +118,5 @@ if ( $did > 0 ) {
 					<?php } else { ?><?= $img ?><?php } ?>&nbsp;&nbsp;</B>&nbsp;<A href="#" onClick="<?= $url_load ?>"><?= $roditel ?></A>
 			</td>
 		</tr>
-	<? } ?>
+	<?php } ?>
 </table>

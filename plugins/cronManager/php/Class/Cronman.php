@@ -22,6 +22,7 @@ use Cron;
  * @author      Vladislav Andreev <v@salesman.pro>
  * @version     v.1.0 (24/03/2020)
  */
+#[\AllowDynamicProperties]
 class Cronman {
 
 	public const PERIODS = [

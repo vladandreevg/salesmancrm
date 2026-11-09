@@ -10,10 +10,6 @@
 
 namespace Salesman;
 
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
 use event;
 use Exception;
 use Mustache_Autoloader;
@@ -162,7 +158,7 @@ class Invoice {
 	 * @param bool $dealinclude
 	 * @return array
 	 */
-	public static function info($crid, $dealinclude = false): array {
+	public static function info($crid, bool $dealinclude = false): array {
 
 		$rootpath = dirname(__DIR__, 2);
 
@@ -1539,6 +1535,17 @@ class Invoice {
 						"invoice" => $arg['invoice']
 					]);
 
+					//Вызовем событие внесения оплаты по сделке
+					event ::fire('invoice.expressadd', [
+						"did"     => $did,
+						"autor"   => $iduser1,
+						"user"    => $arg['iduser'],
+						"userUID" => current_userUID($arg['iduser']),
+						"id"      => $crid,
+						"summa"   => $arg['summa_credit'],
+						"invoice" => $arg['invoice']
+					]);
+
 					$response['result']   = 'Успешно';
 					$response['data']     = $crid;
 					$response['invoice']  = $arg['invoice'];
@@ -2569,7 +2576,7 @@ class Invoice {
 	 * @return array|bool
 	 * @throws Exception
 	 */
-	public function getInvoice(int $crid = 0, array $params = []) {
+	public function getInvoice(int $crid = 0, array $params = []): bool|array|string {
 
 		global $pdfname;
 		global $hooks;
@@ -3284,10 +3291,8 @@ class Invoice {
 		// проверяем шаблон на наличие тэга
 		if (str_contains($html, '{{qrcode}}')) {
 
-			// qrcode
-			$qr = self ::getQR($tags);
-
-			$tags['qrcode'] = 'data:image/png;base64,'.base64_encode($qr);
+			// qrcode: PNG через GD (bacon 3.x GDLibRenderer), imagick не нужен — см. Salesman\QrCode
+			$tags['qrcode'] = self ::qrDataUri($tags);
 
 		}
 
@@ -3398,6 +3403,10 @@ class Invoice {
 			//генерируем PDF
 			if ($tip == 'pdf') {
 
+				// кэш шрифтов dompdf 3 — в writable-каталоге установки (cash/dompdf),
+				// vendor/dompdfFontsCastom только источник .ttf/.ufm и может быть read-only
+				$fontDir = DompdfFonts::ensure($rootpath);
+
 				$options = new Options();
 
 				/*
@@ -3430,7 +3439,7 @@ class Invoice {
 				$options -> set('rootDir', $rootpath.'/vendor/dompdf/dompdf/');
 				$options -> set('chroot', $rootpath.'/cash/dompdf/');
 				$options -> set('fontCache', $rootpath.'/cash/dompdf/');
-				$options -> set('fontDir', $rootpath.'/vendor/dompdfFontsCastom/');
+				$options -> set('fontDir', $fontDir);
 				$options -> set('tempDir', $rootpath.'/cash/');
 				$options -> set('dpi', 100);
 
@@ -3653,17 +3662,37 @@ class Invoice {
 	 */
 	public static function getQR(array $tags): string {
 
-		// qrcode
-		$renderer = new ImageRenderer(new RendererStyle(400), new ImagickImageBackEnd());
-		$writer   = new Writer($renderer);
-
+		// qrcode: GDLibRenderer (GD) — PNG без imagick; см. Salesman\QrCode
 		$kpp = $tags['compKpp'] == '0' ? "" : $tags['compKpp'];
 
 		//$qr = $writer -> writeString( "ST00011|Name=".mb_convert_encoding( trim( str_replace( "”", "\"", $tags[ 'compUrName' ] ) ), "UTF-8", "ISO-8859-1" )."|PersonalAcc=".mb_convert_encoding( trim( $tags[ 'compBankRs' ] ), "UTF-8", "ISO-8859-1" )."|BankName=".mb_convert_encoding( trim( str_replace( "”", "\"", $tags[ 'compBankName' ] ) ), "UTF-8", "ISO-8859-1" )."|BIC=".mb_convert_encoding( trim( $tags[ 'compBankBik' ] ), "UTF-8", "ISO-8859-1" )."|CorrespAcc=".mb_convert_encoding( trim( $tags[ 'compBankKs' ] ), "UTF-8", "ISO-8859-1" )."|PayeeINN=".mb_convert_encoding( trim( $tags[ 'compInn' ] ), "UTF-8", "ISO-8859-1" )."|KPP=".mb_convert_encoding( trim( $tags[ 'compKpp' ] ), "UTF-8", "ISO-8859-1" )."|Sum=".($summaInvoice * 100)."|Purpose=".mb_convert_encoding( trim( str_replace( "”", "\"", "Оплата счета _№".$invoice." от ".$tags[ 'InvoiceDate' ]." ".$tags[ 'nalogName' ]." ".$tags[ 'nalogSumma' ] ) ), "UTF-8", "ISO-8859-1" )."" );
 
 		//$writer -> writeFile( "ST00012|Name=".trim( str_replace( "”", "\"", $tags[ 'compUrName' ] ) )."|PersonalAcc=".trim( $tags[ 'compBankRs' ] )."|BankName=".trim( str_replace( "”", "\"", $tags[ 'compBankName' ] ) )."|BIC=".trim( $tags[ 'compBankBik' ] )."|CorrespAcc=".trim( $tags[ 'compBankKs' ] )."|PayeeINN=".trim( $tags[ 'compInn' ] )."|KPP=".trim( $kpp )."|Sum=".($tags[ 'InvoiceSumma' ] * 100)."|Purpose=".trim( str_replace( "”", "\"", "Оплата счета _№".$tags[ 'Invoice' ]." от ".$tags[ 'InvoiceDate' ]." ".$tags[ 'nalogName' ]." ".$tags[ 'nalogSumma' ] ) ), $root."/cash/qrcode-invoice.png", "UTF-8" );
 
-		return $writer -> writeString("ST00012|Name=".trim(str_replace("”", "\"", $tags['compUrName']))."|PersonalAcc=".trim($tags['compBankRs'])."|BankName=".trim(str_replace("”", "\"", $tags['compBankName']))."|BIC=".trim($tags['compBankBik'])."|CorrespAcc=".trim($tags['compBankKs'])."|PayeeINN=".trim($tags['compInn'])."|KPP=".trim($kpp)."|Sum=".( pre_format($tags['InvoiceSumma']) * 100 )."|Purpose=".trim(str_replace("”", "\"", "Оплата счета _№".$tags['Invoice']." от ".$tags['InvoiceDate']." ".$tags['nalogName']." ".$tags['nalogSumma'])), "UTF-8");
+		return QrCode::render("ST00012|Name=".trim(str_replace("”", "\"", $tags['compUrName']))."|PersonalAcc=".trim($tags['compBankRs'])."|BankName=".trim(str_replace("”", "\"", $tags['compBankName']))."|BIC=".trim($tags['compBankBik'])."|CorrespAcc=".trim($tags['compBankKs'])."|PayeeINN=".trim($tags['compInn'])."|KPP=".trim($kpp)."|Sum=".( pre_format($tags['InvoiceSumma']) * 100 )."|Purpose=".trim(str_replace("”", "\"", "Оплата счета _№".$tags['Invoice']." от ".$tags['InvoiceDate']." ".$tags['nalogName']." ".$tags['nalogSumma'])));
+
+	}
+
+	/**
+	 * MIME-тип QR-изображения (PNG через GD/imagick, иначе SVG)
+	 *
+	 * @return string
+	 */
+	public static function getQRMime(): string {
+
+		return QrCode::mime();
+
+	}
+
+	/**
+	 * QR-код в виде data-URI для вставки в HTML/PDF
+	 *
+	 * @param array $tags - те же теги, что и для getQR()
+	 * @return string
+	 */
+	public static function qrDataUri(array $tags): string {
+
+		return 'data:'.self::getQRMime().';base64,'.base64_encode(self::getQR($tags));
 
 	}
 

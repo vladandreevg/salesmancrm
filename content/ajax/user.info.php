@@ -24,7 +24,7 @@ $thisfile = basename( __FILE__ );
 $iduser = $_REQUEST['iduser'];
 $action = $_REQUEST['action'];
 
-if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '')) != 'xmlhttprequest') {
 	print '<div class="bad" align="center"><br>Доступ запрещен.<br>Обратитесь к администратору.<br><br></div>';
 	exit();
 }
@@ -106,13 +106,13 @@ if($secrty=='no'){
 		<td><div class="fnameForm">Отдел:</div></td>
 		<td><?=$otdel?></td>
 	</tr>
-	<? }?>
+	<?php }?>
 	<?php if ($rukov!="") {?>
 	<tr>
 		<td><div class="fnameForm">Руководитель:</div></td>
 		<td><?=$rukov?></td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if($office>"0") {
 		$office = $db -> getOne("SELECT title FROM ".$sqlname."office_cat WHERE idcategory='".$office."' and identity = '$identity'");
 	?>
@@ -120,7 +120,7 @@ if($secrty=='no'){
 		<td><div class="fnameForm">Офис:</div></td>
 		<td><?=$office?></td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if ($territory>0) {
 		$territory = $db -> getOne("SELECT title FROM ".$sqlname."territory_cat WHERE idcategory='".$territory."' and identity = '$identity'");
 	?>
@@ -128,7 +128,7 @@ if($secrty=='no'){
 		<td><div class="fnameForm">Территория:</div></td>
 		<td><b class="green"><?=$territory?></b>&nbsp;</td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<tr>
 		<td colspan="2"><hr></td>
 	</tr>
@@ -137,31 +137,31 @@ if($secrty=='no'){
 		<td><div class="fnameForm">Телефон:</div></td>
 		<td><?=$phone?>&nbsp;</td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if ($fax!="") {?>
 	<tr>
 		<td><div class="fnameForm">Факс:</div></td>
 		<td><?=$fax?>&nbsp;</td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if ($mob!="") {?>
 	<tr>
 		<td><div class="fnameForm">Мобильный:</div></td>
 		<td><?=$mob?></td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if ($phone_in!="") {?>
 	<tr>
 		<td><div class="fnameForm">Внутр.номер:</div></td>
 		<td><?=$phone_in?></td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	<?php if ($mail_url!="") {?>
 	<tr>
 		<td><div class="fnameForm">Email:</div></td>
 		<td><a href="mailto:<?=str_replace("mailto:","", $mail_url)?>"><?=str_replace("mailto:","", $mail_url)?></a></td>
 	</tr>
-	<? } ?>
+	<?php } ?>
 	</table>
 </div>
 <script>

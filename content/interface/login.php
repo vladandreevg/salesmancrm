@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /* ============================ */
 /*         SalesMan CRM         */
 /* ============================ */
@@ -627,7 +627,7 @@ $logo = "/assets/images/logo-white.png";
 				<div class="flex-container">
 
 					<div class="flex-string wp100 relativ mt10">
-						<input name="pwd" type="password" placeholder="Задайте новый пароль" id="pwd" width="100%" <? if (isset($_GET['demo'])) {
+						<input name="pwd" type="password" placeholder="Задайте новый пароль" id="pwd" width="100%" <?php if (isset($_GET['demo'])) {
 							echo ' value="'.$demo['pass'].'"';
 						}; ?> >
 						<div class="showpass">

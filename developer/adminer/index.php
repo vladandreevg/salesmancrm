@@ -1,51 +1,34 @@
 <?php
-$rootpath = realpath( __DIR__ );
-
+/**
+ * Adminer 6.x bootstrap.
+ *
+ * С Adminer 5 весь код перенесён в namespace Adminer, а класс AdminerPlugin
+ * заменён контейнером Adminer\Plugins. Плагины официального набора — глобальные
+ * классы, наследующие Adminer\Plugin (складываются в admin-plugins/).
+ *
+ * Старые файлы из developer/adminer/plugins/ написаны под Adminer 4.x
+ * (AdminerPlugin/Adminer в глобальном namespace) и на 5+/6+ падают с
+ * "Class Adminer not found", поэтому здесь они не подключаются.
+ *
+ * @link https://www.adminer.org/plugins/#use
+ */
 function adminer_object() {
+	$dir = __DIR__;
 
-	global $rootpath;
-
-	// Required to run any plugin.
-	include_once $rootpath."/plugins/plugin.php";
-
-	// Plugins auto-loader.
-	foreach (glob("plugins/*.php") as $filename) {
-		include_once $rootpath."/$filename";
+	foreach (glob($dir . '/adminer-plugins/*.php') as $file) {
+		include_once $file;
 	}
 
-	// Specify enabled plugins here.
-	$plugins = [
-		new AdminerDatabaseHide([
-			"mysql",
-			"information_schema",
-			"performance_schema"
-		]),
-		/*new AdminerLoginServers([
-			'localhost',
-			filter_input(INPUT_SERVER, 'HTTP_HOST') => filter_input(INPUT_SERVER, 'SERVER_NAME')
-		]),*/
+	$plugins = array(
+		new AdminerDatabaseHide(array('mysql', 'information_schema', 'performance_schema')),
 		new AdminerTablesFilter(),
-		new AdminerSimpleMenu(),
-		new AdminerCollations(),
-		new AdminerJsonPreview(),
-
-		// AdminerTheme has to be the last one.
-		new AdminerTheme("default-blue"),
-		new AdminerSqlLog(),
-		new AdminerWymeditor(),
-		new AdminerDumpZip(),
 		new AdminerTableStructure(),
-		//new AdminerEditTextarea(),
-		new AdminerStructComments(),
-		new AdminerEditCalendar(),
-		new FasterTablesFilter(),
-		new AdminerForeignSystem(),
+		new AdminerDumpZip(),
 		new AdminerEditForeign(),
-		//new AdminerDesigns()
-	];
+		new AdminerForeignSystem(),
+	);
 
-	return new AdminerPlugin($plugins);
+	return new \Adminer\Plugins($plugins);
 }
 
-// Include original Adminer or Adminer Editor.
-include $rootpath."/adminer.php";
+include __DIR__ . '/adminer.php';
